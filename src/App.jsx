@@ -1,4 +1,9 @@
 import { useState, useRef, useCallback } from "react";
+import * as pdfjsLib from "pdfjs-dist";
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).href;
 
 // ── IMPORTANTE: reemplaza esta URL con la de tu Worker desplegado ──────────
 const WORKER_URL = "https://archicheck-worker.nestragues.workers.dev";
@@ -23,9 +28,13 @@ const TIPOS_DOC = [
 // ── Prompt ─────────────────────────────────────────────────────────────────
 function buildPrompt(tipo, comuna, archivos) {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
-  const lista = archivos.map((f, i) =>
-    `Archivo ${i + 1}: "${f.name}" (${f.tipoDoc || "sin clasificar"})\n${f.textContent ? `Contenido:\n${f.textContent}` : "[PDF escaneado o imagen — sin texto extraíble]"}`
-  ).join("\n\n---\n\n");
+  const lista = archivos.map((f, i) => {
+    const tag = f.pdfImages?.length
+      ? `${f.pdfImages.length} pág. adjunta${f.pdfImages.length > 1 ? "s" : ""} como imagen (de ${f.pdfImages[0].total} total)`
+      : f.isImage ? "imagen adjunta"
+      : "[formato no visual — sin contenido extraíble]";
+    return `Archivo ${i + 1}: "${f.name}" (${f.tipoDoc || "sin clasificar"}) — ${tag}`;
+  }).join("\n\n---\n\n");
 
   return `Eres un revisor experto de la Dirección de Obras Municipales (DOM) de Chile. Tienes dominio completo de:
 - LGUC (Ley General de Urbanismo y Construcciones)
@@ -77,22 +86,28 @@ Responde SOLO con JSON puro, sin markdown ni texto adicional:
 }`;
 }
 
-// ── Extraer texto de PDF ───────────────────────────────────────────────────
-async function extractTextFromPDF(file) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const text = e.target.result
-          .replace(/[^\x20-\x7E\xA0-\xFF\n]/g, " ")
-          .replace(/\s{3,}/g, " ")
-          .substring(0, 3000);
-        resolve(text.trim() || null);
-      } catch { resolve(null); }
-    };
-    reader.onerror = () => resolve(null);
-    reader.readAsText(file, "latin1");
-  });
+// ── PDF → imágenes base64 (máx. 3 páginas) ────────────────────────────────
+const MAX_PDF_PAGES = 3;
+
+async function pdfPagesToBase64(file) {
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const totalPages = Math.min(pdf.numPages, MAX_PDF_PAGES);
+    const images = [];
+    for (let i = 1; i <= totalPages; i++) {
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 1.5 });
+      const canvas = document.createElement("canvas");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: canvas.getContext("2d"), viewport }).promise;
+      images.push({ data: canvas.toDataURL("image/jpeg", 0.85).split(",")[1], page: i, total: pdf.numPages });
+    }
+    return images;
+  } catch {
+    return [];
+  }
 }
 
 // ── Imagen a base64 ────────────────────────────────────────────────────────
@@ -152,7 +167,7 @@ export default function ArchiCheck() {
       size: f.size,
       type: f.type,
       isImage: f.type.startsWith("image/"),
-      textContent: f.type === "application/pdf" ? await extractTextFromPDF(f) : null,
+      pdfImages: f.type === "application/pdf" ? await pdfPagesToBase64(f) : null,
       base64: f.type.startsWith("image/") ? await toBase64(f) : null,
       tipoDoc: "",
     })));
@@ -168,28 +183,32 @@ export default function ArchiCheck() {
     if (!archivos.length || !comuna.trim()) return;
     setLoading(true); setError(""); setResult(null);
     try {
-      // Construir content (texto + imágenes si hay)
+      // Construir content (imágenes primero, luego el prompt)
+      setProgress("Convirtiendo PDFs a imágenes...");
       const content = [];
       for (const f of archivos) {
         if (f.isImage && f.base64) {
           content.push({ type: "image", source: { type: "base64", media_type: f.type, data: f.base64 } });
           content.push({ type: "text", text: `[Imagen: "${f.name}" — ${f.tipoDoc || "plano"}]` });
         }
+        if (f.pdfImages?.length) {
+          for (const img of f.pdfImages) {
+            content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img.data } });
+            content.push({ type: "text", text: `[PDF: "${f.name}" — página ${img.page}/${img.total} — ${f.tipoDoc || "plano"}]` });
+          }
+        }
       }
       content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos) });
 
       setProgress("Analizando contra normativa OGUC / LGUC...");
 
-const response = await fetch(WORKER_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    messages: [{ 
-      role: "user", 
-      content: buildPrompt(tipo, comuna, archivos)
-    }],
-  }),
-});
+      const response = await fetch(WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [{ role: "user", content }],
+        }),
+      });
 
       const data = await response.json();
       if (data.error) throw new Error(typeof data.error === "string" ? data.error : data.error.message);
