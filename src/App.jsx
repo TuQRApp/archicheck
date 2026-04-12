@@ -86,8 +86,8 @@ Responde SOLO con JSON puro, sin markdown ni texto adicional:
 }`;
 }
 
-// ── PDF → imágenes base64 (máx. 3 páginas) ────────────────────────────────
-const MAX_PDF_PAGES = 3;
+// ── PDF → imágenes base64 (máx. 2 páginas) ────────────────────────────────
+const MAX_PDF_PAGES = 2;
 
 async function pdfPagesToBase64(file) {
   try {
@@ -97,12 +97,12 @@ async function pdfPagesToBase64(file) {
     const images = [];
     for (let i = 1; i <= totalPages; i++) {
       const page = await pdf.getPage(i);
-      const viewport = page.getViewport({ scale: 1.5 });
+      const viewport = page.getViewport({ scale: 0.8 });
       const canvas = document.createElement("canvas");
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       await page.render({ canvasContext: canvas.getContext("2d"), viewport }).promise;
-      images.push({ data: canvas.toDataURL("image/jpeg", 0.85).split(",")[1], page: i, total: pdf.numPages });
+      images.push({ data: canvas.toDataURL("image/jpeg", 0.6).split(",")[1], page: i, total: pdf.numPages });
     }
     return images;
   } catch {
