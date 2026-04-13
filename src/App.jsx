@@ -220,15 +220,24 @@ export default function ArchiCheck() {
   const [expandido,  setExpandido]  = useState({});
   const [dragOver,   setDragOver]   = useState(false);
   const [modoAnalisis, setModoAnalisis] = useState("parcial");
+  const [modalDwg, setModalDwg] = useState(false);
+  const [dwgBloqueado, setDwgBloqueado] = useState(false);
   const inputRef = useRef();
 
   // ── Manejo de archivos ─────────────────────────────────────────────────
   const handleFiles = useCallback(async (files) => {
+    const tieneDwg = Array.from(files).some(
+      f => f.name.toLowerCase().endsWith(".dwg") ||
+           f.name.toLowerCase().endsWith(".dxf")
+    );
+    if (tieneDwg) {
+      setModalDwg(true);
+      setDwgBloqueado(true);
+      return;
+    }
     const validos = Array.from(files).filter(f =>
       f.type === "application/pdf" ||
-      f.type.startsWith("image/") ||
-      f.name.toLowerCase().endsWith(".dwg") ||
-      f.name.toLowerCase().endsWith(".dxf")
+      f.type.startsWith("image/")
     );
     const procesados = await Promise.all(validos.map(async (f) => ({
       file: f,
@@ -295,6 +304,62 @@ export default function ArchiCheck() {
 
   const ec = globalStyle(result?.estado_global);
 
+  // ── Instrucciones DWG ──────────────────────────────────────────────────
+  const InstruccionesDwg = () => (
+    <div style={{
+      background: "#0F172A",
+      border: "1px solid #1E3A8A",
+      borderRadius: 10,
+      padding: "20px 24px",
+      marginBottom: 8,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+        <span style={{ fontSize: 20 }}>📐</span>
+        <span style={{ fontFamily: "'DM Mono', monospace", fontWeight: 800, fontSize: 13, color: "#60A5FA", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          Cómo exportar DWG a PDF para ArchiCheck
+        </span>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {[
+          ["1", "Abre el archivo en AutoCAD o software CAD compatible."],
+          ["2", "Ve a Archivo → Imprimir / Plot (Ctrl+P)."],
+          ["3", "En Impresora/Trazador selecciona DWG To PDF.pc3 o Microsoft Print to PDF."],
+          ["4", "Configura escala: elige una escala fija (1:50, 1:100 o 1:500 según el plano). No uses Ajustar a página."],
+          ["5", "Activa TODAS las capas antes de exportar (Layer Properties → todas visibles)."],
+          ["6", "En Opciones de trama selecciona resolución 300 DPI mínimo."],
+          ["7", "Si el proyecto tiene varias hojas, usa Publicar (PUBLISH) para exportar todas en un solo PDF."],
+          ["8", "Abre el PDF resultante y verifica que los textos y cotas sean legibles antes de subir."],
+        ].map(([n, texto]) => (
+          <div key={n} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+            <span style={{ background: "#1E3A8A", color: "white", borderRadius: "50%", width: 22, height: 22, minWidth: 22, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{n}</span>
+            <span style={{ fontSize: 13, color: "#CBD5E1", lineHeight: 1.5 }}>{texto}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 14, padding: "10px 14px", background: "#1E3A8A22", border: "1px solid #1E3A8A", borderRadius: 7, fontSize: 12, color: "#93C5FD" }}>
+        ⚠ ArchiCheck no acepta archivos DWG ni DXF directamente.
+        Convierte a PDF siguiendo los pasos anteriores y vuelve a subir.
+      </div>
+    </div>
+  );
+
+  const ModalDwg = () => modalDwg ? (
+    <div style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div style={{ background: "#06090f", border: "1px solid #1E3A8A", borderRadius: 14, padding: 28, maxWidth: 620, width: "100%", boxShadow: "0 25px 50px rgba(0,0,0,0.6)" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+          <span style={{ fontWeight: 800, fontSize: 15, color: "#F87171", fontFamily: "'DM Mono', monospace", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            ✗ Formato no compatible
+          </span>
+          <button onClick={() => setModalDwg(false)} style={{ background: "none", border: "none", color: "#64748B", fontSize: 20, cursor: "pointer", lineHeight: 1 }}>✕</button>
+        </div>
+        <InstruccionesDwg />
+        <button onClick={() => setModalDwg(false)} style={{ marginTop: 16, width: "100%", background: "linear-gradient(90deg,#1e3a8a,#2563eb)", color: "white", border: "none", borderRadius: 8, padding: "11px 0", fontWeight: 700, fontSize: 13, cursor: "pointer", letterSpacing: "0.04em" }}>
+          Entendido — voy a convertir el archivo a PDF
+        </button>
+      </div>
+    </div>
+  ) : null;
+
   // ── Render ─────────────────────────────────────────────────────────────
   return (
     <div style={{ minHeight: "100vh", background: "#06090f", color: "#e2e8f0", fontFamily: "'DM Mono','Fira Code','Courier New',monospace" }}>
@@ -341,6 +406,8 @@ export default function ArchiCheck() {
         </div>
       </header>
 
+      <ModalDwg />
+
       <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px" }}>
 
         {/* ── FORMULARIO ─────────────────────────────────────────────── */}
@@ -371,6 +438,13 @@ export default function ArchiCheck() {
                 onChange={setComuna}
                 required={true}
               />
+            </div>
+
+            {/* Botón Cómo subir DWG */}
+            <div style={{ marginBottom: 12 }}>
+              <button onClick={() => setModalDwg(true)} style={{ background: "none", border: "1px solid #1E3A8A", borderRadius: 7, padding: "7px 14px", color: "#60A5FA", fontSize: 12, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit" }}>
+                📐 Cómo subir archivos DWG
+              </button>
             </div>
 
             {/* Drop zone */}
@@ -460,6 +534,14 @@ export default function ArchiCheck() {
         )}
 
         {/* ── RESULTADO ──────────────────────────────────────────────── */}
+        {result && result.analisis_por_archivo?.some(a => a.estado === "NO LEGIBLE") && (
+          <div style={{ marginTop: 16, background: "#1C1917", border: "1px solid #D97706", borderRadius: 10, padding: "16px 20px" }}>
+            <p style={{ margin: "0 0 12px", fontWeight: 700, fontSize: 13, color: "#FBBF24", fontFamily: "'DM Mono', monospace", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              ⚠ Documento no legible detectado
+            </p>
+            <InstruccionesDwg />
+          </div>
+        )}
         {result && (
           <div className="fade-up">
 
