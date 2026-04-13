@@ -332,9 +332,12 @@ export default function ArchiCheck() {
             <div style={{ fontSize: 9, color: "#1e4d7a", letterSpacing: "3px" }}>REVISIÓN NORMATIVA · CHILE</div>
           </div>
         </div>
-        <div style={{ fontSize: 10, color: "#1e3a5f", textAlign: "right", lineHeight: 1.6 }}>
-          OGUC · LGUC · NCh · SEIA<br/>
-          <span style={{ color: "#0f3460" }}>Normativa vigente 2025</span>
+        <div style={{ textAlign: "right", lineHeight: 1.8 }}>
+          <div style={{ fontSize: 10, color: "#1e3a5f" }}>OGUC · LGUC · NCh · SEIA</div>
+          <a href="/ArchiCheck_Guia_Normativa.pdf" target="_blank" rel="noopener noreferrer"
+            style={{ fontSize: 10, color: "#3b82f6", textDecoration: "none", letterSpacing: "0.03em" }}>
+            ¿Cómo funciona ArchiCheck?
+          </a>
         </div>
       </header>
 
