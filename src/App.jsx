@@ -362,9 +362,9 @@ export default function ArchiCheck() {
 
   // ── Render ─────────────────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100vh", background: "#F4F6FB", color: "#3D4A5C", fontFamily: "'Inter','DM Mono','Fira Code','Courier New',sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#F4F6FB", color: "#3D4A5C", fontFamily: "'Inter', sans-serif" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
         *{box-sizing:border-box}
         @keyframes spin{to{transform:rotate(360deg)}}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -392,7 +392,7 @@ export default function ArchiCheck() {
             <circle cx="18" cy="18" r="2.5" fill="white" opacity="0.9"/>
           </svg>
           <div>
-            <div style={{ fontSize: 19, fontWeight: 800, fontFamily: "'Syne',sans-serif", color: "#FFFFFF", letterSpacing: "-0.4px" }}>ArchiCheck</div>
+            <div style={{ fontSize: 19, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: "#FFFFFF", letterSpacing: "-0.4px" }}>ArchiCheck</div>
             <div style={{ fontSize: 9, color: "#A8BFEE", letterSpacing: "3px" }}>REVISIÓN NORMATIVA · CHILE</div>
           </div>
         </div>
@@ -413,7 +413,7 @@ export default function ArchiCheck() {
         {!result && (
           <div className="fade-up" style={{ background: "#FFFFFF", border: "1px solid #D1D9EE", borderRadius: 14, boxShadow: "0 2px 12px rgba(27,58,138,0.07)", padding: "32px 28px" }}>
             <div style={{ marginBottom: 32 }}>
-              <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 30, fontWeight: 800, color: "#1B3A8A", margin: "0 0 8px", lineHeight: 1.15 }}>
+              <h1 style={{ fontFamily: "'Inter', sans-serif", fontSize: 30, fontWeight: 800, color: "#1B3A8A", margin: "0 0 8px", lineHeight: 1.15 }}>
                 Sube el expediente.<br/>
                 <span style={{ color: "#2952A3" }}>La IA hace la revisión.</span>
               </h1>
@@ -548,7 +548,7 @@ export default function ArchiCheck() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, gap: 16, flexWrap: "wrap" }}>
               <div>
                 <div style={{ fontSize: 9, color: "#6B7A99", letterSpacing: "3px", marginBottom: 8 }}>INFORME DE REVISIÓN NORMATIVA</div>
-                <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 22, fontWeight: 800, margin: "0 0 4px", color: "#1B3A8A" }}>
+                <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 800, margin: "0 0 4px", color: "#1B3A8A" }}>
                   {TIPOS.find(t => t.id === tipo)?.label} · {comuna}
                 </h2>
                 <div style={{ fontSize: 11, color: "#6B7A99" }}>
@@ -560,7 +560,7 @@ export default function ArchiCheck() {
                   {result.estado_global}
                 </span>
                 <div>
-                  <span style={{ fontSize: 42, fontWeight: 800, fontFamily: "'Syne',sans-serif", color: ec.color, lineHeight: 1 }}>{result.puntaje_global}</span>
+                  <span style={{ fontSize: 42, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: ec.color, lineHeight: 1 }}>{result.puntaje_global}</span>
                   <span style={{ fontSize: 13, color: "#6B7A99" }}>/100</span>
                 </div>
               </div>
@@ -585,7 +585,7 @@ export default function ArchiCheck() {
                     { n: result.documentos_faltantes?.length || 0,  label: "Docs faltantes", c: "#2952A3" },
                   ].map(m => (
                     <div key={m.label} style={{ background: "#F4F6FB", border: "1px solid #D1D9EE", borderRadius: 10, padding: "14px 10px", textAlign: "center" }}>
-                      <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Syne',sans-serif", color: m.c, lineHeight: 1 }}>{m.n}</div>
+                      <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: m.c, lineHeight: 1 }}>{m.n}</div>
                       <div style={{ fontSize: 10, color: "#6B7A99", marginTop: 3 }}>{m.label}</div>
                     </div>
                   ))}
