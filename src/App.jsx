@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import * as pdfjsLib from "pdfjs-dist";
+import SelectorComuna from './components/SelectorComuna.jsx';
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url
@@ -25,6 +26,79 @@ const TIPOS_DOC = [
   "Planos de instalaciones", "Presupuesto de obras", "Otro",
 ];
 
+// ── Reparar JSON cortado ───────────────────────────────────────────────────
+function repairJSON(str) {
+  // Elimina trailing parcial: coma suelta al final antes de cerrar
+  let s = str.trimEnd();
+
+  // Cierra string abierto: cuenta comillas no escapadas
+  let inString = false;
+  let lastStringStart = -1;
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '"' && (i === 0 || s[i - 1] !== "\\")) {
+      inString = !inString;
+      if (inString) lastStringStart = i;
+    }
+  }
+  if (inString) {
+    // Trunca hasta antes del string abierto incompleto y cierra
+    s = s.slice(0, lastStringStart) + '""';
+  }
+
+  // Elimina coma final suelta antes de } o ]
+  s = s.replace(/,\s*$/, "");
+
+  // Apila los contenedores abiertos
+  const stack = [];
+  let inStr = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === '"' && (i === 0 || s[i - 1] !== "\\")) { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (c === "{") stack.push("}");
+    else if (c === "[") stack.push("]");
+    else if (c === "}" || c === "]") stack.pop();
+  }
+
+  // Elimina coma suelta de nuevo por si el truncado la dejó
+  s = s.replace(/,\s*$/, "");
+
+  // Cierra en orden inverso
+  s += stack.reverse().join("");
+  return s;
+}
+
+function repairAndParse(str) {
+  // Intento 1: parseo directo
+  try { return JSON.parse(str); } catch (_) { /* continúa */ }
+
+  // Intento 2: reparación
+  try { return JSON.parse(repairJSON(str)); } catch (_) { /* continúa */ }
+
+  // Intento 3: datos parciales — extrae campos de primer nivel que sí llegaron
+  const partial = {};
+  const fields = ["resumen_general","puntaje_global","estado_global","documentos_faltantes","analisis_por_archivo","alertas_especiales","pasos_siguientes"];
+  for (const field of fields) {
+    const m = str.match(new RegExp(`"${field}"\\s*:\\s*("([^"\\\\]|\\\\.)*"|\\d+|\\[|\\{)`));
+    if (m) {
+      try {
+        // Intenta extraer el valor completo buscando su cierre
+        const start = str.indexOf(`"${field}"`);
+        const valStart = str.indexOf(":", start) + 1;
+        partial[field] = JSON.parse(repairJSON(str.slice(valStart).trimStart().replace(/,?\s*$/, "")));
+      } catch (_) { partial[field] = "⚠ dato parcial"; }
+    }
+  }
+  if (!partial.resumen_general) partial.resumen_general = "⚠ Respuesta recibida incompleta — datos parciales.";
+  if (!partial.estado_global)   partial.estado_global   = "OBSERVADO";
+  if (typeof partial.puntaje_global !== "number") partial.puntaje_global = 0;
+  if (!partial.analisis_por_archivo) partial.analisis_por_archivo = [];
+  if (!partial.documentos_faltantes) partial.documentos_faltantes = [];
+  if (!partial.alertas_especiales)   partial.alertas_especiales   = [];
+  if (!partial.pasos_siguientes)     partial.pasos_siguientes     = [];
+  return partial;
+}
+
 // ── Prompt ─────────────────────────────────────────────────────────────────
 function buildPrompt(tipo, comuna, archivos) {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
@@ -36,58 +110,18 @@ function buildPrompt(tipo, comuna, archivos) {
     return `Archivo ${i + 1}: "${f.name}" (${f.tipoDoc || "sin clasificar"}) — ${tag}`;
   }).join("\n\n---\n\n");
 
-  return `Eres un revisor experto de la Dirección de Obras Municipales (DOM) de Chile. Tienes dominio completo de:
-- LGUC (Ley General de Urbanismo y Construcciones)
-- OGUC (Ordenanza General de Urbanismo y Construcciones) completa
-- Formularios MINVU vigentes
-- NCh 433, NCh 430, NCh 1537 (estructuras y sismo)
-- NCh 1079, Art. 4.1.10 OGUC (acondicionamiento térmico)
-- OGUC Título 2 Cap. 2 (accesibilidad universal)
-- Ley 19.300 SEIA
-- Normativa sanitaria y eléctrica
-- Plan Regulador Comunal de ${comuna || "la comuna indicada"}
+  return `Eres revisor DOM de Chile experto en LGUC, OGUC, normativas NCh y Plan Regulador de ${comuna || "la comuna"}.
 
-PROYECTO:
-Tipo: ${tipoLabel}
-Comuna: ${comuna || "No especificada"}
-Archivos: ${archivos.length}
-
+Proyecto: ${tipoLabel} — ${comuna || "comuna no especificada"}
+Archivos:
 ${lista}
 
-Analiza cada documento exhaustivamente como lo haría un revisor DOM experimentado.
-Sé muy específico: cita artículos exactos, describe el problema concreto, indica la corrección requerida.
-
-Responde SOLO con JSON puro, sin markdown ni texto adicional:
-{
-  "resumen_general": "diagnóstico global del expediente en 2-3 oraciones",
-  "puntaje_global": número 0-100,
-  "estado_global": "APROBABLE" | "OBSERVADO" | "RECHAZABLE",
-  "documentos_faltantes": [
-    { "nombre": "...", "articulo": "...", "criticidad": "ALTA" | "MEDIA" | "BAJA" }
-  ],
-  "analisis_por_archivo": [
-    {
-      "archivo": "nombre exacto del archivo",
-      "tipo_detectado": "tipo de documento identificado",
-      "estado": "OK" | "CON OBSERVACIONES" | "INCOMPLETO" | "NO LEGIBLE",
-      "observaciones": [
-        {
-          "descripcion": "descripción clara y específica del problema",
-          "articulo": "artículo OGUC/LGUC/norma exacta",
-          "criticidad": "ALTA" | "MEDIA" | "BAJA",
-          "correccion": "acción concreta para resolverlo"
-        }
-      ],
-      "elementos_ok": ["elementos que sí cumplen normativa"]
-    }
-  ],
-  "alertas_especiales": ["alertas sobre normativas especiales que podrían aplicar"],
-  "pasos_siguientes": ["acciones ordenadas para completar el expediente"]
-}`;
+Responde SOLO con JSON puro sin markdown:
+{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","documentos_faltantes":[{"nombre":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA"}],"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
 
-// ── PDF → imágenes base64 (máx. 2 páginas) ────────────────────────────────
-const MAX_PDF_PAGES = 2;
+// ── PDF → imágenes base64 (máx. 1 página) ─────────────────────────────────
+const MAX_PDF_PAGES = 1;
 
 async function pdfPagesToBase64(file) {
   try {
@@ -97,12 +131,12 @@ async function pdfPagesToBase64(file) {
     const images = [];
     for (let i = 1; i <= totalPages; i++) {
       const page = await pdf.getPage(i);
-      const viewport = page.getViewport({ scale: 0.8 });
+      const viewport = page.getViewport({ scale: 0.5 });
       const canvas = document.createElement("canvas");
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       await page.render({ canvasContext: canvas.getContext("2d"), viewport }).promise;
-      images.push({ data: canvas.toDataURL("image/jpeg", 0.6).split(",")[1], page: i, total: pdf.numPages });
+      images.push({ data: canvas.toDataURL("image/jpeg", 0.4).split(",")[1], page: i, total: pdf.numPages });
     }
     return images;
   } catch {
@@ -180,7 +214,7 @@ export default function ArchiCheck() {
 
   // ── Análisis ───────────────────────────────────────────────────────────
   async function analizar() {
-    if (!archivos.length || !comuna.trim()) return;
+    if (!archivos.length || !comuna) return;
     setLoading(true); setError(""); setResult(null);
     try {
       // Construir content (imágenes primero, luego el prompt)
@@ -215,7 +249,7 @@ export default function ArchiCheck() {
 
       const raw   = data.content?.map(b => b.text || "").join("") || "";
       const clean = raw.replace(/```json|```/g, "").trim();
-      setResult(JSON.parse(clean));
+      setResult(repairAndParse(clean));
 
     } catch (e) {
       setError("Error al analizar: " + e.message);
@@ -294,14 +328,16 @@ export default function ArchiCheck() {
                   {TIPOS.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
                 </select>
               </label>
-              <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <span style={{ fontSize: 10, color: "#334155", letterSpacing: "2px" }}>COMUNA <span style={{ color: "#ef4444" }}>*</span></span>
-                <input value={comuna} onChange={e => setComuna(e.target.value)}
-                  placeholder="Ej: Ñuñoa, Providencia, Temuco..."
-                  style={{ background: "#0a1628", border: "1px solid #1e3a5f", borderRadius: 8, padding: "10px 12px", color: "#94a3b8", fontSize: 13, fontFamily: "inherit", transition: "border-color .15s" }}
-                  onFocus={e => e.target.style.borderColor = "#3b82f6"}
-                  onBlur={e => e.target.style.borderColor = "#1e3a5f"} />
-              </label>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  COMUNA *
+                </span>
+                <SelectorComuna
+                  value={comuna}
+                  onChange={setComuna}
+                  required={true}
+                />
+              </div>
             </div>
 
             {/* Drop zone */}
@@ -349,8 +385,8 @@ export default function ArchiCheck() {
 
             {/* Botón analizar */}
             <button onClick={analizar}
-              disabled={loading || !archivos.length || !comuna.trim()}
-              style={{ width: "100%", padding: "15px", borderRadius: 10, border: "none", fontFamily: "inherit", fontSize: 14, fontWeight: 500, letterSpacing: ".4px", cursor: loading || !archivos.length || !comuna.trim() ? "not-allowed" : "pointer", transition: "all .2s", background: loading || !archivos.length || !comuna.trim() ? "#0a1628" : "linear-gradient(135deg,#1d4ed8,#0891b2)", color: loading || !archivos.length || !comuna.trim() ? "#1e3a5f" : "#fff" }}>
+              disabled={loading || !archivos.length || !comuna}
+              style={{ width: "100%", padding: "15px", borderRadius: 10, border: "none", fontFamily: "inherit", fontSize: 14, fontWeight: 500, letterSpacing: ".4px", cursor: loading || !archivos.length || !comuna ? "not-allowed" : "pointer", transition: "all .2s", background: loading || !archivos.length || !comuna ? "#0a1628" : "linear-gradient(135deg,#1d4ed8,#0891b2)", color: loading || !archivos.length || !comuna ? "#1e3a5f" : "#fff" }}>
               {loading ? (
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
                   <span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid #1e4d7a", borderTop: "2px solid #3b82f6", borderRadius: "50%", animation: "spin .7s linear infinite" }}/>
@@ -359,7 +395,7 @@ export default function ArchiCheck() {
               ) : `Analizar ${archivos.length ? `${archivos.length} archivo${archivos.length > 1 ? "s" : ""}` : "expediente"} →`}
             </button>
 
-            {!comuna.trim() && archivos.length > 0 && (
+            {!comuna && archivos.length > 0 && (
               <p style={{ fontSize: 11, color: "#92400e", textAlign: "center", marginTop: 8 }}>
                 ↑ Ingresa la comuna para habilitar el análisis
               </p>
