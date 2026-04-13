@@ -1,6 +1,10 @@
 import { useState, useRef, useCallback } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import SelectorComuna from './components/SelectorComuna.jsx';
+import ogucArticulos from "../normativa/nacional/oguc_articulos.json";
+import lgucArticulos from "../normativa/nacional/lguc_articulos.json";
+import ley19300Articulos from "../normativa/nacional/ley19300_articulos.json";
+import reglasNacionales from "../normativa/nacional/reglas_verificacion.json";
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url
@@ -110,11 +114,38 @@ function buildPrompt(tipo, comuna, archivos) {
     return `Archivo ${i + 1}: "${f.name}" (${f.tipoDoc || "sin clasificar"}) — ${tag}`;
   }).join("\n\n---\n\n");
 
+  // Artículos OGUC clave para el análisis
+  const ogucTexto = Object.entries(ogucArticulos.articulos)
+    .map(([num, art]) => `Art. ${num} (${art.tema}): ${art.texto.substring(0, 300)}`)
+    .join("\n");
+
+  // Artículos LGUC clave
+  const lgucTexto = Object.entries(lgucArticulos.articulos)
+    .map(([num, art]) => `Art. ${num} (${art.tema}): ${art.texto.substring(0, 300)}`)
+    .join("\n");
+
+  // Reglas de verificación nacional
+  const reglasTexto = reglasNacionales.reglas
+    .map(r => `- ${r.descripcion} (${r.referencia}): ${r.verificacion}`)
+    .join("\n");
+
   return `Eres revisor DOM de Chile experto en LGUC, OGUC, normativas NCh y Plan Regulador de ${comuna || "la comuna"}.
+
+NORMATIVA NACIONAL VIGENTE — OGUC (última versión ${ogucArticulos.ultima_version}):
+${ogucTexto}
+
+NORMATIVA NACIONAL VIGENTE — LGUC (última versión ${lgucArticulos.ultima_version}):
+${lgucTexto}
+
+REGLAS DE VERIFICACIÓN OBLIGATORIAS:
+${reglasTexto}
 
 Proyecto: ${tipoLabel} — ${comuna || "comuna no especificada"}
 Archivos:
 ${lista}
+
+Usa la normativa anterior como base de tu análisis. Cita el artículo exacto
+cuando detectes cumplimiento o incumplimiento.
 
 Responde SOLO con JSON puro sin markdown:
 {"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","documentos_faltantes":[{"nombre":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA"}],"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
