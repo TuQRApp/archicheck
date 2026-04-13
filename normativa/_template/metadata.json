@@ -1,0 +1,11 @@
+{
+  "id": "slug_comuna",
+  "nombre": "Nombre Comuna",
+  "region": "Metropolitana",
+  "prc_nombre": "PRC Nombre",
+  "prc_version": "Texto Refundido YYYY",
+  "activa": false,
+  "fecha_carga": null,
+  "fuente": "Municipalidad de X — Decreto Nº X del DD.MM.AAAA",
+  "referencias_legales": []
+}

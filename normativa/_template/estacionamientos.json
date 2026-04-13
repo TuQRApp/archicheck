@@ -1,0 +1,13 @@
+{
+  "referencia": "Art. XX PRC NombreComuna",
+  "nota": "Variables: sup=m² edificados, personas=carga ocupación, unidades=viviendas o canchas, dormitorios=m² útiles dormitorios",
+  "reglas": [
+    {
+      "id": "destino_id",
+      "categoria": "Categoría",
+      "destino": "Destino específico",
+      "formula_vehiculos": "ceil(sup / X)",
+      "formula_bicicletas": "ceil(vehiculos / Y)"
+    }
+  ]
+}

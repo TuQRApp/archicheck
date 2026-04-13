@@ -1,0 +1,21 @@
+{
+  "ZONA-X": {
+    "id": "ZONA-X",
+    "nombre": "Zona ZONA-X",
+    "tipo": "residencial",
+    "subdivision_predial_minima_m2": null,
+    "coef_ocupacion_suelo": null,
+    "coef_constructibilidad": null,
+    "altura_maxima_m": null,
+    "altura_maxima_pisos": null,
+    "altura_max_continua_m": null,
+    "altura_max_continua_pisos": null,
+    "altura_max_aislada_sobre_continua_m": null,
+    "altura_max_aislada_sobre_continua_pisos": null,
+    "antejardín_m": null,
+    "rasante_grados": null,
+    "densidad_bruta_maxima_hab_ha": null,
+    "agrupamiento": [],
+    "observaciones": null
+  }
+}

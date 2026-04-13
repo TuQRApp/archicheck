@@ -1,0 +1,14 @@
+{
+  "actividades_prohibidas_toda_comuna": [
+    "Cementerios",
+    "Medialunas (excluido Estadio Nacional)",
+    "Hipódromos",
+    "Zoológicos",
+    "Moteles",
+    "Casinos de Juegos",
+    "Plantas de Basura",
+    "Botaderos de Basura",
+    "Mall"
+  ],
+  "nota": "Estas actividades están prohibidas en toda la comuna de Ñuñoa, independiente de la zona."
+}

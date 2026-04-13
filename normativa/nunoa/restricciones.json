@@ -1,0 +1,66 @@
+{
+  "restricciones_especiales": {
+    "aerodromo": {
+      "tipo": "restriccion_altura",
+      "descripcion": "Proyectos > 7 pisos en área afectada requieren certificado favorable DGAC",
+      "umbral_pisos": 7,
+      "accion_requerida": "Certificado DGAC antes de DOM"
+    },
+    "helipuerto": {
+      "tipo": "restriccion_altura",
+      "descripcion": "Todos los proyectos en área afectada requieren autorización DGAC",
+      "umbral_pisos": 0,
+      "accion_requerida": "Autorización DGAC antes de DOM"
+    },
+    "canal_san_carlos": {
+      "tipo": "franja_proteccion",
+      "franja_m": 15,
+      "servidumbre_m": 8,
+      "uso_permitido": "area_verde",
+      "medicion": "desde eje del canal hacia interior de la comuna"
+    },
+    "canal_san_miguel": {
+      "tipo": "servidumbre",
+      "ancho_m": 3,
+      "uso_permitido": "area_verde",
+      "nota": "Canal subterráneo. Excavaciones profundas aledañas requieren aprobación DOH/SEREMI MOP"
+    }
+  },
+  "normas_generales": {
+    "antejardín_prohibido_para": [
+      "estacionamientos vehiculares",
+      "casetas de portería",
+      "pérgolas",
+      "pilares, muros y machones"
+    ],
+    "antejardín_excepciones": [
+      "estacionamiento discapacidad (visitas)",
+      "bicicletas",
+      "rampas a partir de 5m desde LO"
+    ],
+    "subterraneo": {
+      "dist_min_deslinde_m": 2.5,
+      "nota_continua": "En edificación continua puede acercarse hasta deslinde en máx. 60% de profundidad del predio"
+    },
+    "cierros_exteriores": {
+      "altura_max_m": 2.4,
+      "transparencia_min_pct": 70,
+      "sitios_eriazo": {
+        "altura_max_m": 2.2,
+        "transparencia_pct": 100,
+        "porton_ancho_min_m": 3
+      }
+    },
+    "regla_calle_12m": {
+      "descripcion": "Art. 18 — calles frentera ≤ 12m",
+      "max_pisos": 3,
+      "max_altura_m": 8,
+      "max_cc": 1.0,
+      "excepciones": [
+        "Predios con acceso ≤60m de Av. Irarrázaval",
+        "Predios >500m² según títulos a 2007",
+        "Adopción de línea de edificación a 8m desde LO"
+      ]
+    }
+  }
+}

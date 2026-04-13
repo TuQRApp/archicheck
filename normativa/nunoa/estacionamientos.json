@@ -1,0 +1,294 @@
+{
+  "referencia": "Art. 14 PRC Ñuñoa",
+  "nota": "Variables: sup=m² edificados, personas=carga ocupación, unidades=viviendas o canchas, dormitorios=m² útiles dormitorios",
+  "reglas": [
+    {
+      "id": "viv_unifamiliar_bajo100",
+      "categoria": "Residencial",
+      "destino": "Vivienda unifamiliar ≤ 100m²",
+      "formula_vehiculos": "1",
+      "formula_bicicletas": "0"
+    },
+    {
+      "id": "viv_unifamiliar_sobre100",
+      "categoria": "Residencial",
+      "destino": "Vivienda unifamiliar > 100m²",
+      "formula_vehiculos": "2",
+      "formula_bicicletas": "0"
+    },
+    {
+      "id": "viv_condominio_bajo100",
+      "categoria": "Residencial",
+      "destino": "Condominio viviendas < 100m²",
+      "formula_vehiculos": "unidades + max(4, ceil(unidades * 0.20))",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    },
+    {
+      "id": "viv_condominio_sobre100",
+      "categoria": "Residencial",
+      "destino": "Condominio viviendas ≥ 100m²",
+      "formula_vehiculos": "unidades*2 + max(4, ceil(unidades*2 * 0.20))",
+      "formula_bicicletas": "0"
+    },
+    {
+      "id": "hogar_acogida",
+      "categoria": "Residencial",
+      "destino": "Hogares de Acogida",
+      "formula_vehiculos": "ceil(dormitorios * 0.15)",
+      "formula_bicicletas": "1"
+    },
+    {
+      "id": "residencia_adulto_mayor",
+      "categoria": "Residencial",
+      "destino": "Residencia Adulto Mayor",
+      "formula_vehiculos": "ceil(dormitorios * 0.25)",
+      "formula_bicicletas": "1"
+    },
+    {
+      "id": "residencia_estudiantes",
+      "categoria": "Residencial",
+      "destino": "Residencia Estudiantes",
+      "formula_vehiculos": "max(3, ceil(personas / 8))",
+      "formula_bicicletas": "ceil(vehiculos * 0.50)"
+    },
+    {
+      "id": "hospedaje",
+      "categoria": "Residencial",
+      "destino": "Hospedaje / Hotel / Apart-Hotel",
+      "formula_vehiculos": "max(3, ceil(personas / 8))",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    },
+    {
+      "id": "hospitalizacion",
+      "categoria": "Equipamiento - Salud",
+      "destino": "Hospitalización",
+      "formula_vehiculos": "ceil(personas / 2)",
+      "formula_bicicletas": "max(5, ceil(vehiculos / 5))"
+    },
+    {
+      "id": "tratamiento_rehabilitacion",
+      "categoria": "Equipamiento - Salud",
+      "destino": "Tratamiento / Rehabilitación",
+      "formula_vehiculos": "ceil(sup / 60)",
+      "formula_bicicletas": "max(5, ceil(vehiculos / 5))"
+    },
+    {
+      "id": "consulta_medica",
+      "categoria": "Equipamiento - Salud",
+      "destino": "Consulta médica",
+      "formula_vehiculos": "ceil(sup / 60)",
+      "formula_bicicletas": "max(5, ceil(vehiculos / 5))"
+    },
+    {
+      "id": "prebásica",
+      "categoria": "Equipamiento - Educación",
+      "destino": "Pre-básica / Parvulario",
+      "formula_vehiculos": "ceil(personas / 65)",
+      "formula_bicicletas": "ceil(vehiculos / 3)"
+    },
+    {
+      "id": "basica_media",
+      "categoria": "Equipamiento - Educación",
+      "destino": "Básica / Media / Capacitación",
+      "formula_vehiculos": "ceil(personas / 40)",
+      "formula_bicicletas": "ceil(personas / 10)",
+      "nota": "+1 bus"
+    },
+    {
+      "id": "superior_tecnico",
+      "categoria": "Equipamiento - Educación",
+      "destino": "Superior / Técnico",
+      "formula_vehiculos": "ceil(personas / 15)",
+      "formula_bicicletas": "ceil(personas / 15)"
+    },
+    {
+      "id": "preuniversitario",
+      "categoria": "Equipamiento - Educación",
+      "destino": "Preuniversitario",
+      "formula_vehiculos": "ceil(sup / 50)",
+      "formula_bicicletas": "ceil(personas / 10)"
+    },
+    {
+      "id": "rehabilitacion_conductual",
+      "categoria": "Equipamiento - Educación",
+      "destino": "Rehabilitación conductual",
+      "formula_vehiculos": "ceil(sup / 50)",
+      "formula_bicicletas": "ceil(vehiculos * 0.50)"
+    },
+    {
+      "id": "estadio",
+      "categoria": "Equipamiento - Deportivo",
+      "destino": "Estadio",
+      "formula_vehiculos": "ceil(personas / 25)",
+      "formula_bicicletas": "ceil(personas / 20)"
+    },
+    {
+      "id": "club_gimnasio",
+      "categoria": "Equipamiento - Deportivo",
+      "destino": "Club / Gimnasio / Centro deportivo",
+      "formula_vehiculos": "ceil(sup / 80)",
+      "formula_bicicletas": "ceil(personas / 20)"
+    },
+    {
+      "id": "canchas_tenis_bowling",
+      "categoria": "Equipamiento - Deportivo",
+      "destino": "Canchas tenis / bowling",
+      "formula_vehiculos": "unidades * 2",
+      "formula_bicicletas": "1"
+    },
+    {
+      "id": "multicanchas",
+      "categoria": "Equipamiento - Deportivo",
+      "destino": "Multicanchas",
+      "formula_vehiculos": "unidades * 2",
+      "formula_bicicletas": "1"
+    },
+    {
+      "id": "cancha_futbol_rugby",
+      "categoria": "Equipamiento - Deportivo",
+      "destino": "Cancha fútbol / rugby",
+      "formula_vehiculos": "unidades * 4",
+      "formula_bicicletas": "1",
+      "nota": "+1 bus"
+    },
+    {
+      "id": "piscina_publica",
+      "categoria": "Equipamiento - Deportivo",
+      "destino": "Piscina pública",
+      "formula_vehiculos": "ceil(sup / 12)",
+      "formula_bicicletas": "1"
+    },
+    {
+      "id": "supermercado",
+      "categoria": "Equipamiento - Comercial",
+      "destino": "Supermercado / Materiales construcción",
+      "formula_vehiculos": "ceil(sup / 50)",
+      "formula_bicicletas": "max(5, ceil(personas / 20))",
+      "nota": "+ceil(sup/300) camiones"
+    },
+    {
+      "id": "comercio_100_200",
+      "categoria": "Equipamiento - Comercial",
+      "destino": "Comercio 100–200m²",
+      "formula_vehiculos": "ceil(sup / 50)",
+      "formula_bicicletas": "5"
+    },
+    {
+      "id": "comercio_200_500",
+      "categoria": "Equipamiento - Comercial",
+      "destino": "Comercio 200–500m²",
+      "formula_vehiculos": "ceil(sup / 40)",
+      "formula_bicicletas": "5",
+      "nota": "+1 camión"
+    },
+    {
+      "id": "comercio_sobre500",
+      "categoria": "Equipamiento - Comercial",
+      "destino": "Comercio > 500m² (excl. supermercado)",
+      "formula_vehiculos": "ceil(sup / 30)",
+      "formula_bicicletas": "5",
+      "nota": "+ceil(sup/500) camiones"
+    },
+    {
+      "id": "restaurante",
+      "categoria": "Equipamiento - Comercial",
+      "destino": "Restaurante / Bar / Pub / Casino alimentación",
+      "formula_vehiculos": "ceil(sup / 80)",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    },
+    {
+      "id": "discoteca_eventos",
+      "categoria": "Equipamiento - Comercial",
+      "destino": "Discoteca / Sala baile / Eventos / Conciertos",
+      "formula_vehiculos": "ceil(sup / 50)",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    },
+    {
+      "id": "fuente_soda_bar",
+      "categoria": "Equipamiento - Comercial",
+      "destino": "Fuente de soda / Bar",
+      "formula_vehiculos": "ceil(sup / 75)",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    },
+    {
+      "id": "venta_autos",
+      "categoria": "Equipamiento - Comercial",
+      "destino": "Venta autos / Servicio automotor",
+      "formula_vehiculos": "max(3, ceil(sup / 150))",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    },
+    {
+      "id": "venta_combustibles",
+      "categoria": "Equipamiento - Comercial",
+      "destino": "Venta combustibles / Maquinarias",
+      "formula_vehiculos": "max(3, ceil(sup / 150))",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    },
+    {
+      "id": "oficinas",
+      "categoria": "Equipamiento - Servicios",
+      "destino": "Oficinas / Servicios profesionales / Bancos",
+      "formula_vehiculos": "ceil(sup / 50)",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    },
+    {
+      "id": "call_center",
+      "categoria": "Equipamiento - Servicios",
+      "destino": "Call center",
+      "formula_vehiculos": "ceil(sup / 30)",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    },
+    {
+      "id": "templos",
+      "categoria": "Equipamiento - Culto y Cultura",
+      "destino": "Templos / Catedrales / Iglesias",
+      "formula_vehiculos": "ceil(sup / 80)",
+      "formula_bicicletas": "max(5, ceil(vehiculos / 5))"
+    },
+    {
+      "id": "museos_bibliotecas",
+      "categoria": "Equipamiento - Culto y Cultura",
+      "destino": "Museos / Bibliotecas / Centros culturales",
+      "formula_vehiculos": "ceil(sup / 150)",
+      "formula_bicicletas": "max(5, ceil(vehiculos / 5))"
+    },
+    {
+      "id": "cines_teatros",
+      "categoria": "Equipamiento - Culto y Cultura",
+      "destino": "Cines / Teatros / Auditorios",
+      "formula_vehiculos": "ceil(personas / 30)",
+      "formula_bicicletas": "max(5, ceil(vehiculos / 5))"
+    },
+    {
+      "id": "actividad_productiva",
+      "categoria": "Actividad Productiva",
+      "destino": "Actividad productiva inofensiva",
+      "formula_vehiculos": "max(3, ceil(sup / 180))",
+      "formula_bicicletas": "max(3, ceil(vehiculos / 3))",
+      "nota": "+ceil(sup/300) buses"
+    },
+    {
+      "id": "almacenamiento",
+      "categoria": "Actividad Productiva",
+      "destino": "Almacenamiento > 200m²",
+      "formula_vehiculos": "max(3, ceil(sup / 200))",
+      "formula_bicicletas": "ceil(vehiculos / 4)",
+      "nota": "+ceil(sup/350) camiones"
+    },
+    {
+      "id": "talleres",
+      "categoria": "Actividad Productiva",
+      "destino": "Talleres",
+      "formula_vehiculos": "ceil(sup / 200)",
+      "formula_bicicletas": "ceil(vehiculos / 2)",
+      "nota": "+ceil(sup/250) buses"
+    },
+    {
+      "id": "talleres_reparacion",
+      "categoria": "Actividad Productiva",
+      "destino": "Talleres reparación / Garajes / Rev. técnica",
+      "formula_vehiculos": "max(3, ceil(sup / 150))",
+      "formula_bicicletas": "ceil(vehiculos / 5)"
+    }
+  ]
+}
