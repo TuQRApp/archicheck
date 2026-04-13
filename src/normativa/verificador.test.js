@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, test, expect } from "vitest";
 import { verificarProyecto } from "./verificador.js";
 import { calcularEstacionamientos } from "./estacionamientos.js";
 
@@ -166,5 +166,28 @@ describe("calcularEstacionamientos — ID inválido", () => {
     expect(r.vehiculos).toBe(0);
     expect(r.bicicletas).toBe(0);
     expect(r.regla).toBeNull();
+  });
+});
+
+import { verificarNormativaNacional } from "./verificador.js";
+
+describe("verificarNormativaNacional", () => {
+  test("obra_nueva incluye permiso DOM y recepción final", () => {
+    const res = verificarNormativaNacional(["obra_nueva"]);
+    const ids = res.map(r => r.referencia);
+    expect(ids.some(r => r.includes("116"))).toBe(true);
+    expect(ids.some(r => r.includes("118"))).toBe(true);
+  });
+
+  test("todos incluye carga de ocupación y resistencia al fuego", () => {
+    const res = verificarNormativaNacional(["todos"]);
+    expect(res.length).toBeGreaterThan(0);
+    expect(res.some(r => r.referencia.includes("4.2.4"))).toBe(true);
+    expect(res.some(r => r.referencia.includes("4.3.3"))).toBe(true);
+  });
+
+  test("patrimonio incluye regla de protección patrimonial", () => {
+    const res = verificarNormativaNacional(["patrimonio"]);
+    expect(res.some(r => r.referencia.includes("60"))).toBe(true);
   });
 });

@@ -1,5 +1,6 @@
 import normasNunoa    from "../../normativa/nunoa/normas_edificacion.json";
 import patrimonioNunoa from "../../normativa/nunoa/patrimonio.json";
+import reglasNacionales from "../../normativa/nacional/reglas_verificacion.json";
 
 // ── Índices por comunaId ────────────────────────────────────────────────────
 const NORMAS = { nunoa: normasNunoa };
@@ -65,6 +66,27 @@ function resolverNormas(zonaId, patriId, comunaId) {
 // ── Verificador principal ───────────────────────────────────────────────────
 
 /**
+ * Verifica las reglas de normativa nacional que aplican al tipo de proyecto.
+ * @param {string[]} tiposProyecto - ej: ['obra_nueva', 'residencial']
+ * @returns {Array<{parametro, propuesto, limiteNormativo, cumple, observacion, referencia}>}
+ */
+export function verificarNormativaNacional(tiposProyecto = []) {
+  const reglasAplicables = reglasNacionales.reglas.filter(regla =>
+    regla.aplica_a.includes("todos") ||
+    regla.aplica_a.some(t => tiposProyecto.includes(t))
+  );
+
+  return reglasAplicables.map(regla => ({
+    parametro: regla.descripcion,
+    propuesto: "A verificar en expediente",
+    limiteNormativo: regla.referencia,
+    cumple: null,   // null = requiere revisión manual, no es automático
+    observacion: regla.verificacion,
+    referencia: regla.referencia,
+  }));
+}
+
+/**
  * Verifica un proyecto contra la normativa.
  *
  * @param {object} proyecto
@@ -76,6 +98,7 @@ function resolverNormas(zonaId, patriId, comunaId) {
  * @param {number} [proyecto.antejardínProyectado]  - metros
  * @param {number} [proyecto.densidadProyectada]    - hab/há
  * @param {number} [proyecto.anchoCalleFrentera]    - metros (para Art. 18)
+ * @param {string[]} [proyecto.tiposProyecto] - ej: ['obra_nueva','residencial']
  *
  * @param {string} zonaId    - ej: 'Z-3'
  * @param {string} [comunaId='nunoa']
@@ -236,6 +259,11 @@ export function verificarProyecto(proyecto, zonaId, comunaId = "nunoa", patriId 
       ));
     }
   }
+
+  // Agregar alertas de normativa nacional según tipo de proyecto
+  const tiposProyecto = proyecto.tiposProyecto ?? ["todos"];
+  const alertasNacionales = verificarNormativaNacional(tiposProyecto);
+  resultados.push(...alertasNacionales);
 
   return resultados;
 }
