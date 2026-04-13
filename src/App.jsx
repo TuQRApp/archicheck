@@ -104,7 +104,7 @@ function repairAndParse(str) {
 }
 
 // ── Prompt ─────────────────────────────────────────────────────────────────
-function buildPrompt(tipo, comuna, archivos) {
+function buildPrompt(tipo, comuna, archivos, modo = "parcial") {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
   const lista = archivos.map((f, i) => {
     const tag = f.pdfImages?.length
@@ -146,6 +146,9 @@ ${lista}
 
 Usa la normativa anterior como base de tu análisis. Cita el artículo exacto
 cuando detectes cumplimiento o incumplimiento.
+${modo === "completo"
+  ? `MODO EXPEDIENTE COMPLETO: Verifica rigurosamente si el expediente contiene TODOS los documentos obligatorios para un proyecto ${TIPOS.find(t => t.id === tipo)?.label ?? tipo}. Lista en documentos_faltantes cada documento obligatorio ausente con su artículo de referencia y criticidad. Penaliza el puntaje_global si faltan documentos críticos.`
+  : `MODO PARCIAL: Analiza solo los archivos adjuntos sin penalizar por documentos no subidos.`}
 
 Responde SOLO con JSON puro sin markdown:
 {"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","documentos_faltantes":[{"nombre":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA"}],"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
@@ -216,6 +219,7 @@ export default function ArchiCheck() {
   const [error,      setError]      = useState("");
   const [expandido,  setExpandido]  = useState({});
   const [dragOver,   setDragOver]   = useState(false);
+  const [modoAnalisis, setModoAnalisis] = useState("parcial");
   const inputRef = useRef();
 
   // ── Manejo de archivos ─────────────────────────────────────────────────
@@ -263,7 +267,7 @@ export default function ArchiCheck() {
           }
         }
       }
-      content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos) });
+      content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, modoAnalisis) });
 
       setProgress("Analizando contra normativa OGUC / LGUC...");
 
@@ -359,16 +363,11 @@ export default function ArchiCheck() {
                   {TIPOS.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
                 </select>
               </label>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                  COMUNA *
-                </span>
-                <SelectorComuna
-                  value={comuna}
-                  onChange={setComuna}
-                  required={true}
-                />
-              </div>
+              <SelectorComuna
+                value={comuna}
+                onChange={setComuna}
+                required={true}
+              />
             </div>
 
             {/* Drop zone */}
@@ -413,6 +412,23 @@ export default function ArchiCheck() {
                 </div>
               </div>
             )}
+
+            {/* Modo de análisis */}
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ fontSize: 10, color: "#334155", letterSpacing: "2px", marginBottom: 8 }}>MODO DE ANÁLISIS</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                {[
+                  { id: "parcial",  label: "Analizar lo subido",       desc: "Revisa solo los archivos adjuntos" },
+                  { id: "completo", label: "Validar expediente completo", desc: "Exige todos los documentos obligatorios" },
+                ].map(m => (
+                  <button key={m.id} onClick={() => setModoAnalisis(m.id)}
+                    style={{ background: modoAnalisis === m.id ? "rgba(59,130,246,0.12)" : "rgba(10,22,40,0.6)", border: `1px solid ${modoAnalisis === m.id ? "rgba(59,130,246,0.5)" : "#1e3a5f"}`, borderRadius: 8, padding: "10px 12px", textAlign: "left", cursor: "pointer", transition: "all .15s" }}>
+                    <div style={{ fontSize: 12, fontWeight: 500, color: modoAnalisis === m.id ? "#93c5fd" : "#64748b", fontFamily: "inherit", marginBottom: 2 }}>{m.label}</div>
+                    <div style={{ fontSize: 10, color: modoAnalisis === m.id ? "#1e4d7a" : "#1e3a5f", fontFamily: "inherit" }}>{m.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Botón analizar */}
             <button onClick={analizar}
