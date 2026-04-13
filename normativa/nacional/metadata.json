@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "descripcion": "Normativa nacional chilena para verificación de proyectos de arquitectura",
+  "instrumentos": [
+    {
+      "id": "oguc",
+      "nombre": "Ordenanza General de Urbanismo y Construcciones",
+      "decreto": "47",
+      "ministerio": "Ministerio de Vivienda y Urbanismo",
+      "ultima_version": "2026-03-29",
+      "total_articulos": 644,
+      "articulos_indexados": 35
+    },
+    {
+      "id": "lguc",
+      "nombre": "Ley General de Urbanismo y Construcciones",
+      "decreto": "458",
+      "ministerio": "Ministerio de Vivienda y Urbanismo",
+      "ultima_version": "2026-03-29",
+      "total_articulos": 234,
+      "articulos_indexados": 14
+    },
+    {
+      "id": "ley19300",
+      "nombre": "Ley sobre Bases Generales del Medio Ambiente",
+      "numero": "19300",
+      "ministerio": "Ministerio Secretaría General de la Presidencia",
+      "ultima_version": "2024-04-10",
+      "total_articulos": 126,
+      "articulos_indexados": 10
+    }
+  ]
+}

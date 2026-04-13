@@ -1,0 +1,128 @@
+{
+  "fuente": "normativa_nacional_chile",
+  "descripcion": "Reglas de verificación automática derivadas de OGUC, LGUC y Ley 19300",
+  "reglas": [
+    {
+      "id": "permiso_construccion_obligatorio",
+      "descripcion": "Todo proyecto de construcción nueva, reconstrucción, reparación, alteración, ampliación o demolición requiere permiso municipal",
+      "referencia": "LGUC Art. 116",
+      "aplica_a": [
+        "obra_nueva",
+        "ampliacion",
+        "reparacion",
+        "alteracion",
+        "demolicion"
+      ],
+      "verificacion": "Confirmar que expediente incluye solicitud de permiso DOM"
+    },
+    {
+      "id": "recepcion_final_obligatoria",
+      "descripcion": "Toda edificación requiere recepción final antes de ser habitada o usada",
+      "referencia": "LGUC Art. 118",
+      "aplica_a": [
+        "obra_nueva",
+        "ampliacion"
+      ],
+      "verificacion": "Confirmar que expediente incluye tramitación de recepción final"
+    },
+    {
+      "id": "accesibilidad_universal",
+      "descripcion": "Todo edificio de uso público y vía pública debe cumplir condiciones de accesibilidad universal",
+      "referencia": "OGUC Art. 4.1.1 – 4.1.7",
+      "aplica_a": [
+        "equipamiento",
+        "comercio",
+        "servicios",
+        "educacion",
+        "salud",
+        "cultura"
+      ],
+      "verificacion": "Verificar rampas, pasillos mínimos 1.5m, baños accesibles, estacionamientos discapacidad"
+    },
+    {
+      "id": "carga_ocupacion",
+      "descripcion": "Todo proyecto debe calcular la carga de ocupación según OGUC Art. 4.2.4 para determinar salidas de emergencia y estacionamientos",
+      "referencia": "OGUC Art. 4.2.4",
+      "aplica_a": [
+        "todos"
+      ],
+      "verificacion": "Confirmar que memoria de cálculo incluye carga de ocupación"
+    },
+    {
+      "id": "resistencia_al_fuego",
+      "descripcion": "Los elementos estructurales deben cumplir resistencia al fuego según destino y altura del edificio",
+      "referencia": "OGUC Art. 4.3.3",
+      "aplica_a": [
+        "todos"
+      ],
+      "verificacion": "Verificar especificaciones técnicas de estructura y tabique"
+    },
+    {
+      "id": "vias_evacuacion",
+      "descripcion": "Todo edificio debe contar con vías de evacuación y escaleras de emergencia según OGUC",
+      "referencia": "OGUC Art. 4.3.4 – 4.3.5",
+      "aplica_a": [
+        "todos"
+      ],
+      "verificacion": "Verificar ancho mínimo de pasillos, escaleras y distancia máxima a salida"
+    },
+    {
+      "id": "ventilacion_iluminacion",
+      "descripcion": "Todo recinto habitable debe tener ventilación e iluminación natural mínima",
+      "referencia": "OGUC Art. 4.2.5 – 4.2.6",
+      "aplica_a": [
+        "residencial",
+        "equipamiento"
+      ],
+      "verificacion": "Verificar superficies de ventana ≥ 10% superficie del recinto"
+    },
+    {
+      "id": "altura_minima_pisos",
+      "descripcion": "Altura mínima libre de piso a cielo: 2.30m en recintos habitables, 2.20m en baños y cocinas",
+      "referencia": "OGUC Art. 4.2.7",
+      "aplica_a": [
+        "residencial",
+        "equipamiento"
+      ],
+      "verificacion": "Verificar cotas de altura en planos de corte"
+    },
+    {
+      "id": "seia_obligatorio",
+      "descripcion": "Proyectos que superen umbrales de tamaño, impacto o localización deben ingresar al SEIA",
+      "referencia": "Ley 19300 Art. 10",
+      "aplica_a": [
+        "obra_nueva",
+        "ampliacion"
+      ],
+      "verificacion": "Verificar si proyecto supera umbrales del Art. 10 Ley 19300 o Reglamento SEIA"
+    },
+    {
+      "id": "cambio_destino",
+      "descripcion": "El cambio de destino de una edificación requiere cumplir normas del nuevo uso y tramitación ante DOM",
+      "referencia": "LGUC Art. 57 – 59",
+      "aplica_a": [
+        "cambio_destino"
+      ],
+      "verificacion": "Verificar que expediente incluye solicitud de cambio de destino con cumplimiento de nueva normativa"
+    },
+    {
+      "id": "urbanizacion_previa",
+      "descripcion": "Todo proyecto que contemple nuevos lotes debe contar con urbanización completa previa a la edificación",
+      "referencia": "OGUC Art. 3.2.1 – 3.2.3",
+      "aplica_a": [
+        "loteo",
+        "subdivision"
+      ],
+      "verificacion": "Verificar factibilidades de agua potable, alcantarillado, electricidad y pavimentación"
+    },
+    {
+      "id": "proteccion_patrimonio",
+      "descripcion": "Intervenciones en inmuebles o zonas de conservación histórica requieren autorización del CMN o DOM según corresponda",
+      "referencia": "LGUC Art. 60",
+      "aplica_a": [
+        "patrimonio"
+      ],
+      "verificacion": "Verificar si predio está en zona o inmueble patrimonial y si cuenta con autorización correspondiente"
+    }
+  ]
+}
