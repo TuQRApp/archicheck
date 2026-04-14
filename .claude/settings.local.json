@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npx vitest:*)",
+      "Read(//tmp/**)",
+      "Bash(dir \"C:\\\\Program Files\\\\nodejs\")",
+      "Bash(\"/c/Users/nicolas.estragues/Documents/Claude/node.exe\" --version)",
+      "Bash(\"/c/Users/nicolas.estragues/Documents/Claude/node.exe\" \"/c/Users/nicolas.estragues/Documents/Claude/node_modules/npm/bin/npx-cli.js\" vitest run src/normativa/verificador.test.js --reporter=verbose)",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" add src/normativa/verificador.js src/normativa/verificador.test.js)",
+      "Bash(git -C C:/Users/nicolas.estragues/Documents/Claude/archicheck commit -m ':*)",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"integrar normativa nacional OGUC LGUC Ley19300 al verificador\")",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" push)",
+      "Bash(\"/c/Users/nicolas.estragues/Documents/Claude/node.exe\" \"/c/Users/nicolas.estragues/Documents/Claude/node_modules/npm/bin/npx-cli.js\" vite build --mode development)",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" add src/App.jsx)",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"incluir normativa nacional OGUC LGUC en prompt de analisis\")",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"corregir label duplicado de comuna y agregar modo de analisis parcial/completo\")",
+      "Bash(\"/c/Users/nicolas.estragues/Documents/Claude/node.exe\" -e \"require\\('fs'\\).copyFileSync\\('C:/Users/nicolas.estragues/Documents/Claude/archicheck/Readme/ArchiCheck_Guia_Normativa.pdf','C:/Users/nicolas.estragues/Documents/Claude/archicheck/public/ArchiCheck_Guia_Normativa.pdf'\\)\")",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" add src/App.jsx public/ArchiCheck_Guia_Normativa.pdf)",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"agregar link Como funciona ArchiCheck con PDF de guia normativa\")",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"bloquear DWG, modal instrucciones exportacion, alerta no legible\")",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"rediseno paleta institucional chilena: azul blanco gris\")",
+      "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"aplicar Inter como fuente principal en todo el proyecto\")",
+      "Bash(claude install:*)"
+    ]
+  }
+}

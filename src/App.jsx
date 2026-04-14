@@ -5,11 +5,12 @@ import ogucArticulos from "../normativa/nacional/oguc_articulos.json";
 import lgucArticulos from "../normativa/nacional/lguc_articulos.json";
 import ley19300Articulos from "../normativa/nacional/ley19300_articulos.json";
 import reglasNacionales from "../normativa/nacional/reglas_verificacion.json";
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://unpkg.com/pdfjs-dist@5.6.205/build/pdf.worker.min.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
-// ── IMPORTANTE: reemplaza esta URL con la de tu Worker desplegado ──────────
-const WORKER_URL = "https://archicheck-worker.nestragues.workers.dev";
+const WORKER_URL = import.meta.env.VITE_WORKER_URL;
 
 // ── Tipos de proyecto ──────────────────────────────────────────────────────
 const TIPOS = [
