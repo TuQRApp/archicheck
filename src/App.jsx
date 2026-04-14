@@ -5,10 +5,8 @@ import ogucArticulos from "../normativa/nacional/oguc_articulos.json";
 import lgucArticulos from "../normativa/nacional/lguc_articulos.json";
 import ley19300Articulos from "../normativa/nacional/ley19300_articulos.json";
 import reglasNacionales from "../normativa/nacional/reglas_verificacion.json";
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).href;
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://unpkg.com/pdfjs-dist@5.6.205/build/pdf.worker.min.mjs";
 
 // ── IMPORTANTE: reemplaza esta URL con la de tu Worker desplegado ──────────
 const WORKER_URL = "https://archicheck-worker.nestragues.workers.dev";
@@ -399,7 +397,7 @@ export default function ArchiCheck() {
         <div style={{ textAlign: "right", lineHeight: 1.8 }}>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.6)" }}>OGUC · LGUC · NCh · SEIA</div>
           <a href="/ArchiCheck_Guia_Normativa.pdf" target="_blank" rel="noopener noreferrer"
-            style={{ fontSize: 10, color: "#A8BFEE", textDecoration: "none", letterSpacing: "0.03em" }}>
+            style={{ fontSize: 13, fontWeight: 700, color: "#A8BFEE", textDecoration: "none", letterSpacing: "0.03em" }}>
             ¿Cómo funciona ArchiCheck?
           </a>
         </div>
@@ -415,7 +413,7 @@ export default function ArchiCheck() {
             <div style={{ marginBottom: 32 }}>
               <h1 style={{ fontFamily: "'Inter', sans-serif", fontSize: 30, fontWeight: 800, color: "#1B3A8A", margin: "0 0 8px", lineHeight: 1.15 }}>
                 Sube el expediente.<br/>
-                <span style={{ color: "#2952A3" }}>La IA hace la revisión.</span>
+                <span style={{ color: "#2952A3" }}>Hacemos la revisión por ti.</span>
               </h1>
               <p style={{ color: "#6B7A99", fontSize: 13, margin: 0, lineHeight: 1.7 }}>
                 PDFs de planos, memorias, especificaciones, formularios MINVU.<br/>
