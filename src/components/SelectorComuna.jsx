@@ -117,9 +117,9 @@ export default function SelectorComuna({
             opacity: disabled ? 0.5 : 1,
           }}
         >
-          <option value="">— Selecciona una comuna —</option>
+          <option value="" style={{ color: "#000" }}>— Selecciona una comuna —</option>
           {comunas.map(c => (
-            <option key={c.id} value={c.id}>
+            <option key={c.id} value={c.id} style={{ color: "#000" }}>
               {c.nombre} — {c.prc_version ?? c.prc_nombre}
             </option>
           ))}
