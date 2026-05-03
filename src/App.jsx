@@ -666,18 +666,32 @@ export default function ArchiCheck() {
                                 </button>
                               </div>
                               {f.escalasPorPagina.filter(ep => f.paginasSeleccionadas.includes(ep.pagina)).map(ep => (
-                                <div key={ep.pagina} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 5 }}>
-                                  <span style={{ fontSize: 11, color: "#6B7A99", minWidth: 50, flexShrink: 0 }}>Pág. {ep.pagina}</span>
-                                  <select value={ep.escala} onChange={e => setEscalaPagina(i, ep.pagina, e.target.value)}
-                                    style={{ background: "#FFFFFF", border: "1px solid #D1D9EE", borderRadius: 5, padding: "3px 7px", color: "#3D4A5C", fontSize: 11, fontFamily: "inherit", cursor: "pointer" }}>
-                                    <option value="">—</option>
-                                    {ESCALAS.map(s => <option key={s} value={s}>{s}</option>)}
-                                  </select>
-                                  <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: ep.screenshot ? "#1E8449" : "#2952A3", background: ep.screenshot ? "rgba(30,132,73,0.06)" : "rgba(74,114,196,0.06)", border: `1px solid ${ep.screenshot ? "rgba(30,132,73,0.3)" : "#D1D9EE"}`, borderRadius: 5, padding: "3px 8px" }}>
-                                    {ep.screenshot ? `✓ ${ep.screenshot.length > 16 ? ep.screenshot.slice(0,16)+"…" : ep.screenshot}` : "+ captura escala"}
-                                    <input type="file" accept="image/*" style={{ display: "none" }}
-                                      onChange={e => handleScaleScreenshot(i, ep.pagina, e.target.files[0])} />
-                                  </label>
+                                <div key={ep.pagina} style={{ marginBottom: 8 }}>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
+                                    <span style={{ fontSize: 11, color: "#6B7A99", minWidth: 50, flexShrink: 0 }}>Pág. {ep.pagina}</span>
+                                    <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: ep.screenshot ? "#1E8449" : "#2952A3", background: ep.screenshot ? "rgba(30,132,73,0.06)" : "rgba(74,114,196,0.06)", border: `1px solid ${ep.screenshot ? "rgba(30,132,73,0.3)" : "#D1D9EE"}`, borderRadius: 5, padding: "3px 8px" }}>
+                                      {ep.screenshot ? `✓ ${ep.screenshot.length > 16 ? ep.screenshot.slice(0,16)+"…" : ep.screenshot}` : "+ captura de escala"}
+                                      <input type="file" accept="image/*" style={{ display: "none" }}
+                                        onChange={e => handleScaleScreenshot(i, ep.pagina, e.target.files[0])} />
+                                    </label>
+                                    {ep.screenshot && (
+                                      <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                                        <span style={{ fontSize: 10, color: ep.escala ? "#3D4A5C" : "#D68910", whiteSpace: "nowrap" }}>
+                                          ¿Qué escala muestra?
+                                        </span>
+                                        <select value={ep.escala} onChange={e => setEscalaPagina(i, ep.pagina, e.target.value)}
+                                          style={{ background: "#FFFFFF", border: `1px solid ${ep.escala ? "#D1D9EE" : "#D68910"}`, borderRadius: 5, padding: "3px 7px", color: ep.escala ? "#3D4A5C" : "#D68910", fontSize: 11, fontFamily: "inherit", cursor: "pointer" }}>
+                                          <option value="">— indicar —</option>
+                                          {ESCALAS.map(s => <option key={s} value={s}>{s}</option>)}
+                                        </select>
+                                      </div>
+                                    )}
+                                  </div>
+                                  {ep.screenshot && !ep.escala && (
+                                    <div style={{ paddingLeft: 57, marginTop: 3, fontSize: 10, color: "#D68910" }}>
+                                      Indica la escala de esta captura para que Claude pueda usarla correctamente
+                                    </div>
+                                  )}
                                 </div>
                               ))}
                             </div>
