@@ -344,6 +344,7 @@ export default function ArchiCheck() {
   const [modalDwg, setModalDwg] = useState(false);
   const [dwgBloqueado, setDwgBloqueado] = useState(false);
   const [preguntas, setPreguntas] = useState({ situacion: "", analizarSituacion: "", niveles: "" });
+  const [obsStatus, setObsStatus] = useState({});
   const inputRef = useRef();
 
   // ── Manejo de archivos ─────────────────────────────────────────────────
@@ -426,10 +427,22 @@ export default function ArchiCheck() {
   }));
   const toggle = (k) => setExpandido(prev => ({ ...prev, [k]: !prev[k] }));
 
+  const setObsAction = (docIdx, obsIdx, action) => {
+    const key = `${docIdx}-${obsIdx}`;
+    setObsStatus(prev => ({
+      ...prev,
+      [key]: { ...prev[key], status: prev[key]?.status === action ? null : action },
+    }));
+  };
+  const setObsComment = (docIdx, obsIdx, comment) => {
+    const key = `${docIdx}-${obsIdx}`;
+    setObsStatus(prev => ({ ...prev, [key]: { ...prev[key], comment } }));
+  };
+
   // ── Análisis ───────────────────────────────────────────────────────────
   async function analizar() {
     if (!archivos.length) return;
-    setLoading(true); setError(""); setResult(null);
+    setLoading(true); setError(""); setResult(null); setObsStatus({});
     try {
       // Construir content (imágenes primero, luego el prompt)
       setProgress("Convirtiendo PDFs a imágenes...");
@@ -954,22 +967,36 @@ export default function ArchiCheck() {
 
             {/* Métricas */}
             {(() => {
-              const totalObs = (result.analisis_por_archivo || []).reduce((s, a) => s + (a.observaciones?.length || 0), 0);
-              const altas    = (result.analisis_por_archivo || []).reduce((s, a) => s + (a.observaciones?.filter(o => o.criticidad === "ALTA").length || 0), 0);
+              const totalObs    = (result.analisis_por_archivo || []).reduce((s, a) => s + (a.observaciones?.length || 0), 0);
+              const altas       = (result.analisis_por_archivo || []).reduce((s, a) => s + (a.observaciones?.filter(o => o.criticidad === "ALTA").length || 0), 0);
+              const resueltas   = Object.values(obsStatus).filter(s => s?.status).length;
               return (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10, marginBottom: 26 }}>
-                  {[
-                    { n: archivos.length,                           label: "Archivos",       c: "#3b82f6" },
-                    { n: totalObs,                                   label: "Observaciones",  c: "#f59e0b" },
-                    { n: altas,                                      label: "Críticas",       c: "#ef4444" },
-                    { n: result.documentos_faltantes?.length || 0,  label: "Docs faltantes", c: "#2952A3" },
-                  ].map(m => (
-                    <div key={m.label} style={{ background: "#F4F6FB", border: "1px solid #D1D9EE", borderRadius: 10, padding: "14px 10px", textAlign: "center" }}>
-                      <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: m.c, lineHeight: 1 }}>{m.n}</div>
-                      <div style={{ fontSize: 10, color: "#6B7A99", marginTop: 3 }}>{m.label}</div>
+                <>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10, marginBottom: 12 }}>
+                    {[
+                      { n: totalObs,                                  label: "Observaciones",  c: "#f59e0b" },
+                      { n: altas,                                     label: "Críticas",       c: "#ef4444" },
+                      { n: result.documentos_faltantes?.length || 0, label: "Docs faltantes", c: "#2952A3" },
+                      { n: resueltas,                                 label: "Resueltas",      c: "#1E8449" },
+                    ].map(m => (
+                      <div key={m.label} style={{ background: "#F4F6FB", border: "1px solid #D1D9EE", borderRadius: 10, padding: "14px 10px", textAlign: "center" }}>
+                        <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: m.c, lineHeight: 1 }}>{m.n}</div>
+                        <div style={{ fontSize: 10, color: "#6B7A99", marginTop: 3 }}>{m.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {totalObs > 0 && (
+                    <div style={{ marginBottom: 26 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#6B7A99", marginBottom: 5 }}>
+                        <span>Progreso de revisión</span>
+                        <span style={{ color: resueltas === totalObs ? "#1E8449" : "#6B7A99" }}>{resueltas} / {totalObs} observaciones resueltas</span>
+                      </div>
+                      <div style={{ background: "#EEF2FB", borderRadius: 99, height: 4, overflow: "hidden" }}>
+                        <div style={{ width: `${totalObs ? (resueltas / totalObs) * 100 : 0}%`, height: "100%", borderRadius: 99, background: "linear-gradient(90deg,#1E844980,#1E8449)", transition: "width .4s ease" }} />
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               );
             })()}
 
@@ -1042,17 +1069,64 @@ export default function ArchiCheck() {
                               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                                 {doc.observaciones.map((obs, j) => {
                                   const cs = critStyle(obs.criticidad);
+                                  const obsKey = `${i}-${j}`;
+                                  const obsState = obsStatus[obsKey];
+                                  const isResolved = !!obsState?.status;
+                                  const OBS_ACTIONS = [
+                                    { id: "aceptada",   label: "✅ Aceptar",   color: "#1E8449" },
+                                    { id: "comentada",  label: "💬 Comentar",  color: "#2952A3" },
+                                    { id: "modificada", label: "✏️ Modificar", color: "#D68910" },
+                                    { id: "descartada", label: "🗑️ Descartar", color: "#6B7A99" },
+                                  ];
+                                  const STATUS_LABELS = { aceptada: "Aceptada", comentada: "Comentada", modificada: "Modificada", descartada: "Descartada" };
+                                  const STATUS_COLORS = { aceptada: "#1E8449", comentada: "#2952A3", modificada: "#D68910", descartada: "#6B7A99" };
                                   return (
-                                    <div key={j} className="obs-card" style={{ ...cs, borderRadius: 8, padding: "12px 14px", transition: "border-color .15s" }}>
+                                    <div key={j} className="obs-card" style={{ ...cs, borderRadius: 8, padding: "12px 14px", transition: "border-color .15s", opacity: obsState?.status === "descartada" ? 0.5 : 1 }}>
                                       <div style={{ display: "flex", justifyContent: "space-between", gap: 10, marginBottom: 6 }}>
                                         <div style={{ fontSize: 13, color: "#3D4A5C", lineHeight: 1.5, flex: 1 }}>{obs.descripcion}</div>
-                                        <span style={{ fontSize: 10, fontWeight: 700, color: cs.color, background: cs.background, border: cs.border, borderRadius: 4, padding: "2px 8px", flexShrink: 0, alignSelf: "flex-start" }}>{obs.criticidad}</span>
+                                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
+                                          <span style={{ fontSize: 10, fontWeight: 700, color: cs.color, background: cs.background, border: cs.border, borderRadius: 4, padding: "2px 8px" }}>{obs.criticidad}</span>
+                                          {isResolved && (
+                                            <span style={{ fontSize: 10, fontWeight: 600, color: STATUS_COLORS[obsState.status], background: STATUS_COLORS[obsState.status] + "18", border: `1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius: 4, padding: "1px 7px", whiteSpace: "nowrap" }}>
+                                              ✓ {STATUS_LABELS[obsState.status]}
+                                            </span>
+                                          )}
+                                        </div>
                                       </div>
-                                      <div style={{ fontSize: 11, color: "#2952A3", marginBottom: obs.correccion ? 6 : 0 }}>📘 {obs.articulo}</div>
+                                      {/* § Badges artículo */}
+                                      {obs.articulo && (
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: obs.correccion ? 8 : 6 }}>
+                                          {obs.articulo.split(/[,;]/).map(p => p.trim()).filter(Boolean).map((p, pi) => (
+                                            <span key={pi} style={{ fontSize: 10, color: "#2952A3", background: "rgba(41,82,163,0.08)", border: "1px solid rgba(41,82,163,0.2)", borderRadius: 4, padding: "2px 7px", fontFamily: "'DM Mono', monospace" }}>
+                                              § {p}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      )}
                                       {obs.correccion && (
-                                        <div style={{ fontSize: 12, color: "#6B7A99", borderTop: "1px solid #D1D9EE", paddingTop: 8, marginTop: 4, lineHeight: 1.5 }}>
+                                        <div style={{ fontSize: 12, color: "#6B7A99", borderTop: "1px solid #D1D9EE", paddingTop: 8, marginTop: 4, lineHeight: 1.5, marginBottom: 8 }}>
                                           <span style={{ color: "#2952A3" }}>→ </span>{obs.correccion}
                                         </div>
+                                      )}
+                                      {/* Acciones */}
+                                      <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+                                        {OBS_ACTIONS.map(action => {
+                                          const active = obsState?.status === action.id;
+                                          return (
+                                            <button key={action.id} onClick={() => setObsAction(i, j, action.id)}
+                                              style={{ padding: "3px 9px", fontSize: 10, borderRadius: 5, border: `1px solid ${active ? action.color : "#D1D9EE"}`, background: active ? action.color + "18" : "transparent", color: active ? action.color : "#6B7A99", cursor: "pointer", fontFamily: "inherit", fontWeight: active ? 700 : 400, transition: "all .15s" }}>
+                                              {action.label}
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                      {obsState?.status === "comentada" && (
+                                        <textarea
+                                          value={obsState?.comment || ""}
+                                          onChange={e => setObsComment(i, j, e.target.value)}
+                                          placeholder="Escribe tu comentario o nota para esta observación..."
+                                          style={{ marginTop: 8, width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "8px 10px", fontSize: 11, fontFamily: "inherit", color: "#3D4A5C", resize: "vertical", minHeight: 60, outline: "none", background: "#FFFFFF" }}
+                                        />
                                       )}
                                     </div>
                                   );
