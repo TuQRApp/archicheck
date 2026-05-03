@@ -475,10 +475,38 @@ export default function ArchiCheck() {
         }),
       });
 
-      const data = await response.json();
-      if (data.error) throw new Error(typeof data.error === "string" ? data.error : data.error.message);
+      // Si la respuesta es JSON (error de Anthropic), lanzar el error
+      const ct = response.headers.get("content-type") || "";
+      if (ct.includes("application/json")) {
+        const data = await response.json();
+        throw new Error(typeof data.error === "string" ? data.error : JSON.stringify(data.error));
+      }
 
-      const raw   = data.content?.map(b => b.text || "").join("") || "";
+      // Leer stream SSE y acumular text_delta
+      setProgress("Recibiendo analisis...");
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let raw = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        for (const line of chunk.split("\n")) {
+          if (!line.startsWith("data: ")) continue;
+          const payload = line.slice(6).trim();
+          if (!payload) continue;
+          try {
+            const evt = JSON.parse(payload);
+            if (evt.type === "content_block_delta" && evt.delta?.type === "text_delta") {
+              raw += evt.delta.text;
+            }
+            if (evt.type === "error") throw new Error(evt.error?.message || JSON.stringify(evt.error));
+          } catch (e) {
+            if (e.message && !e.message.startsWith("JSON")) throw e;
+          }
+        }
+      }
+
       const clean = raw.replace(/```json|```/g, "").trim();
       setResult(repairAndParse(clean));
 
