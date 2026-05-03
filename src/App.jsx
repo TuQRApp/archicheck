@@ -166,7 +166,7 @@ function buildPrompt(tipo, comuna, archivos, modo = "parcial", preguntas = {}) {
         }).join("\n")
     : "";
 
-  const comunaNombre = prcData ? prcData.meta.nombre : (comuna || "la comuna");
+  const comunaNombre = prcData ? prcData.meta.nombre : (comuna || "comuna no especificada");
 
   const contextoLineas = [];
   if (preguntas.situacion) contextoLineas.push(`Expediente contiene: ${preguntas.situacion}`);
@@ -428,7 +428,7 @@ export default function ArchiCheck() {
 
   // ── Análisis ───────────────────────────────────────────────────────────
   async function analizar() {
-    if (!archivos.length || !comuna) return;
+    if (!archivos.length) return;
     setLoading(true); setError(""); setResult(null);
     try {
       // Construir content (imágenes primero, luego el prompt)
@@ -888,8 +888,8 @@ export default function ArchiCheck() {
 
             {/* Botón analizar */}
             <button onClick={analizar}
-              disabled={loading || !archivos.length || !comuna}
-              style={{ width: "100%", padding: "15px", borderRadius: 10, border: "none", fontFamily: "inherit", fontSize: 14, fontWeight: 600, letterSpacing: ".4px", cursor: loading || !archivos.length || !comuna ? "not-allowed" : "pointer", transition: "all .2s", background: loading || !archivos.length || !comuna ? "#B8C5E0" : "linear-gradient(90deg,#1B3A8A,#2952A3)", color: "#FFFFFF" }}>
+              disabled={loading || !archivos.length}
+              style={{ width: "100%", padding: "15px", borderRadius: 10, border: "none", fontFamily: "inherit", fontSize: 14, fontWeight: 600, letterSpacing: ".4px", cursor: loading || !archivos.length ? "not-allowed" : "pointer", transition: "all .2s", background: loading || !archivos.length ? "#B8C5E0" : "linear-gradient(90deg,#1B3A8A,#2952A3)", color: "#FFFFFF" }}>
               {loading ? (
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
                   <span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid #B8C5E0", borderTop: "2px solid #1B3A8A", borderRadius: "50%", animation: "spin .7s linear infinite" }}/>
@@ -899,8 +899,8 @@ export default function ArchiCheck() {
             </button>
 
             {!comuna && archivos.length > 0 && (
-              <p style={{ fontSize: 11, color: "#D68910", textAlign: "center", marginTop: 8 }}>
-                ↑ Ingresa la comuna para habilitar el análisis
+              <p style={{ fontSize: 11, color: "#6B7A99", textAlign: "center", marginTop: 8 }}>
+                Sin comuna seleccionada el análisis no incluirá normativa del PRC local
               </p>
             )}
 
