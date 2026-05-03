@@ -118,8 +118,9 @@ function repairAndParse(str) {
 function buildPrompt(tipo, comuna, archivos, modo = "parcial", preguntas = {}) {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
   const lista = archivos.map((f, i) => {
+    const selCount = f.paginasSeleccionadas?.length ?? f.pdfImages?.length ?? 0;
     const tag = f.pdfImages?.length
-      ? `${f.pdfImages.length} pág. adjunta${f.pdfImages.length > 1 ? "s" : ""} como imagen (de ${f.pdfImages[0].total} total)`
+      ? `${selCount} pág. seleccionada${selCount !== 1 ? "s" : ""} de ${f.pdfImages[0].total} adjunta${selCount !== 1 ? "s" : ""} como imagen`
       : f.isImage ? "imagen adjunta"
       : "[formato no visual — sin contenido extraíble]";
     let escalaInfo = "";
@@ -203,8 +204,8 @@ Responde SOLO con JSON puro sin markdown:
 {"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","documentos_faltantes":[{"nombre":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA"}],"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
 
-// ── PDF → imágenes base64 (máx. 6 páginas) ─────────────────────────────────
-const MAX_PDF_PAGES = 6;
+// ── PDF → thumbnails (todas las páginas, baja res) + full-res bajo demanda ──
+const MAX_PDF_PAGES = 15;
 
 async function pdfPagesToBase64(file) {
   try {
@@ -214,10 +215,33 @@ async function pdfPagesToBase64(file) {
     const images = [];
     for (let i = 1; i <= totalPages; i++) {
       const page = await pdf.getPage(i);
+      // thumb a escala baja para UI; full-res se genera en analizar()
+      const vThumb = page.getViewport({ scale: 0.35 });
+      const cThumb = document.createElement("canvas");
+      cThumb.width = vThumb.width; cThumb.height = vThumb.height;
+      await page.render({ canvasContext: cThumb.getContext("2d"), viewport: vThumb }).promise;
+      images.push({
+        thumb: cThumb.toDataURL("image/jpeg", 0.75),
+        page: i,
+        total: pdf.numPages,
+      });
+    }
+    return images;
+  } catch {
+    return [];
+  }
+}
+
+async function renderPdfPagesFullRes(file, pageNumbers) {
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const images = [];
+    for (const i of pageNumbers) {
+      const page = await pdf.getPage(i);
       const viewport = page.getViewport({ scale: 1.5 });
       const canvas = document.createElement("canvas");
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
+      canvas.width = viewport.width; canvas.height = viewport.height;
       await page.render({ canvasContext: canvas.getContext("2d"), viewport }).promise;
       images.push({ data: canvas.toDataURL("image/jpeg", 0.85).split(",")[1], page: i, total: pdf.numPages });
     }
@@ -298,6 +322,7 @@ export default function ArchiCheck() {
         type: f.type,
         isImage: f.type.startsWith("image/"),
         pdfImages,
+        paginasSeleccionadas: pdfImages?.map(img => img.page) ?? [],
         base64: f.type.startsWith("image/") ? await toBase64(f) : null,
         tipoDoc: "",
         escala: "",
@@ -328,6 +353,13 @@ export default function ArchiCheck() {
       )};
     }));
   }
+  const togglePagina = (fileIdx, pagina) => setArchivos(prev => prev.map((f, idx) => {
+    if (idx !== fileIdx) return f;
+    const sel = f.paginasSeleccionadas.includes(pagina)
+      ? f.paginasSeleccionadas.filter(p => p !== pagina)
+      : [...f.paginasSeleccionadas, pagina].sort((a, b) => a - b);
+    return { ...f, paginasSeleccionadas: sel };
+  }));
   const toggle = (k) => setExpandido(prev => ({ ...prev, [k]: !prev[k] }));
 
   // ── Análisis ───────────────────────────────────────────────────────────
@@ -344,16 +376,20 @@ export default function ArchiCheck() {
           content.push({ type: "text", text: `[Imagen: "${f.name}" — ${f.tipoDoc || "plano"}${f.escala ? ` — escala: ${f.escala}` : ""}]` });
         }
         if (f.pdfImages?.length) {
-          for (const img of f.pdfImages) {
+          const pagSel = f.paginasSeleccionadas?.length ? f.paginasSeleccionadas : f.pdfImages.map(img => img.page);
+          setProgress(`Renderizando ${f.name} (${pagSel.length} página${pagSel.length !== 1 ? "s" : ""})...`);
+          const fullRes = await renderPdfPagesFullRes(f.file, pagSel);
+          const totalPaginas = f.pdfImages[0].total;
+          for (const img of fullRes) {
             const escalaPage = f.escalasMultiples
               ? (f.escalasPorPagina?.find(ep => ep.pagina === img.page)?.escala || "")
               : f.escala;
             content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img.data } });
-            content.push({ type: "text", text: `[PDF: "${f.name}" — página ${img.page}/${img.total} — ${f.tipoDoc || "plano"}${escalaPage ? ` — escala: ${escalaPage}` : ""}]` });
+            content.push({ type: "text", text: `[PDF: "${f.name}" — página ${img.page}/${totalPaginas} — ${f.tipoDoc || "plano"}${escalaPage ? ` — escala: ${escalaPage}` : ""}]` });
           }
           if (f.escalasMultiples) {
             for (const ep of f.escalasPorPagina) {
-              if (ep.screenshotBase64) {
+              if (ep.screenshotBase64 && pagSel.includes(ep.pagina)) {
                 content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: ep.screenshotBase64 } });
                 content.push({ type: "text", text: `[REFERENCIA ESCALA: "${f.name}" — página ${ep.pagina} — escala declarada: ${ep.escala || "no especificada"}]` });
               }
@@ -571,6 +607,39 @@ export default function ArchiCheck() {
                         <button className="rm" onClick={() => removeFile(i)}
                           style={{ background: "none", border: "none", color: "#6B7A99", cursor: "pointer", fontSize: 14, padding: "0 4px", transition: "color .15s" }}>✕</button>
                       </div>
+                      {/* Selección de páginas — todos los PDFs */}
+                      {f.type === "application/pdf" && f.pdfImages?.length > 0 && (
+                        <div style={{ borderTop: "1px solid #D1D9EE", padding: "8px 12px 10px" }}>
+                          <div style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "1px", marginBottom: 7 }}>
+                            PÁGINAS — {f.paginasSeleccionadas.length}/{f.pdfImages.length} seleccionadas
+                            {f.pdfImages[0].total > MAX_PDF_PAGES && (
+                              <span style={{ color: "#D68910", marginLeft: 8 }}>
+                                (PDF tiene {f.pdfImages[0].total} — se muestran primeras {MAX_PDF_PAGES})
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                            {f.pdfImages.map(img => {
+                              const sel = f.paginasSeleccionadas.includes(img.page);
+                              return (
+                                <button key={img.page} onClick={() => togglePagina(i, img.page)}
+                                  title={`Página ${img.page}`}
+                                  style={{ position: "relative", padding: 0, border: `2px solid ${sel ? "#2952A3" : "#D1D9EE"}`, borderRadius: 6, overflow: "hidden", cursor: "pointer", background: "none", opacity: sel ? 1 : 0.45, transition: "all .15s", flexShrink: 0 }}>
+                                  <img src={img.thumb} alt={`Pág. ${img.page}`}
+                                    style={{ display: "block", width: 52, height: 66, objectFit: "cover" }} />
+                                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: sel ? "rgba(27,58,138,0.82)" : "rgba(0,0,0,0.45)", color: "white", fontSize: 9, textAlign: "center", padding: "2px 0", fontFamily: "'DM Mono', monospace" }}>
+                                    {img.page}
+                                  </div>
+                                  {sel && (
+                                    <div style={{ position: "absolute", top: 2, right: 2, width: 13, height: 13, borderRadius: "50%", background: "#2952A3", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: "white", fontWeight: 700 }}>✓</div>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
                       {/* Sección escala — solo para PDFs con tipo relevante */}
                       {f.type === "application/pdf" && TIPOS_DOC_CON_ESCALA.includes(f.tipoDoc) && (
                         <div style={{ borderTop: "1px solid #D1D9EE", padding: "8px 12px 10px" }}>
@@ -596,7 +665,7 @@ export default function ArchiCheck() {
                                   Una sola escala
                                 </button>
                               </div>
-                              {f.escalasPorPagina.map(ep => (
+                              {f.escalasPorPagina.filter(ep => f.paginasSeleccionadas.includes(ep.pagina)).map(ep => (
                                 <div key={ep.pagina} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 5 }}>
                                   <span style={{ fontSize: 11, color: "#6B7A99", minWidth: 50, flexShrink: 0 }}>Pág. {ep.pagina}</span>
                                   <select value={ep.escala} onChange={e => setEscalaPagina(i, ep.pagina, e.target.value)}
