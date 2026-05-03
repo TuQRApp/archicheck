@@ -124,8 +124,10 @@ function buildPrompt(tipo, comuna, archivos, modo = "parcial", preguntas = {}) {
       : f.isImage ? "imagen adjunta"
       : "[formato no visual — sin contenido extraíble]";
     let escalaInfo = "";
-    if (f.escalasMultiples && f.escalasPorPagina?.some(ep => ep.escala)) {
-      escalaInfo = " — Escalas: " + f.escalasPorPagina.filter(ep => ep.escala).map(ep => `pág.${ep.pagina}=${ep.escala}`).join(", ");
+    if (f.escalasMultiples && f.escalasPorPagina?.some(ep => ep.capturas?.some(c => c.escala))) {
+      escalaInfo = " — Escalas: " + f.escalasPorPagina
+        .flatMap(ep => ep.capturas.filter(c => c.escala).map(c => `pág.${ep.pagina}=${c.escala}`))
+        .join(", ");
     } else if (f.escala) {
       escalaInfo = ` — Escala: ${f.escala}`;
     }
@@ -327,7 +329,7 @@ export default function ArchiCheck() {
         tipoDoc: "",
         escala: "",
         escalasMultiples: false,
-        escalasPorPagina: pdfImages?.map(img => ({ pagina: img.page, escala: "", screenshot: "", screenshotBase64: "" })) ?? [],
+        escalasPorPagina: pdfImages?.map(img => ({ pagina: img.page, capturas: [] })) ?? [],
       };
     }));
     setArchivos(prev => [...prev, ...procesados]);
@@ -339,18 +341,34 @@ export default function ArchiCheck() {
   const toggleEscalasMultiples = (i) => setArchivos(prev => prev.map((f, idx) =>
     idx === i ? { ...f, escalasMultiples: !f.escalasMultiples } : f
   ));
-  const setEscalaPagina = (fileIdx, pagina, value) => setArchivos(prev => prev.map((f, idx) => {
+  const addCaptura = (fileIdx, pagina) => setArchivos(prev => prev.map((f, idx) => {
     if (idx !== fileIdx) return f;
-    return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep => ep.pagina === pagina ? { ...ep, escala: value } : ep) };
+    return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep =>
+      ep.pagina === pagina ? { ...ep, capturas: [...ep.capturas, { escala: "", nombre: "", base64: "" }] } : ep
+    )};
   }));
-  async function handleScaleScreenshot(fileIdx, pagina, file) {
+  const removeCaptura = (fileIdx, pagina, ci) => setArchivos(prev => prev.map((f, idx) => {
+    if (idx !== fileIdx) return f;
+    return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep =>
+      ep.pagina === pagina ? { ...ep, capturas: ep.capturas.filter((_, j) => j !== ci) } : ep
+    )};
+  }));
+  const setCapturaEscala = (fileIdx, pagina, ci, value) => setArchivos(prev => prev.map((f, idx) => {
+    if (idx !== fileIdx) return f;
+    return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep => {
+      if (ep.pagina !== pagina) return ep;
+      return { ...ep, capturas: ep.capturas.map((c, j) => j === ci ? { ...c, escala: value } : c) };
+    })};
+  }));
+  async function handleScaleScreenshot(fileIdx, pagina, ci, file) {
     if (!file) return;
     const b64 = await toBase64(file);
     setArchivos(prev => prev.map((f, idx) => {
       if (idx !== fileIdx) return f;
-      return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep =>
-        ep.pagina === pagina ? { ...ep, screenshot: file.name, screenshotBase64: b64 } : ep
-      )};
+      return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep => {
+        if (ep.pagina !== pagina) return ep;
+        return { ...ep, capturas: ep.capturas.map((c, j) => j === ci ? { ...c, nombre: file.name, base64: b64 } : c) };
+      })};
     }));
   }
   const togglePagina = (fileIdx, pagina) => setArchivos(prev => prev.map((f, idx) => {
@@ -382,16 +400,18 @@ export default function ArchiCheck() {
           const totalPaginas = f.pdfImages[0].total;
           for (const img of fullRes) {
             const escalaPage = f.escalasMultiples
-              ? (f.escalasPorPagina?.find(ep => ep.pagina === img.page)?.escala || "")
+              ? (f.escalasPorPagina?.find(ep => ep.pagina === img.page)?.capturas?.find(c => c.escala)?.escala || "")
               : f.escala;
             content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img.data } });
             content.push({ type: "text", text: `[PDF: "${f.name}" — página ${img.page}/${totalPaginas} — ${f.tipoDoc || "plano"}${escalaPage ? ` — escala: ${escalaPage}` : ""}]` });
           }
           if (f.escalasMultiples) {
             for (const ep of f.escalasPorPagina) {
-              if (ep.screenshotBase64 && pagSel.includes(ep.pagina)) {
-                content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: ep.screenshotBase64 } });
-                content.push({ type: "text", text: `[REFERENCIA ESCALA: "${f.name}" — página ${ep.pagina} — escala declarada: ${ep.escala || "no especificada"}]` });
+              if (!pagSel.includes(ep.pagina)) continue;
+              for (const c of ep.capturas) {
+                if (!c.base64) continue;
+                content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: c.base64 } });
+                content.push({ type: "text", text: `[REFERENCIA ESCALA: "${f.name}" — página ${ep.pagina} — escala declarada: ${c.escala || "no especificada"}]` });
               }
             }
           }
@@ -666,30 +686,47 @@ export default function ArchiCheck() {
                                 </button>
                               </div>
                               {f.escalasPorPagina.filter(ep => f.paginasSeleccionadas.includes(ep.pagina)).map(ep => (
-                                <div key={ep.pagina} style={{ marginBottom: 8 }}>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
+                                <div key={ep.pagina} style={{ marginBottom: 10 }}>
+                                  {/* Encabezado de página + botón agregar */}
+                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
                                     <span style={{ fontSize: 11, color: "#6B7A99", minWidth: 50, flexShrink: 0 }}>Pág. {ep.pagina}</span>
-                                    <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: ep.screenshot ? "#1E8449" : "#2952A3", background: ep.screenshot ? "rgba(30,132,73,0.06)" : "rgba(74,114,196,0.06)", border: `1px solid ${ep.screenshot ? "rgba(30,132,73,0.3)" : "#D1D9EE"}`, borderRadius: 5, padding: "3px 8px" }}>
-                                      {ep.screenshot ? `✓ ${ep.screenshot.length > 16 ? ep.screenshot.slice(0,16)+"…" : ep.screenshot}` : "+ captura de escala"}
-                                      <input type="file" accept="image/*" style={{ display: "none" }}
-                                        onChange={e => handleScaleScreenshot(i, ep.pagina, e.target.files[0])} />
-                                    </label>
-                                    {ep.screenshot && (
-                                      <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                                        <span style={{ fontSize: 10, color: ep.escala ? "#3D4A5C" : "#D68910", whiteSpace: "nowrap" }}>
-                                          ¿Qué escala muestra?
-                                        </span>
-                                        <select value={ep.escala} onChange={e => setEscalaPagina(i, ep.pagina, e.target.value)}
-                                          style={{ background: "#FFFFFF", border: `1px solid ${ep.escala ? "#D1D9EE" : "#D68910"}`, borderRadius: 5, padding: "3px 7px", color: ep.escala ? "#3D4A5C" : "#D68910", fontSize: 11, fontFamily: "inherit", cursor: "pointer" }}>
-                                          <option value="">— indicar —</option>
-                                          {ESCALAS.map(s => <option key={s} value={s}>{s}</option>)}
-                                        </select>
-                                      </div>
-                                    )}
+                                    <button onClick={() => addCaptura(i, ep.pagina)}
+                                      style={{ background: "rgba(74,114,196,0.06)", border: "1px solid #D1D9EE", borderRadius: 5, padding: "2px 9px", color: "#2952A3", fontSize: 10, cursor: "pointer", fontFamily: "inherit" }}>
+                                      + captura
+                                    </button>
                                   </div>
-                                  {ep.screenshot && !ep.escala && (
-                                    <div style={{ paddingLeft: 57, marginTop: 3, fontSize: 10, color: "#D68910" }}>
-                                      Indica la escala de esta captura para que Claude pueda usarla correctamente
+                                  {/* Lista de capturas */}
+                                  {ep.capturas.map((c, ci) => (
+                                    <div key={ci} style={{ paddingLeft: 58, marginBottom: 6 }}>
+                                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                                        <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: c.base64 ? "#1E8449" : "#2952A3", background: c.base64 ? "rgba(30,132,73,0.06)" : "rgba(74,114,196,0.06)", border: `1px solid ${c.base64 ? "rgba(30,132,73,0.3)" : "#D1D9EE"}`, borderRadius: 5, padding: "3px 8px" }}>
+                                          {c.base64 ? `✓ ${c.nombre.length > 14 ? c.nombre.slice(0,14)+"…" : c.nombre}` : "Subir captura"}
+                                          <input type="file" accept="image/*" style={{ display: "none" }}
+                                            onChange={e => handleScaleScreenshot(i, ep.pagina, ci, e.target.files[0])} />
+                                        </label>
+                                        {c.base64 && (
+                                          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                                            <span style={{ fontSize: 10, color: c.escala ? "#3D4A5C" : "#D68910", whiteSpace: "nowrap" }}>escala:</span>
+                                            <select value={c.escala} onChange={e => setCapturaEscala(i, ep.pagina, ci, e.target.value)}
+                                              style={{ background: "#FFFFFF", border: `1px solid ${c.escala ? "#D1D9EE" : "#D68910"}`, borderRadius: 5, padding: "3px 7px", color: c.escala ? "#3D4A5C" : "#D68910", fontSize: 11, fontFamily: "inherit", cursor: "pointer" }}>
+                                              <option value="">— indicar —</option>
+                                              {ESCALAS.map(s => <option key={s} value={s}>{s}</option>)}
+                                            </select>
+                                          </div>
+                                        )}
+                                        <button onClick={() => removeCaptura(i, ep.pagina, ci)}
+                                          style={{ background: "none", border: "none", color: "#6B7A99", cursor: "pointer", fontSize: 12, padding: "0 2px", lineHeight: 1 }}>✕</button>
+                                      </div>
+                                      {c.base64 && !c.escala && (
+                                        <div style={{ marginTop: 3, fontSize: 10, color: "#D68910" }}>
+                                          Indica la escala de esta captura
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                  {ep.capturas.length === 0 && (
+                                    <div style={{ paddingLeft: 58, fontSize: 10, color: "#B8C5E0" }}>
+                                      Sin capturas — haz clic en "+ captura" para agregar
                                     </div>
                                   )}
                                 </div>
