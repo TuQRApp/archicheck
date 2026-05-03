@@ -115,7 +115,7 @@ function repairAndParse(str) {
 }
 
 // ── Prompt ─────────────────────────────────────────────────────────────────
-function buildPrompt(tipo, comuna, archivos, modo = "parcial") {
+function buildPrompt(tipo, comuna, archivos, modo = "parcial", preguntas = {}) {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
   const lista = archivos.map((f, i) => {
     const tag = f.pdfImages?.length
@@ -165,6 +165,14 @@ function buildPrompt(tipo, comuna, archivos, modo = "parcial") {
 
   const comunaNombre = prcData ? prcData.meta.nombre : (comuna || "la comuna");
 
+  const contextoLineas = [];
+  if (preguntas.situacion) contextoLineas.push(`Expediente contiene: ${preguntas.situacion}`);
+  if (preguntas.analizarSituacion) contextoLineas.push(`El arquitecto pide analizar: ${preguntas.analizarSituacion}`);
+  if (preguntas.niveles?.trim()) contextoLineas.push(`Niveles a priorizar: ${preguntas.niveles.trim()}`);
+  const contextoTexto = contextoLineas.length
+    ? `\nCONTEXTO DECLARADO POR EL ARQUITECTO:\n${contextoLineas.map(l => `- ${l}`).join("\n")}\n`
+    : "";
+
   return `Eres revisor DOM de Chile experto en LGUC, OGUC, circulares DDU del MINVU, normativas NCh y Plan Regulador de ${comunaNombre}.
 
 NORMATIVA NACIONAL VIGENTE — OGUC (última versión ${ogucArticulos.ultima_version}):
@@ -187,7 +195,7 @@ CIRCULARES DDU VIGENTES (División de Desarrollo Urbano, MINVU):
 - DDU 415: Estacionamientos — dotación mínima según uso y comuna
 
 Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de OGUC, LGUC o la circular DDU correspondiente cuando detectes cumplimiento o incumplimiento.
-${modo === "completo"
+${contextoTexto}${modo === "completo"
   ? `MODO EXPEDIENTE COMPLETO: Verifica rigurosamente si el expediente contiene TODOS los documentos obligatorios para un proyecto ${TIPOS.find(t => t.id === tipo)?.label ?? tipo}. Lista en documentos_faltantes cada documento obligatorio ausente con su artículo de referencia y criticidad. Penaliza el puntaje_global si faltan documentos críticos.`
   : `MODO PARCIAL: Analiza solo los archivos adjuntos sin penalizar por documentos no subidos.`}
 
@@ -263,6 +271,7 @@ export default function ArchiCheck() {
   const [modoAnalisis, setModoAnalisis] = useState("parcial");
   const [modalDwg, setModalDwg] = useState(false);
   const [dwgBloqueado, setDwgBloqueado] = useState(false);
+  const [preguntas, setPreguntas] = useState({ situacion: "", analizarSituacion: "", niveles: "" });
   const inputRef = useRef();
 
   // ── Manejo de archivos ─────────────────────────────────────────────────
@@ -352,7 +361,7 @@ export default function ArchiCheck() {
           }
         }
       }
-      content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, modoAnalisis) });
+      content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, modoAnalisis, preguntas) });
 
       setProgress("Analizando contra normativa OGUC / LGUC...");
 
@@ -628,6 +637,60 @@ export default function ArchiCheck() {
                 ))}
               </div>
             </div>
+
+            {/* Preguntas de contexto */}
+            {archivos.length > 0 && (
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "2px", marginBottom: 10 }}>CONTEXTO DEL EXPEDIENTE</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+
+                  {/* Pregunta 1: situación existente / propuesta */}
+                  <div>
+                    <div style={{ fontSize: 12, color: "#3D4A5C", marginBottom: 6 }}>¿El expediente incluye situación existente y propuesta?</div>
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                      {["Solo propuesta", "Existente + propuesta"].map(op => (
+                        <button key={op}
+                          onClick={() => setPreguntas(p => ({ ...p, situacion: p.situacion === op ? "" : op, analizarSituacion: p.situacion === op ? "" : p.analizarSituacion }))}
+                          style={{ padding: "6px 12px", borderRadius: 6, border: `1px solid ${preguntas.situacion === op ? "#2952A3" : "#D1D9EE"}`, background: preguntas.situacion === op ? "#EEF2FB" : "#FFFFFF", color: preguntas.situacion === op ? "#1B3A8A" : "#6B7A99", fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontWeight: preguntas.situacion === op ? 600 : 400, transition: "all .15s" }}>
+                          {op}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Subpregunta: qué analizar */}
+                  {preguntas.situacion === "Existente + propuesta" && (
+                    <div style={{ paddingLeft: 12, borderLeft: "2px solid #D1D9EE" }}>
+                      <div style={{ fontSize: 12, color: "#3D4A5C", marginBottom: 6 }}>¿Qué analizo?</div>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                        {["Solo la propuesta", "Ambas"].map(op => (
+                          <button key={op}
+                            onClick={() => setPreguntas(p => ({ ...p, analizarSituacion: p.analizarSituacion === op ? "" : op }))}
+                            style={{ padding: "6px 12px", borderRadius: 6, border: `1px solid ${preguntas.analizarSituacion === op ? "#2952A3" : "#D1D9EE"}`, background: preguntas.analizarSituacion === op ? "#EEF2FB" : "#FFFFFF", color: preguntas.analizarSituacion === op ? "#1B3A8A" : "#6B7A99", fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontWeight: preguntas.analizarSituacion === op ? 600 : 400, transition: "all .15s" }}>
+                            {op}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pregunta 2: niveles */}
+                  <div>
+                    <div style={{ fontSize: 12, color: "#3D4A5C", marginBottom: 6 }}>
+                      ¿Qué nivel o niveles quieres priorizar?{" "}
+                      <span style={{ color: "#6B7A99", fontSize: 11 }}>(opcional)</span>
+                    </div>
+                    <input
+                      value={preguntas.niveles}
+                      onChange={e => setPreguntas(p => ({ ...p, niveles: e.target.value }))}
+                      placeholder="Ej: todos, primer piso, nivel 2 y 3"
+                      style={{ width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "8px 10px", fontSize: 12, color: "#3D4A5C", fontFamily: "inherit", background: "#FFFFFF" }}
+                    />
+                  </div>
+
+                </div>
+              </div>
+            )}
 
             {/* Botón analizar */}
             <button onClick={analizar}
