@@ -1,0 +1,66 @@
+{
+  "fuente": "PRC Santiago",
+  "articulo": "Artículo 23 — Zonas y usos de suelo",
+  "nota": "Simplificación para consulta automática. Verificar siempre en Ordenanza Local PRCS vigente para sub-zonas patrimoniales (ZCH, SE).",
+  "zonas": {
+    "A": {
+      "nombre": "Zona Central",
+      "usos_permitidos": ["residencial_colectivo", "comercio_mayor", "comercio_menor", "servicios", "oficinas", "equipamiento_salud", "equipamiento_educacion", "equipamiento_cultura", "equipamiento_deporte", "equipamiento_social", "hoteles", "industria_inofensiva"],
+      "usos_prohibidos": ["industria_molesta", "industria_peligrosa", "bodega_mayor", "cementerio", "vivienda_unifamiliar_aislada"],
+      "usos_condicionados": ["industria_inofensiva_requiere_mitigacion", "equipamiento_mayor_requiere_estudio_impacto_vial"],
+      "notas": "Zona de mayor densidad e intensidad de uso del PRCS. Admite casi todos los usos salvo industria molesta. Las sub-zonas ZCH A1–A7 tienen restricciones patrimoniales adicionales."
+    },
+    "A1": {
+      "nombre": "Micro Centro (sub-zona ZCH)",
+      "usos_permitidos": ["residencial_colectivo", "comercio_mayor", "comercio_menor", "servicios", "oficinas", "equipamiento"],
+      "usos_prohibidos": ["industria_molesta", "industria_peligrosa", "bodega_mayor"],
+      "usos_condicionados": ["ampliacion_rehabilitacion_patrimonio_requiere_autorizacion_seremi"],
+      "notas": "Zona de Conservación Histórica: toda intervención en inmuebles de conservación histórica requiere autorización previa de la SEREMI MINVU. Constructibilidad reducida respecto a Zona A base."
+    },
+    "B": {
+      "nombre": "Zona de Transición",
+      "usos_permitidos": ["residencial_colectivo", "residencial_unifamiliar", "comercio_menor", "servicios_escala_barrial", "oficinas", "equipamiento_salud", "equipamiento_educacion", "equipamiento_cultura", "equipamiento_deporte", "equipamiento_social"],
+      "usos_prohibidos": ["industria_molesta", "industria_peligrosa", "industria_inofensiva_mayor", "comercio_mayor_supermercado_sobre_2000m2", "bodega_mayor", "cementerio"],
+      "usos_condicionados": ["comercio_menor_en_primeros_pisos", "equipamiento_mayor_requiere_estudio_impacto_vial"],
+      "notas": "Zona residencial con mezcla de usos. El comercio se admite preferentemente en primer piso. Las sub-zonas B2–B16 (ZCH y SE) tienen restricciones patrimoniales y de altura específicas."
+    },
+    "D": {
+      "nombre": "Zona Residencial Mixta",
+      "usos_permitidos": ["residencial_colectivo", "residencial_unifamiliar", "comercio_menor", "servicios_menor", "equipamiento_educacion", "equipamiento_salud_menor", "equipamiento_social"],
+      "usos_prohibidos": ["industria_cualquier_tipo", "comercio_mayor", "bodega", "hotel_sobre_50_habitaciones"],
+      "usos_condicionados": ["comercio_menor_en_primeros_pisos_max_300m2", "equipamiento_menor_hasta_300m2"],
+      "notas": "Zona predominantemente residencial. Constructibilidad libre (sin límite de coef. constructibilidad según PRC). Altura máxima 15 m base. Sub-zonas ZCH D1–D10 tienen restricciones patrimoniales."
+    },
+    "E": {
+      "nombre": "Zona Residencial",
+      "usos_permitidos": ["residencial_colectivo", "residencial_unifamiliar", "equipamiento_educacion_basica_media", "equipamiento_salud_consultorio", "equipamiento_social", "equipamiento_deporte_menor"],
+      "usos_prohibidos": ["industria_cualquier_tipo", "comercio_mayor", "comercio_menor_excepto_almacen_local", "bodega", "hotel", "oficinas_mayor_300m2"],
+      "usos_condicionados": ["almacen_local_max_150m2_planta_baja", "jardin_infantil_kinder_hasta_300m2"],
+      "notas": "Zona principalmente residencial. Restricción fuerte de usos comerciales. Coeficiente constructibilidad 2.0 (bajo). Sub-zonas E1–E15 incluyen corredores de alta constructibilidad (E2, E4, E10) con distintos parámetros."
+    },
+    "E2": {
+      "nombre": "Sub-zona Isabel Riquelme (Corredor de alta densidad)",
+      "usos_permitidos": ["residencial_colectivo", "comercio_mayor", "servicios", "oficinas", "equipamiento"],
+      "usos_prohibidos": ["industria_molesta", "industria_peligrosa"],
+      "notas": "Corredor de alta densidad sobre Avenida Isabel Riquelme. Constructibilidad 5.5, altura 35 m. Usos similares a Zona A."
+    },
+    "F": {
+      "nombre": "Zonas de Parque",
+      "usos_permitidos": ["parque_publico", "areas_verdes", "construcciones_complementarias_parque_max_5porciento_superficie"],
+      "usos_prohibidos": ["residencial", "comercio", "industria", "equipamiento_cubierto_mayor_5porciento"],
+      "notas": "Solo uso de parque y áreas verdes. Las construcciones complementarias (quioscos, baños, casetas) no pueden superar el 5% de la superficie total de la zona. Incluye parques urbanos de Santiago."
+    },
+    "G": {
+      "nombre": "Equipamiento Especial",
+      "usos_permitidos": ["equipamiento_mayor_especial", "hospitales", "estadios", "universidades", "cuarteles", "cementerios", "mataderos_industriales"],
+      "usos_prohibidos": ["residencial", "comercio_libre", "industria_libre"],
+      "notas": "Zonas de grandes equipamientos de escala metropolitana. COS máximo 0.05 sobre el total de la zona (muy bajo), destinado principalmente a áreas verdes y circulaciones. Las construcciones son el equipamiento especial en sí."
+    },
+    "H": {
+      "nombre": "Club Hípico",
+      "usos_permitidos": ["uso_hipico_exclusivo", "instalaciones_deportivas_hipicas", "equipamiento_complementario_hipico"],
+      "usos_prohibidos": ["residencial", "comercio", "industria", "cualquier_uso_no_hipico"],
+      "notas": "Zona de uso exclusivo para el Club Hípico de Santiago. Subdivisión predial mínima 34 há. No se admiten otros usos. Altura máxima 10 m para construcciones de apoyo."
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "santiago",
+  "nombre": "Santiago",
+  "region": "Metropolitana",
+  "prc_nombre": "Plan Regulador Comunal de Santiago (PRCS)",
+  "prc_version": "Texto Refundido vigente",
+  "fuente": "Municipalidad de Santiago — Ordenanza Local PRCS",
+  "articulo_zonificacion": "Artículo 23 — Zonas A, B, D, E, F, G, H",
+  "articulo_normas": "Artículo 24",
+  "descripcion": "Santiago es una de las comunas más densas de Chile con alta mixidad de usos. La zonificación combina zonas genéricas (A–H) con Zonas de Conservación Histórica (ZCH) y Sectores Especiales (SE) que regulan el patrimonio urbano.",
+  "zonas_principales": ["A", "B", "D", "E", "F", "G", "H"],
+  "observacion": "El PRCS incluye numerosas sub-zonas patrimoniales (ZCH A1–A7, B1–B16, D1–D10, E1–E15). Para uso genérico utilizar los parámetros de la zona base."
+}

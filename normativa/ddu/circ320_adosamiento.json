@@ -1,0 +1,27 @@
+{
+  "fuente": "ddu",
+  "numero": "320",
+  "titulo": "Adosamiento y Distanciamiento entre Edificaciones",
+  "organismo": "División de Desarrollo Urbano, MINVU",
+  "fecha": "2015",
+  "oguc_relacionada": ["Art. 2.6.1", "Art. 2.6.2", "Art. 2.6.3"],
+  "resumen": "Precisa los criterios para la aplicación de los artículos 2.6.1, 2.6.2 y 2.6.3 de la OGUC relativos a adosamiento, distanciamientos y envolvente. Establece el procedimiento de acreditación del adosamiento y el plano catastral requerido.",
+  "secciones": {
+    "1_definicion_adosamiento": {
+      "titulo": "Definición y condiciones del adosamiento",
+      "texto": "El adosamiento es la edificación no subterránea contigua a uno o más deslindes del predio. Condiciones para que proceda el adosamiento: 1) Que el Plan Regulador Comunal lo permita en la zona donde se emplaza el proyecto (puede ser de modo obligatorio —continuo— o facultativo). 2) Que la longitud de adosamiento no exceda el 40% del deslinde común con el vecino en zonas de agrupamiento aislado o pareado. En zonas de agrupamiento continuo, el 100% del deslinde puede ser adosado. 3) Que la altura del muro de adosamiento no exceda 3,5 m sobre el nivel del terreno natural. Excepción: si la edificación vecina existente y aprobada tiene mayor altura en el deslinde, se puede adosar hasta esa altura. 4) Que el adosamiento no ocupe el antejardín. 5) Que la edificación en adosamiento se inscriba dentro de la envolvente de 45° definida en el Art. 2.6.2 numeral 3."
+    },
+    "2_plano_catastral": {
+      "titulo": "Plano catastral: requisito para acreditar adosamiento",
+      "texto": "Para acreditar adosamiento al deslinde, el expediente debe incluir: 1) Plano catastral del predio y los predios colindantes a escala mínima 1:500, con identificación de roles de avalúo, deslindes, edificaciones existentes en todos los predios vecinos, alturas de dichas edificaciones en el deslinde común, y distancia de las edificaciones al deslinde. 2) Cuando el adosamiento es a edificación existente en el predio vecino: fotografías de la edificación vecina desde el deslinde, con indicación de la altura en ese punto. 3) Autorización del propietario vecino suscrita ante Notario, cuando el porcentaje de adosamiento exceda el 40% del deslinde (en zonas aisladas). Sin el plano catastral, la DOM no puede verificar el cumplimiento del Art. 2.6.2 y puede rechazar el expediente o formular observación."
+    },
+    "3_distanciamientos": {
+      "titulo": "Distanciamientos mínimos cuando no hay adosamiento",
+      "texto": "En zonas de agrupamiento aislado, cuando la edificación no se adosa al deslinde, deben cumplirse los distanciamientos mínimos del Art. 2.6.3 OGUC: el distanciamiento entre la edificación y el deslinde lateral o posterior se determina aplicando la rasante al deslinde desde el punto más alto de la edificación. El ángulo de rasante se establece en el PRC (habitualmente 70° en comunas de la RM). La fórmula práctica es: Distanciamiento mínimo = altura medida desde el terreno natural / tangente del ángulo de rasante. Ejemplo con rasante 70°: un muro de 9 m de altura requiere distanciamiento mínimo de 9 / tan(70°) = 3,27 m al deslinde. En zonas de agrupamiento continuo no aplican distanciamientos laterales (solo frontal según antejardín)."
+    },
+    "4_verificacion_archicheck": {
+      "titulo": "Verificación en ArchiCheck",
+      "texto": "Para proyectos que declaren adosamiento o presenten edificación próxima a deslindes, ArchiCheck debe verificar: 1) Si el PRC de la comuna permite adosamiento en la zona (consultar usos_suelo y normas_edificacion). 2) Que el porcentaje de adosamiento no supere el permitido (40% en aislado, libre en continuo). 3) Que la altura del muro de adosamiento no supere 3,5 m (salvo excepción por vecino). 4) Que se haya declarado la presentación del plano catastral (DF observación si falta). 5) Si hay rasante declarada: verificar que la edificación se inscriba dentro de la envolvente rasante. Si el proyecto está en zona de agrupamiento continuo (Zona A y B en PRC Santiago): el adosamiento frontal es la norma general; verificar antejardín mínimo si aplica."
+    }
+  }
+}
