@@ -1,14 +1,61 @@
 {
-  "actividades_prohibidas_toda_comuna": [
-    "Cementerios",
-    "Medialunas (excluido Estadio Nacional)",
-    "Hipódromos",
-    "Zoológicos",
-    "Moteles",
-    "Casinos de Juegos",
-    "Plantas de Basura",
-    "Botaderos de Basura",
-    "Mall"
-  ],
-  "nota": "Estas actividades están prohibidas en toda la comuna de Ñuñoa, independiente de la zona."
+  "fuente": "PRC Ñuñoa",
+  "articulo": "Artículo sobre Uso de Suelo — Ordenanza Local MPRCÑ-18",
+  "nota": "Basado en MPRCÑ-18 (D.O. 30.08.2019) con modificaciones por Fallo CA Santiago (D.O. 26.11.2024) y Enmienda N°1 (17.12.2024). Verificar siempre la Ordenanza vigente para casos específicos.",
+  "zonas": {
+    "Z-1": {
+      "nombre": "Zona Z-1 — Residencial de Alta Densidad",
+      "usos_permitidos": ["residencial_colectivo", "residencial_unifamiliar", "comercio_menor_planta_baja", "servicios_menor", "equipamiento_educacion", "equipamiento_salud_menor", "equipamiento_social", "oficinas_menor"],
+      "usos_prohibidos": ["industria_cualquier_tipo", "comercio_mayor", "bodega_mayor", "hotel_mayor_50_hab", "local_nocturno"],
+      "usos_condicionados": ["comercio_menor_solo_planta_baja_max_200m2", "oficinas_desde_piso_2_hasta_300m2"],
+      "notas": "Zona residencial de mayor densidad en Ñuñoa. Altura hasta 44 m (15 pisos). El comercio se permite exclusivamente en planta baja con restricción de superficie."
+    },
+    "Z-1A": {
+      "nombre": "Zona Z-1A — Residencial Alta Densidad Especial",
+      "usos_permitidos": ["residencial_colectivo", "residencial_unifamiliar", "comercio_menor_planta_baja", "servicios_menor", "equipamiento"],
+      "usos_prohibidos": ["industria", "comercio_mayor", "bodega_mayor"],
+      "notas": "Similar a Z-1 con parámetros de altura distintos según sector."
+    },
+    "Z-2": {
+      "nombre": "Zona Z-2 — Residencial Densidad Media",
+      "usos_permitidos": ["residencial_colectivo", "residencial_unifamiliar", "comercio_menor_planta_baja", "equipamiento_educacion", "equipamiento_salud_menor", "equipamiento_social"],
+      "usos_prohibidos": ["industria", "comercio_mayor", "bodega", "hotel", "oficinas_mayor_200m2"],
+      "usos_condicionados": ["comercio_menor_solo_planta_baja_max_150m2"],
+      "notas": "Zona residencial de densidad media. Generalmente vivienda colectiva de menor altura (hasta 5-7 pisos)."
+    },
+    "Z-2A": {
+      "nombre": "Zona Z-2A — Residencial Densidad Media Especial",
+      "usos_permitidos": ["residencial_colectivo", "residencial_unifamiliar", "equipamiento_educacion_menor", "equipamiento_social"],
+      "usos_prohibidos": ["industria", "comercio_mayor", "bodega", "hotel", "oficinas"],
+      "notas": "Zona residencial de transición. Uso predominantemente residencial sin mezcla comercial significativa."
+    },
+    "ZMU": {
+      "nombre": "Zona de Uso Mixto",
+      "usos_permitidos": ["residencial_colectivo", "residencial_unifamiliar", "comercio_mayor", "comercio_menor", "servicios", "oficinas", "equipamiento_todos_los_tipos", "hoteles"],
+      "usos_prohibidos": ["industria_molesta", "industria_peligrosa", "bodega_mayor_2000m2"],
+      "usos_condicionados": ["industria_inofensiva_requiere_mitigacion_acustica", "equipamiento_mayor_requiere_estudio_impacto_vial"],
+      "notas": "Zona de alta mixticidad de usos. Corresponde a los principales ejes comerciales de Ñuñoa (Irarrázaval, Ñuñoa Plaza). Admite prácticamente todos los usos salvo industria molesta o peligrosa."
+    },
+    "ZC": {
+      "nombre": "Zona Comercial",
+      "usos_permitidos": ["comercio_mayor", "comercio_menor", "servicios", "oficinas", "hoteles", "equipamiento_comercial_escala_comunal"],
+      "usos_prohibidos": ["residencial_en_pisos_1_y_2", "industria_molesta", "industria_peligrosa", "bodega_sin_comercio_asociado"],
+      "usos_condicionados": ["residencial_desde_piso_3_en_adelante", "bodega_asociada_a_comercio_max_30porciento_superficie"],
+      "notas": "Zona estrictamente comercial a nivel de calle. El uso residencial se permite sobre los pisos comerciales (desde piso 3)."
+    },
+    "ZE": {
+      "nombre": "Zona de Equipamiento",
+      "usos_permitidos": ["equipamiento_todos_los_tipos", "areas_verdes", "deporte_al_aire_libre"],
+      "usos_prohibidos": ["residencial_libre", "comercio_libre", "industria", "oficinas_independientes"],
+      "usos_condicionados": ["comercio_complementario_al_equipamiento_max_10porciento_superficie"],
+      "notas": "Zona destinada a equipamientos de escala comunal e intercomunal. Las construcciones comerciales solo se admiten si son complementarias al equipamiento principal."
+    },
+    "ZCH": {
+      "nombre": "Zona de Conservación Histórica",
+      "usos_permitidos": ["residencial_unifamiliar", "residencial_colectivo_menor_densidad", "comercio_menor_compatible_con_patrimonio", "servicios_menor", "equipamiento_cultural"],
+      "usos_prohibidos": ["industria", "comercio_mayor", "demolicion_sin_autorizacion_seremi", "ampliacion_que_altere_valor_patrimonial"],
+      "usos_condicionados": ["toda_intervencion_requiere_autorizacion_seremi_minvu", "ampliacion_hasta_altura_del_inmueble_original"],
+      "notas": "Zona de alta restricción de intervención. Todas las obras requieren autorización de la SEREMI MINVU. El Fallo CA 2024 restableció restricciones que habían sido reducidas."
+    }
+  }
 }

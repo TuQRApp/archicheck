@@ -5,6 +5,15 @@ import ogucArticulos from "../normativa/nacional/oguc_articulos.json";
 import lgucArticulos from "../normativa/nacional/lguc_articulos.json";
 import ley19300Articulos from "../normativa/nacional/ley19300_articulos.json";
 import reglasNacionales from "../normativa/nacional/reglas_verificacion.json";
+import nunoa_normas from "../normativa/nunoa/normas_edificacion.json";
+import nunoa_meta from "../normativa/nunoa/metadata.json";
+import santiago_normas from "../normativa/santiago/normas_edificacion.json";
+import santiago_meta from "../normativa/santiago/metadata.json";
+
+const PRC_COMUNAS = {
+  nunoa:    { meta: nunoa_meta,    normas: nunoa_normas },
+  santiago: { meta: santiago_meta, normas: santiago_normas },
+};
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url
@@ -28,6 +37,9 @@ const TIPOS_DOC = [
   "Certificado de Informaciones Previas", "Memoria de cálculo estructural",
   "Planos de instalaciones", "Presupuesto de obras", "Otro",
 ];
+
+const ESCALAS = ["1:25","1:50","1:75","1:100","1:150","1:200","1:250","1:500","1:1000","1:2000"];
+const TIPOS_DOC_CON_ESCALA = ["Planta arquitectura","Cortes y elevaciones","Plano de emplazamiento"];
 
 // ── Reparar JSON cortado ───────────────────────────────────────────────────
 function repairJSON(str) {
@@ -110,7 +122,13 @@ function buildPrompt(tipo, comuna, archivos, modo = "parcial") {
       ? `${f.pdfImages.length} pág. adjunta${f.pdfImages.length > 1 ? "s" : ""} como imagen (de ${f.pdfImages[0].total} total)`
       : f.isImage ? "imagen adjunta"
       : "[formato no visual — sin contenido extraíble]";
-    return `Archivo ${i + 1}: "${f.name}" (${f.tipoDoc || "sin clasificar"}) — ${tag}`;
+    let escalaInfo = "";
+    if (f.escalasMultiples && f.escalasPorPagina?.some(ep => ep.escala)) {
+      escalaInfo = " — Escalas: " + f.escalasPorPagina.filter(ep => ep.escala).map(ep => `pág.${ep.pagina}=${ep.escala}`).join(", ");
+    } else if (f.escala) {
+      escalaInfo = ` — Escala: ${f.escala}`;
+    }
+    return `Archivo ${i + 1}: "${f.name}" (${f.tipoDoc || "sin clasificar"}) — ${tag}${escalaInfo}`;
   }).join("\n\n---\n\n");
 
   // Artículos OGUC clave para el análisis
@@ -128,7 +146,26 @@ function buildPrompt(tipo, comuna, archivos, modo = "parcial") {
     .map(r => `- ${r.descripcion} (${r.referencia}): ${r.verificacion}`)
     .join("\n");
 
-  return `Eres revisor DOM de Chile experto en LGUC, OGUC, normativas NCh y Plan Regulador de ${comuna || "la comuna"}.
+  // PRC de la comuna seleccionada
+  const prcData = PRC_COMUNAS[comuna];
+  const prcTexto = prcData
+    ? `\nPRC ${prcData.meta.prc_nombre} — ${prcData.meta.prc_version}:\n` +
+      Object.entries(prcData.normas)
+        .map(([id, z]) => {
+          const lineas = [`Zona ${id} (${z.nombre}): ${z.descripcion || ""}`];
+          if (z.coef_ocupacion_suelo)    lineas.push(`  COS=${z.coef_ocupacion_suelo}`);
+          if (z.coef_constructibilidad)  lineas.push(`  Constructibilidad=${z.coef_constructibilidad}`);
+          if (z.altura_maxima_m)         lineas.push(`  Altura máx=${z.altura_maxima_m}m`);
+          if (z.densidad_bruta_maxima_hab_ha) lineas.push(`  Densidad máx=${z.densidad_bruta_maxima_hab_ha} Hab/Há`);
+          if (z.articulo)                lineas.push(`  Referencia: ${z.articulo}`);
+          if (z.notas)                   lineas.push(`  Notas: ${z.notas}`);
+          return lineas.join("\n");
+        }).join("\n")
+    : "";
+
+  const comunaNombre = prcData ? prcData.meta.nombre : (comuna || "la comuna");
+
+  return `Eres revisor DOM de Chile experto en LGUC, OGUC, circulares DDU del MINVU, normativas NCh y Plan Regulador de ${comunaNombre}.
 
 NORMATIVA NACIONAL VIGENTE — OGUC (última versión ${ogucArticulos.ultima_version}):
 ${ogucTexto}
@@ -138,13 +175,18 @@ ${lgucTexto}
 
 REGLAS DE VERIFICACIÓN OBLIGATORIAS:
 ${reglasTexto}
-
-Proyecto: ${tipoLabel} — ${comuna || "comuna no especificada"}
+${prcTexto}
+Proyecto: ${tipoLabel} — ${comunaNombre}
 Archivos:
 ${lista}
 
-Usa la normativa anterior como base de tu análisis. Cita el artículo exacto
-cuando detectes cumplimiento o incumplimiento.
+CIRCULARES DDU VIGENTES (División de Desarrollo Urbano, MINVU):
+- DDU 279: Accesibilidad universal — rampas, ascensores, circulaciones accesibles
+- DDU 390: Presentación de expedientes DOM — documentos obligatorios por tipo de proyecto
+- DDU 320: Adosamiento y distanciamientos entre edificaciones
+- DDU 415: Estacionamientos — dotación mínima según uso y comuna
+
+Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de OGUC, LGUC o la circular DDU correspondiente cuando detectes cumplimiento o incumplimiento.
 ${modo === "completo"
   ? `MODO EXPEDIENTE COMPLETO: Verifica rigurosamente si el expediente contiene TODOS los documentos obligatorios para un proyecto ${TIPOS.find(t => t.id === tipo)?.label ?? tipo}. Lista en documentos_faltantes cada documento obligatorio ausente con su artículo de referencia y criticidad. Penaliza el puntaje_global si faltan documentos críticos.`
   : `MODO PARCIAL: Analiza solo los archivos adjuntos sin penalizar por documentos no subidos.`}
@@ -153,8 +195,8 @@ Responde SOLO con JSON puro sin markdown:
 {"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","documentos_faltantes":[{"nombre":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA"}],"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
 
-// ── PDF → imágenes base64 (máx. 1 página) ─────────────────────────────────
-const MAX_PDF_PAGES = 1;
+// ── PDF → imágenes base64 (máx. 6 páginas) ─────────────────────────────────
+const MAX_PDF_PAGES = 6;
 
 async function pdfPagesToBase64(file) {
   try {
@@ -164,12 +206,12 @@ async function pdfPagesToBase64(file) {
     const images = [];
     for (let i = 1; i <= totalPages; i++) {
       const page = await pdf.getPage(i);
-      const viewport = page.getViewport({ scale: 0.5 });
+      const viewport = page.getViewport({ scale: 1.5 });
       const canvas = document.createElement("canvas");
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       await page.render({ canvasContext: canvas.getContext("2d"), viewport }).promise;
-      images.push({ data: canvas.toDataURL("image/jpeg", 0.4).split(",")[1], page: i, total: pdf.numPages });
+      images.push({ data: canvas.toDataURL("image/jpeg", 0.85).split(",")[1], page: i, total: pdf.numPages });
     }
     return images;
   } catch {
@@ -238,22 +280,46 @@ export default function ArchiCheck() {
       f.type === "application/pdf" ||
       f.type.startsWith("image/")
     );
-    const procesados = await Promise.all(validos.map(async (f) => ({
-      file: f,
-      name: f.name,
-      size: f.size,
-      type: f.type,
-      isImage: f.type.startsWith("image/"),
-      pdfImages: f.type === "application/pdf" ? await pdfPagesToBase64(f) : null,
-      base64: f.type.startsWith("image/") ? await toBase64(f) : null,
-      tipoDoc: "",
-    })));
+    const procesados = await Promise.all(validos.map(async (f) => {
+      const pdfImages = f.type === "application/pdf" ? await pdfPagesToBase64(f) : null;
+      return {
+        file: f,
+        name: f.name,
+        size: f.size,
+        type: f.type,
+        isImage: f.type.startsWith("image/"),
+        pdfImages,
+        base64: f.type.startsWith("image/") ? await toBase64(f) : null,
+        tipoDoc: "",
+        escala: "",
+        escalasMultiples: false,
+        escalasPorPagina: pdfImages?.map(img => ({ pagina: img.page, escala: "", screenshot: "", screenshotBase64: "" })) ?? [],
+      };
+    }));
     setArchivos(prev => [...prev, ...procesados]);
   }, []);
 
   const removeFile   = (i) => setArchivos(prev => prev.filter((_, idx) => idx !== i));
   const setTipoDoc   = (i, v) => setArchivos(prev => prev.map((f, idx) => idx === i ? { ...f, tipoDoc: v } : f));
-  const toggle       = (k) => setExpandido(prev => ({ ...prev, [k]: !prev[k] }));
+  const setEscala    = (i, v) => setArchivos(prev => prev.map((f, idx) => idx === i ? { ...f, escala: v } : f));
+  const toggleEscalasMultiples = (i) => setArchivos(prev => prev.map((f, idx) =>
+    idx === i ? { ...f, escalasMultiples: !f.escalasMultiples } : f
+  ));
+  const setEscalaPagina = (fileIdx, pagina, value) => setArchivos(prev => prev.map((f, idx) => {
+    if (idx !== fileIdx) return f;
+    return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep => ep.pagina === pagina ? { ...ep, escala: value } : ep) };
+  }));
+  async function handleScaleScreenshot(fileIdx, pagina, file) {
+    if (!file) return;
+    const b64 = await toBase64(file);
+    setArchivos(prev => prev.map((f, idx) => {
+      if (idx !== fileIdx) return f;
+      return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep =>
+        ep.pagina === pagina ? { ...ep, screenshot: file.name, screenshotBase64: b64 } : ep
+      )};
+    }));
+  }
+  const toggle = (k) => setExpandido(prev => ({ ...prev, [k]: !prev[k] }));
 
   // ── Análisis ───────────────────────────────────────────────────────────
   async function analizar() {
@@ -266,12 +332,23 @@ export default function ArchiCheck() {
       for (const f of archivos) {
         if (f.isImage && f.base64) {
           content.push({ type: "image", source: { type: "base64", media_type: f.type, data: f.base64 } });
-          content.push({ type: "text", text: `[Imagen: "${f.name}" — ${f.tipoDoc || "plano"}]` });
+          content.push({ type: "text", text: `[Imagen: "${f.name}" — ${f.tipoDoc || "plano"}${f.escala ? ` — escala: ${f.escala}` : ""}]` });
         }
         if (f.pdfImages?.length) {
           for (const img of f.pdfImages) {
+            const escalaPage = f.escalasMultiples
+              ? (f.escalasPorPagina?.find(ep => ep.pagina === img.page)?.escala || "")
+              : f.escala;
             content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img.data } });
-            content.push({ type: "text", text: `[PDF: "${f.name}" — página ${img.page}/${img.total} — ${f.tipoDoc || "plano"}]` });
+            content.push({ type: "text", text: `[PDF: "${f.name}" — página ${img.page}/${img.total} — ${f.tipoDoc || "plano"}${escalaPage ? ` — escala: ${escalaPage}` : ""}]` });
+          }
+          if (f.escalasMultiples) {
+            for (const ep of f.escalasPorPagina) {
+              if (ep.screenshotBase64) {
+                content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: ep.screenshotBase64 } });
+                content.push({ type: "text", text: `[REFERENCIA ESCALA: "${f.name}" — página ${ep.pagina} — escala declarada: ${ep.escala || "no especificada"}]` });
+              }
+            }
           }
         }
       }
@@ -392,7 +469,7 @@ export default function ArchiCheck() {
           </svg>
           <div>
             <div style={{ fontSize: 19, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: "#FFFFFF", letterSpacing: "-0.4px" }}>ArchiCheck</div>
-            <div style={{ fontSize: 9, color: "#A8BFEE", letterSpacing: "3px" }}>REVISIÓN NORMATIVA · CHILE</div>
+            <div style={{ fontSize: 9, color: "#A8BFEE", letterSpacing: "3px" }}>REVISIÓN NORMATIVA · CHILE · 24-ABR</div>
           </div>
         </div>
         <div style={{ textAlign: "right", lineHeight: 1.8 }}>
@@ -469,19 +546,66 @@ export default function ArchiCheck() {
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                   {archivos.map((f, i) => (
-                    <div key={i} className="file-row" style={{ display: "flex", alignItems: "center", gap: 10, background: "#F4F6FB", border: "1px solid #D1D9EE", borderRadius: 8, padding: "8px 12px", transition: "all .15s" }}>
-                      <span style={{ fontSize: 15, flexShrink: 0 }}>
-                        {f.isImage ? "🖼" : f.name.match(/\.(dwg|dxf)$/i) ? "📐" : "📄"}
-                      </span>
-                      <span style={{ fontSize: 12, color: "#1B3A8A", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</span>
-                      <span style={{ fontSize: 10, color: "#6B7A99", flexShrink: 0 }}>{(f.size / 1024).toFixed(0)} KB</span>
-                      <select value={f.tipoDoc} onChange={e => setTipoDoc(i, e.target.value)}
-                        style={{ background: "#FFFFFF", border: "1px solid #D1D9EE", borderRadius: 6, padding: "4px 8px", color: "#3D4A5C", fontSize: 11, fontFamily: "inherit", cursor: "pointer", maxWidth: 190 }}>
-                        <option value="">— tipo —</option>
-                        {TIPOS_DOC.map(t => <option key={t} value={t}>{t}</option>)}
-                      </select>
-                      <button className="rm" onClick={() => removeFile(i)}
-                        style={{ background: "none", border: "none", color: "#6B7A99", cursor: "pointer", fontSize: 14, padding: "0 4px", transition: "color .15s" }}>✕</button>
+                    <div key={i} style={{ background: "#F4F6FB", border: "1px solid #D1D9EE", borderRadius: 8, overflow: "hidden", transition: "all .15s" }}>
+                      {/* Fila principal */}
+                      <div className="file-row" style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px" }}>
+                        <span style={{ fontSize: 15, flexShrink: 0 }}>
+                          {f.isImage ? "🖼" : f.name.match(/\.(dwg|dxf)$/i) ? "📐" : "📄"}
+                        </span>
+                        <span style={{ fontSize: 12, color: "#1B3A8A", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</span>
+                        <span style={{ fontSize: 10, color: "#6B7A99", flexShrink: 0 }}>{(f.size / 1024).toFixed(0)} KB</span>
+                        <select value={f.tipoDoc} onChange={e => setTipoDoc(i, e.target.value)}
+                          style={{ background: "#FFFFFF", border: "1px solid #D1D9EE", borderRadius: 6, padding: "4px 8px", color: "#3D4A5C", fontSize: 11, fontFamily: "inherit", cursor: "pointer", maxWidth: 190 }}>
+                          <option value="">— tipo —</option>
+                          {TIPOS_DOC.map(t => <option key={t} value={t}>{t}</option>)}
+                        </select>
+                        <button className="rm" onClick={() => removeFile(i)}
+                          style={{ background: "none", border: "none", color: "#6B7A99", cursor: "pointer", fontSize: 14, padding: "0 4px", transition: "color .15s" }}>✕</button>
+                      </div>
+                      {/* Sección escala — solo para PDFs con tipo relevante */}
+                      {f.type === "application/pdf" && TIPOS_DOC_CON_ESCALA.includes(f.tipoDoc) && (
+                        <div style={{ borderTop: "1px solid #D1D9EE", padding: "8px 12px 10px" }}>
+                          {!f.escalasMultiples ? (
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                              <span style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "1px" }}>ESCALA</span>
+                              <select value={f.escala} onChange={e => setEscala(i, e.target.value)}
+                                style={{ background: "#FFFFFF", border: "1px solid #D1D9EE", borderRadius: 5, padding: "3px 7px", color: "#3D4A5C", fontSize: 11, fontFamily: "inherit", cursor: "pointer" }}>
+                                <option value="">— seleccionar —</option>
+                                {ESCALAS.map(s => <option key={s} value={s}>{s}</option>)}
+                              </select>
+                              <button onClick={() => toggleEscalasMultiples(i)}
+                                style={{ background: "none", border: "1px solid #D1D9EE", borderRadius: 5, padding: "3px 8px", color: "#6B7A99", fontSize: 10, cursor: "pointer", fontFamily: "inherit" }}>
+                                Hay múltiples escalas
+                              </button>
+                            </div>
+                          ) : (
+                            <div>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
+                                <span style={{ fontSize: 10, color: "#D68910", letterSpacing: "1px" }}>ESCALAS POR PÁGINA</span>
+                                <button onClick={() => toggleEscalasMultiples(i)}
+                                  style={{ background: "none", border: "1px solid #D1D9EE", borderRadius: 5, padding: "2px 7px", color: "#6B7A99", fontSize: 10, cursor: "pointer", fontFamily: "inherit" }}>
+                                  Una sola escala
+                                </button>
+                              </div>
+                              {f.escalasPorPagina.map(ep => (
+                                <div key={ep.pagina} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 5 }}>
+                                  <span style={{ fontSize: 11, color: "#6B7A99", minWidth: 50, flexShrink: 0 }}>Pág. {ep.pagina}</span>
+                                  <select value={ep.escala} onChange={e => setEscalaPagina(i, ep.pagina, e.target.value)}
+                                    style={{ background: "#FFFFFF", border: "1px solid #D1D9EE", borderRadius: 5, padding: "3px 7px", color: "#3D4A5C", fontSize: 11, fontFamily: "inherit", cursor: "pointer" }}>
+                                    <option value="">—</option>
+                                    {ESCALAS.map(s => <option key={s} value={s}>{s}</option>)}
+                                  </select>
+                                  <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: ep.screenshot ? "#1E8449" : "#2952A3", background: ep.screenshot ? "rgba(30,132,73,0.06)" : "rgba(74,114,196,0.06)", border: `1px solid ${ep.screenshot ? "rgba(30,132,73,0.3)" : "#D1D9EE"}`, borderRadius: 5, padding: "3px 8px" }}>
+                                    {ep.screenshot ? `✓ ${ep.screenshot.length > 16 ? ep.screenshot.slice(0,16)+"…" : ep.screenshot}` : "+ captura escala"}
+                                    <input type="file" accept="image/*" style={{ display: "none" }}
+                                      onChange={e => handleScaleScreenshot(i, ep.pagina, e.target.files[0])} />
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
