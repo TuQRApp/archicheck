@@ -202,8 +202,10 @@ ${contextoTexto}${modo === "completo"
   ? `MODO EXPEDIENTE COMPLETO: Verifica rigurosamente si el expediente contiene TODOS los documentos obligatorios para un proyecto ${TIPOS.find(t => t.id === tipo)?.label ?? tipo}. Lista en documentos_faltantes cada documento obligatorio ausente con su artículo de referencia y criticidad. Penaliza el puntaje_global si faltan documentos críticos.`
   : `MODO PARCIAL: Analiza solo los archivos adjuntos sin penalizar por documentos no subidos.`}
 
+Para cada planta de arquitectura identifica los recintos visibles. En "recintos" incluye nombre, uso declarado, superficie estimada en m2, estado normativo y bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Indica en que pagina aparece cada recinto. Si no puedes estimar coordenadas confiables para un recinto, omite su campo bbox.
+
 Responde SOLO con JSON puro sin markdown:
-{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","documentos_faltantes":[{"nombre":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA"}],"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
+{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","documentos_faltantes":[{"nombre":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA"}],"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
 
 // ── PDF → thumbnails (todas las páginas, baja res) + full-res bajo demanda ──
@@ -282,6 +284,50 @@ const globalStyle = (e) => ({
   "OBSERVADO":  { color: "#D68910", background: "rgba(214,137,16,0.10)",  border: "1px solid rgba(214,137,16,0.35)" },
   "RECHAZABLE": { color: "#C0392B", background: "rgba(192,57,43,0.10)",   border: "1px solid rgba(192,57,43,0.35)" },
 })[e] || {};
+
+// ── Canvas overlay de recintos ─────────────────────────────────────────────
+function CanvasOverlay({ src, recintos, pagina }) {
+  const ref = useRef();
+  const COLORES = { OK: "#1E8449", OBSERVADO: "#D68910", INCUMPLE: "#C0392B" };
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas || !src) return;
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+      canvas.width  = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      const pagRecintos = recintos.filter(r => r.pagina === pagina && Array.isArray(r.bbox) && r.bbox.length === 4);
+      for (const r of pagRecintos) {
+        const [x1, y1, x2, y2] = r.bbox;
+        const px = x1 * img.width,  py = y1 * img.height;
+        const pw = (x2 - x1) * img.width, ph = (y2 - y1) * img.height;
+        const col = COLORES[r.estado] || COLORES.OBSERVADO;
+        ctx.fillStyle   = col + "28";
+        ctx.strokeStyle = col;
+        ctx.lineWidth   = Math.max(1.5, img.width * 0.003);
+        ctx.fillRect(px, py, pw, ph);
+        ctx.strokeRect(px, py, pw, ph);
+        const fs = Math.max(10, img.width * 0.018);
+        ctx.font         = `bold ${fs}px sans-serif`;
+        ctx.fillStyle    = col;
+        ctx.fillText(r.nombre, px + 4, py + fs + 2);
+        if (r.superficie_m2) {
+          ctx.font      = `${fs * 0.8}px sans-serif`;
+          ctx.fillText(`${r.superficie_m2} m²`, px + 4, py + fs * 2 + 4);
+        }
+      }
+    };
+    img.src = src;
+  }, [src, recintos, pagina]);
+
+  return (
+    <canvas ref={ref}
+      style={{ width: "100%", display: "block", borderRadius: 6, border: "1px solid #D1D9EE" }} />
+  );
+}
 
 // ── Componente ─────────────────────────────────────────────────────────────
 export default function ArchiCheck() {
@@ -988,6 +1034,78 @@ export default function ArchiCheck() {
                           ) : (
                             <div style={{ fontSize: 12, color: "#1E8449", textAlign: "center", padding: "10px 0" }}>✓ Sin observaciones</div>
                           )}
+
+                          {/* Overlay de recintos */}
+                          {(() => {
+                            const recintos = doc.recintos?.filter(r => Array.isArray(r.bbox));
+                            if (!recintos?.length) return null;
+                            const archivoMatch = archivos.find(a => a.name === doc.archivo);
+                            const paginas = [...new Set(recintos.map(r => r.pagina))].sort((a, b) => a - b);
+                            return (
+                              <div style={{ marginTop: 16 }}>
+                                <div style={{ fontSize: 9, color: "#2952A3", letterSpacing: "2px", marginBottom: 10 }}>
+                                  RECINTOS DETECTADOS — {recintos.length}
+                                  <span style={{ fontSize: 9, color: "#6B7A99", letterSpacing: 0, marginLeft: 8, fontWeight: 400 }}>(estimación IA — posiciones aproximadas)</span>
+                                </div>
+                                {/* Leyenda */}
+                                <div style={{ display: "flex", gap: 12, marginBottom: 10, flexWrap: "wrap" }}>
+                                  {[["OK","#1E8449"],["OBSERVADO","#D68910"],["INCUMPLE","#C0392B"]].map(([label, color]) => (
+                                    <div key={label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: "#6B7A99" }}>
+                                      <div style={{ width: 12, height: 12, borderRadius: 2, background: color+"28", border: `2px solid ${color}` }}/>
+                                      {label}
+                                    </div>
+                                  ))}
+                                </div>
+                                {paginas.map(pag => {
+                                  let src = null;
+                                  if (archivoMatch?.pdfImages) {
+                                    const imgData = archivoMatch.pdfImages.find(p => p.page === pag);
+                                    src = imgData?.thumb || null;
+                                  } else if (archivoMatch?.isImage && archivoMatch.base64) {
+                                    src = `data:${archivoMatch.type};base64,${archivoMatch.base64}`;
+                                  }
+                                  if (!src) return null;
+                                  return (
+                                    <div key={pag} style={{ marginBottom: 12 }}>
+                                      {paginas.length > 1 && (
+                                        <div style={{ fontSize: 10, color: "#6B7A99", marginBottom: 5 }}>Página {pag}</div>
+                                      )}
+                                      <CanvasOverlay src={src} recintos={recintos} pagina={pag} />
+                                    </div>
+                                  );
+                                })}
+                                {/* Tabla de recintos */}
+                                <div style={{ marginTop: 10, overflowX: "auto" }}>
+                                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+                                    <thead>
+                                      <tr style={{ background: "#EEF2FB" }}>
+                                        {["Recinto","Uso","Sup. m²","Pág.","Estado","Observación"].map(h => (
+                                          <th key={h} style={{ padding: "6px 10px", textAlign: "left", color: "#1B3A8A", fontWeight: 600, borderBottom: "1px solid #D1D9EE", whiteSpace: "nowrap" }}>{h}</th>
+                                        ))}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {doc.recintos.map((r, ri) => {
+                                        const cs = { OK: "#1E8449", OBSERVADO: "#D68910", INCUMPLE: "#C0392B" }[r.estado] || "#6B7A99";
+                                        return (
+                                          <tr key={ri} style={{ borderBottom: "1px solid #EEF2FB" }}>
+                                            <td style={{ padding: "6px 10px", color: "#1B3A8A", fontWeight: 500 }}>{r.nombre}</td>
+                                            <td style={{ padding: "6px 10px", color: "#6B7A99" }}>{r.uso || "—"}</td>
+                                            <td style={{ padding: "6px 10px", color: "#3D4A5C" }}>{r.superficie_m2 ?? "—"}</td>
+                                            <td style={{ padding: "6px 10px", color: "#6B7A99" }}>{r.pagina}</td>
+                                            <td style={{ padding: "6px 10px" }}>
+                                              <span style={{ color: cs, fontWeight: 700, fontSize: 10 }}>{r.estado}</span>
+                                            </td>
+                                            <td style={{ padding: "6px 10px", color: "#6B7A99", maxWidth: 200 }}>{r.observacion || "—"}</td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       )}
                     </div>
