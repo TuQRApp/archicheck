@@ -487,6 +487,440 @@ function ObsSection({ obs, prefix, obsStatus, onAction, onComment }) {
   );
 }
 
+// ── PrintReport — layout dedicado para PDF ──────────────────────────────────
+function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
+  const ec = globalStyle(result.estado_global);
+  const tienePRC = !!PRC_COMUNAS[comuna];
+  const todas = getAllObs(result);
+  const altas = todas.filter(x => x.obs.criticidad === "ALTA");
+  const tecnicas = todas.filter(x => x.obs.criticidad !== "ALTA");
+  const resueltas = Object.values(obsStatus).filter(s => s?.status).length;
+  const total = todas.length;
+  const totalRecintos = (result.capa1?.reconocimiento?.recintos_por_nivel || [])
+    .reduce((acc, n) => acc + (n.recintos?.length || 0), 0);
+
+  const PTH = { padding:"5px 9px", textAlign:"left", color:"#fff", fontWeight:700, fontSize:9, background:"#1B3A8A", whiteSpace:"nowrap" };
+  const PTD = { padding:"5px 9px", borderBottom:"1px solid #e8ecf5", fontSize:10, color:"#2d3748", verticalAlign:"top" };
+
+  function ObsPrint({ arr, prefix }) {
+    if (!arr?.length) return null;
+    return (
+      <div style={{ marginTop:10 }}>
+        <div style={{ fontSize:8, fontWeight:700, color:"#6B7A99", letterSpacing:"1.5px", marginBottom:6 }}>OBSERVACIONES — {arr.length}</div>
+        {arr.map((obs, i) => {
+          const key = `${prefix}-${i}`;
+          const st = obsStatus[key];
+          const cs = critStyle(obs.criticidad);
+          return (
+            <div key={i} style={{ ...cs, borderRadius:5, padding:"8px 10px", marginBottom:5, pageBreakInside:"avoid" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", gap:8, marginBottom:3 }}>
+                <div style={{ fontSize:10, color:"#3D4A5C", lineHeight:1.4, flex:1 }}>{obs.descripcion}</div>
+                <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:2, flexShrink:0 }}>
+                  <span style={{ fontSize:8, fontWeight:700, color:cs.color, background:cs.background, border:cs.border, borderRadius:99, padding:"1px 5px" }}>{obs.criticidad}</span>
+                  {st?.status && <span style={{ fontSize:8, fontWeight:600, color:STATUS_COLORS[st.status], background:STATUS_COLORS[st.status]+"18", border:`1px solid ${STATUS_COLORS[st.status]}40`, borderRadius:99, padding:"1px 5px" }}>✓ {STATUS_LABELS[st.status]}</span>}
+                </div>
+              </div>
+              {obs.articulo && (
+                <div style={{ display:"flex", flexWrap:"wrap", gap:3, marginBottom: obs.correccion ? 5 : 0 }}>
+                  {obs.articulo.split(/[,;]/).map(p => p.trim()).filter(Boolean).map((p, pi) => (
+                    <span key={pi} style={{ fontSize:8, color:"#2952A3", background:"rgba(41,82,163,0.08)", border:"1px solid rgba(41,82,163,0.2)", borderRadius:3, padding:"1px 4px", fontFamily:"monospace" }}>§ {p}</span>
+                  ))}
+                </div>
+              )}
+              {obs.correccion && <div style={{ fontSize:9, color:"#6B7A99", borderTop:"1px solid rgba(0,0,0,0.08)", paddingTop:5, lineHeight:1.4 }}><span style={{ color:"#2952A3", fontWeight:700 }}>→ </span>{obs.correccion}</div>}
+              {st?.comment && <div style={{ fontSize:9, color:"#2952A3", marginTop:3, fontStyle:"italic" }}>Nota: {st.comment}</div>}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  function EtapaTitle({ label, subtitle, badge, c2 = false }) {
+    const col = c2 ? "#D68910" : "#2952A3";
+    return (
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, marginBottom:12, pageBreakInside:"avoid" }}>
+        <div>
+          <h2 style={{ fontSize:14, fontWeight:800, color:"#1B3A8A", fontFamily:"Arial,sans-serif", margin:"0 0 2px" }}>{label}</h2>
+          {subtitle && <p style={{ color:"#6B7A99", fontSize:9, margin:0 }}>{subtitle}</p>}
+        </div>
+        <span style={{ fontSize:8, fontWeight:700, padding:"2px 9px", borderRadius:99, background:`${col}14`, color:col, border:`1px solid ${col}40`, whiteSpace:"nowrap", flexShrink:0 }}>{badge}</span>
+      </div>
+    );
+  }
+
+  function CapaBanner({ children }) {
+    return <div style={{ background:"#1B3A8A", color:"#fff", padding:"7px 12px", borderRadius:5, marginBottom:18, fontSize:10, fontWeight:700, letterSpacing:"0.5px" }}>{children}</div>;
+  }
+
+  function PrintTable({ headers, rows }) {
+    if (!rows?.length) return <p style={{ fontSize:9, color:"#B8C5E0", margin:"0 0 12px" }}>Sin datos</p>;
+    return (
+      <div style={{ overflowX:"auto", marginBottom:12 }}>
+        <table style={{ width:"100%", borderCollapse:"collapse" }}>
+          <thead><tr>{headers.map(h => <th key={h} style={PTH}>{h}</th>)}</tr></thead>
+          <tbody>{rows}</tbody>
+        </table>
+      </div>
+    );
+  }
+
+  const pg = { pageBreakBefore:"always", paddingTop:20 };
+
+  return (
+    <div style={{ padding:"18mm 16mm", fontFamily:"Arial,sans-serif", fontSize:11, color:"#1a1a1a", background:"#fff", width:"210mm", boxSizing:"border-box" }}>
+
+      {/* PORTADA */}
+      <div style={{ pageBreakAfter:"always", paddingBottom:20 }}>
+        <div style={{ borderBottom:"3px solid #1B3A8A", paddingBottom:14, marginBottom:20, display:"flex", justifyContent:"space-between", alignItems:"flex-end" }}>
+          <div>
+            <div style={{ fontSize:9, color:"#6B7A99", letterSpacing:"3px", marginBottom:4 }}>INFORME DE REVISIÓN NORMATIVA</div>
+            <h1 style={{ fontSize:22, fontWeight:900, color:"#1B3A8A", fontFamily:"Arial,sans-serif", margin:"0 0 2px" }}>ArchiCheck</h1>
+            <div style={{ fontSize:13, color:"#3D4A5C", fontWeight:600 }}>{TIPOS.find(t => t.id === tipo)?.label} · {PRC_COMUNAS[comuna]?.meta?.nombre || comuna}</div>
+            <div style={{ fontSize:10, color:"#6B7A99", marginTop:3 }}>{new Date().toLocaleDateString("es-CL",{day:"2-digit",month:"long",year:"numeric"})}</div>
+          </div>
+          <div style={{ textAlign:"right" }}>
+            <span style={{ fontSize:9, fontWeight:700, letterSpacing:"1.5px", padding:"4px 14px", borderRadius:99, ...ec }}>{result.estado_global}</span>
+            <div style={{ marginTop:6 }}>
+              <span style={{ fontSize:44, fontWeight:900, fontFamily:"Arial,sans-serif", color:ec.color, lineHeight:1 }}>{result.puntaje_global}</span>
+              <span style={{ fontSize:13, color:"#6B7A99" }}>/100</span>
+            </div>
+          </div>
+        </div>
+        <div style={{ borderLeft:"4px solid #1B3A8A", background:"#F4F6FB", borderRadius:"0 8px 8px 0", padding:"12px 16px", marginBottom:20, display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:"8px 20px" }}>
+          {[
+            { label:"TIPO DE PROYECTO", value:TIPOS.find(t => t.id === tipo)?.label },
+            { label:"DOCUMENTOS", value:archivos.map(f => f.name).join(", ") },
+            { label:"NORMATIVA", value:["OGUC","LGUC",tienePRC?`PRC ${PRC_COMUNAS[comuna].meta.nombre}`:null].filter(Boolean).join(" · ") },
+            { label:"FECHA", value:new Date().toLocaleDateString("es-CL",{day:"2-digit",month:"long",year:"numeric"}) },
+          ].map(({ label, value }) => (
+            <div key={label}>
+              <div style={{ fontSize:7, color:"#6B7A99", letterSpacing:"1.5px", marginBottom:2 }}>{label}</div>
+              <div style={{ fontSize:9, color:"#3D4A5C", fontWeight:600, lineHeight:1.4, wordBreak:"break-word" }}>{value}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ background:"#EEF2FB", borderRadius:99, height:5, marginBottom:6, overflow:"hidden" }}>
+          <div style={{ width:`${result.puntaje_global}%`, height:"100%", borderRadius:99, background:`linear-gradient(90deg,${ec.color}80,${ec.color})` }}/>
+        </div>
+        <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:20 }}>{result.resumen_general}</p>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
+          {[
+            { n:altas.length,    label:"Incumplimientos", c:"#C0392B" },
+            { n:tecnicas.length, label:"Observaciones",   c:"#D68910" },
+            { n:resueltas,       label:"Resueltas",        c:"#1E8449" },
+          ].map(m => (
+            <div key={m.label} style={{ border:`1px solid ${m.c}30`, borderRadius:8, padding:"10px", textAlign:"center", background:`${m.c}06` }}>
+              <div style={{ fontSize:28, fontWeight:900, color:m.c, lineHeight:1 }}>{m.n}</div>
+              <div style={{ fontSize:9, color:"#6B7A99", marginTop:2 }}>{m.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CAPA 1 ── */}
+      <div>
+        <CapaBanner>CAPA 1 — LEVANTAMIENTO GEOMÉTRICO</CapaBanner>
+
+        {/* E1 */}
+        <EtapaTitle label="Etapa 1 — Separación Gráfica" subtitle="El sistema distingue geometría real vs. texto, cotas, simbología y ruido visual" badge="Capa 1 · 1/4" />
+        <PrintTable
+          headers={["Capa","Contenido identificado","Páginas","Estado"]}
+          rows={(result.capa1?.separacion?.capas || []).map((c, i) => (
+            <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+              <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{c.nombre}</td>
+              <td style={PTD}>{c.contenido}</td>
+              <td style={{ ...PTD, whiteSpace:"nowrap" }}>{c.paginas}</td>
+              <td style={PTD}><StatusBadge val={c.estado} /></td>
+            </tr>
+          ))}
+        />
+        <ObsPrint arr={result.capa1?.separacion?.observaciones} prefix="sep" />
+
+        {/* E2 */}
+        <div style={pg}>
+          <CapaBanner>CAPA 1 — LEVANTAMIENTO GEOMÉTRICO</CapaBanner>
+          <EtapaTitle label="Etapa 2 — Reconocimiento de Elementos" subtitle="El sistema identifica recintos, circulaciones y elementos relevantes por nivel" badge="Capa 1 · 2/4" />
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:14 }}>
+            {[
+              { n:result.capa1?.reconocimiento?.stats?.recintos_total??0, label:"Recintos identificados", c:"#1B3A8A" },
+              { n:result.capa1?.reconocimiento?.stats?.niveles??0,         label:"Niveles procesados",    c:"#2952A3" },
+              { n:result.capa1?.reconocimiento?.observaciones?.length??0,  label:"Observaciones",         c:"#D68910" },
+            ].map(m => (
+              <div key={m.label} style={{ border:"1px solid #D1D9EE", borderRadius:6, padding:"8px", textAlign:"center" }}>
+                <div style={{ fontSize:22, fontWeight:900, color:m.c, lineHeight:1 }}>{m.n}</div>
+                <div style={{ fontSize:8, color:"#6B7A99", marginTop:2 }}>{m.label}</div>
+              </div>
+            ))}
+          </div>
+          {(result.capa1?.reconocimiento?.recintos_por_nivel || []).map((nivel, ni) => (
+            <div key={ni} style={{ marginBottom:14, pageBreakInside:"avoid" }}>
+              <div style={{ fontSize:9, fontWeight:700, color:"#1B3A8A", letterSpacing:"1px", marginBottom:5, background:"#EEF2FB", padding:"4px 8px", borderRadius:4 }}>NIVEL: {nivel.nivel}</div>
+              <PrintTable
+                headers={["Recinto","Uso","Superficie m²","Estado"]}
+                rows={(nivel.recintos || []).map((r, i) => (
+                  <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                    <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{r.nombre}</td>
+                    <td style={PTD}>{r.uso || "—"}</td>
+                    <td style={PTD}>{r.superficie_m2 ?? "—"}</td>
+                    <td style={PTD}><StatusBadge val={r.estado} /></td>
+                  </tr>
+                ))}
+              />
+            </div>
+          ))}
+          {colabPngs.length > 0 && (
+            <div style={{ marginBottom:14 }}>
+              <div style={{ fontSize:9, fontWeight:700, color:"#6B7A99", letterSpacing:"1.5px", marginBottom:8 }}>ANÁLISIS GEOMÉTRICO COLAB (OpenCV)</div>
+              {colabPngs.map((p, i) => (
+                <div key={i} style={{ marginBottom:8, pageBreakInside:"avoid" }}>
+                  <div style={{ fontSize:8, color:"#6B7A99", marginBottom:3, fontFamily:"monospace" }}>{p.name}</div>
+                  <img src={`data:image/jpeg;base64,${p.base64}`} alt={p.name} style={{ width:"100%", borderRadius:5, border:"1px solid #D1D9EE" }} />
+                </div>
+              ))}
+            </div>
+          )}
+          <ObsPrint arr={result.capa1?.reconocimiento?.observaciones} prefix="rec" />
+        </div>
+
+        {/* E3 */}
+        <div style={pg}>
+          <CapaBanner>CAPA 1 — LEVANTAMIENTO GEOMÉTRICO</CapaBanner>
+          <EtapaTitle label="Etapa 3 — Vectorización" subtitle="Elementos geométricos extraídos y clasificados del plano" badge="Capa 1 · 3/4" />
+          <PrintTable
+            headers={["Tipo","Cant.","Descripción","Páginas","Estado"]}
+            rows={(result.capa1?.vectorizacion?.elementos || []).map((e, i) => (
+              <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{e.tipo}</td>
+                <td style={{ ...PTD, textAlign:"center" }}>{e.cantidad}</td>
+                <td style={PTD}>{e.descripcion}</td>
+                <td style={{ ...PTD, whiteSpace:"nowrap" }}>{e.paginas}</td>
+                <td style={PTD}><StatusBadge val={e.estado} /></td>
+              </tr>
+            ))}
+          />
+          <ObsPrint arr={result.capa1?.vectorizacion?.observaciones} prefix="vec" />
+        </div>
+
+        {/* E4 */}
+        <div style={pg}>
+          <CapaBanner>CAPA 1 — LEVANTAMIENTO GEOMÉTRICO</CapaBanner>
+          <EtapaTitle label="Etapa 4 — Modelo Estructural" subtitle="Organización funcional, accesos y sistemas de evacuación" badge="Capa 1 · 4/4" />
+          <div style={{ fontSize:9, fontWeight:700, color:"#1B3A8A", letterSpacing:"1px", marginBottom:6 }}>ORGANIZACIÓN FUNCIONAL</div>
+          <PrintTable
+            headers={["Nivel","Uso","Área m²","Conexión"]}
+            rows={(result.capa1?.modelo?.organizacion_funcional || []).map((o, i) => (
+              <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{o.nivel}</td>
+                <td style={PTD}>{o.uso}</td>
+                <td style={PTD}>{o.area_m2 ?? "—"}</td>
+                <td style={PTD}>{o.conexion || "—"}</td>
+              </tr>
+            ))}
+          />
+          <div style={{ fontSize:9, fontWeight:700, color:"#1B3A8A", letterSpacing:"1px", marginBottom:6, marginTop:10 }}>ACCESOS Y EVACUACIÓN</div>
+          <PrintTable
+            headers={["Elemento","Estado","Nota"]}
+            rows={(result.capa1?.modelo?.accesos_evacuacion || []).map((a, i) => (
+              <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{a.elemento}</td>
+                <td style={PTD}><StatusBadge val={a.estado} /></td>
+                <td style={PTD}>{a.nota || "—"}</td>
+              </tr>
+            ))}
+          />
+          <ObsPrint arr={result.capa1?.modelo?.observaciones} prefix="mod" />
+        </div>
+      </div>
+
+      {/* ── CAPA 2 ── */}
+      <div style={pg}>
+        <CapaBanner>CAPA 2 — EVALUACIÓN NORMATIVA</CapaBanner>
+
+        {/* N1 */}
+        <EtapaTitle label="Etapa A — Recintos y Superficies" subtitle="Verificación de superficies mínimas por tipo de recinto según OGUC" badge="Capa 2 · A/D" c2 />
+        <PrintTable
+          headers={["Recinto","Uso","Sup. real m²","Sup. mín. m²","Cumple","Artículo"]}
+          rows={(result.capa2?.recintos_superficies?.tabla || []).map((r, i) => (
+            <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+              <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{r.recinto}</td>
+              <td style={PTD}>{r.uso || "—"}</td>
+              <td style={PTD}>{r.sup_real_m2 ?? "—"}</td>
+              <td style={PTD}>{r.sup_minima_m2 ?? "—"}</td>
+              <td style={PTD}><StatusBadge val={r.cumple} /></td>
+              <td style={{ ...PTD, fontFamily:"monospace", fontSize:9, color:"#2952A3" }}>{r.articulo || "—"}</td>
+            </tr>
+          ))}
+        />
+        <ObsPrint arr={result.capa2?.recintos_superficies?.observaciones} prefix="n1" />
+
+        {/* N2 */}
+        <div style={pg}>
+          <CapaBanner>CAPA 2 — EVALUACIÓN NORMATIVA</CapaBanner>
+          <EtapaTitle label="Etapa B — Circulaciones" subtitle="Verificación de anchos mínimos de pasillos, escaleras y accesos según OGUC" badge="Capa 2 · B/D" c2 />
+          <PrintTable
+            headers={["Elemento","Ancho real (m)","Ancho mín. (m)","Artículo","Cumple"]}
+            rows={(result.capa2?.circulaciones?.tabla || []).map((r, i) => (
+              <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{r.elemento}</td>
+                <td style={{ ...PTD, textAlign:"center" }}>{r.ancho_real_m ?? "—"}</td>
+                <td style={{ ...PTD, textAlign:"center" }}>{r.ancho_minimo_m ?? "—"}</td>
+                <td style={{ ...PTD, fontFamily:"monospace", fontSize:9, color:"#2952A3" }}>{r.articulo || "—"}</td>
+                <td style={PTD}><StatusBadge val={r.cumple} /></td>
+              </tr>
+            ))}
+          />
+          <ObsPrint arr={result.capa2?.circulaciones?.observaciones} prefix="n2" />
+        </div>
+
+        {/* N3 */}
+        <div style={pg}>
+          <CapaBanner>CAPA 2 — EVALUACIÓN NORMATIVA</CapaBanner>
+          <EtapaTitle label="Etapa C — Iluminación y Ventilación" subtitle="Verificación de relación ventana/área de recinto según OGUC Art. 4.5.7" badge="Capa 2 · C/D" c2 />
+          <PrintTable
+            headers={["Recinto","Área ventana m²","Área recinto m²","Ratio req.","Cumple"]}
+            rows={(result.capa2?.iluminacion_ventilacion?.tabla || []).map((r, i) => (
+              <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{r.recinto}</td>
+                <td style={{ ...PTD, textAlign:"center" }}>{r.area_ventana_m2 ?? "—"}</td>
+                <td style={{ ...PTD, textAlign:"center" }}>{r.area_recinto_m2 ?? "—"}</td>
+                <td style={{ ...PTD, textAlign:"center" }}>{r.ratio_requerido || "1/6"}</td>
+                <td style={PTD}><StatusBadge val={r.cumple} /></td>
+              </tr>
+            ))}
+          />
+          <ObsPrint arr={result.capa2?.iluminacion_ventilacion?.observaciones} prefix="n3" />
+        </div>
+
+        {/* N4 */}
+        <div style={pg}>
+          <CapaBanner>CAPA 2 — EVALUACIÓN NORMATIVA</CapaBanner>
+          <EtapaTitle label="Etapa D — Normativa Urbanística" subtitle="Verificación de constructibilidad, altura, COS y uso de suelo" badge="Capa 2 · D/D" c2 />
+          <PrintTable
+            headers={["Parámetro","Referencia normativa","Valor del proyecto","Estado"]}
+            rows={(result.capa2?.normativa_urbanistica?.tabla || []).map((r, i) => (
+              <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{r.parametro}</td>
+                <td style={{ ...PTD, fontFamily:"monospace", fontSize:9, color:"#2952A3" }}>{r.referencia}</td>
+                <td style={PTD}>{r.valor_proyecto}</td>
+                <td style={PTD}><StatusBadge val={r.estado} /></td>
+              </tr>
+            ))}
+          />
+          <ObsPrint arr={result.capa2?.normativa_urbanistica?.observaciones} prefix="n4" />
+        </div>
+
+        {/* N5 — Consolidación */}
+        <div style={pg}>
+          <CapaBanner>CAPA 2 — EVALUACIÓN NORMATIVA</CapaBanner>
+          <EtapaTitle label="Etapa E — Consolidación" subtitle="Revisión final de todas las observaciones" badge="Capa 2 · E/E" c2 />
+          {altas.length > 0 && (
+            <div style={{ marginBottom:14 }}>
+              <div style={{ fontSize:9, fontWeight:700, color:"#C0392B", letterSpacing:"1.5px", marginBottom:8 }}>INCUMPLIMIENTOS — {altas.length}</div>
+              {altas.map(({ obs, key, etapa }) => {
+                const st = obsStatus[key];
+                return (
+                  <div key={key} style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.04)", borderRadius:"0 6px 6px 0", padding:"8px 10px", marginBottom:6, pageBreakInside:"avoid" }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", gap:8, marginBottom:3 }}>
+                      <div style={{ fontSize:9, fontWeight:700, color:"#C0392B" }}>{etapa}</div>
+                      {st?.status && <span style={{ fontSize:8, fontWeight:600, color:STATUS_COLORS[st.status], background:STATUS_COLORS[st.status]+"18", border:`1px solid ${STATUS_COLORS[st.status]}40`, borderRadius:99, padding:"1px 5px" }}>✓ {STATUS_LABELS[st.status]}</span>}
+                    </div>
+                    <div style={{ fontSize:10, color:"#3D4A5C", lineHeight:1.4, marginBottom:4 }}>{obs.descripcion}</div>
+                    {obs.articulo && <div style={{ display:"flex", flexWrap:"wrap", gap:3, marginBottom:4 }}>{obs.articulo.split(/[,;]/).map(p => p.trim()).filter(Boolean).map((p, pi) => <span key={pi} style={{ fontSize:8, color:"#2952A3", background:"rgba(41,82,163,0.08)", border:"1px solid rgba(41,82,163,0.2)", borderRadius:3, padding:"1px 4px", fontFamily:"monospace" }}>§ {p}</span>)}</div>}
+                    {obs.correccion && <div style={{ fontSize:9, color:"#6B7A99", borderTop:"1px solid rgba(192,57,43,0.15)", paddingTop:4, lineHeight:1.4 }}><span style={{ color:"#C0392B", fontWeight:700 }}>→ </span>{obs.correccion}</div>}
+                    {st?.comment && <div style={{ fontSize:9, color:"#2952A3", marginTop:3, fontStyle:"italic" }}>Nota: {st.comment}</div>}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {tecnicas.length > 0 && (
+            <div style={{ marginBottom:14 }}>
+              <div style={{ fontSize:9, fontWeight:700, color:"#D68910", letterSpacing:"1.5px", marginBottom:8 }}>OBSERVACIONES TÉCNICAS — {tecnicas.length}</div>
+              <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                <thead><tr>{["Etapa","Descripción","Criticidad","Artículo"].map(h => <th key={h} style={PTH}>{h}</th>)}</tr></thead>
+                <tbody>{tecnicas.map(({ obs, key, etapa }, i) => (
+                  <tr key={key} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                    <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A", whiteSpace:"nowrap" }}>{etapa}</td>
+                    <td style={PTD}>{obs.descripcion}</td>
+                    <td style={PTD}><StatusBadge val={obs.criticidad === "ALTA" ? "INCUMPLE" : obs.criticidad === "MEDIA" ? "OBSERVADO" : "OK"} /></td>
+                    <td style={{ ...PTD, fontFamily:"monospace", fontSize:9, color:"#2952A3" }}>{obs.articulo || "—"}</td>
+                  </tr>
+                ))}</tbody>
+              </table>
+            </div>
+          )}
+          {result.pasos_siguientes?.length > 0 && (
+            <div style={{ marginBottom:14 }}>
+              <div style={{ fontSize:9, fontWeight:700, color:"#1B3A8A", letterSpacing:"1.5px", marginBottom:8 }}>PLAN DE ACCIÓN PRIORITARIO</div>
+              {result.pasos_siguientes.map((p, i) => (
+                <div key={i} style={{ display:"grid", gridTemplateColumns:"28px 1fr", gap:8, padding:"7px 10px", borderBottom:i < result.pasos_siguientes.length - 1 ? "1px solid #EEF2FB" : "none", pageBreakInside:"avoid" }}>
+                  <div style={{ width:20, height:20, borderRadius:"50%", background:i===0?"#C0392B":i===1?"#D68910":"#2952A3", display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, fontWeight:700, color:"#fff" }}>{i + 1}</div>
+                  <div style={{ fontSize:10, color:"#3D4A5C", lineHeight:1.5 }}>{p}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── INFORME FINAL ── */}
+      <div style={pg}>
+        <CapaBanner>★ INFORME FINAL</CapaBanner>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16, gap:12 }}>
+          <div>
+            <h2 style={{ fontSize:16, fontWeight:800, color:"#1B3A8A", fontFamily:"Arial,sans-serif", margin:"0 0 2px" }}>{TIPOS.find(t => t.id === tipo)?.label} · {PRC_COMUNAS[comuna]?.meta?.nombre || comuna}</h2>
+            <div style={{ fontSize:10, color:"#6B7A99" }}>{new Date().toLocaleDateString("es-CL",{day:"2-digit",month:"long",year:"numeric"})}</div>
+          </div>
+          <div style={{ textAlign:"right" }}>
+            <span style={{ fontSize:8, fontWeight:700, padding:"3px 12px", borderRadius:99, ...ec }}>{result.estado_global}</span>
+            <div><span style={{ fontSize:32, fontWeight:900, color:ec.color, lineHeight:1 }}>{result.puntaje_global}</span><span style={{ fontSize:11, color:"#6B7A99" }}>/100</span></div>
+          </div>
+        </div>
+        <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:16 }}>{result.resumen_general}</p>
+        {total > 0 && (
+          <div style={{ marginBottom:14 }}>
+            <div style={{ display:"flex", justifyContent:"space-between", fontSize:8, color:"#6B7A99", marginBottom:4 }}>
+              <span>Progreso de revisión</span>
+              <span>{resueltas} / {total} observaciones resueltas</span>
+            </div>
+            <div style={{ background:"#EEF2FB", borderRadius:99, height:4, overflow:"hidden" }}>
+              <div style={{ width:`${total ? (resueltas / total) * 100 : 0}%`, height:"100%", borderRadius:99, background:"#1E8449" }} />
+            </div>
+          </div>
+        )}
+        {result.alertas_especiales?.length > 0 && (
+          <div style={{ marginBottom:14 }}>
+            <div style={{ fontSize:9, fontWeight:700, color:"#D68910", letterSpacing:"1.5px", marginBottom:6 }}>ALERTAS ESPECIALES</div>
+            {result.alertas_especiales.map((a, i) => (
+              <div key={i} style={{ background:"#FEF3CD", border:"1px solid #D68910", borderRadius:5, padding:"7px 10px", marginBottom:4, fontSize:10, color:"#7D5A00", lineHeight:1.5 }}>⚠ {a}</div>
+            ))}
+          </div>
+        )}
+        <div style={{ marginBottom:14 }}>
+          <div style={{ fontSize:9, fontWeight:700, color:"#1B3A8A", letterSpacing:"1.5px", marginBottom:6 }}>RESUMEN DE VERIFICACIÓN</div>
+          {[
+            { label:"Normativa OGUC verificada", ok:true },
+            { label:"Normativa LGUC verificada", ok:true },
+            { label:tienePRC ? `PRC ${PRC_COMUNAS[comuna].meta.nombre} aplicado` : "PRC — comuna no registrada", ok:tienePRC },
+            { label:totalRecintos > 0 ? `${totalRecintos} recinto${totalRecintos !== 1 ? "s" : ""} identificado${totalRecintos !== 1 ? "s" : ""}` : "Recintos — no detectados", ok:totalRecintos > 0 },
+            { label:"Incumplimientos críticos", ok:altas.length === 0 },
+          ].map(item => (
+            <div key={item.label} style={{ display:"flex", alignItems:"center", gap:8, fontSize:10, color:"#3D4A5C", marginBottom:4 }}>
+              <span style={{ fontSize:11, flexShrink:0 }}>{item.ok ? "✅" : "⚠️"}</span>
+              <span style={{ color:item.ok ? "#1E8449" : "#D68910" }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ background:"#EEF2FB", border:"1px solid #D1D9EE", borderRadius:6, padding:"10px 12px", fontSize:9, color:"#6B7A99", lineHeight:1.6 }}>
+          ⚠ Análisis orientativo. No reemplaza la revisión oficial de la DOM. Consulte siempre el Plan Regulador Comunal y la DOM de su comuna.
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
 // ── Componente ─────────────────────────────────────────────────────────────
 export default function ArchiCheck() {
   const [archivos,   setArchivos]   = useState([]);
@@ -508,9 +942,28 @@ export default function ArchiCheck() {
   const [toast, setToast] = useState(null);
   const [activeEtapa, setActiveEtapa] = useState("e1");
   const [activeFloor, setActiveFloor] = useState(0);
+  const [printing, setPrinting] = useState(false);
   const inputRef = useRef();
   const colabInputRef = useRef();
   const colabPngInputRef = useRef();
+  const printRef = useRef();
+
+  async function exportPDF() {
+    setPrinting(true);
+    await new Promise(r => setTimeout(r, 400));
+    const { default: html2pdf } = await import("html2pdf.js");
+    const slug = TIPOS.find(t => t.id === tipo)?.label?.replace(/\s+/g, "-").toLowerCase() || "informe";
+    const fecha = new Date().toISOString().slice(0, 10);
+    await html2pdf().set({
+      margin: 0,
+      filename: `archicheck-${slug}-${fecha}.pdf`,
+      image: { type: "jpeg", quality: 0.92 },
+      html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["css", "legacy"] },
+    }).from(printRef.current).save();
+    setPrinting(false);
+  }
 
   useEffect(() => {
     if (!toast) return;
@@ -1739,7 +2192,7 @@ export default function ArchiCheck() {
                   </div>
                   <div style={{ display:"flex", gap:10 }}>
                     <button onClick={() => { setResult(null); setArchivos([]); }} style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #D1D9EE", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>↩ Nuevo análisis</button>
-                    <button onClick={() => window.print()} style={{ flex:1, padding:"13px", background:"linear-gradient(90deg,#1B3A8A,#2952A3)", border:"none", borderRadius:10, color:"#fff", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>🖨 Exportar informe</button>
+                    <button onClick={exportPDF} disabled={printing} style={{ flex:1, padding:"13px", background:printing?"#6B7A99":"linear-gradient(90deg,#1B3A8A,#2952A3)", border:"none", borderRadius:10, color:"#fff", fontSize:13, fontFamily:"inherit", cursor:printing?"wait":"pointer", transition:"background .2s" }}>{printing ? "⏳ Generando PDF..." : "🖨 Exportar informe"}</button>
                   </div>
                 </div>
               );
@@ -1754,6 +2207,20 @@ export default function ArchiCheck() {
       {toast && (
         <div style={{ position: "fixed", bottom: 24, right: 24, background: toast === "aceptada" ? "#1E8449" : toast === "comentada" ? "#2952A3" : toast === "modificada" ? "#D68910" : "#6B7A99", color: "#fff", borderRadius: 10, padding: "12px 20px", fontSize: 13, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 9999, display: "flex", alignItems: "center", gap: 8 }}>
           {toast === "aceptada" ? "✅ Observación aceptada" : toast === "comentada" ? "💬 Comentario guardado" : toast === "modificada" ? "✏️ Marcada para modificar" : "🗑️ Observación descartada"}
+        </div>
+      )}
+
+      {/* Div oculto para generación de PDF */}
+      {printing && result && (
+        <div ref={printRef} style={{ position:"fixed", left:"-9999px", top:0, zIndex:-1 }}>
+          <PrintReport
+            result={result}
+            obsStatus={obsStatus}
+            tipo={tipo}
+            comuna={comuna}
+            archivos={archivos}
+            colabPngs={colabPngs}
+          />
         </div>
       )}
     </div>
