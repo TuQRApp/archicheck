@@ -232,14 +232,12 @@ CIRCULARES DDU VIGENTES (División de Desarrollo Urbano, MINVU):
 - DDU 415: Estacionamientos — dotación mínima según uso y comuna
 
 Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de OGUC, LGUC o la circular DDU correspondiente cuando detectes cumplimiento o incumplimiento.
-${contextoTexto}${modo === "completo"
-  ? `MODO EXPEDIENTE COMPLETO: Verifica rigurosamente si el expediente contiene TODOS los documentos obligatorios para un proyecto ${TIPOS.find(t => t.id === tipo)?.label ?? tipo}. Lista en documentos_faltantes cada documento obligatorio ausente con su artículo de referencia y criticidad. Penaliza el puntaje_global si faltan documentos críticos.`
-  : `MODO PARCIAL: Analiza solo los archivos adjuntos sin penalizar por documentos no subidos.`}
+${contextoTexto}Analiza solo los archivos adjuntos. No penalices por documentos no subidos.
 
 Para cada planta de arquitectura identifica los recintos visibles. En "recintos" incluye nombre, uso declarado, superficie estimada en m2, estado normativo y bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Indica en que pagina aparece cada recinto. Si no puedes estimar coordenadas confiables para un recinto, omite su campo bbox.
 ${buildColabTexto(colabData)}
 Responde SOLO con JSON puro sin markdown:
-{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","documentos_faltantes":[{"nombre":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA"}],"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
+{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
 
 // ── PDF → thumbnails (todas las páginas, baja res) + full-res bajo demanda ──
@@ -396,7 +394,6 @@ export default function ArchiCheck() {
   const [error,      setError]      = useState("");
   const [expandido,  setExpandido]  = useState({});
   const [dragOver,   setDragOver]   = useState(false);
-  const [modoAnalisis, setModoAnalisis] = useState("parcial");
   const [modalDwg, setModalDwg] = useState(false);
   const [dwgBloqueado, setDwgBloqueado] = useState(false);
   const [preguntas, setPreguntas] = useState({ situacion: "", analizarSituacion: "", niveles: "" });
@@ -573,7 +570,7 @@ export default function ArchiCheck() {
         content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: png.base64 } });
         content.push({ type: "text", text: `[COLAB PNG: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales]` });
       }
-      content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, modoAnalisis, preguntas, colabJson) });
+      content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, "parcial", preguntas, colabJson) });
 
       setProgress("Analizando contra normativa OGUC / LGUC...");
 
@@ -925,23 +922,6 @@ export default function ArchiCheck() {
               </div>
             )}
 
-            {/* Modo de análisis */}
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "2px", marginBottom: 8 }}>MODO DE ANÁLISIS</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                {[
-                  { id: "parcial",  label: "Analizar lo subido",       desc: "Revisa solo los archivos adjuntos" },
-                  { id: "completo", label: "Validar expediente completo", desc: "Exige todos los documentos obligatorios" },
-                ].map(m => (
-                  <button key={m.id} onClick={() => setModoAnalisis(m.id)}
-                    style={{ background: modoAnalisis === m.id ? "#EEF2FB" : "#FFFFFF", border: `1px solid ${modoAnalisis === m.id ? "#2952A3" : "#D1D9EE"}`, borderRadius: 8, padding: "10px 12px", textAlign: "left", cursor: "pointer", transition: "all .15s" }}>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: modoAnalisis === m.id ? "#1B3A8A" : "#6B7A99", fontFamily: "inherit", marginBottom: 2 }}>{m.label}</div>
-                    <div style={{ fontSize: 10, color: modoAnalisis === m.id ? "#2952A3" : "#6B7A99", fontFamily: "inherit" }}>{m.desc}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             {/* Preguntas de contexto */}
             {archivos.length > 0 && (
               <div style={{ marginBottom: 14 }}>
@@ -1119,17 +1099,18 @@ export default function ArchiCheck() {
 
             {/* Métricas */}
             {(() => {
-              const totalObs    = (result.analisis_por_archivo || []).reduce((s, a) => s + (a.observaciones?.length || 0), 0);
-              const altas       = (result.analisis_por_archivo || []).reduce((s, a) => s + (a.observaciones?.filter(o => o.criticidad === "ALTA").length || 0), 0);
-              const resueltas   = Object.values(obsStatus).filter(s => s?.status).length;
+              const todasObs  = (result.analisis_por_archivo || []).flatMap(a => a.observaciones || []);
+              const altas     = todasObs.filter(o => o.criticidad === "ALTA");
+              const tecnicas  = todasObs.filter(o => o.criticidad !== "ALTA");
+              const resueltas = Object.values(obsStatus).filter(s => s?.status).length;
+              const total     = todasObs.length;
               return (
                 <>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10, marginBottom: 12 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 12 }}>
                     {[
-                      { n: totalObs,                                  label: "Observaciones",  c: "#f59e0b" },
-                      { n: altas,                                     label: "Críticas",       c: "#ef4444" },
-                      { n: result.documentos_faltantes?.length || 0, label: "Docs faltantes", c: "#2952A3" },
-                      { n: resueltas,                                 label: "Resueltas",      c: "#1E8449" },
+                      { n: altas.length,    label: "🔴 Incumplimientos", c: "#C0392B" },
+                      { n: tecnicas.length, label: "🟡 Observaciones",   c: "#D68910" },
+                      { n: resueltas,       label: "✅ Resueltas",        c: "#1E8449" },
                     ].map(m => (
                       <div key={m.label} style={{ background: "#F4F6FB", border: "1px solid #D1D9EE", borderRadius: 10, padding: "14px 10px", textAlign: "center" }}>
                         <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: m.c, lineHeight: 1 }}>{m.n}</div>
@@ -1137,14 +1118,14 @@ export default function ArchiCheck() {
                       </div>
                     ))}
                   </div>
-                  {totalObs > 0 && (
+                  {total > 0 && (
                     <div style={{ marginBottom: 26 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#6B7A99", marginBottom: 5 }}>
                         <span>Progreso de revisión</span>
-                        <span style={{ color: resueltas === totalObs ? "#1E8449" : "#6B7A99" }}>{resueltas} / {totalObs} observaciones resueltas</span>
+                        <span style={{ color: resueltas === total ? "#1E8449" : "#6B7A99" }}>{resueltas} / {total} observaciones resueltas</span>
                       </div>
                       <div style={{ background: "#EEF2FB", borderRadius: 99, height: 4, overflow: "hidden" }}>
-                        <div style={{ width: `${totalObs ? (resueltas / totalObs) * 100 : 0}%`, height: "100%", borderRadius: 99, background: "linear-gradient(90deg,#1E844980,#1E8449)", transition: "width .4s ease" }} />
+                        <div style={{ width: `${total ? (resueltas / total) * 100 : 0}%`, height: "100%", borderRadius: 99, background: "linear-gradient(90deg,#1E844980,#1E8449)", transition: "width .4s ease" }} />
                       </div>
                     </div>
                   )}
@@ -1152,33 +1133,90 @@ export default function ArchiCheck() {
               );
             })()}
 
-            {/* Documentos faltantes */}
-            {result.documentos_faltantes?.length > 0 && (
-              <div style={{ marginBottom: 26 }}>
-                <div style={{ fontSize: 10, color: "#2952A3", letterSpacing: "2px", marginBottom: 10 }}>
-                  DOCUMENTOS FALTANTES — {result.documentos_faltantes.length}
+            {/* Incumplimientos (ALTA) — inc-block estilo Demo */}
+            {(() => {
+              const incumplimientos = (result.analisis_por_archivo || []).flatMap((doc, di) =>
+                (doc.observaciones || [])
+                  .map((obs, oi) => ({ obs, di, oi, archivo: doc.archivo }))
+                  .filter(x => x.obs.criticidad === "ALTA")
+              );
+              if (!incumplimientos.length) return null;
+              return (
+                <div style={{ marginBottom: 28 }}>
+                  <div style={{ fontSize: 10, color: "#C0392B", letterSpacing: "2px", marginBottom: 12 }}>🔴 INCUMPLIMIENTOS — {incumplimientos.length}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {incumplimientos.map(({ obs, di, oi, archivo }) => {
+                      const obsKey = `${di}-${oi}`;
+                      const obsState = obsStatus[obsKey];
+                      const isResolved = !!obsState?.status;
+                      const STATUS_COLORS = { aceptada: "#1E8449", comentada: "#2952A3", modificada: "#D68910", descartada: "#6B7A99" };
+                      const STATUS_LABELS = { aceptada: "Aceptada", comentada: "Comentada", modificada: "Modificada", descartada: "Descartada" };
+                      const OBS_ACTIONS = [
+                        { id: "aceptada",   label: "✅ Aceptar",   color: "#1E8449" },
+                        { id: "comentada",  label: "💬 Comentar",  color: "#2952A3" },
+                        { id: "modificada", label: "✏️ Modificar", color: "#D68910" },
+                        { id: "descartada", label: "🗑️ Descartar", color: "#6B7A99" },
+                      ];
+                      return (
+                        <div key={`${di}-${oi}`} style={{ borderLeft: "4px solid #C0392B", background: "rgba(192,57,43,0.05)", borderRadius: "0 8px 8px 0", padding: "14px 16px", opacity: obsState?.status === "descartada" ? 0.5 : 1 }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, marginBottom: 6 }}>
+                            <div style={{ fontSize: 12, fontWeight: 700, color: "#C0392B" }}>{archivo}</div>
+                            {isResolved && (
+                              <span style={{ fontSize: 10, fontWeight: 600, color: STATUS_COLORS[obsState.status], background: STATUS_COLORS[obsState.status] + "18", border: `1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius: 4, padding: "1px 7px", whiteSpace: "nowrap", flexShrink: 0 }}>
+                                ✓ {STATUS_LABELS[obsState.status]}
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ fontSize: 13, color: "#3D4A5C", lineHeight: 1.6, marginBottom: 8 }}>{obs.descripcion}</div>
+                          {obs.articulo && (
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 8 }}>
+                              {obs.articulo.split(/[,;]/).map(p => p.trim()).filter(Boolean).map((p, pi) => (
+                                <span key={pi} style={{ fontSize: 10, color: "#2952A3", background: "rgba(41,82,163,0.08)", border: "1px solid rgba(41,82,163,0.2)", borderRadius: 4, padding: "2px 7px", fontFamily: "'DM Mono', monospace" }}>§ {p}</span>
+                              ))}
+                            </div>
+                          )}
+                          {obs.correccion && (
+                            <div style={{ fontSize: 12, color: "#6B7A99", borderTop: "1px solid rgba(192,57,43,0.15)", paddingTop: 8, lineHeight: 1.5, marginBottom: 8 }}>
+                              <span style={{ color: "#C0392B", fontWeight: 600 }}>→ </span>{obs.correccion}
+                            </div>
+                          )}
+                          <div style={{ display: "flex", gap: 5, flexWrap: "wrap", paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+                            {OBS_ACTIONS.map(action => {
+                              const active = obsState?.status === action.id;
+                              return (
+                                <button key={action.id} onClick={() => setObsAction(di, oi, action.id)}
+                                  style={{ padding: "3px 9px", fontSize: 10, borderRadius: 5, border: `1px solid ${active ? action.color : "#D1D9EE"}`, background: active ? action.color + "18" : "transparent", color: active ? action.color : "#6B7A99", cursor: "pointer", fontFamily: "inherit", fontWeight: active ? 700 : 400, transition: "all .15s" }}>
+                                  {action.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          {obsState?.status === "comentada" && (
+                            <textarea value={obsState?.comment || ""} onChange={e => setObsComment(di, oi, e.target.value)}
+                              placeholder="Escribe tu comentario..."
+                              style={{ marginTop: 8, width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "8px 10px", fontSize: 11, fontFamily: "inherit", color: "#3D4A5C", resize: "vertical", minHeight: 60, outline: "none", background: "#FFFFFF" }} />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {result.documentos_faltantes.map((d, i) => (
-                    <div key={i} style={{ background: "#EEF2FB", border: "1px solid #D1D9EE", borderRadius: 8, padding: "11px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-                      <div>
-                        <div style={{ fontSize: 13, color: "#1B3A8A", marginBottom: 2 }}>{d.nombre}</div>
-                        <div style={{ fontSize: 11, color: "#2952A3" }}>📘 {d.articulo}</div>
-                      </div>
-                      <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 10px", borderRadius: 4, flexShrink: 0, ...critStyle(d.criticidad) }}>{d.criticidad}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              );
+            })()}
 
-            {/* Análisis por archivo */}
-            <div style={{ marginBottom: 26 }}>
-              <div style={{ fontSize: 10, color: "#1B3A8A", letterSpacing: "2px", marginBottom: 12 }}>
-                ANÁLISIS POR DOCUMENTO
-              </div>
+            {/* Observaciones técnicas (MEDIA / BAJA) por documento */}
+            {(() => {
+              const docsConObs = (result.analisis_por_archivo || []).filter(doc =>
+                doc.observaciones?.some(o => o.criticidad !== "ALTA") || doc.elementos_ok?.length || doc.recintos?.length
+              );
+              if (!docsConObs.length) return null;
+              return (
+              <div style={{ marginBottom: 26 }}>
+              <div style={{ fontSize: 10, color: "#D68910", letterSpacing: "2px", marginBottom: 12 }}>🟡 OBSERVACIONES TÉCNICAS</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {result.analisis_por_archivo?.map((doc, i) => {
+                {(result.analisis_por_archivo || []).map((doc, i) => {
+                  const obsTec = (doc.observaciones || []).filter(o => o.criticidad !== "ALTA");
+                  if (!obsTec.length && !doc.elementos_ok?.length && !doc.recintos?.length) return null;
                   const est  = estadoDocStyle(doc.estado);
                   const open = expandido[`d${i}`] !== false;
                   return (
@@ -1193,9 +1231,9 @@ export default function ArchiCheck() {
                           <div style={{ fontSize: 11, color: "#6B7A99", marginTop: 1 }}>{doc.tipo_detectado}</div>
                         </div>
                         <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, flexShrink: 0, ...est }}>{doc.estado}</span>
-                        {doc.observaciones?.length > 0 && (
+                        {obsTec.length > 0 && (
                           <span style={{ fontSize: 10, color: "#D68910", background: "rgba(214,137,16,0.08)", border: "1px solid rgba(214,137,16,0.25)", borderRadius: 99, padding: "2px 8px", flexShrink: 0 }}>
-                            {doc.observaciones.length}
+                            {obsTec.length}
                           </span>
                         )}
                         <span style={{ color: "#6B7A99", fontSize: 11, flexShrink: 0 }}>{open ? "▾" : "▸"}</span>
@@ -1214,14 +1252,15 @@ export default function ArchiCheck() {
                               </div>
                             </div>
                           )}
-                          {/* Observaciones */}
-                          {doc.observaciones?.length > 0 ? (
+                          {/* Observaciones MEDIA / BAJA */}
+                          {obsTec.length > 0 && (
                             <div>
-                              <div style={{ fontSize: 9, color: "#C0392B", letterSpacing: "2px", marginBottom: 8 }}>OBSERVACIONES — {doc.observaciones.length}</div>
+                              <div style={{ fontSize: 9, color: "#D68910", letterSpacing: "2px", marginBottom: 8 }}>OBSERVACIONES — {obsTec.length}</div>
                               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                                {doc.observaciones.map((obs, j) => {
+                                {obsTec.map((obs, j) => {
+                                  const realIdx = (doc.observaciones || []).indexOf(obs);
                                   const cs = critStyle(obs.criticidad);
-                                  const obsKey = `${i}-${j}`;
+                                  const obsKey = `${i}-${realIdx}`;
                                   const obsState = obsStatus[obsKey];
                                   const isResolved = !!obsState?.status;
                                   const OBS_ACTIONS = [
@@ -1245,13 +1284,10 @@ export default function ArchiCheck() {
                                           )}
                                         </div>
                                       </div>
-                                      {/* § Badges artículo */}
                                       {obs.articulo && (
                                         <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: obs.correccion ? 8 : 6 }}>
                                           {obs.articulo.split(/[,;]/).map(p => p.trim()).filter(Boolean).map((p, pi) => (
-                                            <span key={pi} style={{ fontSize: 10, color: "#2952A3", background: "rgba(41,82,163,0.08)", border: "1px solid rgba(41,82,163,0.2)", borderRadius: 4, padding: "2px 7px", fontFamily: "'DM Mono', monospace" }}>
-                                              § {p}
-                                            </span>
+                                            <span key={pi} style={{ fontSize: 10, color: "#2952A3", background: "rgba(41,82,163,0.08)", border: "1px solid rgba(41,82,163,0.2)", borderRadius: 4, padding: "2px 7px", fontFamily: "'DM Mono', monospace" }}>§ {p}</span>
                                           ))}
                                         </div>
                                       )}
@@ -1260,12 +1296,11 @@ export default function ArchiCheck() {
                                           <span style={{ color: "#2952A3" }}>→ </span>{obs.correccion}
                                         </div>
                                       )}
-                                      {/* Acciones */}
                                       <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
                                         {OBS_ACTIONS.map(action => {
                                           const active = obsState?.status === action.id;
                                           return (
-                                            <button key={action.id} onClick={() => setObsAction(i, j, action.id)}
+                                            <button key={action.id} onClick={() => setObsAction(i, realIdx, action.id)}
                                               style={{ padding: "3px 9px", fontSize: 10, borderRadius: 5, border: `1px solid ${active ? action.color : "#D1D9EE"}`, background: active ? action.color + "18" : "transparent", color: active ? action.color : "#6B7A99", cursor: "pointer", fontFamily: "inherit", fontWeight: active ? 700 : 400, transition: "all .15s" }}>
                                               {action.label}
                                             </button>
@@ -1273,20 +1308,15 @@ export default function ArchiCheck() {
                                         })}
                                       </div>
                                       {obsState?.status === "comentada" && (
-                                        <textarea
-                                          value={obsState?.comment || ""}
-                                          onChange={e => setObsComment(i, j, e.target.value)}
+                                        <textarea value={obsState?.comment || ""} onChange={e => setObsComment(i, realIdx, e.target.value)}
                                           placeholder="Escribe tu comentario o nota para esta observación..."
-                                          style={{ marginTop: 8, width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "8px 10px", fontSize: 11, fontFamily: "inherit", color: "#3D4A5C", resize: "vertical", minHeight: 60, outline: "none", background: "#FFFFFF" }}
-                                        />
+                                          style={{ marginTop: 8, width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "8px 10px", fontSize: 11, fontFamily: "inherit", color: "#3D4A5C", resize: "vertical", minHeight: 60, outline: "none", background: "#FFFFFF" }} />
                                       )}
                                     </div>
                                   );
                                 })}
                               </div>
                             </div>
-                          ) : (
-                            <div style={{ fontSize: 12, color: "#1E8449", textAlign: "center", padding: "10px 0" }}>✓ Sin observaciones</div>
                           )}
 
                           {/* Overlay de recintos */}
@@ -1367,6 +1397,8 @@ export default function ArchiCheck() {
                 })}
               </div>
             </div>
+              );
+            })()}
 
             {/* Alertas especiales */}
             {result.alertas_especiales?.length > 0 && (
@@ -1380,16 +1412,22 @@ export default function ArchiCheck() {
               </div>
             )}
 
-            {/* Pasos siguientes */}
+            {/* Plan de acción */}
             {result.pasos_siguientes?.length > 0 && (
               <div style={{ marginBottom: 26 }}>
-                <div style={{ fontSize: 10, color: "#1B3A8A", letterSpacing: "2px", marginBottom: 8 }}>PASOS SIGUIENTES</div>
-                {result.pasos_siguientes.map((p, i) => (
-                  <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "10px 0", borderBottom: "1px solid #D1D9EE" }}>
-                    <div style={{ width: 24, height: 24, borderRadius: "50%", flexShrink: 0, background: "linear-gradient(135deg,#1B3A8A,#2952A3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff" }}>{i + 1}</div>
-                    <div style={{ fontSize: 13, color: "#3D4A5C", lineHeight: 1.6 }}>{p}</div>
+                <div style={{ fontSize: 10, color: "#1B3A8A", letterSpacing: "2px", marginBottom: 10 }}>✅ PLAN DE ACCIÓN PRIORITARIO</div>
+                <div style={{ border: "1px solid #D1D9EE", borderRadius: 10, overflow: "hidden" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "40px 1fr", background: "#EEF2FB", padding: "7px 14px", gap: 12 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "#1B3A8A" }}>#</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "#1B3A8A" }}>Acción</span>
                   </div>
-                ))}
+                  {result.pasos_siguientes.map((p, i) => (
+                    <div key={i} style={{ display: "grid", gridTemplateColumns: "40px 1fr", gap: 12, padding: "10px 14px", borderTop: "1px solid #EEF2FB", alignItems: "flex-start" }}>
+                      <div style={{ width: 24, height: 24, borderRadius: "50%", background: i === 0 ? "#C0392B" : i === 1 ? "#D68910" : "#2952A3", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff" }}>{i + 1}</div>
+                      <div style={{ fontSize: 13, color: "#3D4A5C", lineHeight: 1.6 }}>{p}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
