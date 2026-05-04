@@ -299,6 +299,28 @@ async function toBase64(file) {
   });
 }
 
+// ── Comprimir imagen a JPEG (max 2000px, evita límite 5MB Anthropic) ────────
+async function compressImage(file, maxPx = 2000, quality = 0.80) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width  = Math.round(img.width  * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", quality).split(",")[1]);
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 // ── Helpers de color ───────────────────────────────────────────────────────
 const critStyle = (c) => ({
   ALTA:  { color: "#C0392B", background: "rgba(192,57,43,0.08)",  border: "1px solid rgba(192,57,43,0.25)" },
@@ -411,7 +433,7 @@ export default function ArchiCheck() {
         isImage: f.type.startsWith("image/"),
         pdfImages,
         paginasSeleccionadas: pdfImages?.map(img => img.page) ?? [],
-        base64: f.type.startsWith("image/") ? await toBase64(f) : null,
+        base64: f.type.startsWith("image/") ? await compressImage(f) : null,
         tipoDoc: "",
         escala: "",
         escalasMultiples: false,
@@ -498,7 +520,7 @@ export default function ArchiCheck() {
     if (!files?.length) return;
     const nuevos = await Promise.all(Array.from(files).map(async (f) => ({
       name: f.name,
-      base64: await toBase64(f),
+      base64: await compressImage(f),
     })));
     setColabPngs(prev => [...prev, ...nuevos]);
   }
