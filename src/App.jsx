@@ -379,6 +379,7 @@ export default function ArchiCheck() {
   const [dwgBloqueado, setDwgBloqueado] = useState(false);
   const [preguntas, setPreguntas] = useState({ situacion: "", analizarSituacion: "", niveles: "" });
   const [obsStatus, setObsStatus] = useState({});
+  const [sinTipo, setSinTipo] = useState(false);
   const [colabJson, setColabJson] = useState(null);
   const [colabPngs, setColabPngs] = useState([]);
   const inputRef = useRef();
@@ -509,6 +510,9 @@ export default function ArchiCheck() {
   // ── Análisis ───────────────────────────────────────────────────────────
   async function analizar() {
     if (!archivos.length) return;
+    const faltanTipo = archivos.some(f => !f.tipoDoc);
+    if (faltanTipo) { setSinTipo(true); setError("Asigna el tipo de documento a cada archivo antes de analizar."); return; }
+    setSinTipo(false);
     setLoading(true); setError(""); setResult(null); setObsStatus({});
     try {
       // Construir content (imágenes primero, luego el prompt)
@@ -777,9 +781,9 @@ export default function ArchiCheck() {
                         </span>
                         <span style={{ fontSize: 12, color: "#1B3A8A", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</span>
                         <span style={{ fontSize: 10, color: "#6B7A99", flexShrink: 0 }}>{(f.size / 1024).toFixed(0)} KB</span>
-                        <select value={f.tipoDoc} onChange={e => setTipoDoc(i, e.target.value)}
-                          style={{ background: "#FFFFFF", border: "1px solid #D1D9EE", borderRadius: 6, padding: "4px 8px", color: "#3D4A5C", fontSize: 11, fontFamily: "inherit", cursor: "pointer", maxWidth: 190 }}>
-                          <option value="">— tipo —</option>
+                        <select value={f.tipoDoc} onChange={e => { setTipoDoc(i, e.target.value); setSinTipo(false); }}
+                          style={{ background: "#FFFFFF", border: `1px solid ${sinTipo && !f.tipoDoc ? "#D68910" : "#D1D9EE"}`, borderRadius: 6, padding: "4px 8px", color: !f.tipoDoc && sinTipo ? "#D68910" : "#3D4A5C", fontSize: 11, fontFamily: "inherit", cursor: "pointer", maxWidth: 190, fontWeight: sinTipo && !f.tipoDoc ? 600 : 400 }}>
+                          <option value="">{sinTipo && !f.tipoDoc ? "⚠ indicar tipo" : "— tipo —"}</option>
                           {TIPOS_DOC.map(t => <option key={t} value={t}>{t}</option>)}
                         </select>
                         <button className="rm" onClick={() => removeFile(i)}
@@ -830,8 +834,8 @@ export default function ArchiCheck() {
                                 {ESCALAS.map(s => <option key={s} value={s}>{s}</option>)}
                               </select>
                               <button onClick={() => toggleEscalasMultiples(i)}
-                                style={{ background: "none", border: "1px solid #D1D9EE", borderRadius: 5, padding: "3px 8px", color: "#6B7A99", fontSize: 10, cursor: "pointer", fontFamily: "inherit" }}>
-                                Hay múltiples escalas
+                                style={{ background: "rgba(74,114,196,0.07)", border: "1px solid #4A72C4", borderRadius: 5, padding: "4px 10px", color: "#2952A3", fontSize: 10, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                                + capturas de escala por página
                               </button>
                             </div>
                           ) : (
