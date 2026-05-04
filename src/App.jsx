@@ -570,7 +570,7 @@ export default function ArchiCheck() {
         }
       }
       for (const png of colabPngs) {
-        content.push({ type: "image", source: { type: "base64", media_type: "image/png", data: png.base64 } });
+        content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: png.base64 } });
         content.push({ type: "text", text: `[COLAB PNG: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales]` });
       }
       content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, modoAnalisis, preguntas, colabJson) });
