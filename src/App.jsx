@@ -114,8 +114,42 @@ function repairAndParse(str) {
   return partial;
 }
 
+// ── Colab JSON → texto para el prompt ──────────────────────────────────────
+function buildColabTexto(json) {
+  if (!json) return "";
+  if (json.paginas) {
+    const lines = ["\nMEDICIÓN GEOMÉTRICA REAL (Colab/OpenCV, medida desde píxeles reales):"];
+    for (const p of json.paginas) {
+      lines.push(`Página ${p.pagina} — escala ${p.escala} — área total medida: ${p.total_area_m2} m²:`);
+      const named = (p.mediciones_geometricas || []).filter(r => !r.nombre.startsWith("Espacio E"));
+      for (const r of named) {
+        const a = r.ancho_min_m != null ? ` · ancho mín ${r.ancho_min_m} m` : "";
+        const e = r.cumple_geo === false ? " [INCUMPLE OGUC]" : "";
+        lines.push(`  - ${r.nombre} (${r.tipo}): ${r.area_m2} m²${a}${e}`);
+      }
+      for (const inc of (p.incumplimientos_geo || [])) {
+        const u = inc.tipo === "area" ? "m²" : "m";
+        lines.push(`  INCUMPLIMIENTO CONFIRMADO [${inc.tipo.toUpperCase()}] ${inc.recinto}: ${inc.medido}${u} < ${inc.minimo}${u} mínimo — ${inc.ref} — déficit ${inc.deficit}${u}`);
+      }
+    }
+    const totalInc = json.resumen_global?.incumplimientos_geo_total ?? 0;
+    if (totalInc > 0)
+      lines.push(`\nLos ${totalInc} incumplimientos marcados son MEDIDAS REALES confirmadas por OpenCV. Inclúyelos como observaciones ALTA criticidad.\n`);
+    return lines.join("\n") + "\n";
+  }
+  if (json.tabla_cruzada) {
+    const lines = [`\nMEDICIÓN GEOMÉTRICA REAL (Colab, escala ${json.escala || "no declarada"}):`];
+    for (const r of json.tabla_cruzada) {
+      if (!r.Nombre || r.Nombre.startsWith("Espacio")) continue;
+      lines.push(`  - ${r.Nombre} (${r.Tipo || "—"}): ${r["Área m²"]} m²`);
+    }
+    return lines.join("\n") + "\n";
+  }
+  return "";
+}
+
 // ── Prompt ─────────────────────────────────────────────────────────────────
-function buildPrompt(tipo, comuna, archivos, modo = "parcial", preguntas = {}) {
+function buildPrompt(tipo, comuna, archivos, modo = "parcial", preguntas = {}, colabData = null) {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
   const lista = archivos.map((f, i) => {
     const selCount = f.paginasSeleccionadas?.length ?? f.pdfImages?.length ?? 0;
@@ -203,7 +237,7 @@ ${contextoTexto}${modo === "completo"
   : `MODO PARCIAL: Analiza solo los archivos adjuntos sin penalizar por documentos no subidos.`}
 
 Para cada planta de arquitectura identifica los recintos visibles. En "recintos" incluye nombre, uso declarado, superficie estimada en m2, estado normativo y bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Indica en que pagina aparece cada recinto. Si no puedes estimar coordenadas confiables para un recinto, omite su campo bbox.
-
+${buildColabTexto(colabData)}
 Responde SOLO con JSON puro sin markdown:
 {"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","documentos_faltantes":[{"nombre":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA"}],"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
@@ -345,7 +379,11 @@ export default function ArchiCheck() {
   const [dwgBloqueado, setDwgBloqueado] = useState(false);
   const [preguntas, setPreguntas] = useState({ situacion: "", analizarSituacion: "", niveles: "" });
   const [obsStatus, setObsStatus] = useState({});
+  const [colabJson, setColabJson] = useState(null);
+  const [colabPngs, setColabPngs] = useState([]);
   const inputRef = useRef();
+  const colabInputRef = useRef();
+  const colabPngInputRef = useRef();
 
   // ── Manejo de archivos ─────────────────────────────────────────────────
   const handleFiles = useCallback(async (files) => {
@@ -439,6 +477,35 @@ export default function ArchiCheck() {
     setObsStatus(prev => ({ ...prev, [key]: { ...prev[key], comment } }));
   };
 
+  async function handleColabJson(file) {
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text.replace(/^﻿/, ""));
+      if (!json.paginas && !json.tabla_cruzada) {
+        setError("El JSON no parece ser un archivo de Colab válido.");
+        return;
+      }
+      setColabJson(json);
+      setError("");
+    } catch (e) {
+      setError("No se pudo leer el JSON de Colab: " + e.message);
+    }
+  }
+
+  async function handleColabPngs(files) {
+    if (!files?.length) return;
+    const nuevos = await Promise.all(Array.from(files).map(async (f) => ({
+      name: f.name,
+      base64: await toBase64(f),
+    })));
+    setColabPngs(prev => [...prev, ...nuevos]);
+  }
+
+  function removeColabPng(i) {
+    setColabPngs(prev => prev.filter((_, idx) => idx !== i));
+  }
+
   // ── Análisis ───────────────────────────────────────────────────────────
   async function analizar() {
     if (!archivos.length) return;
@@ -476,7 +543,11 @@ export default function ArchiCheck() {
           }
         }
       }
-      content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, modoAnalisis, preguntas) });
+      for (const png of colabPngs) {
+        content.push({ type: "image", source: { type: "base64", media_type: "image/png", data: png.base64 } });
+        content.push({ type: "text", text: `[COLAB PNG: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales]` });
+      }
+      content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, modoAnalisis, preguntas, colabJson) });
 
       setProgress("Analizando contra normativa OGUC / LGUC...");
 
@@ -898,6 +969,61 @@ export default function ArchiCheck() {
                 </div>
               </div>
             )}
+
+            {/* Resultados Colab (opcional) */}
+            <div style={{ marginBottom: 18, border: "1px solid #D1D9EE", borderRadius: 10, overflow: "hidden" }}>
+              <div style={{ padding: "10px 14px", background: "#F4F6FB", borderBottom: "1px solid #D1D9EE", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "2px" }}>RESULTADOS COLAB</span>
+                <span style={{ fontSize: 10, color: "#B8C5E0" }}>opcional — medición geométrica OpenCV</span>
+              </div>
+              <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
+
+                {/* JSON */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                  <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: colabJson ? "#1E8449" : "#2952A3", background: colabJson ? "rgba(30,132,73,0.06)" : "#EEF2FB", border: `1px solid ${colabJson ? "rgba(30,132,73,0.35)" : "#D1D9EE"}`, borderRadius: 7, padding: "7px 13px", fontFamily: "inherit", transition: "all .15s" }}>
+                    <input ref={colabInputRef} type="file" accept=".json" style={{ display: "none" }}
+                      onChange={e => handleColabJson(e.target.files[0])} />
+                    <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace" }}>.json</span>
+                    {colabJson ? " ✓ cargado" : " — archicheck_geometrico.json"}
+                  </label>
+                  {colabJson && (
+                    <>
+                      <span style={{ fontSize: 11, color: "#6B7A99" }}>
+                        {colabJson.paginas
+                          ? `${colabJson.paginas.length} pág. · ${colabJson.resumen_global?.incumplimientos_geo_total ?? 0} incumplimientos`
+                          : `${colabJson.tabla_cruzada?.length ?? 0} recintos`}
+                      </span>
+                      <button onClick={() => { setColabJson(null); if (colabInputRef.current) colabInputRef.current.value = ""; }}
+                        style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 13, padding: "0 2px", lineHeight: 1 }}>✕</button>
+                    </>
+                  )}
+                </div>
+
+                {/* PNGs */}
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                    <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: colabPngs.length ? "#1E8449" : "#2952A3", background: colabPngs.length ? "rgba(30,132,73,0.06)" : "#EEF2FB", border: `1px solid ${colabPngs.length ? "rgba(30,132,73,0.35)" : "#D1D9EE"}`, borderRadius: 7, padding: "7px 13px", fontFamily: "inherit", transition: "all .15s" }}>
+                      <input ref={colabPngInputRef} type="file" accept="image/png,image/jpeg" multiple style={{ display: "none" }}
+                        onChange={e => handleColabPngs(e.target.files)} />
+                      <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace" }}>.png</span>
+                      {colabPngs.length ? ` ✓ ${colabPngs.length} imagen${colabPngs.length > 1 ? "es" : ""} cargada${colabPngs.length > 1 ? "s" : ""}` : " — archicheck_geometrico_pagN.png"}
+                    </label>
+                  </div>
+                  {colabPngs.length > 0 && (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 7 }}>
+                      {colabPngs.map((p, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 4, background: "rgba(30,132,73,0.06)", border: "1px solid rgba(30,132,73,0.2)", borderRadius: 5, padding: "3px 8px 3px 6px" }}>
+                          <span style={{ fontSize: 10, color: "#1E8449", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
+                          <button onClick={() => removeColabPng(i)}
+                            style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 11, padding: 0, lineHeight: 1 }}>✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            </div>
 
             {/* Botón analizar */}
             <button onClick={analizar}
