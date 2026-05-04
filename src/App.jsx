@@ -41,6 +41,47 @@ const TIPOS_DOC = [
 const ESCALAS = ["1:25","1:50","1:75","1:100","1:150","1:200","1:250","1:500","1:1000","1:2000"];
 const TIPOS_DOC_CON_ESCALA = ["Planta arquitectura","Cortes y elevaciones","Plano de emplazamiento"];
 
+const OBS_ACTIONS = [
+  { id:"aceptada",   label:"✅ Aceptar",   color:"#1E8449" },
+  { id:"comentada",  label:"💬 Comentar",  color:"#2952A3" },
+  { id:"modificada", label:"✏️ Modificar", color:"#D68910" },
+  { id:"descartada", label:"🗑️ Descartar", color:"#6B7A99" },
+];
+const STATUS_LABELS = { aceptada:"Aceptada", comentada:"Comentada", modificada:"Modificada", descartada:"Descartada" };
+const STATUS_COLORS = { aceptada:"#1E8449", comentada:"#2952A3", modificada:"#D68910", descartada:"#6B7A99" };
+
+const ETAPAS = [
+  { id:"e1",     dot:"1", label:"Separación Gráfica",      capa:"c1" },
+  { id:"e2",     dot:"2", label:"Reconocimiento",           capa:"c1" },
+  { id:"e3",     dot:"3", label:"Vectorización",            capa:"c1" },
+  { id:"e4",     dot:"4", label:"Modelo Estructural",       capa:"c1" },
+  { id:"n1",     dot:"A", label:"Recintos y Superficies",   capa:"c2" },
+  { id:"n2",     dot:"B", label:"Circulaciones",            capa:"c2" },
+  { id:"n3",     dot:"C", label:"Iluminación y Ventilación",capa:"c2" },
+  { id:"n4",     dot:"D", label:"Normativa Urbanística",    capa:"c2" },
+  { id:"n5",     dot:"E", label:"Consolidación",            capa:"c2" },
+  { id:"report", dot:"★", label:"Informe Final",            capa:"c2" },
+];
+
+const TH = { padding:"8px 12px", textAlign:"left", color:"#fff", fontWeight:600, fontSize:11, background:"#1B3A8A", whiteSpace:"nowrap" };
+const TD = { padding:"8px 12px", borderBottom:"1px solid #EEF2FB", fontSize:12, color:"#3D4A5C" };
+
+function getAllObs(result) {
+  if (!result) return [];
+  return [
+    { prefix:"sep", arr:result.capa1?.separacion?.observaciones,              etapa:"Separación" },
+    { prefix:"rec", arr:result.capa1?.reconocimiento?.observaciones,          etapa:"Reconocimiento" },
+    { prefix:"vec", arr:result.capa1?.vectorizacion?.observaciones,           etapa:"Vectorización" },
+    { prefix:"mod", arr:result.capa1?.modelo?.observaciones,                  etapa:"Modelo" },
+    { prefix:"n1",  arr:result.capa2?.recintos_superficies?.observaciones,    etapa:"Recintos" },
+    { prefix:"n2",  arr:result.capa2?.circulaciones?.observaciones,           etapa:"Circulaciones" },
+    { prefix:"n3",  arr:result.capa2?.iluminacion_ventilacion?.observaciones, etapa:"Iluminación" },
+    { prefix:"n4",  arr:result.capa2?.normativa_urbanistica?.observaciones,   etapa:"Urbanística" },
+  ].flatMap(({ prefix, arr, etapa }) =>
+    (arr || []).map((obs, i) => ({ obs, key:`${prefix}-${i}`, etapa }))
+  );
+}
+
 // ── Reparar JSON cortado ───────────────────────────────────────────────────
 function repairJSON(str) {
   // Elimina trailing parcial: coma suelta al final antes de cerrar
@@ -234,10 +275,10 @@ CIRCULARES DDU VIGENTES (División de Desarrollo Urbano, MINVU):
 Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de OGUC, LGUC o la circular DDU correspondiente cuando detectes cumplimiento o incumplimiento.
 ${contextoTexto}Analiza solo los archivos adjuntos. No penalices por documentos no subidos.
 
-Para cada planta de arquitectura identifica los recintos visibles. En "recintos" incluye nombre, uso declarado, superficie estimada en m2, estado normativo y bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Indica en que pagina aparece cada recinto. Si no puedes estimar coordenadas confiables para un recinto, omite su campo bbox.
+Para cada planta de arquitectura identifica los recintos visibles con bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Si no puedes estimar coordenadas confiables para un recinto, omite bbox.
 ${buildColabTexto(colabData)}
-Responde SOLO con JSON puro sin markdown:
-{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}],"elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
+Responde SOLO con JSON puro sin markdown. Esquema completo:
+{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","capa1":{"separacion":{"capas":[{"nombre":"...","contenido":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"reconocimiento":{"stats":{"recintos_total":0,"niveles":0},"recintos_por_nivel":[{"nivel":"...","recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"estado":"OK|OBSERVADO|INCUMPLE"}]}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"vectorizacion":{"elementos":[{"tipo":"...","cantidad":0,"descripcion":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"modelo":{"organizacion_funcional":[{"nivel":"...","uso":"...","area_m2":0,"conexion":"..."}],"accesos_evacuacion":[{"elemento":"...","estado":"OK|OBSERVADO|INCUMPLE","nota":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
 
 // ── PDF → thumbnails (todas las páginas, baja res) + full-res bajo demanda ──
@@ -383,6 +424,69 @@ function CanvasOverlay({ src, recintos, pagina }) {
   );
 }
 
+// ── Componentes de resultados ───────────────────────────────────────────────
+function SectionTitle({ children }) {
+  return <h3 style={{ fontSize:14, fontWeight:700, color:"#1B3A8A", margin:"0 0 12px", paddingBottom:8, borderBottom:"2px solid #EEF2FB", display:"flex", alignItems:"center", gap:8 }}>{children}</h3>;
+}
+
+function StatusBadge({ val }) {
+  const cfg = {
+    OK:       { bg:"rgba(30,132,73,0.08)",   bo:"rgba(30,132,73,0.25)",   c:"#1E8449" },
+    SI:       { bg:"rgba(30,132,73,0.08)",   bo:"rgba(30,132,73,0.25)",   c:"#1E8449" },
+    OBSERVADO:{ bg:"rgba(214,137,16,0.08)", bo:"rgba(214,137,16,0.25)", c:"#D68910" },
+    VERIFICAR:{ bg:"rgba(74,114,196,0.08)", bo:"rgba(74,114,196,0.25)", c:"#2952A3" },
+    NO:       { bg:"rgba(192,57,43,0.08)",  bo:"rgba(192,57,43,0.25)",  c:"#C0392B" },
+    INCUMPLE: { bg:"rgba(192,57,43,0.08)",  bo:"rgba(192,57,43,0.25)",  c:"#C0392B" },
+  };
+  const s = cfg[val] || cfg.VERIFICAR;
+  return <span style={{ fontSize:10, fontWeight:700, color:s.c, background:s.bg, border:`1px solid ${s.bo}`, borderRadius:99, padding:"2px 8px", whiteSpace:"nowrap" }}>{val}</span>;
+}
+
+function ObsCard({ obs, obsKey, obsState, onAction, onComment }) {
+  const cs = critStyle(obs.criticidad);
+  const isResolved = !!obsState?.status;
+  return (
+    <div className="obs-card" style={{ ...cs, borderRadius:8, padding:"12px 14px", opacity:obsState?.status === "descartada" ? 0.5 : 1 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", gap:10, marginBottom:6 }}>
+        <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.5, flex:1 }}>{obs.descripcion}</div>
+        <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:4, flexShrink:0 }}>
+          <span style={{ fontSize:10, fontWeight:700, color:cs.color, background:cs.background, border:cs.border, borderRadius:4, padding:"2px 8px" }}>{obs.criticidad}</span>
+          {isResolved && <span style={{ fontSize:10, fontWeight:600, color:STATUS_COLORS[obsState.status], background:STATUS_COLORS[obsState.status]+"18", border:`1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius:4, padding:"1px 7px", whiteSpace:"nowrap" }}>✓ {STATUS_LABELS[obsState.status]}</span>}
+        </div>
+      </div>
+      {obs.articulo && (
+        <div style={{ display:"flex", flexWrap:"wrap", gap:4, marginBottom:obs.correccion ? 8 : 6 }}>
+          {obs.articulo.split(/[,;]/).map(p => p.trim()).filter(Boolean).map((p,pi) => (
+            <span key={pi} style={{ fontSize:10, color:"#2952A3", background:"rgba(41,82,163,0.08)", border:"1px solid rgba(41,82,163,0.2)", borderRadius:4, padding:"2px 7px", fontFamily:"'DM Mono',monospace" }}>§ {p}</span>
+          ))}
+        </div>
+      )}
+      {obs.correccion && <div style={{ fontSize:12, color:"#6B7A99", borderTop:"1px solid #D1D9EE", paddingTop:8, marginTop:4, lineHeight:1.5, marginBottom:8 }}><span style={{ color:"#2952A3" }}>→ </span>{obs.correccion}</div>}
+      <div style={{ display:"flex", gap:5, flexWrap:"wrap", marginTop:8, paddingTop:8, borderTop:"1px solid rgba(0,0,0,0.06)" }}>
+        {OBS_ACTIONS.map(a => {
+          const active = obsState?.status === a.id;
+          return <button key={a.id} onClick={() => onAction(obsKey, a.id)} style={{ padding:"3px 9px", fontSize:10, borderRadius:5, border:`1px solid ${active ? a.color : "#D1D9EE"}`, background:active ? a.color+"18" : "transparent", color:active ? a.color : "#6B7A99", cursor:"pointer", fontFamily:"inherit", fontWeight:active ? 700 : 400, transition:"all .15s" }}>{a.label}</button>;
+        })}
+      </div>
+      {obsState?.status === "comentada" && (
+        <textarea value={obsState?.comment || ""} onChange={e => onComment(obsKey, e.target.value)} placeholder="Escribe tu comentario..." style={{ marginTop:8, width:"100%", border:"1px solid #D1D9EE", borderRadius:6, padding:"8px 10px", fontSize:11, fontFamily:"inherit", color:"#3D4A5C", resize:"vertical", minHeight:60, outline:"none", background:"#FFFFFF" }} />
+      )}
+    </div>
+  );
+}
+
+function ObsSection({ obs, prefix, obsStatus, onAction, onComment }) {
+  if (!obs?.length) return null;
+  return (
+    <div style={{ marginTop:20 }}>
+      <SectionTitle>⚠️ Observaciones — {obs.length}</SectionTitle>
+      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+        {obs.map((o,i) => <ObsCard key={i} obs={o} obsKey={`${prefix}-${i}`} obsState={obsStatus[`${prefix}-${i}`]} onAction={onAction} onComment={onComment} />)}
+      </div>
+    </div>
+  );
+}
+
 // ── Componente ─────────────────────────────────────────────────────────────
 export default function ArchiCheck() {
   const [archivos,   setArchivos]   = useState([]);
@@ -401,9 +505,18 @@ export default function ArchiCheck() {
   const [sinTipo, setSinTipo] = useState(false);
   const [colabJson, setColabJson] = useState(null);
   const [colabPngs, setColabPngs] = useState([]);
+  const [toast, setToast] = useState(null);
+  const [activeEtapa, setActiveEtapa] = useState("e1");
+  const [activeFloor, setActiveFloor] = useState(0);
   const inputRef = useRef();
   const colabInputRef = useRef();
   const colabPngInputRef = useRef();
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   // ── Manejo de archivos ─────────────────────────────────────────────────
   const handleFiles = useCallback(async (files) => {
@@ -485,15 +598,14 @@ export default function ArchiCheck() {
   }));
   const toggle = (k) => setExpandido(prev => ({ ...prev, [k]: !prev[k] }));
 
-  const setObsAction = (docIdx, obsIdx, action) => {
-    const key = `${docIdx}-${obsIdx}`;
-    setObsStatus(prev => ({
-      ...prev,
-      [key]: { ...prev[key], status: prev[key]?.status === action ? null : action },
-    }));
+  const setObsAction = (key, action) => {
+    setObsStatus(prev => {
+      const newStatus = prev[key]?.status === action ? null : action;
+      if (newStatus) setToast(newStatus);
+      return { ...prev, [key]: { ...prev[key], status: newStatus } };
+    });
   };
-  const setObsComment = (docIdx, obsIdx, comment) => {
-    const key = `${docIdx}-${obsIdx}`;
+  const setObsComment = (key, comment) => {
     setObsStatus(prev => ({ ...prev, [key]: { ...prev[key], comment } }));
   };
 
@@ -532,7 +644,7 @@ export default function ArchiCheck() {
     const faltanTipo = archivos.some(f => !f.tipoDoc);
     if (faltanTipo) { setSinTipo(true); setError("Asigna el tipo de documento a cada archivo antes de analizar."); return; }
     setSinTipo(false);
-    setLoading(true); setError(""); setResult(null); setObsStatus({});
+    setLoading(true); setError(""); setResult(null); setObsStatus({}); setActiveEtapa("e1");
     try {
       // Construir content (imágenes primero, luego el prompt)
       setProgress("Convirtiendo PDFs a imágenes...");
@@ -729,7 +841,7 @@ export default function ArchiCheck() {
 
       <ModalDwg />
 
-      <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px" }}>
+      <main style={result ? { padding: 0 } : { maxWidth: 860, margin: "0 auto", padding: "40px 24px" }}>
 
         {/* ── FORMULARIO ─────────────────────────────────────────────── */}
         {!result && (
@@ -1058,399 +1170,592 @@ export default function ArchiCheck() {
         )}
 
         {/* ── RESULTADO ──────────────────────────────────────────────── */}
-        {result && result.analisis_por_archivo?.some(a => a.estado === "NO LEGIBLE") && (
-          <div style={{ marginTop: 16, background: "#FEF3CD", border: "1px solid #D68910", borderRadius: 10, padding: "16px 20px" }}>
-            <p style={{ margin: "0 0 12px", fontWeight: 700, fontSize: 13, color: "#7D5A00", fontFamily: "'DM Mono', monospace", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              ⚠ Documento no legible detectado
-            </p>
-            <InstruccionesDwg />
-          </div>
-        )}
         {result && (
-          <div className="fade-up" style={{ background: "#FFFFFF", border: "1px solid #D1D9EE", borderRadius: 14, boxShadow: "0 2px 12px rgba(27,58,138,0.07)", padding: "28px 28px" }}>
+          <div className="fade-up" style={{ display:"flex", alignItems:"flex-start" }}>
 
-            {/* Encabezado */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, gap: 16, flexWrap: "wrap" }}>
-              <div>
-                <div style={{ fontSize: 9, color: "#6B7A99", letterSpacing: "3px", marginBottom: 8 }}>INFORME DE REVISIÓN NORMATIVA</div>
-                <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 800, margin: "0 0 4px", color: "#1B3A8A" }}>
-                  {TIPOS.find(t => t.id === tipo)?.label} · {comuna}
-                </h2>
-                <div style={{ fontSize: 11, color: "#6B7A99" }}>
-                  {archivos.length} documentos · {new Date().toLocaleDateString("es-CL", { day: "2-digit", month: "long", year: "numeric" })}
+            {/* ── Sidebar ─────────────────────────────────────────────── */}
+            <div style={{ width:240, background:"#fff", borderRight:"1px solid #E0E6F3", flexShrink:0, position:"sticky", top:0, height:"100vh", overflowY:"auto", alignSelf:"flex-start" }}>
+              <div style={{ padding:"16px 16px 12px", borderBottom:"1px solid #EEF2FB" }}>
+                <div style={{ fontSize:9, color:"#6B7A99", letterSpacing:"2px", marginBottom:6 }}>REVISIÓN NORMATIVA</div>
+                <div style={{ display:"flex", alignItems:"flex-end", gap:6 }}>
+                  <span style={{ fontSize:30, fontWeight:800, color:ec.color, lineHeight:1, fontFamily:"'Inter',sans-serif" }}>{result.puntaje_global}</span>
+                  <span style={{ fontSize:12, color:"#6B7A99", marginBottom:3 }}>/100</span>
+                  <span style={{ marginLeft:"auto", fontSize:9, fontWeight:700, padding:"3px 10px", borderRadius:99, ...ec }}>{result.estado_global}</span>
+                </div>
+                <div style={{ background:"#EEF2FB", borderRadius:99, height:4, marginTop:8, overflow:"hidden" }}>
+                  <div style={{ width:`${result.puntaje_global}%`, height:"100%", borderRadius:99, background:`linear-gradient(90deg,${ec.color}80,${ec.color})`, transition:"width 1.2s ease" }} />
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", padding: "5px 16px", borderRadius: 99, ...ec }}>
-                  {result.estado_global}
-                </span>
-                <div>
-                  <span style={{ fontSize: 42, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: ec.color, lineHeight: 1 }}>{result.puntaje_global}</span>
-                  <span style={{ fontSize: 13, color: "#6B7A99" }}>/100</span>
-                </div>
+              <div style={{ padding:"12px 0" }}>
+                <div style={{ padding:"6px 16px 4px", fontSize:10, fontWeight:700, color:"#B8C5E0", letterSpacing:"1px" }}>CAPA 1 — LEVANTAMIENTO</div>
+                {ETAPAS.filter(e => e.capa === "c1").map(e => (
+                  <button key={e.id} onClick={() => setActiveEtapa(e.id)}
+                    style={{ width:"100%", background:activeEtapa===e.id?"#EEF2FB":"none", border:"none", borderLeft:`3px solid ${activeEtapa===e.id?"#2952A3":"transparent"}`, cursor:"pointer", padding:"9px 16px", display:"flex", alignItems:"center", gap:10, textAlign:"left", transition:"all .15s" }}>
+                    <div style={{ width:22, height:22, borderRadius:"50%", background:activeEtapa===e.id?"#2952A3":"#D1D9EE", color:activeEtapa===e.id?"#fff":"#6B7A99", fontSize:10, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{e.dot}</div>
+                    <span style={{ fontSize:12, color:activeEtapa===e.id?"#1B3A8A":"#6B7A99", fontWeight:activeEtapa===e.id?600:400 }}>{e.label}</span>
+                  </button>
+                ))}
+                <div style={{ height:1, background:"#EEF2FB", margin:"8px 16px" }} />
+                <div style={{ padding:"6px 16px 4px", fontSize:10, fontWeight:700, color:"#B8C5E0", letterSpacing:"1px" }}>CAPA 2 — NORMATIVA</div>
+                {ETAPAS.filter(e => e.capa === "c2").map(e => (
+                  <button key={e.id} onClick={() => setActiveEtapa(e.id)}
+                    style={{ width:"100%", background:activeEtapa===e.id?(e.id==="report"?"rgba(27,58,138,0.08)":"#EEF2FB"):"none", border:"none", borderLeft:`3px solid ${activeEtapa===e.id?(e.id==="report"?"#1B3A8A":"#2952A3"):"transparent"}`, cursor:"pointer", padding:"9px 16px", display:"flex", alignItems:"center", gap:10, textAlign:"left", transition:"all .15s" }}>
+                    <div style={{ width:22, height:22, borderRadius:"50%", background:activeEtapa===e.id?(e.id==="report"?"#1B3A8A":"#2952A3"):"#D1D9EE", color:activeEtapa===e.id?"#fff":"#6B7A99", fontSize:e.id==="report"?11:10, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{e.dot}</div>
+                    <span style={{ fontSize:12, color:activeEtapa===e.id?"#1B3A8A":"#6B7A99", fontWeight:activeEtapa===e.id?600:400 }}>{e.label}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Barra */}
-            <div style={{ background: "#EEF2FB", borderRadius: 99, height: 5, marginBottom: 8, overflow: "hidden" }}>
-              <div style={{ width: `${result.puntaje_global}%`, height: "100%", borderRadius: 99, background: `linear-gradient(90deg,${ec.color}80,${ec.color})`, transition: "width 1.2s ease" }}/>
-            </div>
-            <p style={{ fontSize: 13, color: "#6B7A99", lineHeight: 1.7, marginBottom: 24 }}>{result.resumen_general}</p>
+            {/* ── Contenido por etapa ──────────────────────────────────── */}
+            <div style={{ flex:1, padding:"32px 36px", minWidth:0 }}>
 
-            {/* Métricas */}
-            {(() => {
-              const todasObs  = (result.analisis_por_archivo || []).flatMap(a => a.observaciones || []);
-              const altas     = todasObs.filter(o => o.criticidad === "ALTA");
-              const tecnicas  = todasObs.filter(o => o.criticidad !== "ALTA");
-              const resueltas = Object.values(obsStatus).filter(s => s?.status).length;
-              const total     = todasObs.length;
+            {/* NO LEGIBLE warning */}
+            {result.analisis_por_archivo?.some(a => a.estado === "NO LEGIBLE") && (
+              <div style={{ marginBottom:20, background:"#FEF3CD", border:"1px solid #D68910", borderRadius:10, padding:"16px 20px" }}>
+                <p style={{ margin:"0 0 12px", fontWeight:700, fontSize:13, color:"#7D5A00", fontFamily:"'DM Mono',monospace", textTransform:"uppercase", letterSpacing:"0.06em" }}>⚠ Documento no legible detectado</p>
+                <InstruccionesDwg />
+              </div>
+            )}
+
+            {/* E1 — Separación Gráfica */}
+            {activeEtapa === "e1" && (() => {
+              const d = result.capa1?.separacion;
               return (
-                <>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 12 }}>
+                <div>
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
+                      <div>
+                        <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa 1 — Separación Gráfica</h1>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>El sistema distingue geometría real vs. texto, cotas, simbología y ruido visual</p>
+                      </div>
+                      <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(41,82,163,0.08)", color:"#2952A3", border:"1px solid rgba(41,82,163,0.25)", whiteSpace:"nowrap" }}>Capa 1 · Paso 1/4</span>
+                    </div>
+                  </div>
+                  <SectionTitle>📄 Capas detectadas</SectionTitle>
+                  {d?.capas?.length ? (
+                    <div style={{ overflowX:"auto", marginBottom:8 }}>
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead><tr>{["Capa","Contenido identificado","Páginas","Estado"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                        <tbody>{d.capas.map((c,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{c.nombre}</td><td style={TD}>{c.contenido}</td><td style={{ ...TD, whiteSpace:"nowrap" }}>{c.paginas}</td><td style={TD}><StatusBadge val={c.estado} /></td></tr>)}</tbody>
+                      </table>
+                    </div>
+                  ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de separación — analiza un plano para ver resultados</p>}
+                  <ObsSection obs={d?.observaciones} prefix="sep" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                </div>
+              );
+            })()}
+
+            {/* E2 — Reconocimiento */}
+            {activeEtapa === "e2" && (() => {
+              const d = result.capa1?.reconocimiento;
+              const niveles = d?.recintos_por_nivel || [];
+              const docsConRecintos = (result.analisis_por_archivo || []).filter(doc => doc.recintos?.some(r => Array.isArray(r.bbox)));
+              return (
+                <div>
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
+                      <div>
+                        <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa 2 — Reconocimiento de Elementos</h1>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>El sistema identifica recintos, circulaciones y elementos relevantes por nivel</p>
+                      </div>
+                      <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(41,82,163,0.08)", color:"#2952A3", border:"1px solid rgba(41,82,163,0.25)", whiteSpace:"nowrap" }}>Capa 1 · Paso 2/4</span>
+                    </div>
+                  </div>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:20 }}>
                     {[
-                      { n: altas.length,    label: "🔴 Incumplimientos", c: "#C0392B" },
-                      { n: tecnicas.length, label: "🟡 Observaciones",   c: "#D68910" },
-                      { n: resueltas,       label: "✅ Resueltas",        c: "#1E8449" },
+                      { n:d?.stats?.recintos_total??0, label:"Recintos identificados", c:"#1B3A8A" },
+                      { n:d?.stats?.niveles??0,         label:"Niveles procesados",    c:"#2952A3" },
+                      { n:d?.observaciones?.length??0,  label:"Observaciones",         c:"#D68910" },
                     ].map(m => (
-                      <div key={m.label} style={{ background: "#F4F6FB", border: "1px solid #D1D9EE", borderRadius: 10, padding: "14px 10px", textAlign: "center" }}>
-                        <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: m.c, lineHeight: 1 }}>{m.n}</div>
-                        <div style={{ fontSize: 10, color: "#6B7A99", marginTop: 3 }}>{m.label}</div>
+                      <div key={m.label} style={{ background:"#fff", border:"1px solid #D1D9EE", borderRadius:10, padding:"14px", textAlign:"center" }}>
+                        <div style={{ fontSize:28, fontWeight:800, fontFamily:"'Inter',sans-serif", color:m.c, lineHeight:1 }}>{m.n}</div>
+                        <div style={{ fontSize:10, color:"#6B7A99", marginTop:3 }}>{m.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {niveles.length > 0 && (
+                    <div style={{ marginBottom:20 }}>
+                      <SectionTitle>🏢 Mapa de recintos por nivel</SectionTitle>
+                      {niveles.length > 1 && (
+                        <div style={{ display:"flex", gap:6, marginBottom:12, flexWrap:"wrap" }}>
+                          {niveles.map((n,i) => <button key={i} onClick={() => setActiveFloor(i)} style={{ padding:"5px 14px", borderRadius:20, border:"none", background:activeFloor===i?"#2952A3":"#E0E6F3", color:activeFloor===i?"#fff":"#6B7A99", cursor:"pointer", fontSize:12, fontWeight:600, transition:"all .15s" }}>{n.nivel}</button>)}
+                        </div>
+                      )}
+                      {niveles[activeFloor] && (
+                        <div style={{ overflowX:"auto" }}>
+                          <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                            <thead><tr>{["Recinto","Uso","Superficie m²","Estado"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                            <tbody>{(niveles[activeFloor].recintos||[]).map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.nombre}</td><td style={TD}>{r.uso||"—"}</td><td style={TD}>{r.superficie_m2??"—"}</td><td style={TD}><StatusBadge val={r.estado} /></td></tr>)}</tbody>
+                          </table>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {docsConRecintos.length > 0 && (
+                    <div style={{ marginBottom:20 }}>
+                      <SectionTitle>📍 Vista anotada — posiciones estimadas IA</SectionTitle>
+                      <div style={{ display:"flex", gap:12, marginBottom:10, flexWrap:"wrap" }}>
+                        {[["OK","#1E8449"],["OBSERVADO","#D68910"],["INCUMPLE","#C0392B"]].map(([lbl,col]) => (
+                          <div key={lbl} style={{ display:"flex", alignItems:"center", gap:5, fontSize:10, color:"#6B7A99" }}><div style={{ width:12, height:12, borderRadius:2, background:col+"28", border:`2px solid ${col}` }}/>{lbl}</div>
+                        ))}
+                      </div>
+                      {docsConRecintos.map((doc,di) => {
+                        const archivoMatch = archivos.find(a => a.name === doc.archivo);
+                        const recintos = doc.recintos.filter(r => Array.isArray(r.bbox));
+                        const paginas = [...new Set(recintos.map(r => r.pagina))].sort((a,b)=>a-b);
+                        return paginas.map(pag => {
+                          let src = null;
+                          if (archivoMatch?.pdfImages) src = archivoMatch.pdfImages.find(p => p.page===pag)?.thumb||null;
+                          else if (archivoMatch?.isImage && archivoMatch.base64) src = `data:${archivoMatch.type};base64,${archivoMatch.base64}`;
+                          if (!src) return null;
+                          return <div key={`${di}-${pag}`} style={{ marginBottom:12 }}><div style={{ fontSize:10, color:"#6B7A99", marginBottom:4 }}>{doc.archivo} — Pág. {pag}</div><CanvasOverlay src={src} recintos={recintos} pagina={pag} /></div>;
+                        });
+                      })}
+                    </div>
+                  )}
+                  {colabPngs.length > 0 && (
+                    <div style={{ marginBottom:20 }}>
+                      <SectionTitle>🔬 Análisis geométrico Colab (OpenCV)</SectionTitle>
+                      <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                        {colabPngs.map((p,i) => (
+                          <div key={i}><div style={{ fontSize:10, color:"#6B7A99", marginBottom:4, fontFamily:"'DM Mono',monospace" }}>{p.name}</div><img src={`data:image/jpeg;base64,${p.base64}`} alt={p.name} style={{ width:"100%", borderRadius:8, border:"1px solid #D1D9EE" }} /></div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <ObsSection obs={d?.observaciones} prefix="rec" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                </div>
+              );
+            })()}
+
+            {/* E3 — Vectorización */}
+            {activeEtapa === "e3" && (() => {
+              const d = result.capa1?.vectorizacion;
+              return (
+                <div>
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
+                      <div>
+                        <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa 3 — Vectorización</h1>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>Elementos geométricos extraídos y clasificados del plano</p>
+                      </div>
+                      <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(41,82,163,0.08)", color:"#2952A3", border:"1px solid rgba(41,82,163,0.25)", whiteSpace:"nowrap" }}>Capa 1 · Paso 3/4</span>
+                    </div>
+                  </div>
+                  <SectionTitle>📐 Elementos identificados</SectionTitle>
+                  {d?.elementos?.length ? (
+                    <div style={{ overflowX:"auto", marginBottom:8 }}>
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead><tr>{["Tipo","Cant.","Descripción","Páginas","Estado"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                        <tbody>{d.elementos.map((e,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{e.tipo}</td><td style={{ ...TD, textAlign:"center" }}>{e.cantidad}</td><td style={TD}>{e.descripcion}</td><td style={{ ...TD, whiteSpace:"nowrap" }}>{e.paginas}</td><td style={TD}><StatusBadge val={e.estado} /></td></tr>)}</tbody>
+                      </table>
+                    </div>
+                  ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de vectorización</p>}
+                  <ObsSection obs={d?.observaciones} prefix="vec" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                </div>
+              );
+            })()}
+
+            {/* E4 — Modelo Estructural */}
+            {activeEtapa === "e4" && (() => {
+              const d = result.capa1?.modelo;
+              return (
+                <div>
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
+                      <div>
+                        <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa 4 — Modelo Estructural</h1>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>Organización funcional, accesos y sistemas de evacuación</p>
+                      </div>
+                      <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(41,82,163,0.08)", color:"#2952A3", border:"1px solid rgba(41,82,163,0.25)", whiteSpace:"nowrap" }}>Capa 1 · Paso 4/4</span>
+                    </div>
+                  </div>
+                  <SectionTitle>🏗️ Organización funcional</SectionTitle>
+                  {d?.organizacion_funcional?.length ? (
+                    <div style={{ overflowX:"auto", marginBottom:20 }}>
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead><tr>{["Nivel","Uso","Área m²","Conexión"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                        <tbody>{d.organizacion_funcional.map((o,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{o.nivel}</td><td style={TD}>{o.uso}</td><td style={TD}>{o.area_m2??"—"}</td><td style={TD}>{o.conexion||"—"}</td></tr>)}</tbody>
+                      </table>
+                    </div>
+                  ) : <p style={{ color:"#B8C5E0", fontSize:12, marginBottom:16 }}>Sin datos de organización funcional</p>}
+                  <SectionTitle>🚪 Accesos y evacuación</SectionTitle>
+                  {d?.accesos_evacuacion?.length ? (
+                    <div style={{ overflowX:"auto", marginBottom:8 }}>
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead><tr>{["Elemento","Estado","Nota"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                        <tbody>{d.accesos_evacuacion.map((a,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{a.elemento}</td><td style={TD}><StatusBadge val={a.estado} /></td><td style={TD}>{a.nota||"—"}</td></tr>)}</tbody>
+                      </table>
+                    </div>
+                  ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de accesos</p>}
+                  <ObsSection obs={d?.observaciones} prefix="mod" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                </div>
+              );
+            })()}
+
+            {/* N1 — Recintos y Superficies */}
+            {activeEtapa === "n1" && (() => {
+              const d = result.capa2?.recintos_superficies;
+              return (
+                <div>
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
+                      <div>
+                        <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa A — Recintos y Superficies</h1>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>Verificación de superficies mínimas por tipo de recinto según OGUC</p>
+                      </div>
+                      <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(214,137,16,0.08)", color:"#D68910", border:"1px solid rgba(214,137,16,0.25)", whiteSpace:"nowrap" }}>Capa 2 · A/D</span>
+                    </div>
+                  </div>
+                  <SectionTitle>📐 Verificación de superficies mínimas</SectionTitle>
+                  {d?.tabla?.length ? (
+                    <div style={{ overflowX:"auto", marginBottom:8 }}>
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead><tr>{["Recinto","Uso","Sup. real m²","Sup. mín. m²","Cumple","Artículo"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                        <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.recinto}</td><td style={TD}>{r.uso||"—"}</td><td style={TD}>{r.sup_real_m2??"—"}</td><td style={TD}>{r.sup_minima_m2??"—"}</td><td style={TD}><StatusBadge val={r.cumple} /></td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{r.articulo||"—"}</td></tr>)}</tbody>
+                      </table>
+                    </div>
+                  ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de superficies</p>}
+                  <ObsSection obs={d?.observaciones} prefix="n1" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                </div>
+              );
+            })()}
+
+            {/* N2 — Circulaciones */}
+            {activeEtapa === "n2" && (() => {
+              const d = result.capa2?.circulaciones;
+              return (
+                <div>
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
+                      <div>
+                        <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa B — Circulaciones</h1>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>Verificación de anchos mínimos de pasillos, escaleras y accesos según OGUC</p>
+                      </div>
+                      <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(214,137,16,0.08)", color:"#D68910", border:"1px solid rgba(214,137,16,0.25)", whiteSpace:"nowrap" }}>Capa 2 · B/D</span>
+                    </div>
+                  </div>
+                  <SectionTitle>🚶 Anchos y requisitos de circulación</SectionTitle>
+                  {d?.tabla?.length ? (
+                    <div style={{ overflowX:"auto", marginBottom:8 }}>
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead><tr>{["Elemento","Ancho real (m)","Ancho mín. (m)","Artículo","Cumple"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                        <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.elemento}</td><td style={{ ...TD, textAlign:"center" }}>{r.ancho_real_m??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ancho_minimo_m??"—"}</td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{r.articulo||"—"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
+                      </table>
+                    </div>
+                  ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de circulaciones</p>}
+                  <ObsSection obs={d?.observaciones} prefix="n2" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                </div>
+              );
+            })()}
+
+            {/* N3 — Iluminación y Ventilación */}
+            {activeEtapa === "n3" && (() => {
+              const d = result.capa2?.iluminacion_ventilacion;
+              return (
+                <div>
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
+                      <div>
+                        <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa C — Iluminación y Ventilación</h1>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>Verificación de relación ventana/área de recinto según OGUC Art. 4.5.7</p>
+                      </div>
+                      <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(214,137,16,0.08)", color:"#D68910", border:"1px solid rgba(214,137,16,0.25)", whiteSpace:"nowrap" }}>Capa 2 · C/D</span>
+                    </div>
+                  </div>
+                  <SectionTitle>🔆 Relación ventana / área por recinto</SectionTitle>
+                  {d?.tabla?.length ? (
+                    <div style={{ overflowX:"auto", marginBottom:8 }}>
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead><tr>{["Recinto","Área ventana m²","Área recinto m²","Ratio req.","Cumple"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                        <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.recinto}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_ventana_m2??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_recinto_m2??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ratio_requerido||"1/6"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
+                      </table>
+                    </div>
+                  ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de iluminación</p>}
+                  <ObsSection obs={d?.observaciones} prefix="n3" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                </div>
+              );
+            })()}
+
+            {/* N4 — Normativa Urbanística */}
+            {activeEtapa === "n4" && (() => {
+              const d = result.capa2?.normativa_urbanistica;
+              return (
+                <div>
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
+                      <div>
+                        <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa D — Normativa Urbanística</h1>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>Verificación de constructibilidad, altura, COS y uso de suelo</p>
+                      </div>
+                      <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(214,137,16,0.08)", color:"#D68910", border:"1px solid rgba(214,137,16,0.25)", whiteSpace:"nowrap" }}>Capa 2 · D/D</span>
+                    </div>
+                  </div>
+                  <SectionTitle>🏙️ Marco normativo aplicable</SectionTitle>
+                  {d?.tabla?.length ? (
+                    <div style={{ overflowX:"auto", marginBottom:8 }}>
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead><tr>{["Parámetro","Referencia normativa","Valor del proyecto","Estado"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                        <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.parametro}</td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{r.referencia}</td><td style={TD}>{r.valor_proyecto}</td><td style={TD}><StatusBadge val={r.estado} /></td></tr>)}</tbody>
+                      </table>
+                    </div>
+                  ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos urbanísticos</p>}
+                  <ObsSection obs={d?.observaciones} prefix="n4" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                </div>
+              );
+            })()}
+
+            {/* N5 — Consolidación */}
+            {activeEtapa === "n5" && (() => {
+              const todas = getAllObs(result);
+              const altas = todas.filter(x => x.obs.criticidad === "ALTA");
+              const tecnicas = todas.filter(x => x.obs.criticidad !== "ALTA");
+              const resueltas = Object.values(obsStatus).filter(s => s?.status).length;
+              return (
+                <div>
+                  <div style={{ marginBottom:24 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
+                      <div>
+                        <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa E — Consolidación</h1>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>Revisión final de todas las observaciones antes del informe</p>
+                      </div>
+                      <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(214,137,16,0.08)", color:"#D68910", border:"1px solid rgba(214,137,16,0.25)", whiteSpace:"nowrap" }}>Capa 2 · E/E</span>
+                    </div>
+                  </div>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:20 }}>
+                    {[
+                      { n:altas.length,    label:"🔴 Incumplimientos", c:"#C0392B" },
+                      { n:tecnicas.length, label:"🟡 Observaciones",   c:"#D68910" },
+                      { n:resueltas,       label:"✅ Resueltas",        c:"#1E8449" },
+                    ].map(m => (
+                      <div key={m.label} style={{ background:"#fff", border:"1px solid #D1D9EE", borderRadius:10, padding:"14px", textAlign:"center" }}>
+                        <div style={{ fontSize:28, fontWeight:800, fontFamily:"'Inter',sans-serif", color:m.c, lineHeight:1 }}>{m.n}</div>
+                        <div style={{ fontSize:10, color:"#6B7A99", marginTop:3 }}>{m.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {altas.length > 0 && (
+                    <div style={{ marginBottom:24 }}>
+                      <SectionTitle>🔴 Incumplimientos probables — acción requerida</SectionTitle>
+                      <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                        {altas.map(({ obs, key, etapa }) => {
+                          const obsState = obsStatus[key];
+                          return (
+                            <div key={key} style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.04)", borderRadius:"0 8px 8px 0", padding:"14px 16px", opacity:obsState?.status==="descartada"?0.5:1 }}>
+                              <div style={{ display:"flex", justifyContent:"space-between", gap:10, marginBottom:6 }}>
+                                <div style={{ fontSize:11, fontWeight:700, color:"#C0392B" }}>{etapa}</div>
+                                {obsState?.status && <span style={{ fontSize:10, fontWeight:600, color:STATUS_COLORS[obsState.status], background:STATUS_COLORS[obsState.status]+"18", border:`1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius:4, padding:"1px 7px" }}>✓ {STATUS_LABELS[obsState.status]}</span>}
+                              </div>
+                              <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.6, marginBottom:8 }}>{obs.descripcion}</div>
+                              {obs.articulo && <div style={{ display:"flex", flexWrap:"wrap", gap:4, marginBottom:8 }}>{obs.articulo.split(/[,;]/).map(p=>p.trim()).filter(Boolean).map((p,pi) => <span key={pi} style={{ fontSize:10, color:"#2952A3", background:"rgba(41,82,163,0.08)", border:"1px solid rgba(41,82,163,0.2)", borderRadius:4, padding:"2px 7px", fontFamily:"'DM Mono',monospace" }}>§ {p}</span>)}</div>}
+                              {obs.correccion && <div style={{ fontSize:12, color:"#6B7A99", borderTop:"1px solid rgba(192,57,43,0.15)", paddingTop:8, lineHeight:1.5, marginBottom:8 }}><span style={{ color:"#C0392B", fontWeight:600 }}>→ </span>{obs.correccion}</div>}
+                              <div style={{ display:"flex", gap:5, flexWrap:"wrap", paddingTop:8, borderTop:"1px solid rgba(0,0,0,0.06)" }}>
+                                {OBS_ACTIONS.map(a => { const active=obsState?.status===a.id; return <button key={a.id} onClick={() => setObsAction(key, a.id)} style={{ padding:"3px 9px", fontSize:10, borderRadius:5, border:`1px solid ${active?a.color:"#D1D9EE"}`, background:active?a.color+"18":"transparent", color:active?a.color:"#6B7A99", cursor:"pointer", fontFamily:"inherit", fontWeight:active?700:400, transition:"all .15s" }}>{a.label}</button>; })}
+                              </div>
+                              {obsState?.status==="comentada" && <textarea value={obsState?.comment||""} onChange={e=>setObsComment(key,e.target.value)} placeholder="Escribe tu comentario..." style={{ marginTop:8, width:"100%", border:"1px solid #D1D9EE", borderRadius:6, padding:"8px 10px", fontSize:11, fontFamily:"inherit", color:"#3D4A5C", resize:"vertical", minHeight:60, outline:"none", background:"#FFFFFF" }} />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {tecnicas.length > 0 && (
+                    <div style={{ marginBottom:24 }}>
+                      <SectionTitle>🟡 Observaciones técnicas</SectionTitle>
+                      <div style={{ overflowX:"auto" }}>
+                        <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                          <thead><tr>{["Etapa","Descripción","Criticidad","Artículo"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                          <tbody>{tecnicas.map(({ obs, key, etapa },i) => <tr key={key} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A", whiteSpace:"nowrap" }}>{etapa}</td><td style={TD}>{obs.descripcion}</td><td style={TD}><StatusBadge val={obs.criticidad==="ALTA"?"INCUMPLE":obs.criticidad==="MEDIA"?"OBSERVADO":"OK"} /></td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{obs.articulo||"—"}</td></tr>)}</tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                  {result.pasos_siguientes?.length > 0 && (
+                    <div>
+                      <SectionTitle>✅ Plan de acción prioritario</SectionTitle>
+                      <div style={{ border:"1px solid #D1D9EE", borderRadius:10, overflow:"hidden" }}>
+                        {result.pasos_siguientes.map((p,i) => (
+                          <div key={i} style={{ display:"grid", gridTemplateColumns:"40px 1fr", gap:12, padding:"10px 14px", borderBottom:i<result.pasos_siguientes.length-1?"1px solid #EEF2FB":"none", alignItems:"flex-start", background:i===0?"rgba(192,57,43,0.03)":i===1?"rgba(214,137,16,0.03)":"#fff" }}>
+                            <div style={{ width:24, height:24, borderRadius:"50%", background:i===0?"#C0392B":i===1?"#D68910":"#2952A3", display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:700, color:"#fff" }}>{i+1}</div>
+                            <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.6 }}>{p}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* Informe Final */}
+            {activeEtapa === "report" && (() => {
+              const ec2 = globalStyle(result.estado_global);
+              const todas = getAllObs(result);
+              const altas = todas.filter(x => x.obs.criticidad === "ALTA");
+              const tecnicas = todas.filter(x => x.obs.criticidad !== "ALTA");
+              const resueltas = Object.values(obsStatus).filter(s => s?.status).length;
+              const total = todas.length;
+              const tienePRC = !!PRC_COMUNAS[comuna];
+              const totalRecintos = (result.capa1?.reconocimiento?.recintos_por_nivel||[]).reduce((acc,n)=>acc+(n.recintos?.length||0),0);
+              const catGroups = {};
+              for (const { obs, key, etapa } of tecnicas) {
+                if (!catGroups[etapa]) catGroups[etapa] = [];
+                catGroups[etapa].push({ obs, key });
+              }
+              return (
+                <div>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:20, gap:16, flexWrap:"wrap" }}>
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <div style={{ fontSize:9, color:"#6B7A99", letterSpacing:"3px", marginBottom:8 }}>INFORME DE REVISIÓN NORMATIVA</div>
+                      <h2 style={{ fontFamily:"'Inter',sans-serif", fontSize:22, fontWeight:800, margin:"0 0 4px", color:"#1B3A8A" }}>{TIPOS.find(t=>t.id===tipo)?.label} · {PRC_COMUNAS[comuna]?.meta?.nombre||comuna}</h2>
+                      <div style={{ fontSize:11, color:"#6B7A99" }}>{new Date().toLocaleDateString("es-CL",{day:"2-digit",month:"long",year:"numeric"})}</div>
+                    </div>
+                    <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:8, flexShrink:0 }}>
+                      <span style={{ fontSize:10, fontWeight:700, letterSpacing:"1.5px", padding:"5px 16px", borderRadius:99, ...ec2 }}>{result.estado_global}</span>
+                      <div><span style={{ fontSize:42, fontWeight:800, fontFamily:"'Inter',sans-serif", color:ec2.color, lineHeight:1 }}>{result.puntaje_global}</span><span style={{ fontSize:13, color:"#6B7A99" }}>/100</span></div>
+                    </div>
+                  </div>
+                  <div style={{ borderLeft:"4px solid #1B3A8A", background:"#F4F6FB", borderRadius:"0 10px 10px 0", padding:"14px 18px", marginBottom:22, display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:"10px 24px" }}>
+                    {[
+                      { label:"TIPO DE PROYECTO", value:TIPOS.find(t=>t.id===tipo)?.label },
+                      { label:"DOCUMENTOS", value:archivos.map(f=>f.name).join(", ") },
+                      { label:"NORMATIVA", value:["OGUC","LGUC",tienePRC?`PRC ${PRC_COMUNAS[comuna].meta.nombre}`:null].filter(Boolean).join(" · ") },
+                      { label:"FECHA", value:new Date().toLocaleDateString("es-CL",{day:"2-digit",month:"long",year:"numeric"}) },
+                    ].map(({ label, value }) => <div key={label}><div style={{ fontSize:9, color:"#6B7A99", letterSpacing:"1.5px", marginBottom:3 }}>{label}</div><div style={{ fontSize:11, color:"#3D4A5C", fontWeight:500, lineHeight:1.4, wordBreak:"break-word" }}>{value}</div></div>)}
+                  </div>
+                  <div style={{ background:"#EEF2FB", borderRadius:99, height:5, marginBottom:8, overflow:"hidden" }}><div style={{ width:`${result.puntaje_global}%`, height:"100%", borderRadius:99, background:`linear-gradient(90deg,${ec2.color}80,${ec2.color})`, transition:"width 1.2s ease" }}/></div>
+                  <p style={{ fontSize:13, color:"#6B7A99", lineHeight:1.7, marginBottom:24 }}>{result.resumen_general}</p>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:12 }}>
+                    {[{ n:altas.length, label:"🔴 Incumplimientos", c:"#C0392B" },{ n:tecnicas.length, label:"🟡 Observaciones", c:"#D68910" },{ n:resueltas, label:"✅ Resueltas", c:"#1E8449" }].map(m => (
+                      <div key={m.label} style={{ background:"#F4F6FB", border:"1px solid #D1D9EE", borderRadius:10, padding:"14px 10px", textAlign:"center" }}>
+                        <div style={{ fontSize:28, fontWeight:800, fontFamily:"'Inter',sans-serif", color:m.c, lineHeight:1 }}>{m.n}</div>
+                        <div style={{ fontSize:10, color:"#6B7A99", marginTop:3 }}>{m.label}</div>
                       </div>
                     ))}
                   </div>
                   {total > 0 && (
-                    <div style={{ marginBottom: 26 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#6B7A99", marginBottom: 5 }}>
-                        <span>Progreso de revisión</span>
-                        <span style={{ color: resueltas === total ? "#1E8449" : "#6B7A99" }}>{resueltas} / {total} observaciones resueltas</span>
-                      </div>
-                      <div style={{ background: "#EEF2FB", borderRadius: 99, height: 4, overflow: "hidden" }}>
-                        <div style={{ width: `${total ? (resueltas / total) * 100 : 0}%`, height: "100%", borderRadius: 99, background: "linear-gradient(90deg,#1E844980,#1E8449)", transition: "width .4s ease" }} />
+                    <div style={{ marginBottom:26 }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, color:"#6B7A99", marginBottom:5 }}><span>Progreso de revisión</span><span style={{ color:resueltas===total?"#1E8449":"#6B7A99" }}>{resueltas} / {total} resueltas</span></div>
+                      <div style={{ background:"#EEF2FB", borderRadius:99, height:4, overflow:"hidden" }}><div style={{ width:`${total?(resueltas/total)*100:0}%`, height:"100%", borderRadius:99, background:"linear-gradient(90deg,#1E844980,#1E8449)", transition:"width .4s ease" }} /></div>
+                    </div>
+                  )}
+                  {altas.length > 0 && (
+                    <div style={{ marginBottom:28 }}>
+                      <SectionTitle>🔴 Incumplimientos — {altas.length}</SectionTitle>
+                      <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                        {altas.map(({ obs, key, etapa }) => {
+                          const obsState = obsStatus[key];
+                          return (
+                            <div key={key} style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.05)", borderRadius:"0 8px 8px 0", padding:"14px 16px", opacity:obsState?.status==="descartada"?0.5:1 }}>
+                              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:10, marginBottom:6 }}>
+                                <div style={{ fontSize:12, fontWeight:700, color:"#C0392B" }}>{etapa}</div>
+                                {obsState?.status && <span style={{ fontSize:10, fontWeight:600, color:STATUS_COLORS[obsState.status], background:STATUS_COLORS[obsState.status]+"18", border:`1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius:4, padding:"1px 7px" }}>✓ {STATUS_LABELS[obsState.status]}</span>}
+                              </div>
+                              <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.6, marginBottom:8 }}>{obs.descripcion}</div>
+                              {obs.articulo && <div style={{ display:"flex", flexWrap:"wrap", gap:4, marginBottom:8 }}>{obs.articulo.split(/[,;]/).map(p=>p.trim()).filter(Boolean).map((p,pi) => <span key={pi} style={{ fontSize:10, color:"#2952A3", background:"rgba(41,82,163,0.08)", border:"1px solid rgba(41,82,163,0.2)", borderRadius:4, padding:"2px 7px", fontFamily:"'DM Mono',monospace" }}>§ {p}</span>)}</div>}
+                              {obs.correccion && <div style={{ fontSize:12, color:"#6B7A99", borderTop:"1px solid rgba(192,57,43,0.15)", paddingTop:8, lineHeight:1.5, marginBottom:8 }}><span style={{ color:"#C0392B", fontWeight:600 }}>→ </span>{obs.correccion}</div>}
+                              <div style={{ display:"flex", gap:5, flexWrap:"wrap", paddingTop:8, borderTop:"1px solid rgba(0,0,0,0.06)" }}>
+                                {OBS_ACTIONS.map(a => { const active=obsState?.status===a.id; return <button key={a.id} onClick={() => setObsAction(key, a.id)} style={{ padding:"3px 9px", fontSize:10, borderRadius:5, border:`1px solid ${active?a.color:"#D1D9EE"}`, background:active?a.color+"18":"transparent", color:active?a.color:"#6B7A99", cursor:"pointer", fontFamily:"inherit", fontWeight:active?700:400, transition:"all .15s" }}>{a.label}</button>; })}
+                              </div>
+                              {obsState?.status==="comentada" && <textarea value={obsState?.comment||""} onChange={e=>setObsComment(key,e.target.value)} placeholder="Escribe tu comentario..." style={{ marginTop:8, width:"100%", border:"1px solid #D1D9EE", borderRadius:6, padding:"8px 10px", fontSize:11, fontFamily:"inherit", color:"#3D4A5C", resize:"vertical", minHeight:60, outline:"none", background:"#FFFFFF" }} />}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
-                </>
-              );
-            })()}
-
-            {/* Incumplimientos (ALTA) — inc-block estilo Demo */}
-            {(() => {
-              const incumplimientos = (result.analisis_por_archivo || []).flatMap((doc, di) =>
-                (doc.observaciones || [])
-                  .map((obs, oi) => ({ obs, di, oi, archivo: doc.archivo }))
-                  .filter(x => x.obs.criticidad === "ALTA")
-              );
-              if (!incumplimientos.length) return null;
-              return (
-                <div style={{ marginBottom: 28 }}>
-                  <div style={{ fontSize: 10, color: "#C0392B", letterSpacing: "2px", marginBottom: 12 }}>🔴 INCUMPLIMIENTOS — {incumplimientos.length}</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    {incumplimientos.map(({ obs, di, oi, archivo }) => {
-                      const obsKey = `${di}-${oi}`;
-                      const obsState = obsStatus[obsKey];
-                      const isResolved = !!obsState?.status;
-                      const STATUS_COLORS = { aceptada: "#1E8449", comentada: "#2952A3", modificada: "#D68910", descartada: "#6B7A99" };
-                      const STATUS_LABELS = { aceptada: "Aceptada", comentada: "Comentada", modificada: "Modificada", descartada: "Descartada" };
-                      const OBS_ACTIONS = [
-                        { id: "aceptada",   label: "✅ Aceptar",   color: "#1E8449" },
-                        { id: "comentada",  label: "💬 Comentar",  color: "#2952A3" },
-                        { id: "modificada", label: "✏️ Modificar", color: "#D68910" },
-                        { id: "descartada", label: "🗑️ Descartar", color: "#6B7A99" },
-                      ];
-                      return (
-                        <div key={`${di}-${oi}`} style={{ borderLeft: "4px solid #C0392B", background: "rgba(192,57,43,0.05)", borderRadius: "0 8px 8px 0", padding: "14px 16px", opacity: obsState?.status === "descartada" ? 0.5 : 1 }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, marginBottom: 6 }}>
-                            <div style={{ fontSize: 12, fontWeight: 700, color: "#C0392B" }}>{archivo}</div>
-                            {isResolved && (
-                              <span style={{ fontSize: 10, fontWeight: 600, color: STATUS_COLORS[obsState.status], background: STATUS_COLORS[obsState.status] + "18", border: `1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius: 4, padding: "1px 7px", whiteSpace: "nowrap", flexShrink: 0 }}>
-                                ✓ {STATUS_LABELS[obsState.status]}
-                              </span>
-                            )}
+                  {Object.keys(catGroups).length > 0 && (
+                    <div style={{ marginBottom:28 }}>
+                      <SectionTitle>🟡 Observaciones técnicas</SectionTitle>
+                      {Object.entries(catGroups).map(([etapa, items]) => (
+                        <div key={etapa} style={{ marginBottom:16 }}>
+                          <div style={{ fontSize:10, color:"#6B7A99", letterSpacing:"1px", marginBottom:8, display:"flex", alignItems:"center", gap:6 }}>
+                            <span style={{ fontWeight:600 }}>{etapa.toUpperCase()}</span>
+                            <span style={{ background:"rgba(107,122,153,0.12)", borderRadius:99, padding:"1px 7px", fontSize:9 }}>{items.length}</span>
                           </div>
-                          <div style={{ fontSize: 13, color: "#3D4A5C", lineHeight: 1.6, marginBottom: 8 }}>{obs.descripcion}</div>
-                          {obs.articulo && (
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 8 }}>
-                              {obs.articulo.split(/[,;]/).map(p => p.trim()).filter(Boolean).map((p, pi) => (
-                                <span key={pi} style={{ fontSize: 10, color: "#2952A3", background: "rgba(41,82,163,0.08)", border: "1px solid rgba(41,82,163,0.2)", borderRadius: 4, padding: "2px 7px", fontFamily: "'DM Mono', monospace" }}>§ {p}</span>
-                              ))}
-                            </div>
-                          )}
-                          {obs.correccion && (
-                            <div style={{ fontSize: 12, color: "#6B7A99", borderTop: "1px solid rgba(192,57,43,0.15)", paddingTop: 8, lineHeight: 1.5, marginBottom: 8 }}>
-                              <span style={{ color: "#C0392B", fontWeight: 600 }}>→ </span>{obs.correccion}
-                            </div>
-                          )}
-                          <div style={{ display: "flex", gap: 5, flexWrap: "wrap", paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
-                            {OBS_ACTIONS.map(action => {
-                              const active = obsState?.status === action.id;
-                              return (
-                                <button key={action.id} onClick={() => setObsAction(di, oi, action.id)}
-                                  style={{ padding: "3px 9px", fontSize: 10, borderRadius: 5, border: `1px solid ${active ? action.color : "#D1D9EE"}`, background: active ? action.color + "18" : "transparent", color: active ? action.color : "#6B7A99", cursor: "pointer", fontFamily: "inherit", fontWeight: active ? 700 : 400, transition: "all .15s" }}>
-                                  {action.label}
-                                </button>
-                              );
-                            })}
+                          <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                            {items.map(({ obs, key }) => <ObsCard key={key} obs={obs} obsKey={key} obsState={obsStatus[key]} onAction={setObsAction} onComment={setObsComment} />)}
                           </div>
-                          {obsState?.status === "comentada" && (
-                            <textarea value={obsState?.comment || ""} onChange={e => setObsComment(di, oi, e.target.value)}
-                              placeholder="Escribe tu comentario..."
-                              style={{ marginTop: 8, width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "8px 10px", fontSize: 11, fontFamily: "inherit", color: "#3D4A5C", resize: "vertical", minHeight: 60, outline: "none", background: "#FFFFFF" }} />
-                          )}
                         </div>
-                      );
-                    })}
+                      ))}
+                    </div>
+                  )}
+                  {(result.analisis_por_archivo||[]).some(a => a.elementos_ok?.length) && (
+                    <div style={{ marginBottom:28 }}>
+                      <SectionTitle>📄 Resumen por documento</SectionTitle>
+                      {(result.analisis_por_archivo||[]).map((doc,i) => {
+                        if (!doc.elementos_ok?.length) return null;
+                        const est = estadoDocStyle(doc.estado);
+                        return (
+                          <div key={i} style={{ background:"#F4F6FB", border:"1px solid #D1D9EE", borderRadius:10, marginBottom:10, overflow:"hidden" }}>
+                            <div style={{ padding:"10px 14px", display:"flex", alignItems:"center", gap:10 }}>
+                              <span style={{ fontSize:14 }}>{doc.archivo?.match(/\.(jpg|jpeg|png)/i)?"🖼":"📄"}</span>
+                              <div style={{ flex:1, minWidth:0 }}><div style={{ fontSize:13, color:"#1B3A8A", fontWeight:500, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{doc.archivo}</div><div style={{ fontSize:11, color:"#6B7A99" }}>{doc.tipo_detectado}</div></div>
+                              <span style={{ fontSize:10, fontWeight:700, padding:"3px 10px", borderRadius:99, ...est }}>{doc.estado}</span>
+                            </div>
+                            <div style={{ padding:"10px 14px", borderTop:"1px solid #D1D9EE" }}>
+                              <div style={{ fontSize:9, color:"#1E8449", letterSpacing:"2px", marginBottom:7 }}>CUMPLE ✓</div>
+                              <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>{doc.elementos_ok.map((ok,j) => <span key={j} style={{ fontSize:11, color:"#1E8449", background:"rgba(30,132,73,0.08)", border:"1px solid rgba(30,132,73,0.25)", borderRadius:6, padding:"3px 10px" }}>{ok}</span>)}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {result.pasos_siguientes?.length > 0 && (
+                    <div style={{ marginBottom:26 }}>
+                      <SectionTitle>✅ Plan de acción prioritario</SectionTitle>
+                      <div style={{ border:"1px solid #D1D9EE", borderRadius:10, overflow:"hidden" }}>
+                        {result.pasos_siguientes.map((p,i) => (
+                          <div key={i} style={{ display:"grid", gridTemplateColumns:"40px 1fr", gap:12, padding:"10px 14px", borderTop:i>0?"1px solid #EEF2FB":"none", alignItems:"flex-start" }}>
+                            <div style={{ width:24, height:24, borderRadius:"50%", background:i===0?"#C0392B":i===1?"#D68910":"#2952A3", display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:700, color:"#fff" }}>{i+1}</div>
+                            <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.6 }}>{p}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {result.alertas_especiales?.length > 0 && (
+                    <div style={{ marginBottom:26 }}>
+                      <SectionTitle>⚡ Alertas especiales</SectionTitle>
+                      {result.alertas_especiales.map((a,i) => <div key={i} style={{ background:"#FEF3CD", border:"1px solid #D68910", borderRadius:8, padding:"11px 14px", marginBottom:6, fontSize:13, color:"#7D5A00", lineHeight:1.6 }}>⚠ {a}</div>)}
+                    </div>
+                  )}
+                  <div style={{ marginBottom:22 }}>
+                    <SectionTitle>RESUMEN DE VERIFICACIÓN</SectionTitle>
+                    <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
+                      {[
+                        { label:"Normativa OGUC verificada", ok:true },
+                        { label:"Normativa LGUC verificada", ok:true },
+                        { label:tienePRC?`PRC ${PRC_COMUNAS[comuna].meta.nombre} aplicado`:"PRC — comuna no registrada", ok:tienePRC },
+                        { label:totalRecintos>0?`${totalRecintos} recinto${totalRecintos!==1?"s":""} identificado${totalRecintos!==1?"s":""}`:"Recintos — no detectados", ok:totalRecintos>0 },
+                        { label:"Incumplimientos críticos", ok:altas.length===0 },
+                      ].map(item => <div key={item.label} style={{ display:"flex", alignItems:"center", gap:10, fontSize:12, color:"#3D4A5C" }}><span style={{ fontSize:14, flexShrink:0 }}>{item.ok?"✅":"⚠️"}</span><span style={{ color:item.ok?"#1E8449":"#D68910" }}>{item.label}</span></div>)}
+                    </div>
+                  </div>
+                  <div style={{ background:"#EEF2FB", border:"1px solid #D1D9EE", borderRadius:8, padding:"12px 16px", fontSize:11, color:"#6B7A99", lineHeight:1.7, marginBottom:18 }}>
+                    ⚠ Análisis orientativo. No reemplaza la revisión oficial de la DOM. Consulte siempre el Plan Regulador Comunal y la DOM de su comuna.
+                  </div>
+                  <div style={{ display:"flex", gap:10 }}>
+                    <button onClick={() => { setResult(null); setArchivos([]); }} style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #D1D9EE", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>↩ Nuevo análisis</button>
+                    <button onClick={() => window.print()} style={{ flex:1, padding:"13px", background:"linear-gradient(90deg,#1B3A8A,#2952A3)", border:"none", borderRadius:10, color:"#fff", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>🖨 Exportar informe</button>
                   </div>
                 </div>
               );
             })()}
 
-            {/* Observaciones técnicas (MEDIA / BAJA) por documento */}
-            {(() => {
-              const docsConObs = (result.analisis_por_archivo || []).filter(doc =>
-                doc.observaciones?.some(o => o.criticidad !== "ALTA") || doc.elementos_ok?.length || doc.recintos?.length
-              );
-              if (!docsConObs.length) return null;
-              return (
-              <div style={{ marginBottom: 26 }}>
-              <div style={{ fontSize: 10, color: "#D68910", letterSpacing: "2px", marginBottom: 12 }}>🟡 OBSERVACIONES TÉCNICAS</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {(result.analisis_por_archivo || []).map((doc, i) => {
-                  const obsTec = (doc.observaciones || []).filter(o => o.criticidad !== "ALTA");
-                  if (!obsTec.length && !doc.elementos_ok?.length && !doc.recintos?.length) return null;
-                  const est  = estadoDocStyle(doc.estado);
-                  const open = expandido[`d${i}`] !== false;
-                  return (
-                    <div key={i} className="doc-card" style={{ background: "#F4F6FB", border: "1px solid #D1D9EE", borderRadius: 12, overflow: "hidden" }}>
-                      <button onClick={() => toggle(`d${i}`)}
-                        style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "13px 16px", display: "flex", alignItems: "center", gap: 12, textAlign: "left" }}>
-                        <span style={{ fontSize: 16, flexShrink: 0 }}>
-                          {doc.archivo?.match(/\.(jpg|jpeg|png)/i) ? "🖼" : doc.archivo?.match(/\.(dwg|dxf)/i) ? "📐" : "📄"}
-                        </span>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: 13, color: "#1B3A8A", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{doc.archivo}</div>
-                          <div style={{ fontSize: 11, color: "#6B7A99", marginTop: 1 }}>{doc.tipo_detectado}</div>
-                        </div>
-                        <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, flexShrink: 0, ...est }}>{doc.estado}</span>
-                        {obsTec.length > 0 && (
-                          <span style={{ fontSize: 10, color: "#D68910", background: "rgba(214,137,16,0.08)", border: "1px solid rgba(214,137,16,0.25)", borderRadius: 99, padding: "2px 8px", flexShrink: 0 }}>
-                            {obsTec.length}
-                          </span>
-                        )}
-                        <span style={{ color: "#6B7A99", fontSize: 11, flexShrink: 0 }}>{open ? "▾" : "▸"}</span>
-                      </button>
-
-                      {open && (
-                        <div style={{ borderTop: "1px solid #D1D9EE", padding: "14px 16px" }}>
-                          {/* OK */}
-                          {doc.elementos_ok?.length > 0 && (
-                            <div style={{ marginBottom: 14 }}>
-                              <div style={{ fontSize: 9, color: "#1E8449", letterSpacing: "2px", marginBottom: 8 }}>CUMPLE ✓</div>
-                              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                                {doc.elementos_ok.map((ok, j) => (
-                                  <span key={j} style={{ fontSize: 11, color: "#1E8449", background: "rgba(30,132,73,0.08)", border: "1px solid rgba(30,132,73,0.25)", borderRadius: 6, padding: "3px 10px" }}>{ok}</span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                          {/* Observaciones MEDIA / BAJA */}
-                          {obsTec.length > 0 && (
-                            <div>
-                              <div style={{ fontSize: 9, color: "#D68910", letterSpacing: "2px", marginBottom: 8 }}>OBSERVACIONES — {obsTec.length}</div>
-                              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                                {obsTec.map((obs, j) => {
-                                  const realIdx = (doc.observaciones || []).indexOf(obs);
-                                  const cs = critStyle(obs.criticidad);
-                                  const obsKey = `${i}-${realIdx}`;
-                                  const obsState = obsStatus[obsKey];
-                                  const isResolved = !!obsState?.status;
-                                  const OBS_ACTIONS = [
-                                    { id: "aceptada",   label: "✅ Aceptar",   color: "#1E8449" },
-                                    { id: "comentada",  label: "💬 Comentar",  color: "#2952A3" },
-                                    { id: "modificada", label: "✏️ Modificar", color: "#D68910" },
-                                    { id: "descartada", label: "🗑️ Descartar", color: "#6B7A99" },
-                                  ];
-                                  const STATUS_LABELS = { aceptada: "Aceptada", comentada: "Comentada", modificada: "Modificada", descartada: "Descartada" };
-                                  const STATUS_COLORS = { aceptada: "#1E8449", comentada: "#2952A3", modificada: "#D68910", descartada: "#6B7A99" };
-                                  return (
-                                    <div key={j} className="obs-card" style={{ ...cs, borderRadius: 8, padding: "12px 14px", transition: "border-color .15s", opacity: obsState?.status === "descartada" ? 0.5 : 1 }}>
-                                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10, marginBottom: 6 }}>
-                                        <div style={{ fontSize: 13, color: "#3D4A5C", lineHeight: 1.5, flex: 1 }}>{obs.descripcion}</div>
-                                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
-                                          <span style={{ fontSize: 10, fontWeight: 700, color: cs.color, background: cs.background, border: cs.border, borderRadius: 4, padding: "2px 8px" }}>{obs.criticidad}</span>
-                                          {isResolved && (
-                                            <span style={{ fontSize: 10, fontWeight: 600, color: STATUS_COLORS[obsState.status], background: STATUS_COLORS[obsState.status] + "18", border: `1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius: 4, padding: "1px 7px", whiteSpace: "nowrap" }}>
-                                              ✓ {STATUS_LABELS[obsState.status]}
-                                            </span>
-                                          )}
-                                        </div>
-                                      </div>
-                                      {obs.articulo && (
-                                        <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: obs.correccion ? 8 : 6 }}>
-                                          {obs.articulo.split(/[,;]/).map(p => p.trim()).filter(Boolean).map((p, pi) => (
-                                            <span key={pi} style={{ fontSize: 10, color: "#2952A3", background: "rgba(41,82,163,0.08)", border: "1px solid rgba(41,82,163,0.2)", borderRadius: 4, padding: "2px 7px", fontFamily: "'DM Mono', monospace" }}>§ {p}</span>
-                                          ))}
-                                        </div>
-                                      )}
-                                      {obs.correccion && (
-                                        <div style={{ fontSize: 12, color: "#6B7A99", borderTop: "1px solid #D1D9EE", paddingTop: 8, marginTop: 4, lineHeight: 1.5, marginBottom: 8 }}>
-                                          <span style={{ color: "#2952A3" }}>→ </span>{obs.correccion}
-                                        </div>
-                                      )}
-                                      <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
-                                        {OBS_ACTIONS.map(action => {
-                                          const active = obsState?.status === action.id;
-                                          return (
-                                            <button key={action.id} onClick={() => setObsAction(i, realIdx, action.id)}
-                                              style={{ padding: "3px 9px", fontSize: 10, borderRadius: 5, border: `1px solid ${active ? action.color : "#D1D9EE"}`, background: active ? action.color + "18" : "transparent", color: active ? action.color : "#6B7A99", cursor: "pointer", fontFamily: "inherit", fontWeight: active ? 700 : 400, transition: "all .15s" }}>
-                                              {action.label}
-                                            </button>
-                                          );
-                                        })}
-                                      </div>
-                                      {obsState?.status === "comentada" && (
-                                        <textarea value={obsState?.comment || ""} onChange={e => setObsComment(i, realIdx, e.target.value)}
-                                          placeholder="Escribe tu comentario o nota para esta observación..."
-                                          style={{ marginTop: 8, width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "8px 10px", fontSize: 11, fontFamily: "inherit", color: "#3D4A5C", resize: "vertical", minHeight: 60, outline: "none", background: "#FFFFFF" }} />
-                                      )}
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Overlay de recintos */}
-                          {(() => {
-                            const recintos = doc.recintos?.filter(r => Array.isArray(r.bbox));
-                            if (!recintos?.length) return null;
-                            const archivoMatch = archivos.find(a => a.name === doc.archivo);
-                            const paginas = [...new Set(recintos.map(r => r.pagina))].sort((a, b) => a - b);
-                            return (
-                              <div style={{ marginTop: 16 }}>
-                                <div style={{ fontSize: 9, color: "#2952A3", letterSpacing: "2px", marginBottom: 10 }}>
-                                  RECINTOS DETECTADOS — {recintos.length}
-                                  <span style={{ fontSize: 9, color: "#6B7A99", letterSpacing: 0, marginLeft: 8, fontWeight: 400 }}>(estimación IA — posiciones aproximadas)</span>
-                                </div>
-                                {/* Leyenda */}
-                                <div style={{ display: "flex", gap: 12, marginBottom: 10, flexWrap: "wrap" }}>
-                                  {[["OK","#1E8449"],["OBSERVADO","#D68910"],["INCUMPLE","#C0392B"]].map(([label, color]) => (
-                                    <div key={label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: "#6B7A99" }}>
-                                      <div style={{ width: 12, height: 12, borderRadius: 2, background: color+"28", border: `2px solid ${color}` }}/>
-                                      {label}
-                                    </div>
-                                  ))}
-                                </div>
-                                {paginas.map(pag => {
-                                  let src = null;
-                                  if (archivoMatch?.pdfImages) {
-                                    const imgData = archivoMatch.pdfImages.find(p => p.page === pag);
-                                    src = imgData?.thumb || null;
-                                  } else if (archivoMatch?.isImage && archivoMatch.base64) {
-                                    src = `data:${archivoMatch.type};base64,${archivoMatch.base64}`;
-                                  }
-                                  if (!src) return null;
-                                  return (
-                                    <div key={pag} style={{ marginBottom: 12 }}>
-                                      {paginas.length > 1 && (
-                                        <div style={{ fontSize: 10, color: "#6B7A99", marginBottom: 5 }}>Página {pag}</div>
-                                      )}
-                                      <CanvasOverlay src={src} recintos={recintos} pagina={pag} />
-                                    </div>
-                                  );
-                                })}
-                                {/* Tabla de recintos */}
-                                <div style={{ marginTop: 10, overflowX: "auto" }}>
-                                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
-                                    <thead>
-                                      <tr style={{ background: "#EEF2FB" }}>
-                                        {["Recinto","Uso","Sup. m²","Pág.","Estado","Observación"].map(h => (
-                                          <th key={h} style={{ padding: "6px 10px", textAlign: "left", color: "#1B3A8A", fontWeight: 600, borderBottom: "1px solid #D1D9EE", whiteSpace: "nowrap" }}>{h}</th>
-                                        ))}
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {doc.recintos.map((r, ri) => {
-                                        const cs = { OK: "#1E8449", OBSERVADO: "#D68910", INCUMPLE: "#C0392B" }[r.estado] || "#6B7A99";
-                                        return (
-                                          <tr key={ri} style={{ borderBottom: "1px solid #EEF2FB" }}>
-                                            <td style={{ padding: "6px 10px", color: "#1B3A8A", fontWeight: 500 }}>{r.nombre}</td>
-                                            <td style={{ padding: "6px 10px", color: "#6B7A99" }}>{r.uso || "—"}</td>
-                                            <td style={{ padding: "6px 10px", color: "#3D4A5C" }}>{r.superficie_m2 ?? "—"}</td>
-                                            <td style={{ padding: "6px 10px", color: "#6B7A99" }}>{r.pagina}</td>
-                                            <td style={{ padding: "6px 10px" }}>
-                                              <span style={{ color: cs, fontWeight: 700, fontSize: 10 }}>{r.estado}</span>
-                                            </td>
-                                            <td style={{ padding: "6px 10px", color: "#6B7A99", maxWidth: 200 }}>{r.observacion || "—"}</td>
-                                          </tr>
-                                        );
-                                      })}
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
-                            );
-                          })()}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-              );
-            })()}
-
-            {/* Alertas especiales */}
-            {result.alertas_especiales?.length > 0 && (
-              <div style={{ marginBottom: 26 }}>
-                <div style={{ fontSize: 10, color: "#2952A3", letterSpacing: "2px", marginBottom: 8 }}>ALERTAS ESPECIALES</div>
-                {result.alertas_especiales.map((a, i) => (
-                  <div key={i} style={{ background: "#FEF3CD", border: "1px solid #D68910", borderRadius: 8, padding: "11px 14px", marginBottom: 6, fontSize: 13, color: "#7D5A00", lineHeight: 1.6 }}>
-                    ⚠ {a}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Plan de acción */}
-            {result.pasos_siguientes?.length > 0 && (
-              <div style={{ marginBottom: 26 }}>
-                <div style={{ fontSize: 10, color: "#1B3A8A", letterSpacing: "2px", marginBottom: 10 }}>✅ PLAN DE ACCIÓN PRIORITARIO</div>
-                <div style={{ border: "1px solid #D1D9EE", borderRadius: 10, overflow: "hidden" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "40px 1fr", background: "#EEF2FB", padding: "7px 14px", gap: 12 }}>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: "#1B3A8A" }}>#</span>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: "#1B3A8A" }}>Acción</span>
-                  </div>
-                  {result.pasos_siguientes.map((p, i) => (
-                    <div key={i} style={{ display: "grid", gridTemplateColumns: "40px 1fr", gap: 12, padding: "10px 14px", borderTop: "1px solid #EEF2FB", alignItems: "flex-start" }}>
-                      <div style={{ width: 24, height: 24, borderRadius: "50%", background: i === 0 ? "#C0392B" : i === 1 ? "#D68910" : "#2952A3", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff" }}>{i + 1}</div>
-                      <div style={{ fontSize: 13, color: "#3D4A5C", lineHeight: 1.6 }}>{p}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Disclaimer */}
-            <div style={{ background: "#EEF2FB", border: "1px solid #D1D9EE", borderRadius: 8, padding: "12px 16px", fontSize: 11, color: "#6B7A99", lineHeight: 1.7, marginBottom: 18 }}>
-              ⚠ Análisis orientativo. No reemplaza la revisión oficial de la DOM. Consulte siempre el Plan Regulador Comunal y la DOM de su comuna.
-            </div>
-
-            {/* Acciones */}
-            <div style={{ display: "flex", gap: 10 }}>
-              <button onClick={() => { setResult(null); setArchivos([]); }}
-                style={{ flex: 1, padding: "13px", background: "#FFFFFF", border: "1px solid #D1D9EE", borderRadius: 10, color: "#2952A3", fontSize: 13, fontFamily: "inherit", cursor: "pointer" }}>
-                ↩ Nuevo análisis
-              </button>
-              <button onClick={() => window.print()}
-                style={{ flex: 1, padding: "13px", background: "linear-gradient(90deg,#1B3A8A,#2952A3)", border: "none", borderRadius: 10, color: "#fff", fontSize: 13, fontFamily: "inherit", cursor: "pointer" }}>
-                🖨 Exportar informe
-              </button>
-            </div>
-
+            </div>{/* /content */}
           </div>
         )}
       </main>
+
+      {/* Toast de confirmación */}
+      {toast && (
+        <div style={{ position: "fixed", bottom: 24, right: 24, background: toast === "aceptada" ? "#1E8449" : toast === "comentada" ? "#2952A3" : toast === "modificada" ? "#D68910" : "#6B7A99", color: "#fff", borderRadius: 10, padding: "12px 20px", fontSize: 13, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 9999, display: "flex", alignItems: "center", gap: 8 }}>
+          {toast === "aceptada" ? "✅ Observación aceptada" : toast === "comentada" ? "💬 Comentario guardado" : toast === "modificada" ? "✏️ Marcada para modificar" : "🗑️ Observación descartada"}
+        </div>
+      )}
     </div>
   );
 }
