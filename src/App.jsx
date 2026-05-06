@@ -133,12 +133,11 @@ function repairAndParse(str) {
 
   // Intento 3: datos parciales — extrae campos de primer nivel que sí llegaron
   const partial = {};
-  const fields = ["resumen_general","puntaje_global","estado_global","documentos_faltantes","analisis_por_archivo","alertas_especiales","pasos_siguientes"];
+  const fields = ["resumen_general","puntaje_global","estado_global","documentos_faltantes","analisis_por_archivo","alertas_especiales","pasos_siguientes","capa1","capa2"];
   for (const field of fields) {
     const m = str.match(new RegExp(`"${field}"\\s*:\\s*("([^"\\\\]|\\\\.)*"|\\d+|\\[|\\{)`));
     if (m) {
       try {
-        // Intenta extraer el valor completo buscando su cierre
         const start = str.indexOf(`"${field}"`);
         const valStart = str.indexOf(":", start) + 1;
         partial[field] = JSON.parse(repairJSON(str.slice(valStart).trimStart().replace(/,?\s*$/, "")));
@@ -152,6 +151,8 @@ function repairAndParse(str) {
   if (!partial.documentos_faltantes) partial.documentos_faltantes = [];
   if (!partial.alertas_especiales)   partial.alertas_especiales   = [];
   if (!partial.pasos_siguientes)     partial.pasos_siguientes     = [];
+  if (!partial.capa1 || typeof partial.capa1 === "string") partial.capa1 = {};
+  if (!partial.capa2 || typeof partial.capa2 === "string") partial.capa2 = {};
   return partial;
 }
 
@@ -512,7 +513,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
           const st = obsStatus[key];
           const cs = critStyle(obs.criticidad);
           return (
-            <div key={i} style={{ ...cs, borderRadius:5, padding:"8px 10px", marginBottom:5, pageBreakInside:"avoid" }}>
+            <div key={i} className="obs-no-break" style={{ ...cs, borderRadius:5, padding:"8px 10px", marginBottom:5, pageBreakInside:"avoid", breakInside:"avoid" }}>
               <div style={{ display:"flex", justifyContent:"space-between", gap:8, marginBottom:3 }}>
                 <div style={{ fontSize:10, color:"#3D4A5C", lineHeight:1.4, flex:1 }}>{obs.descripcion}</div>
                 <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:2, flexShrink:0 }}>
@@ -550,7 +551,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
   }
 
   function CapaBanner({ children }) {
-    return <div style={{ background:"#1B3A8A", color:"#fff", padding:"7px 12px", borderRadius:5, marginBottom:18, fontSize:10, fontWeight:700, letterSpacing:"0.5px" }}>{children}</div>;
+    return <div style={{ background:"#1B3A8A", color:"#fff", padding:"7px 12px", borderRadius:5, marginBottom:18, fontSize:10, fontWeight:700, letterSpacing:"0.5px", pageBreakInside:"avoid", breakInside:"avoid" }}>{children}</div>;
   }
 
   function PrintTable({ headers, rows }) {
@@ -565,13 +566,13 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
     );
   }
 
-  const pg = { pageBreakBefore:"always", paddingTop:20 };
+  const pg = { marginTop:28, paddingTop:20, borderTop:"3px solid #EEF2FB" };
 
   return (
     <div style={{ padding:"18mm 16mm", fontFamily:"Arial,sans-serif", fontSize:11, color:"#1a1a1a", background:"#fff", width:"210mm", boxSizing:"border-box" }}>
 
       {/* PORTADA */}
-      <div style={{ pageBreakAfter:"always", paddingBottom:20 }}>
+      <div style={{ paddingBottom:20 }}>
         <div style={{ borderBottom:"3px solid #1B3A8A", paddingBottom:14, marginBottom:20, display:"flex", justifyContent:"space-between", alignItems:"flex-end" }}>
           <div>
             <div style={{ fontSize:9, color:"#6B7A99", letterSpacing:"3px", marginBottom:4 }}>INFORME DE REVISIÓN NORMATIVA</div>
@@ -820,7 +821,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
               {altas.map(({ obs, key, etapa }) => {
                 const st = obsStatus[key];
                 return (
-                  <div key={key} style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.04)", borderRadius:"0 6px 6px 0", padding:"8px 10px", marginBottom:6, pageBreakInside:"avoid" }}>
+                  <div key={key} className="obs-no-break" style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.04)", borderRadius:"0 6px 6px 0", padding:"8px 10px", marginBottom:6, pageBreakInside:"avoid", breakInside:"avoid" }}>
                     <div style={{ display:"flex", justifyContent:"space-between", gap:8, marginBottom:3 }}>
                       <div style={{ fontSize:9, fontWeight:700, color:"#C0392B" }}>{etapa}</div>
                       {st?.status && <span style={{ fontSize:8, fontWeight:600, color:STATUS_COLORS[st.status], background:STATUS_COLORS[st.status]+"18", border:`1px solid ${STATUS_COLORS[st.status]}40`, borderRadius:99, padding:"1px 5px" }}>✓ {STATUS_LABELS[st.status]}</span>}
@@ -943,26 +944,41 @@ export default function ArchiCheck() {
   const [activeEtapa, setActiveEtapa] = useState("e1");
   const [activeFloor, setActiveFloor] = useState(0);
   const [printing, setPrinting] = useState(false);
+  const [modelo,   setModelo]   = useState("claude"); // "claude" | "gpt4o"
   const inputRef = useRef();
   const colabInputRef = useRef();
   const colabPngInputRef = useRef();
   const printRef = useRef();
 
   async function exportPDF() {
+    if (!printRef.current) return;
     setPrinting(true);
-    await new Promise(r => setTimeout(r, 400));
     const { default: html2pdf } = await import("html2pdf.js");
     const slug = TIPOS.find(t => t.id === tipo)?.label?.replace(/\s+/g, "-").toLowerCase() || "informe";
     const fecha = new Date().toISOString().slice(0, 10);
-    await html2pdf().set({
-      margin: 0,
-      filename: `archicheck-${slug}-${fecha}.pdf`,
-      image: { type: "jpeg", quality: 0.92 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: { mode: ["css", "legacy"] },
-    }).from(printRef.current).save();
-    setPrinting(false);
+
+    // html2canvas solo captura elementos que el browser pinta en pantalla.
+    // Movemos el elemento al viewport, capturamos, y restauramos.
+    const el = printRef.current;
+    const savedStyle = el.style.cssText;
+    el.style.cssText = "position:fixed;left:0;top:0;z-index:99999;background:#fff;pointer-events:none;width:210mm;";
+
+    // Esperar dos frames para que el browser complete layout + paint
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    try {
+      await html2pdf().set({
+        margin: [8, 0, 8, 0],
+        filename: `archicheck-${slug}-${fecha}.pdf`,
+        image: { type: "jpeg", quality: 0.92 },
+        html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["css"], avoid: [".obs-no-break"] },
+      }).from(el).save();
+    } finally {
+      el.style.cssText = savedStyle;
+      setPrinting(false);
+    }
   }
 
   useEffect(() => {
@@ -1144,6 +1160,7 @@ export default function ArchiCheck() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: [{ role: "user", content }],
+          modelo,
         }),
       });
 
@@ -1593,6 +1610,26 @@ export default function ArchiCheck() {
                   )}
                 </div>
 
+              </div>
+            </div>
+
+            {/* Selector de modelo */}
+            <div style={{ marginBottom:14 }}>
+              <div style={{ fontSize:10, color:"#6B7A99", letterSpacing:"2px", marginBottom:8 }}>MODELO DE IA</div>
+              <div style={{ display:"flex", gap:8 }}>
+                {[
+                  { id:"claude", label:"Claude Sonnet 4.6", sub:"Anthropic", color:"#2952A3" },
+                  { id:"gpt4o",  label:"GPT-4o",            sub:"OpenAI",    color:"#10A37F" },
+                ].map(m => {
+                  const active = modelo === m.id;
+                  return (
+                    <button key={m.id} onClick={() => setModelo(m.id)}
+                      style={{ flex:1, padding:"10px 8px", borderRadius:8, border:`2px solid ${active ? m.color : "#D1D9EE"}`, background:active ? `${m.color}0D` : "#fff", cursor:"pointer", fontFamily:"inherit", textAlign:"left", transition:"all .15s" }}>
+                      <div style={{ fontSize:12, fontWeight:700, color:active ? m.color : "#3D4A5C" }}>{m.label}</div>
+                      <div style={{ fontSize:10, color:"#6B7A99", marginTop:2 }}>{m.sub}</div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -2210,9 +2247,9 @@ export default function ArchiCheck() {
         </div>
       )}
 
-      {/* Div oculto para generación de PDF */}
-      {printing && result && (
-        <div ref={printRef} style={{ position:"fixed", left:"-9999px", top:0, zIndex:-1 }}>
+      {/* PrintReport — siempre en DOM para que cloneNode tenga el HTML completo */}
+      {result && (
+        <div ref={printRef} style={{ position:"absolute", left:"-9999px", top:0, width:"210mm", pointerEvents:"none" }}>
           <PrintReport
             result={result}
             obsStatus={obsStatus}
