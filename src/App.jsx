@@ -1176,14 +1176,17 @@ ${printRef.current.innerHTML}
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let raw = "";
+      let sseBuffer = "";
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        const chunk = decoder.decode(value, { stream: true });
-        for (const line of chunk.split("\n")) {
+        sseBuffer += decoder.decode(value, { stream: true });
+        const lines = sseBuffer.split("\n");
+        sseBuffer = lines.pop() ?? ""; // guarda línea incompleta para el próximo chunk
+        for (const line of lines) {
           if (!line.startsWith("data: ")) continue;
           const payload = line.slice(6).trim();
-          if (!payload) continue;
+          if (!payload || payload === "[DONE]") continue;
           try {
             const evt = JSON.parse(payload);
             if (evt.type === "content_block_delta" && evt.delta?.type === "text_delta") {
@@ -1191,7 +1194,7 @@ ${printRef.current.innerHTML}
             }
             if (evt.type === "error") throw new Error(evt.error?.message || JSON.stringify(evt.error));
           } catch (e) {
-            if (e.message && !e.message.startsWith("JSON")) throw e;
+            if (!(e instanceof SyntaxError)) throw e; // solo ignorar errores de parseo SSE parcial
           }
         }
       }
