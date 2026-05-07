@@ -952,31 +952,33 @@ export default function ArchiCheck() {
 
   async function exportPDF() {
     if (!printRef.current) return;
-    setPrinting(true);
+
+    // Copiamos innerHTML a un div NUEVO fuera del árbol React (React no puede
+    // interferir con su estilo), lo posicionamos visible y capturamos desde ahí.
+    const wrapper = document.createElement("div");
+    wrapper.style.cssText = "position:fixed;left:0;top:0;z-index:99999;background:#fff;width:210mm;box-sizing:border-box;";
+    wrapper.innerHTML = printRef.current.innerHTML;
+    document.body.appendChild(wrapper);
+
+    // Esperar dos frames para que el browser pinte el wrapper
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
     const { default: html2pdf } = await import("html2pdf.js");
     const slug = TIPOS.find(t => t.id === tipo)?.label?.replace(/\s+/g, "-").toLowerCase() || "informe";
     const fecha = new Date().toISOString().slice(0, 10);
 
-    // html2canvas solo captura elementos que el browser pinta en pantalla.
-    // Movemos el elemento al viewport, capturamos, y restauramos.
-    const el = printRef.current;
-    const savedStyle = el.style.cssText;
-    el.style.cssText = "position:fixed;left:0;top:0;z-index:99999;background:#fff;pointer-events:none;width:210mm;";
-
-    // Esperar dos frames para que el browser complete layout + paint
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
+    setPrinting(true);
     try {
       await html2pdf().set({
         margin: [8, 0, 8, 0],
         filename: `archicheck-${slug}-${fecha}.pdf`,
         image: { type: "jpeg", quality: 0.92 },
-        html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
+        html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true, windowWidth: 794 },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         pagebreak: { mode: ["css"], avoid: [".obs-no-break"] },
-      }).from(el).save();
+      }).from(wrapper).save();
     } finally {
-      el.style.cssText = savedStyle;
+      document.body.removeChild(wrapper);
       setPrinting(false);
     }
   }
