@@ -950,37 +950,35 @@ export default function ArchiCheck() {
   const colabPngInputRef = useRef();
   const printRef = useRef();
 
-  async function exportPDF() {
+  function exportPDF() {
     if (!printRef.current) return;
 
-    // Copiamos innerHTML a un div NUEVO fuera del árbol React (React no puede
-    // interferir con su estilo), lo posicionamos visible y capturamos desde ahí.
-    const wrapper = document.createElement("div");
-    wrapper.style.cssText = "position:fixed;left:0;top:0;z-index:99999;background:#fff;width:210mm;box-sizing:border-box;";
-    wrapper.innerHTML = printRef.current.innerHTML;
-    document.body.appendChild(wrapper);
-
-    // Esperar dos frames para que el browser pinte el wrapper
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-    const { default: html2pdf } = await import("html2pdf.js");
     const slug = TIPOS.find(t => t.id === tipo)?.label?.replace(/\s+/g, "-").toLowerCase() || "informe";
     const fecha = new Date().toISOString().slice(0, 10);
 
-    setPrinting(true);
-    try {
-      await html2pdf().set({
-        margin: [8, 0, 8, 0],
-        filename: `archicheck-${slug}-${fecha}.pdf`,
-        image: { type: "jpeg", quality: 0.92 },
-        html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true, windowWidth: 794 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        pagebreak: { mode: ["css"], avoid: [".obs-no-break"] },
-      }).from(wrapper).save();
-    } finally {
-      document.body.removeChild(wrapper);
-      setPrinting(false);
-    }
+    // Abre el informe en una nueva pestaña y dispara window.print() automáticamente.
+    // Usa el renderer nativo del browser — sin html2canvas, sin canvas blancos.
+    const html = `<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<title>ArchiCheck — ${slug} — ${fecha}</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;font-family:Arial,sans-serif;background:#fff;}
+@page{margin:8mm 0;size:A4 portrait;}
+.obs-no-break{page-break-inside:avoid;break-inside:avoid;}
+table{border-collapse:collapse;width:100%;}
+</style>
+<script>window.onload=function(){setTimeout(window.print,400);}<\/script>
+</head><body>
+${printRef.current.innerHTML}
+</body></html>`;
+
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const win  = window.open(url, "_blank");
+    if (!win) alert("Permite ventanas emergentes en este sitio para exportar el PDF.");
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   }
 
   useEffect(() => {
@@ -2231,7 +2229,7 @@ export default function ArchiCheck() {
                   </div>
                   <div style={{ display:"flex", gap:10 }}>
                     <button onClick={() => { setResult(null); setArchivos([]); }} style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #D1D9EE", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>↩ Nuevo análisis</button>
-                    <button onClick={exportPDF} disabled={printing} style={{ flex:1, padding:"13px", background:printing?"#6B7A99":"linear-gradient(90deg,#1B3A8A,#2952A3)", border:"none", borderRadius:10, color:"#fff", fontSize:13, fontFamily:"inherit", cursor:printing?"wait":"pointer", transition:"background .2s" }}>{printing ? "⏳ Generando PDF..." : "🖨 Exportar informe"}</button>
+                    <button onClick={exportPDF} style={{ flex:1, padding:"13px", background:"linear-gradient(90deg,#1B3A8A,#2952A3)", border:"none", borderRadius:10, color:"#fff", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>🖨 Exportar informe</button>
                   </div>
                 </div>
               );
