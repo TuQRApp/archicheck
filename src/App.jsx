@@ -156,6 +156,102 @@ function repairAndParse(str) {
   return partial;
 }
 
+// ── Leer stream SSE de un modelo ────────────────────────────────────────────
+async function readModelStream(resp) {
+  const ct = resp.headers.get("content-type") || "";
+  if (ct.includes("application/json")) {
+    const data = await resp.json();
+    throw new Error(typeof data.error === "string" ? data.error : JSON.stringify(data.error));
+  }
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let raw = "", sseBuffer = "";
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    sseBuffer += decoder.decode(value, { stream: true });
+    const lines = sseBuffer.split("\n");
+    sseBuffer = lines.pop() ?? "";
+    for (const line of lines) {
+      if (!line.startsWith("data: ")) continue;
+      const payload = line.slice(6).trim();
+      if (!payload || payload === "[DONE]") continue;
+      try {
+        const evt = JSON.parse(payload);
+        if (evt.type === "content_block_delta" && evt.delta?.type === "text_delta") raw += evt.delta.text;
+        if (evt.type === "error") throw new Error(evt.error?.message || JSON.stringify(evt.error));
+      } catch (e) {
+        if (!(e instanceof SyntaxError)) throw e;
+      }
+    }
+  }
+  return raw;
+}
+
+// ── Merge de resultados de dos modelos ──────────────────────────────────────
+function mergeResults(r1, r2) {
+  const STOP = new Set(["el","la","los","las","un","una","de","del","en","y","o","a","se","que","es","no","con","por","para","al","lo","su","sus"]);
+
+  function wordsOf(s) {
+    return new Set((s || "").toLowerCase().split(/\W+/).filter(w => w.length > 3 && !STOP.has(w)));
+  }
+  function similar(a, b) {
+    const wa = wordsOf(a.descripcion), wb = wordsOf(b.descripcion);
+    let n = 0; wb.forEach(w => { if (wa.has(w)) n++; });
+    return n >= 3;
+  }
+  function mergeObs(a = [], b = []) {
+    const out = [...a];
+    for (const obs of b) if (!out.some(ex => similar(ex, obs))) out.push(obs);
+    return out;
+  }
+  function dedupeArr(a = [], b = []) {
+    const seen = new Set(a.map(s => String(s).trim().toLowerCase()));
+    return [...a, ...b.filter(s => !seen.has(String(s).trim().toLowerCase()))];
+  }
+  function mergeSection(s1 = {}, s2 = {}, tableKey) {
+    const t1 = tableKey ? (s1[tableKey] || []) : [];
+    const t2 = tableKey ? (s2[tableKey] || []) : [];
+    const base = { ...(t1.length >= t2.length ? s1 : s2) };
+    base.observaciones = mergeObs(s1.observaciones, s2.observaciones);
+    if (tableKey) base[tableKey] = t1.length >= t2.length ? t1 : t2;
+    return base;
+  }
+
+  const RANK = { APROBADO: 0, OBSERVADO: 1, RECHAZADO: 2 };
+  const estado = (RANK[r1.estado_global] ?? 1) >= (RANK[r2.estado_global] ?? 1) ? r1.estado_global : r2.estado_global;
+
+  const rec1 = r1.capa1?.reconocimiento || {}, rec2 = r2.capa1?.reconocimiento || {};
+  const recSec = mergeSection(rec1, rec2, "recintos_por_nivel");
+  recSec.stats = {
+    recintos_total: Math.max(rec1.stats?.recintos_total || 0, rec2.stats?.recintos_total || 0),
+    niveles:        Math.max(rec1.stats?.niveles        || 0, rec2.stats?.niveles        || 0),
+    observaciones:  recSec.observaciones?.length || 0,
+  };
+
+  return {
+    puntaje_global:       Math.round(((r1.puntaje_global || 0) + (r2.puntaje_global || 0)) / 2),
+    estado_global:        estado,
+    resumen_general:      (r1.resumen_general?.length || 0) >= (r2.resumen_general?.length || 0) ? r1.resumen_general : r2.resumen_general,
+    analisis_por_archivo: (r1.analisis_por_archivo?.length || 0) >= (r2.analisis_por_archivo?.length || 0) ? (r1.analisis_por_archivo || []) : (r2.analisis_por_archivo || []),
+    documentos_faltantes: dedupeArr(r1.documentos_faltantes, r2.documentos_faltantes),
+    alertas_especiales:   dedupeArr(r1.alertas_especiales,   r2.alertas_especiales),
+    pasos_siguientes:     dedupeArr(r1.pasos_siguientes,     r2.pasos_siguientes).slice(0, 6),
+    capa1: {
+      separacion:     mergeSection(r1.capa1?.separacion     || {}, r2.capa1?.separacion     || {}, "capas"),
+      reconocimiento: recSec,
+      vectorizacion:  mergeSection(r1.capa1?.vectorizacion  || {}, r2.capa1?.vectorizacion  || {}, "elementos"),
+      modelo:         mergeSection(r1.capa1?.modelo         || {}, r2.capa1?.modelo         || {}, null),
+    },
+    capa2: {
+      recintos_superficies:   mergeSection(r1.capa2?.recintos_superficies   || {}, r2.capa2?.recintos_superficies   || {}, "tabla"),
+      circulaciones:           mergeSection(r1.capa2?.circulaciones           || {}, r2.capa2?.circulaciones           || {}, "tabla"),
+      iluminacion_ventilacion: mergeSection(r1.capa2?.iluminacion_ventilacion || {}, r2.capa2?.iluminacion_ventilacion || {}, "tabla"),
+      normativa_urbanistica:   mergeSection(r1.capa2?.normativa_urbanistica   || {}, r2.capa2?.normativa_urbanistica   || {}, "tabla"),
+    },
+  };
+}
+
 // ── Colab JSON → texto para el prompt ──────────────────────────────────────
 function buildColabTexto(json) {
   if (!json) return "";
@@ -944,7 +1040,6 @@ export default function ArchiCheck() {
   const [activeEtapa, setActiveEtapa] = useState("e1");
   const [activeFloor, setActiveFloor] = useState(0);
   const [printing, setPrinting] = useState(false);
-  const [modelo,   setModelo]   = useState("claude"); // "claude" | "gpt4o"
   const inputRef = useRef();
   const colabInputRef = useRef();
   const colabPngInputRef = useRef();
@@ -1154,53 +1249,20 @@ ${printRef.current.innerHTML}
       content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, "parcial", preguntas, colabJson) });
 
       setProgress("Analizando contra normativa OGUC / LGUC...");
+      const makeBody = m => JSON.stringify({ messages: [{ role: "user", content }], modelo: m });
+      const [resp1, resp2] = await Promise.all([
+        fetch(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("claude") }),
+        fetch(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("gpt4o") }),
+      ]);
 
-      const response = await fetch(WORKER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [{ role: "user", content }],
-          modelo,
-        }),
-      });
+      setProgress("Consolidando análisis...");
+      const [s1, s2] = await Promise.allSettled([readModelStream(resp1), readModelStream(resp2)]);
 
-      // Si la respuesta es JSON (error de Anthropic), lanzar el error
-      const ct = response.headers.get("content-type") || "";
-      if (ct.includes("application/json")) {
-        const data = await response.json();
-        throw new Error(typeof data.error === "string" ? data.error : JSON.stringify(data.error));
-      }
+      const r1 = s1.status === "fulfilled" ? repairAndParse(s1.value.replace(/```json|```/g, "").trim()) : null;
+      const r2 = s2.status === "fulfilled" ? repairAndParse(s2.value.replace(/```json|```/g, "").trim()) : null;
 
-      // Leer stream SSE y acumular text_delta
-      setProgress("Recibiendo analisis...");
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let raw = "";
-      let sseBuffer = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        sseBuffer += decoder.decode(value, { stream: true });
-        const lines = sseBuffer.split("\n");
-        sseBuffer = lines.pop() ?? ""; // guarda línea incompleta para el próximo chunk
-        for (const line of lines) {
-          if (!line.startsWith("data: ")) continue;
-          const payload = line.slice(6).trim();
-          if (!payload || payload === "[DONE]") continue;
-          try {
-            const evt = JSON.parse(payload);
-            if (evt.type === "content_block_delta" && evt.delta?.type === "text_delta") {
-              raw += evt.delta.text;
-            }
-            if (evt.type === "error") throw new Error(evt.error?.message || JSON.stringify(evt.error));
-          } catch (e) {
-            if (!(e instanceof SyntaxError)) throw e; // solo ignorar errores de parseo SSE parcial
-          }
-        }
-      }
-
-      const clean = raw.replace(/```json|```/g, "").trim();
-      setResult(repairAndParse(clean));
+      if (!r1 && !r2) throw new Error((s1.reason || s2.reason)?.message || "Error en ambos modelos de análisis");
+      setResult(r1 && r2 ? mergeResults(r1, r2) : (r1 || r2));
 
     } catch (e) {
       setError("Error al analizar: " + e.message);
@@ -1613,26 +1675,6 @@ ${printRef.current.innerHTML}
                   )}
                 </div>
 
-              </div>
-            </div>
-
-            {/* Selector de modelo */}
-            <div style={{ marginBottom:14 }}>
-              <div style={{ fontSize:10, color:"#6B7A99", letterSpacing:"2px", marginBottom:8 }}>MODELO DE IA</div>
-              <div style={{ display:"flex", gap:8 }}>
-                {[
-                  { id:"claude", label:"Claude Sonnet 4.6", sub:"Anthropic", color:"#2952A3" },
-                  { id:"gpt4o",  label:"GPT-4o",            sub:"OpenAI",    color:"#10A37F" },
-                ].map(m => {
-                  const active = modelo === m.id;
-                  return (
-                    <button key={m.id} onClick={() => setModelo(m.id)}
-                      style={{ flex:1, padding:"10px 8px", borderRadius:8, border:`2px solid ${active ? m.color : "#D1D9EE"}`, background:active ? `${m.color}0D` : "#fff", cursor:"pointer", fontFamily:"inherit", textAlign:"left", transition:"all .15s" }}>
-                      <div style={{ fontSize:12, fontWeight:700, color:active ? m.color : "#3D4A5C" }}>{m.label}</div>
-                      <div style={{ fontSize:10, color:"#6B7A99", marginTop:2 }}>{m.sub}</div>
-                    </button>
-                  );
-                })}
               </div>
             </div>
 
