@@ -16,5 +16,14 @@
     "prc_version": "Texto Refundido vigente",
     "activa": true,
     "fuente": "Municipalidad de Santiago — Ordenanza Local PRCS, Zonas A–H (Art. 23–24)"
+  },
+  {
+    "id": "providencia",
+    "nombre": "Providencia",
+    "region": "Metropolitana",
+    "prc_nombre": "Plan Regulador Comunal de Providencia (PRCP 2007)",
+    "prc_version": "Ordenanza Local Refundida — Mayo 2025",
+    "activa": true,
+    "fuente": "Municipalidad de Providencia — SECPLA. OL PRCP 2007 (D.O. 23.01.2007) + 8 modificaciones hasta D.O. 29.05.2025"
   }
 ]

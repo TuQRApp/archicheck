@@ -1,0 +1,308 @@
+{
+  "fuente": "PRCP 2007 Ordenanza Local Refundida Mayo 2025 — Título 6, Arts. 6.2.12 al 6.2.24 y Cuadros Nº 32–38",
+  "nota": "Actividades en cursiva en los cuadros oficiales están asociadas a patentes de alcohol (Ley N°19.925). Modificación N°3 (D.O. 09.01.2016) reformuló completamente los usos de suelo. Modificación N°6 (D.O. 23.12.2022) incorporó ajustes adicionales.",
+  "zonas": {
+
+    "UR": {
+      "nombre": "UR — Zona de Uso Residencial",
+      "cuadro_oficial": "Cuadro Nº 32",
+      "articulo": "Art. 6.2.12",
+      "usos_permitidos": [
+        "residencial_unifamiliar",
+        "residencial_colectivo",
+        "hospedaje_sin_servicios_comerciales",
+        "casas_pension_residenciales_hostales",
+        "hogares_de_acogida",
+        "juzgados_policia_local",
+        "oficinas_municipales_consulados",
+        "equipamiento_cientifico",
+        "seguridad_unidades_policiales",
+        "educacion_sala_cuna_jardin_infantil",
+        "salud_centros_publicos_cesfam_cosam",
+        "salud_sapu",
+        "social_juntas_vecinos_centros_comunitarios",
+        "culto_capillas_iglesias_templos",
+        "culto_bibliotecas_museos",
+        "culto_cines_teatros_auditorios_centros_culturales",
+        "deporte_gimnasios_clubes_deportivos",
+        "deporte_piscinas_spa_polideportivos",
+        "comercio_salon_te_cafeteria_sin_alcohol",
+        "estacionamientos",
+        "salas_pilates_yoga"
+      ],
+      "usos_prohibidos": [
+        "apart_hoteles",
+        "hosterias_turismo",
+        "hoteles_turismo",
+        "complejos_hoteleros_resort",
+        "moteles",
+        "cuarteles_bomberos",
+        "carceles_centros_detencion",
+        "educacion_basica_media_diferencial",
+        "educacion_universidades_institutos",
+        "educacion_centros_rehabilitacion_conductual",
+        "salud_hospitales_clinicas",
+        "salud_morgue_cementerios_crematorios",
+        "salud_cirugias_plasticas_maternidades",
+        "comercio_restaurantes_diurnos_nocturnos",
+        "comercio_bares_pubs_cantinas_discotecas",
+        "comercio_grandes_tiendas_supermercados_centros_comerciales",
+        "comercio_venta_vehiculos_talleres_automotriz",
+        "comercio_bodegas_licores_botillerias",
+        "comercio_black_kitchen_dark_kitchen",
+        "actividades_productivas_cualquier_tipo",
+        "infraestructura_terminales_transporte",
+        "bodegaje",
+        "esparcimiento_casinos_parques_entretenciones"
+      ],
+      "usos_condicionados": [
+        "comercio_farmacia_boutique_libreria_ferreteria_permitido",
+        "servicio_centros_pago_salones_belleza_permitido",
+        "servicio_oficinas_permitido",
+        "hotel_hostal_permitido_sin_servicios_comerciales"
+      ],
+      "notas": "Zona estrictamente residencial. El comercio y servicios de barrio son en su mayoría prohibidos. Se permiten solo ciertos equipamientos de escala local y servicios básicos. Los hoteles solo se permiten sin servicios comerciales adjuntos."
+    },
+
+    "UpR_y_Er": {
+      "nombre": "UpR y Er — Uso preferentemente Residencial y Equipamiento Restringido",
+      "cuadro_oficial": "Cuadro Nº 34",
+      "articulo": "Art. 6.2.14",
+      "usos_permitidos": [
+        "residencial_unifamiliar",
+        "residencial_colectivo",
+        "hospedaje_casas_pension_hostales_hoteles",
+        "hogares_de_acogida",
+        "servicios_centros_pago_oficinas_notarias",
+        "servicios_instituciones_financieras_bancos",
+        "servicios_centros_medicos_laboratorios",
+        "servicios_salas_pilates_yoga",
+        "equipamiento_cientifico",
+        "seguridad_unidades_policiales_bomberos",
+        "educacion_sala_cuna_jardin_infantil",
+        "educacion_basica_media_diferencial",
+        "educacion_academias_institutos_artisticos",
+        "salud_centros_publicos_cesfam_cosam_sapu",
+        "social_juntas_vecinos_centros_comunitarios",
+        "culto_capillas_iglesias_templos",
+        "culto_bibliotecas_museos",
+        "culto_cines_teatros",
+        "deporte_gimnasios_canchas_polideportivos_estadios",
+        "deporte_piscinas_spa_saunas",
+        "comercio_compraventa_bazar_farmacia_tiendas",
+        "comercio_salon_te_sin_alcohol",
+        "comercio_fuente_soda",
+        "comercio_minimarket_sin_alcohol",
+        "comercio_restaurante_complemento_hotel"
+      ],
+      "usos_prohibidos": [
+        "apart_hoteles",
+        "complejos_hoteleros_resort",
+        "moteles",
+        "carceles_centros_detencion",
+        "educacion_universidades_campus_postgrado",
+        "educacion_centros_rehabilitacion_conductual",
+        "salud_hospitales_clinicas",
+        "salud_cirugias_maternidades",
+        "salud_morgue_cementerios",
+        "clubes_sociales_circulos",
+        "culto_auditorios_centros_convenciones_canales_tv_multicines",
+        "comercio_restaurantes_sin_ser_complemento_hotel",
+        "comercio_bares_pubs_cantinas_discotecas",
+        "comercio_grandes_tiendas_supermercados_mercados",
+        "comercio_venta_vehiculos_talleres_automotriz",
+        "comercio_bodegas_licores_botillerias",
+        "comercio_minimarket_con_alcohol",
+        "comercio_black_kitchen_dark_kitchen",
+        "actividades_productivas",
+        "bodegaje",
+        "infraestructura_transporte_sanitaria_energetica",
+        "esparcimiento_casinos"
+      ],
+      "notas": "Permite hoteles y hospedaje con servicios (a diferencia de UR). Restringe fuertemente el comercio: solo comercio menor sin alcohol, sin restaurantes independientes (solo complemento de hotel). Permite educación básica-media pero no universidades."
+    },
+
+    "UpR_y_E": {
+      "nombre": "UpR y E — Uso preferentemente Residencial y Equipamiento",
+      "cuadro_oficial": "Cuadro Nº 35",
+      "articulo": "Art. 6.2.15",
+      "usos_permitidos": [
+        "residencial_unifamiliar",
+        "residencial_colectivo",
+        "hospedaje_todos_los_tipos",
+        "servicios_amplio_espectro",
+        "equipamiento_cientifico",
+        "seguridad_policial_bomberos",
+        "educacion_todos_los_niveles",
+        "salud_todos_los_tipos",
+        "social_organizaciones_comunitarias",
+        "culto_todos_los_tipos",
+        "deporte_todos_los_tipos",
+        "esparcimiento_limitado",
+        "comercio_menor_bazar_farmacia_tiendas",
+        "comercio_salon_te_cafeteria_fuente_soda_restaurante",
+        "comercio_minimarket_supermercado_escala_local"
+      ],
+      "usos_prohibidos": [
+        "industria_molesta_o_peligrosa",
+        "bodegaje",
+        "comercio_bares_discotecas_casinos",
+        "comercio_grandes_tiendas_centros_comerciales",
+        "infraestructura_mayor"
+      ],
+      "notas": "Zona de mayor mixticidad residencial-equipamiento. Admite restaurantes, comercio de proximidad, salud compleja, universidades. Prohibe industria y bodegas. Es la zona más permisiva después de UpEC."
+    },
+
+    "UpR_y_E-CC": {
+      "nombre": "UpR y E-CC — Uso preferentemente Residencial y Equipamiento Culto y Cultura",
+      "cuadro_oficial": "Cuadro Nº 35 bis",
+      "articulo": "Art. 6.2.15 bis",
+      "usos_permitidos": [
+        "residencial_unifamiliar",
+        "residencial_colectivo",
+        "hospedaje_menor",
+        "servicios_basicos",
+        "equipamiento_culto_cultura_prioritario",
+        "educacion_basica_media",
+        "salud_basica",
+        "social_comunitario"
+      ],
+      "usos_prohibidos": [
+        "industria",
+        "bodegaje",
+        "comercio_mayor",
+        "esparcimiento_masivo"
+      ],
+      "notas": "Subzona con énfasis en equipamiento cultural y de culto. Derivada de UpR y E con restricciones adicionales. Consultar Cuadro 35 bis en Ordenanza para detalle completo."
+    },
+
+    "UpR_y_ECr": {
+      "nombre": "UpR y ECr — Uso preferentemente Residencial y Equipamiento Comercial Restringido",
+      "cuadro_oficial": "Cuadro Nº 36",
+      "articulo": "Art. 6.2.16",
+      "usos_permitidos": [
+        "residencial_unifamiliar",
+        "residencial_colectivo",
+        "hospedaje_todos_los_tipos",
+        "servicios_amplio_espectro",
+        "equipamiento_cientifico",
+        "educacion_todos_los_niveles",
+        "salud_todos_los_tipos",
+        "social_organizaciones_comunitarias",
+        "culto_todos_los_tipos",
+        "deporte_todos_los_tipos",
+        "comercio_menor_bazar_farmacia_tiendas",
+        "comercio_salon_te_cafeteria_restaurante_diurno",
+        "comercio_minimarket"
+      ],
+      "usos_prohibidos": [
+        "industria",
+        "bodegaje",
+        "comercio_bares_pubs_cantinas_discotecas_salones_baile",
+        "comercio_grandes_tiendas_centros_comerciales_supermercados",
+        "comercio_venta_vehiculos",
+        "infraestructura_mayor"
+      ],
+      "notas": "Similar a UpR y E pero con restricción adicional en comercio nocturno/alcohol. Permite restaurantes diurnos pero restringe nocturnos y bares. Ejes comerciales de barrio con restricción de impacto."
+    },
+
+    "UpEC": {
+      "nombre": "UpEC — Uso preferentemente de Equipamiento Comercial",
+      "cuadro_oficial": "Cuadro Nº 37",
+      "articulo": "Art. 6.2.17",
+      "usos_permitidos": [
+        "residencial_unifamiliar",
+        "residencial_colectivo",
+        "hospedaje_todos_los_tipos",
+        "comercio_mayor_y_menor_amplio_espectro",
+        "comercio_grandes_tiendas_centros_comerciales_supermercados",
+        "comercio_restaurantes_bares_cafeterias",
+        "servicios_amplio_espectro",
+        "equipamiento_todos_los_tipos",
+        "actividades_productivas_inofensivas"
+      ],
+      "usos_prohibidos": [
+        "industria_molesta_o_peligrosa",
+        "bodegaje_independiente",
+        "infraestructura_rellenos_sanitarios_plantas_tratamiento"
+      ],
+      "notas": "Zona de máxima mixticidad comercial. Corresponde a los principales ejes comerciales de Providencia (ej. Providencia, Eliodoro Yáñez, Av. Italia). Admite grandes tiendas, supermercados, todo tipo de restaurantes y servicios. Es la zona más permisiva en comercio."
+    },
+
+    "UpAP_e_Ir": {
+      "nombre": "UpAP e Ir — Uso preferentemente Actividades Productivas e Industria Restringida",
+      "cuadro_oficial": "Cuadro Nº 38",
+      "articulo": "Art. 6.2.18",
+      "usos_permitidos": [
+        "actividades_productivas_inofensivas",
+        "industria_inofensiva_o_molesta",
+        "talleres_artesanales",
+        "talleres_mecanicos_reparacion",
+        "bodegas_asociadas_a_actividad_productiva",
+        "comercio_asociado_a_produccion",
+        "residencial_limitado",
+        "servicios_basicos"
+      ],
+      "usos_prohibidos": [
+        "industria_peligrosa",
+        "comercio_independiente_mayor",
+        "esparcimiento_masivo"
+      ],
+      "notas": "Única zona donde se permite industria (solo inofensiva o molesta). El bodegaje solo se admite aquí y asociado a actividad productiva. Corresponde a sectores industriales residuales del territorio comunal."
+    },
+
+    "ZUSP_Residencial": {
+      "nombre": "ZUSP Residencial — Zona de Uso de Suelo Patrimonial Residencial",
+      "tipo": "patrimonial",
+      "articulo": "Art. 6.2.21",
+      "aplica_en": "ZT, MH, ZCH, ICH",
+      "usos_permitidos": [
+        "residencial_unifamiliar",
+        "residencial_colectivo_baja_densidad",
+        "servicios_basicos_compatibles_con_patrimonio",
+        "equipamiento_cultural_menor"
+      ],
+      "usos_prohibidos": [
+        "actividades_productivas",
+        "infraestructura",
+        "comercio_mayor",
+        "demolicion_sin_autorizacion_seremi"
+      ],
+      "notas": "Zona patrimonial de uso residencial. Toda intervención requiere autorización SEREMI MINVU."
+    },
+
+    "ZUSP_Residencial_y_Servicios": {
+      "nombre": "ZUSP Residencial y de Servicios — Zona de Uso de Suelo Patrimonial",
+      "tipo": "patrimonial",
+      "articulo": "Art. 6.2.22",
+      "aplica_en": "ZT, MH, ZCH, ICH",
+      "usos_permitidos": [
+        "residencial",
+        "servicios_compatibles_con_patrimonio",
+        "comercio_menor_compatible"
+      ],
+      "usos_prohibidos": [
+        "actividades_productivas",
+        "infraestructura",
+        "comercio_mayor"
+      ],
+      "notas": "Zona patrimonial con mixtura residencial y servicios. Toda intervención requiere autorización SEREMI MINVU."
+    },
+
+    "ZUSP_Cultural_Mixta": {
+      "nombre": "ZUSP Cultural Mixta — Zona de Uso de Suelo Patrimonial",
+      "tipo": "patrimonial",
+      "articulo": "Art. 6.2.23",
+      "aplica_en": "ZT, MH, ZCH, ICH",
+      "notas": "Zona patrimonial cultural. Toda intervención requiere autorización SEREMI MINVU. Ver Cuadro en Art. 6.2.23."
+    },
+
+    "ZUSP_Comercial_Mixta": {
+      "nombre": "ZUSP Comercial Mixta — Zona de Uso de Suelo Patrimonial",
+      "tipo": "patrimonial",
+      "articulo": "Art. 6.2.24",
+      "aplica_en": "ZT, MH, ZCH, ICH",
+      "notas": "Zona patrimonial comercial mixta. Toda intervención requiere autorización SEREMI MINVU. Ver Cuadro en Art. 6.2.24."
+    }
+  }
+}

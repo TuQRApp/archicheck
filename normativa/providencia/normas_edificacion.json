@@ -1,0 +1,433 @@
+{
+  "_fuente": "PRCP 2007 Ordenanza Local Refundida Mayo 2025 — Arts. 4.3.03 al 4.3.14 y Cuadros Nº 08 al 19",
+  "_nota": "Todas las zonas tienen subdivisión predial mínima de 800 m² salvo predios inscritos antes del 23.01.2007. Rasante: Art. 2.6.3 OGUC. Subterráneos: distanciamiento mínimo 2,50 m a deslindes.",
+
+  "EC3": {
+    "id": "EC3",
+    "nombre": "Zona EC3 — Edificación Continua, máximo 3 pisos",
+    "agrupamiento": ["continuo"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 1.10,
+    "coef_ocupacion_suelo_1p": 0.60,
+    "coef_ocupacion_suelo_ps": 0.60,
+    "altura_maxima_m": 10.0,
+    "altura_maxima_pisos": 3,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con o sin antejardín según plano L2/4",
+    "profundidad_maxima_pct_deslinde": 60,
+    "adosamientos": null,
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.03, Cuadro Nº 08"
+  },
+
+  "EC5": {
+    "id": "EC5",
+    "nombre": "Zona EC5 — Edificación Continua, máximo 5 pisos",
+    "agrupamiento": ["continuo"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 1.80,
+    "coef_ocupacion_suelo_1p": 0.60,
+    "coef_ocupacion_suelo_ps": 0.60,
+    "altura_maxima_m": 16.0,
+    "altura_maxima_pisos": 5,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con o sin antejardín según plano L2/4",
+    "profundidad_maxima_pct_deslinde": 60,
+    "adosamientos": null,
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.04, Cuadro Nº 09"
+  },
+
+  "EC7": {
+    "id": "EC7",
+    "nombre": "Zona EC7 — Edificación Continua, máximo 7 pisos",
+    "agrupamiento": ["continuo"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 2.50,
+    "coef_ocupacion_suelo_1p": 0.60,
+    "coef_ocupacion_suelo_ps": 0.60,
+    "altura_maxima_m": 22.0,
+    "altura_maxima_pisos": 7,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con o sin antejardín según plano L2/4",
+    "profundidad_maxima_pct_deslinde": 60,
+    "adosamientos": null,
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.05, Cuadro Nº 10"
+  },
+
+  "EC12": {
+    "id": "EC12",
+    "nombre": "Zona EC12 — Edificación Continua, máximo 12 pisos",
+    "agrupamiento": ["continuo"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 4.30,
+    "coef_ocupacion_suelo_1p": 0.60,
+    "coef_ocupacion_suelo_ps": 0.60,
+    "altura_maxima_m": 37.0,
+    "altura_maxima_pisos": 12,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con o sin antejardín según plano L2/4",
+    "profundidad_maxima_pct_deslinde": 60,
+    "adosamientos": null,
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.06, Cuadro Nº 11"
+  },
+
+  "E5(C+A)": {
+    "id": "E5(C+A)",
+    "nombre": "Zona E5(C+A) — Edificación máx. 5 pisos, Continua más Aislada",
+    "agrupamiento": ["continuo", "aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "antejardín_m": 0,
+    "antejardín_nota": "Sin antejardín obligatorio",
+    "altura_maxima_m": 15.0,
+    "altura_maxima_pisos": 5,
+    "altura_max_por_piso_m_continua": 6.0,
+    "altura_max_por_piso_m_aislada": 3.50,
+    "continua": {
+      "altura_maxima_pisos": 2,
+      "altura_maxima_m": 6.0,
+      "profundidad_maxima_m": 20,
+      "coef_constructibilidad": 1.20,
+      "coef_ocupacion_suelo": 0.60
+    },
+    "aislada_sobre_continua": {
+      "coef_constructibilidad": 1.20,
+      "coef_ocupacion_suelo": 0.40
+    },
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.07, Cuadro Nº 12",
+    "nota": "Volumen continuo obligatorio en línea de edificación (máx 2p/6m/20m prof.) + volumen aislado retirado 3m. Mod. N°7 Barrio El Aguilucho aplica Plano de Detalle N°03."
+  },
+
+  "EC2+A8": {
+    "id": "EC2+A8",
+    "nombre": "Zona EC2+A8 — Continua máx. 2 pisos + Aislada máx. 8 pisos",
+    "agrupamiento": ["continuo", "aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "antejardín_m": null,
+    "antejardín_nota": "Con o sin antejardín según plano L2/4",
+    "altura_maxima_total_m": 36.0,
+    "altura_maxima_total_pisos": 10,
+    "continua": {
+      "altura_obligatoria_m": 7.0,
+      "altura_maxima_pisos": 2,
+      "coef_constructibilidad": 1.20,
+      "coef_ocupacion_suelo_1p": 0.60,
+      "coef_ocupacion_suelo_ps": 0.60
+    },
+    "aislada": {
+      "altura_maxima_pisos": 8,
+      "altura_maxima_m": 28.0,
+      "coef_constructibilidad": 1.60,
+      "coef_ocupacion_suelo_ps": 0.40
+    },
+    "profundidad_maxima_pct_deslinde": 60,
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.08, Cuadro Nº 13"
+  },
+
+  "EC3+AL": {
+    "id": "EC3+AL",
+    "nombre": "Zona EC3+AL — Continua máx. 3 pisos + Aislada Libre",
+    "agrupamiento": ["continuo", "aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "antejardín_m": null,
+    "antejardín_nota": "Con o sin antejardín según plano L2/4",
+    "continua": {
+      "altura_obligatoria_m": 10.5,
+      "altura_maxima_pisos": 3,
+      "coef_constructibilidad": 3.00,
+      "coef_ocupacion_suelo_1p": 1.00,
+      "coef_ocupacion_suelo_ps": 1.00
+    },
+    "aislada": {
+      "altura_maxima_pisos": null,
+      "altura_maxima_m": null,
+      "altura_nota": "Sin límite de altura (Libre)",
+      "coef_constructibilidad": 4.00,
+      "coef_ocupacion_suelo_ps": 0.40
+    },
+    "profundidad_maxima_pct_deslinde": 100,
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.09, Cuadro Nº 14"
+  },
+
+  "EA3": {
+    "id": "EA3",
+    "nombre": "Zona EA3 — Edificación Aislada, máximo 3 pisos",
+    "agrupamiento": ["aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 0.70,
+    "coef_ocupacion_suelo_1p": 0.40,
+    "coef_ocupacion_suelo_ps": 0.40,
+    "altura_maxima_m": 10.0,
+    "altura_maxima_pisos": 3,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con antejardín según Art. 4.1.06",
+    "adosamientos": "Permitidos conforme Art. 2.6.2 OGUC y Arts. 4.2.14 y 4.2.15 OL (hasta 2p/7m)",
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.10, Cuadro Nº 15"
+  },
+
+  "E3": {
+    "id": "E3",
+    "nombre": "Zona E3 — Edificación máx. 3 pisos; Aislada, Pareada o Continua",
+    "agrupamiento": ["aislado", "pareado", "continuo"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 1.10,
+    "coef_ocupacion_suelo": 0.60,
+    "altura_maxima_m": 9.0,
+    "altura_maxima_pisos": 3,
+    "altura_max_por_piso_m_aislada_pareada": 3.50,
+    "altura_max_continua_m": 6.0,
+    "antejardín_m": 3,
+    "profundidad_maxima_continua_m": 20,
+    "adosamientos": "Conforme Art. 2.6.2 OGUC y Arts. 4.2.14 y 4.2.15 OL",
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.10 bis, Cuadro Nº 15 bis",
+    "nota": "Incorporada por Modificación N°7 Barrio El Aguilucho (D.O. 29.05.2025). Plano de Detalle N°03 rige en el área El Aguilucho."
+  },
+
+  "EA5": {
+    "id": "EA5",
+    "nombre": "Zona EA5 — Edificación Aislada, máximo 5 pisos (sin adosamiento)",
+    "agrupamiento": ["aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 1.20,
+    "coef_ocupacion_suelo_1p": 0.30,
+    "coef_ocupacion_suelo_ps": 0.40,
+    "altura_maxima_m": 16.0,
+    "altura_maxima_pisos": 5,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con antejardín según Art. 4.1.06",
+    "adosamientos": null,
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.11, Cuadro Nº 16"
+  },
+
+  "EA5/pa": {
+    "id": "EA5/pa",
+    "nombre": "Zona EA5/pa — Edificación Aislada, máximo 5 pisos (con adosamiento permitido)",
+    "agrupamiento": ["aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 1.20,
+    "coef_ocupacion_suelo_1p": 0.30,
+    "coef_ocupacion_suelo_ps": 0.40,
+    "altura_maxima_m": 16.0,
+    "altura_maxima_pisos": 5,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con antejardín según Art. 4.1.06",
+    "adosamientos": {
+      "permitido": true,
+      "altura_maxima_pisos": 2,
+      "altura_maxima_m": 7.0,
+      "coef_adicional_no_residencial": 0.50,
+      "cos_adosado_por_piso": 0.60,
+      "referencia": "Art. 2.6.2 OGUC + Arts. 4.2.14-4.2.15 OL"
+    },
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.11, Cuadro Nº 16"
+  },
+
+  "EA7": {
+    "id": "EA7",
+    "nombre": "Zona EA7 — Edificación Aislada, máximo 7 pisos (sin adosamiento)",
+    "agrupamiento": ["aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 1.60,
+    "coef_ocupacion_suelo_1p": 0.20,
+    "coef_ocupacion_suelo_ps": 0.40,
+    "altura_maxima_m": 22.0,
+    "altura_maxima_pisos": 7,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con antejardín según Art. 4.1.06",
+    "adosamientos": null,
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.12, Cuadro Nº 17"
+  },
+
+  "EA7/pa": {
+    "id": "EA7/pa",
+    "nombre": "Zona EA7/pa — Edificación Aislada, máximo 7 pisos (con adosamiento permitido)",
+    "agrupamiento": ["aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 1.60,
+    "coef_ocupacion_suelo_1p": 0.20,
+    "coef_ocupacion_suelo_ps": 0.40,
+    "altura_maxima_m": 22.0,
+    "altura_maxima_pisos": 7,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con antejardín según Art. 4.1.06",
+    "adosamientos": {
+      "permitido": true,
+      "altura_maxima_pisos": 2,
+      "altura_maxima_m": 7.0,
+      "coef_adicional_no_residencial": 0.60,
+      "cos_adosado_por_piso": 0.60,
+      "referencia": "Art. 2.6.2 OGUC + Arts. 4.2.14-4.2.15 OL"
+    },
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.12, Cuadro Nº 17"
+  },
+
+  "EA12": {
+    "id": "EA12",
+    "nombre": "Zona EA12 — Edificación Aislada, máximo 12 pisos (sin adosamiento)",
+    "agrupamiento": ["aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 1.70,
+    "coef_ocupacion_suelo_1p": 0.20,
+    "coef_ocupacion_suelo_ps": 0.40,
+    "altura_maxima_m": 37.0,
+    "altura_maxima_pisos": 12,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con antejardín según Art. 4.1.06",
+    "adosamientos": null,
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.13, Cuadro Nº 18"
+  },
+
+  "EA12/pa": {
+    "id": "EA12/pa",
+    "nombre": "Zona EA12/pa — Edificación Aislada, máximo 12 pisos (con adosamiento permitido)",
+    "agrupamiento": ["aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 1.70,
+    "coef_ocupacion_suelo_1p": 0.20,
+    "coef_ocupacion_suelo_ps": 0.40,
+    "altura_maxima_m": 37.0,
+    "altura_maxima_pisos": 12,
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con antejardín según Art. 4.1.06",
+    "adosamientos": {
+      "permitido": true,
+      "altura_maxima_pisos": 2,
+      "altura_maxima_m": 7.0,
+      "coef_adicional_no_residencial": 0.60,
+      "cos_adosado_por_piso": 0.60,
+      "referencia": "Art. 2.6.2 OGUC + Arts. 4.2.14-4.2.15 OL"
+    },
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.13, Cuadro Nº 18"
+  },
+
+  "EAL/pa": {
+    "id": "EAL/pa",
+    "nombre": "Zona EAL/pa — Edificación Aislada Libre con adosamiento",
+    "agrupamiento": ["aislado"],
+    "subdivision_predial_minima_m2": 800,
+    "coef_constructibilidad": 2.90,
+    "coef_ocupacion_suelo_1p": 0.20,
+    "coef_ocupacion_suelo_ps": 0.40,
+    "altura_maxima_m": null,
+    "altura_maxima_pisos": null,
+    "altura_nota": "Sin límite de altura (Libre)",
+    "altura_max_por_piso_m": 3.50,
+    "antejardín_m": null,
+    "antejardín_nota": "Con antejardín según Art. 4.1.06",
+    "adosamientos": {
+      "permitido": true,
+      "altura_maxima_pisos": 2,
+      "altura_maxima_m": 7.0,
+      "coef_adicional_no_residencial": 0.60,
+      "cos_adosado_por_piso": 0.60,
+      "referencia": "Art. 2.6.2 OGUC + Arts. 4.2.14-4.2.15 OL"
+    },
+    "rasante_referencia": "Art. 2.6.3 OGUC",
+    "articulo": "Art. 4.3.14, Cuadro Nº 19"
+  },
+
+  "ZEP-CE1": {
+    "id": "ZEP-CE1",
+    "nombre": "Zona de Edificación Patrimonial — Continua Altura Existente 1",
+    "tipo": "patrimonial",
+    "agrupamiento": ["continuo"],
+    "coef_ocupacion_suelo": 1.0,
+    "coef_constructibilidad": null,
+    "altura_maxima_m": null,
+    "altura_nota": "Altura existente del inmueble patrimonial",
+    "aplica_en": "ZT, MH, ZCH, ICH — ver Art. 4.3.02",
+    "articulo": "Art. 4.3.02"
+  },
+
+  "ZEP-CE2": {
+    "id": "ZEP-CE2",
+    "nombre": "Zona de Edificación Patrimonial — Continua Altura Existente 2",
+    "tipo": "patrimonial",
+    "agrupamiento": ["continuo"],
+    "coef_ocupacion_suelo": 0.80,
+    "coef_constructibilidad": null,
+    "altura_maxima_m": null,
+    "altura_nota": "Altura existente del inmueble patrimonial",
+    "aplica_en": "ZT, MH, ZCH, ICH — ver Art. 4.3.02",
+    "articulo": "Art. 4.3.02"
+  },
+
+  "ZEP-AE": {
+    "id": "ZEP-AE",
+    "nombre": "Zona de Edificación Patrimonial — Aislada Altura Existente",
+    "tipo": "patrimonial",
+    "agrupamiento": ["aislado"],
+    "coef_ocupacion_suelo": 0.60,
+    "coef_constructibilidad": null,
+    "altura_maxima_m": null,
+    "altura_nota": "Altura existente del inmueble patrimonial",
+    "aplica_en": "ZT, MH, ZCH, ICH — ver Art. 4.3.02",
+    "articulo": "Art. 4.3.02"
+  },
+
+  "ZEP-A3": {
+    "id": "ZEP-A3",
+    "nombre": "Zona de Edificación Patrimonial — Aislada máximo 3 pisos",
+    "tipo": "patrimonial",
+    "agrupamiento": ["aislado", "pareado", "continuo"],
+    "coef_ocupacion_suelo": 0.60,
+    "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0,
+    "altura_maxima_pisos": 3,
+    "densidad_max_viv_ha": 195,
+    "aplica_en": "ZT, MH, ZCH, ICH — ver Art. 4.3.02",
+    "articulo": "Art. 4.3.02"
+  },
+
+  "ZEP-A4": {
+    "id": "ZEP-A4",
+    "nombre": "Zona de Edificación Patrimonial — Aislada máximo 4 pisos",
+    "tipo": "patrimonial",
+    "agrupamiento": ["aislado"],
+    "coef_ocupacion_suelo": 0.50,
+    "coef_constructibilidad": 2.0,
+    "altura_maxima_m": 12.0,
+    "altura_maxima_pisos": 4,
+    "densidad_max_viv_ha": 335,
+    "aplica_en": "ZT, MH, ZCH, ICH — ver Art. 4.3.02",
+    "articulo": "Art. 4.3.02"
+  },
+
+  "ZEP-A7": {
+    "id": "ZEP-A7",
+    "nombre": "Zona de Edificación Patrimonial — Aislada máximo 7 pisos",
+    "tipo": "patrimonial",
+    "agrupamiento": ["aislado"],
+    "coef_ocupacion_suelo": 0.40,
+    "coef_constructibilidad": 2.10,
+    "altura_maxima_m": 21.0,
+    "altura_maxima_pisos": 7,
+    "densidad_max_viv_ha": 350,
+    "aplica_en": "ZT, MH, ZCH, ICH — ver Art. 4.3.02",
+    "articulo": "Art. 4.3.02"
+  }
+}

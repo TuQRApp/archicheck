@@ -1,0 +1,25 @@
+{
+  "id": "providencia",
+  "nombre": "Providencia",
+  "region": "Metropolitana",
+  "prc_nombre": "Plan Regulador Comunal de Providencia (PRCP 2007)",
+  "prc_version": "Ordenanza Local Refundida — Mayo 2025",
+  "activa": true,
+  "fecha_carga": "2026-05-09",
+  "fuente": "Municipalidad de Providencia — SECPLA, Departamento de Asesoría Urbana. Ordenanza Local Refundida PRCP 2007 (Decreto EX. Nº 131, D.O. 23.01.2007) con 8 modificaciones hasta D.O. 29.05.2025.",
+  "referencias_legales": [
+    "Decreto EX. Nº 131 del 19/01/2007, publicado D.O. 23.01.2007 — aprobación original PRCP 2007",
+    "Fe de Errata — Decreto Alcaldicio EX Nº 1042 del 04/06/2008, D.O. 14.06.2008",
+    "Modificación N°1 Barrio Las Flores — Decreto EX. Nº 775 del 08.04.2014, D.O. 12.04.2014",
+    "Modificación N°2 Edificación — Decreto EX. Nº 792 del 05.05.2015, D.O. 11.05.2015",
+    "Modificación N°3 Uso de suelo — Decreto EX. Nº 4 del 07.01.2016, D.O. 09.01.2016",
+    "Modificación N°4 Patrimonio — Decreto EX. Nº 2009 del 30.11.2016, D.O. 06.12.2016",
+    "Modificación N°5 Equipamiento — Decreto EX. Nº 1039 del 24.07.2019, D.O. 27.07.2019",
+    "Modificación N°6 Ajustes de Uso de Suelo — Decreto EX. N°1739 del 13.12.2022, D.O. 23.12.2022",
+    "Modificación N°7 Barrio El Aguilucho — Decreto EX. N°701 del 16.05.2025, D.O. 29.05.2025",
+    "Modificación N°8 ZEMoI de Salud — Decreto EX. N°1662 del 25.11.2024, D.O. 05.12.2024",
+    "Ley 20.791, D.O. 29.10.2014 — vialidad",
+    "Resolución Exenta N°1.178 del 22.04.2015, D.O. 27.04.2015 — SEREMI MINVU"
+  ],
+  "nota": "Documento de Trabajo — No Oficial. Versión refundida que incluye OL original más 8 modificaciones. Para aplicación oficial verificar siempre con la DOM de Providencia."
+}

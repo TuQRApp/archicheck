@@ -1,0 +1,289 @@
+[
+  {
+    "id": "ZT-01", "tipo": "ZT", "zep": "CE2",
+    "nombre": "Calle Keller",
+    "ubicacion": "Pasaje Keller 1212-1284, Luis Barros Valdés 810 y 828, Manuel Montt 895 y 925",
+    "decreto": "DS Nº 90, Min. Educación, 01.04.1991, D.O. 15.05.1991",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "ZT-02", "tipo": "ZT", "zep": "CE1",
+    "nombre": "Población William Noon",
+    "ubicacion": "Eliodoro Yáñez (acera norte) 1324-1410, Alberto Magno (ambas aceras) 1320-1428",
+    "decreto": "DS Nº 514, Min. Educación, 31.10.1994, D.O. 17.11.1994",
+    "coef_ocupacion_suelo": 1.0, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "ZT-03", "tipo": "ZT", "zep": "CE2",
+    "nombre": "Población León XIII",
+    "ubicacion": "Bellavista (acera norte) 0290-0520, Isabel Riquelme, Salvador Donoso, Punta Arenas, Capellán Abarzúa, Arzobispo Casanova, Melchor Concha y Toro, Antonia López de Bello, Monitor Araucano",
+    "decreto": "DS Nº 477, Min. Educación, 25.04.1997, D.O. 10.05.1997",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "ZT-04", "tipo": "ZT", "zep": "CE2",
+    "nombre": "Calle Viña del Mar",
+    "ubicacion": "Viña del Mar (ambas aceras) 015-074, entre Ramón Carnicer y Benjamín Vicuña Mackenna",
+    "decreto": "DS Nº 1043, Min. Educación, 15.10.1997",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "ZT-05", "tipo": "ZT", "zep": "ZIM",
+    "nombre": "Entorno Palacio Falabella",
+    "ubicacion": "Pedro de Valdivia 963, Eliodoro Yáñez 1939, Marchant Pereira 880 y 980, Carlos Larraín Claro (acera norte) 1944-1980",
+    "decreto": "DS Nº 737, Min. Educación, 10.07.1998, D.O. 10.08.1998",
+    "coef_ocupacion_suelo": 0.40, "coef_constructibilidad": 2.0,
+    "altura_maxima_m": 17.5, "altura_maxima_pisos": 5,
+    "agrupamiento": ["aislado"],
+    "observaciones": "Normas ZIM: subdivisión min. 2500m², antejardín 5m"
+  },
+  {
+    "id": "ZT-06", "tipo": "ZT", "zep": "CE2",
+    "nombre": "Población Caja del Seguro Obrero",
+    "ubicacion": "Valenzuela Castillo (ambas aceras) 926-998, entre José Manuel Infante y Román Díaz",
+    "decreto": "DS Nº 168, Min. Educación, 26.05.2000, D.O. 13.06.2000",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": 6.5, "altura_nota": "Excepción: altura máxima 6,5m para esta ZT según nota Art. 5.2.02",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "ZT-07", "tipo": "ZT", "zep": "CE2",
+    "nombre": "Plaza Camilo Mori, Cité Constitución 135 y edificios adyacentes",
+    "ubicacion": "Constitución (acera oriente) 123-199, entre Antonia López de Bello y Dardignac",
+    "decreto": "DS Nº 599, Min. Educación, 30.08.2001, D.O. 21.09.2002",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "ZT-08", "tipo": "ZT", "zep": "A3",
+    "nombre": "Sector Emilio Delporte / Manuel Montt / Santa Isabel / Miguel Claro",
+    "ubicacion": "Emilio Delporte, Álvarez Condarco, Dalmacia, Los Capitanes, José Luis Aguilar, José Luis Cea, Agustín Barriga, Rodrigo Quiroga, Miguel Claro (acera oriente) 1580-1802",
+    "decreto": "DS Nº 02875, Min. Educación, 29.09.2008, D.O. 23.10.2008",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0, "altura_maxima_pisos": 3,
+    "agrupamiento": ["aislado", "pareado", "continuo"]
+  },
+  {
+    "id": "ZT-09", "tipo": "ZT", "zep": "A3",
+    "nombre": "Barrio Las Flores",
+    "ubicacion": "Los Pensamientos, Los Nardos, Amapolas, Los Narcisos, Las Pimpinelas, José Manuel Cousiño Ortúzar, Jorge Matte Gormaz, Los Azahares, Los Alhelíes, Las Peonías, Las Achiras, Los Diamelos, Los Tulipanes, Las Nevadas, Pocuro, Francisco Bilbao",
+    "decreto": "DS Nº 138, Min. Educación, 29.04.2016, D.O. 23.05.2016",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0, "altura_maxima_pisos": 3,
+    "agrupamiento": ["aislado", "pareado", "continuo"],
+    "observaciones": "Barrio Las Flores — corresponde a Modificación N°1 PRCP"
+  },
+  {
+    "id": "MH-01", "tipo": "MH", "zep": "ZIM",
+    "nombre": "Casa de Lo Contador",
+    "ubicacion": "El Comendador 1916",
+    "decreto": "DS Nº 808, Min. Educación, 09.08.1974, D.O. 24.09.1974",
+    "coef_ocupacion_suelo": 0.40, "coef_constructibilidad": 2.0,
+    "altura_maxima_m": 17.5, "altura_maxima_pisos": 5,
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "MH-02", "tipo": "MH", "zep": "CE2",
+    "nombre": "Iglesia de Nuestra Señora de la Divina Providencia y casa parroquial",
+    "ubicacion": "Providencia 1619",
+    "decreto": "DS Nº 513, Min. Educación, 13.06.1975, D.O. 30.07.1975",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "MH-04", "tipo": "MH", "zep": "ZEMoI",
+    "nombre": "Hospital del Salvador",
+    "ubicacion": "Salvador 364",
+    "decreto": "DS Nº 245, Min. Educación, 06.05.1985, D.O. 02.08.1985",
+    "coef_ocupacion_suelo": 0.40, "coef_constructibilidad": 2.0,
+    "altura_maxima_m": 17.5, "altura_maxima_pisos": 5,
+    "agrupamiento": ["aislado"],
+    "observaciones": "ZEMoI N°2. Incentivos por Modificación N°8 ZEMoI de Salud (D.O. 05.12.2024): altura hasta 8p/28m con área libre"
+  },
+  {
+    "id": "MH-05", "tipo": "MH", "zep": "CE2",
+    "nombre": "Templo Parroquial de los Santos Ángeles Custodios",
+    "ubicacion": "Rodolfo Vergara Antúnez 0252",
+    "decreto": "DS Nº 13, Min. Educación, 12.01.1990, D.O. 03.03.1990",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "MH-06", "tipo": "MH", "zep": "CE2",
+    "nombre": "Casa de Pablo Neruda (La Chascona)",
+    "ubicacion": "Fernando Márquez de la Plata 0192",
+    "decreto": "DS Nº 622, Min. Educación, 31.07.1990, D.O. 31.08.1990",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "MH-07", "tipo": "MH", "zep": "A3",
+    "nombre": "Museo Nacional Benjamín Vicuña Mackenna",
+    "ubicacion": "Benjamín Vicuña Mackenna 94",
+    "decreto": "DS Nº 341, Min. Educación, 01.07.1992, D.O. 07.07.1992",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0, "altura_maxima_pisos": 3,
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "MH-08", "tipo": "MH", "zep": "CE1",
+    "nombre": "Iglesia Epifanía del Señor",
+    "ubicacion": "Bellavista 0488",
+    "decreto": "DS Nº 477, Min. Educación, 25.04.1997, D.O. 10.05.1997",
+    "coef_ocupacion_suelo": 1.0, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "MH-09", "tipo": "MH", "zep": "ZIM",
+    "nombre": "Palacio Falabella",
+    "ubicacion": "Pedro de Valdivia 963",
+    "decreto": "DS Nº 737, Min. Educación, 10.07.1998, D.O. 10.08.1998",
+    "coef_ocupacion_suelo": 0.40, "coef_constructibilidad": 2.0,
+    "altura_maxima_m": 17.5, "altura_maxima_pisos": 5,
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "MH-12", "tipo": "MH", "zep": "A3",
+    "nombre": "Palacio Schacht",
+    "ubicacion": "Avenida Nueva Providencia 1995",
+    "decreto": "DS Nº 365, Min. Educación, 08.04.2005, D.O. 28.04.2005",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0, "altura_maxima_pisos": 3,
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "MH-13", "tipo": "MH", "zep": "A3",
+    "nombre": "Casa del ex Presidente Eduardo Frei Montalva",
+    "ubicacion": "Hindenburg 683",
+    "decreto": "DS Nº 586, Min. Educación, 13.05.2005, D.O. 25.05.2005",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0, "altura_maxima_pisos": 3,
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "MH-14", "tipo": "MH", "zep": "CE1",
+    "nombre": "Casa del Escritor",
+    "ubicacion": "Almirante Simpson 039",
+    "decreto": "DS Nº 379, Min. Educación, 06.10.2009, D.O. 17.11.2009",
+    "coef_ocupacion_suelo": 1.0, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "MH-18", "tipo": "MH", "zep": "CE2",
+    "nombre": "Escuela de Derecho de la Universidad de Chile",
+    "ubicacion": "Pío Nono 1",
+    "decreto": "DS Nº 289, Min. Educación, 02.07.2014, D.O. 04.09.2014",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "ZCH-01", "tipo": "ZCH", "zep": "CE2",
+    "nombre": "Conjunto de viviendas Antonio Varas",
+    "ubicacion": "Antonio Varas (acera poniente) 721-759, entre Orden de Malta y Valenzuela Castillo",
+    "coef_ocupacion_suelo": 0.80, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["continuo"]
+  },
+  {
+    "id": "ZCH-02", "tipo": "ZCH", "zep": "A3",
+    "nombre": "Población Jefes y Oficiales de Carabineros",
+    "ubicacion": "Cirujano Guzmán (ambas aceras) 102-207 y General Flores (ambas aceras) 90-238",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0, "altura_maxima_pisos": 3,
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "ZCH-04", "tipo": "ZCH", "zep": "A3",
+    "nombre": "Población Salvador Legión Militar de Chile",
+    "ubicacion": "General Salvo, General Bari, General Parra, Almirante Zegers, José Manuel Infante",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0, "altura_maxima_pisos": 3,
+    "agrupamiento": ["aislado"],
+    "observaciones": "Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile — ver Art. 1.1.04"
+  },
+  {
+    "id": "ZCH-06", "tipo": "ZCH", "zep": "AE",
+    "nombre": "Población Los Gráficos",
+    "ubicacion": "Gutenberg, Alcalde Dávalos, Montecarmelo, Monitor Araucano",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": null,
+    "altura_maxima_m": null, "altura_nota": "Altura existente",
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "ZCH-14", "tipo": "ZCH", "zep": "A3",
+    "nombre": "Conjunto calle Triana",
+    "ubicacion": "Triana (ambas aceras) 820-879 y Eliodoro Yáñez (acera poniente) 867-893",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0, "altura_maxima_pisos": 3,
+    "agrupamiento": ["aislado"],
+    "observaciones": "Plano de Detalle 02: ZCH 14 Conjunto Calle Triana — ver Art. 1.1.04"
+  },
+  {
+    "id": "ZCH-23", "tipo": "ZCH", "zep": "A3/A4",
+    "nombre": "Calle Emilio Delporte",
+    "ubicacion": "Emilio Delporte 1308-1492 (acera norte) y 1345-1489 (acera sur), entre Manuel Montt y Antonio Varas",
+    "coef_ocupacion_suelo": 0.60, "coef_constructibilidad": 1.20,
+    "altura_maxima_m": 9.0, "altura_maxima_pisos": 3,
+    "agrupamiento": ["aislado"],
+    "observaciones": "ZEP A3/A4 mixta — incorporada en Modificación N°5 Equipamiento (D.O. 27.07.2019)"
+  },
+  {
+    "id": "ICH-08", "tipo": "ICH", "zep": "A7",
+    "nombre": "Sede DUOC",
+    "ubicacion": "Antonio Varas 666",
+    "coef_ocupacion_suelo": 0.40, "coef_constructibilidad": 2.10,
+    "altura_maxima_m": 21.0, "altura_maxima_pisos": 7,
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "ICH-47", "tipo": "ICH", "zep": "A7",
+    "nombre": "Universidad Finis Terrae",
+    "ubicacion": "Pedro de Valdivia 1509",
+    "coef_ocupacion_suelo": 0.40, "coef_constructibilidad": 2.10,
+    "altura_maxima_m": 21.0, "altura_maxima_pisos": 7,
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "ICH-48", "tipo": "ICH", "zep": "A7",
+    "nombre": "Clínica Sara Moncada de Arias",
+    "ubicacion": "Pedro de Valdivia 2219",
+    "coef_ocupacion_suelo": 0.40, "coef_constructibilidad": 2.10,
+    "altura_maxima_m": 21.0, "altura_maxima_pisos": 7,
+    "agrupamiento": ["aislado"]
+  },
+  {
+    "id": "ZEMoI-02", "tipo": "ZEMoI", "zep": "ZEMoI",
+    "nombre": "Hospital del Salvador e Instituto Nacional del Tórax",
+    "ubicacion": "Salvador 364 / José Manuel Infante 717",
+    "coef_ocupacion_suelo": 0.40, "coef_constructibilidad": 2.0,
+    "subdivision_predial_minima_m2": 2500,
+    "altura_maxima_m": 17.5, "altura_maxima_pisos": 5,
+    "agrupamiento": ["aislado"],
+    "observaciones": "Incentivos Mod. N°8: altura hasta 8p/28m con área libre (2% predio por cada 5.25m adicionales). COS hasta 0.5 si se conservan edificaciones patrimoniales."
+  },
+  {
+    "id": "ZEMoI-04", "tipo": "ZEMoI", "zep": "ZEMoI",
+    "nombre": "Hospital Luis Calvo Mackenna",
+    "ubicacion": "Antonio Varas 360",
+    "coef_ocupacion_suelo": 0.40, "coef_constructibilidad": 2.0,
+    "subdivision_predial_minima_m2": 2500,
+    "altura_maxima_m": 17.5, "altura_maxima_pisos": 5,
+    "agrupamiento": ["aislado"],
+    "observaciones": "Incentivos Mod. N°8: altura hasta 8p/28m, CC hasta 2.5 con área libre (2.5% predio por cada 5.25m adicionales). COS hasta 0.5 si no se construyen estacionamientos de superficie."
+  }
+]

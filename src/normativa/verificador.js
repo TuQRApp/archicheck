@@ -1,12 +1,18 @@
-import normasNunoa    from "../../normativa/nunoa/normas_edificacion.json";
-import patrimonioNunoa from "../../normativa/nunoa/patrimonio.json";
-import reglasNacionales from "../../normativa/nacional/reglas_verificacion.json";
+import normasNunoa         from "../../normativa/nunoa/normas_edificacion.json";
+import patrimonioNunoa    from "../../normativa/nunoa/patrimonio.json";
+import normasProvidencia   from "../../normativa/providencia/normas_edificacion.json";
+import patrimonioProvidencia from "../../normativa/providencia/patrimonio.json";
+import reglasNacionales   from "../../normativa/nacional/reglas_verificacion.json";
 
 // ── Índices por comunaId ────────────────────────────────────────────────────
-const NORMAS = { nunoa: normasNunoa };
+const NORMAS = {
+  nunoa: normasNunoa,
+  providencia: normasProvidencia,
+};
 
 const PATRIMONIO = {
-  nunoa: patrimonioNunoa.reduce((acc, p) => { acc[p.id] = p; return acc; }, {}),
+  nunoa:       patrimonioNunoa.reduce((acc, p)       => { acc[p.id] = p; return acc; }, {}),
+  providencia: patrimonioProvidencia.reduce((acc, p) => { acc[p.id] = p; return acc; }, {}),
 };
 
 // Prioridad de instrumentos (mayor índice = mayor prioridad)
@@ -49,17 +55,22 @@ function resolverNormas(zonaId, patriId, comunaId) {
       antejardín_m:                   null, // antejardín patrimonial es textual
       densidad_bruta_maxima_hab_ha:   p.densidad_bruta_maxima_hab_ha   ?? normZona.densidad_bruta_maxima_hab_ha,
     };
+    const prcLabel = comunaId === "providencia" ? "PRCP Providencia" : "PRC Ñuñoa";
     return {
       normas,
       instrumento: tipo,
-      ref: `${tipo} ${patriId} PRC Ñuñoa — ${p.nombre}`,
+      ref: `${tipo} ${patriId} ${prcLabel} — ${p.nombre}`,
     };
   }
+
+  const artRef = comunaId === "providencia"
+    ? `Art. 4.3 PRCP Providencia (OL Refundida Mayo 2025) — Zona ${zonaId}`
+    : `Art. 26 PRC Ñuñoa — Zona ${zonaId}`;
 
   return {
     normas: normZona,
     instrumento: "zona",
-    ref: `Art. 26 PRC Ñuñoa — Zona ${zonaId}`,
+    ref: artRef,
   };
 }
 
@@ -222,8 +233,8 @@ export function verificarProyecto(proyecto, zonaId, comunaId = "nunoa", patriId 
     ));
   }
 
-  // 8. Regla calle ≤ 12m (Art. 18 PRC Ñuñoa)
-  if (anchoCalleFrentera != null && anchoCalleFrentera <= 12) {
+  // 8. Regla calle ≤ 12m (Art. 18 PRC Ñuñoa — solo aplica a Ñuñoa)
+  if (comunaId === "nunoa" && anchoCalleFrentera != null && anchoCalleFrentera <= 12) {
     const refArt18 = "Art. 18 PRC Ñuñoa — Calle frentera ≤ 12m";
     if (pisosProyectados != null) {
       const cumple = pisosProyectados <= 3;
