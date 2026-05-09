@@ -766,17 +766,6 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
               />
             </div>
           ))}
-          {colabPngs.length > 0 && (
-            <div style={{ marginBottom:14 }}>
-              <div style={{ fontSize:9, fontWeight:700, color:"#6B7A99", letterSpacing:"1.5px", marginBottom:8 }}>ANÁLISIS GEOMÉTRICO COLAB (OpenCV)</div>
-              {colabPngs.map((p, i) => (
-                <div key={i} style={{ marginBottom:8, pageBreakInside:"avoid" }}>
-                  <div style={{ fontSize:8, color:"#6B7A99", marginBottom:3, fontFamily:"monospace" }}>{p.name}</div>
-                  <img src={`data:image/jpeg;base64,${p.base64}`} alt={p.name} style={{ width:"100%", borderRadius:5, border:"1px solid #D1D9EE" }} />
-                </div>
-              ))}
-            </div>
-          )}
           <ObsPrint arr={result.capa1?.reconocimiento?.observaciones} prefix="rec" />
         </div>
 
