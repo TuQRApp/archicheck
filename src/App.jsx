@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import SelectorComuna from './components/SelectorComuna.jsx';
+import CropModal from './components/CropModal.jsx';
 import ogucArticulos from "../normativa/nacional/oguc_articulos.json";
 import lgucArticulos from "../normativa/nacional/lguc_articulos.json";
 import ley19300Articulos from "../normativa/nacional/ley19300_articulos.json";
@@ -300,8 +301,8 @@ function buildPrompt(tipo, comuna, archivos, modo = "parcial", preguntas = {}, c
       : "[formato no visual — sin contenido extraíble]";
     let escalaInfo = "";
     if (f.escalasMultiples && f.escalasPorPagina?.some(ep => ep.capturas?.some(c => c.escala))) {
-      escalaInfo = " — Escalas: " + f.escalasPorPagina
-        .flatMap(ep => ep.capturas.filter(c => c.escala).map(c => `pág.${ep.pagina}=${c.escala}`))
+      escalaInfo = " — Escalas por sección: " + f.escalasPorPagina
+        .flatMap(ep => ep.capturas.filter(c => c.escala).map(c => `pág.${ep.pagina} "${c.nombre || "sección"}"=${c.escala}`))
         .join(", ");
     } else if (f.escala) {
       escalaInfo = ` — Escala: ${f.escala}`;
@@ -1036,6 +1037,7 @@ export default function ArchiCheck() {
   const [activeEtapa, setActiveEtapa] = useState("e1");
   const [activeFloor, setActiveFloor] = useState(0);
   const [printing, setPrinting] = useState(false);
+  const [cropModal, setCropModal] = useState(null);
   const inputRef = useRef();
   const colabInputRef = useRef();
   const colabPngInputRef = useRef();
@@ -1119,34 +1121,22 @@ ${printRef.current.innerHTML}
   const toggleEscalasMultiples = (i) => setArchivos(prev => prev.map((f, idx) =>
     idx === i ? { ...f, escalasMultiples: !f.escalasMultiples } : f
   ));
-  const addCaptura = (fileIdx, pagina) => setArchivos(prev => prev.map((f, idx) => {
-    if (idx !== fileIdx) return f;
-    return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep =>
-      ep.pagina === pagina ? { ...ep, capturas: [...ep.capturas, { escala: "", nombre: "", base64: "" }] } : ep
-    )};
-  }));
   const removeCaptura = (fileIdx, pagina, ci) => setArchivos(prev => prev.map((f, idx) => {
     if (idx !== fileIdx) return f;
     return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep =>
       ep.pagina === pagina ? { ...ep, capturas: ep.capturas.filter((_, j) => j !== ci) } : ep
     )};
   }));
-  const setCapturaEscala = (fileIdx, pagina, ci, value) => setArchivos(prev => prev.map((f, idx) => {
-    if (idx !== fileIdx) return f;
-    return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep => {
-      if (ep.pagina !== pagina) return ep;
-      return { ...ep, capturas: ep.capturas.map((c, j) => j === ci ? { ...c, escala: value } : c) };
-    })};
-  }));
-  async function handleScaleScreenshot(fileIdx, pagina, ci, file) {
-    if (!file) return;
-    const b64 = await toBase64(file);
+  function saveCrop(fileIdx, crop) {
     setArchivos(prev => prev.map((f, idx) => {
       if (idx !== fileIdx) return f;
-      return { ...f, escalasPorPagina: f.escalasPorPagina.map(ep => {
-        if (ep.pagina !== pagina) return ep;
-        return { ...ep, capturas: ep.capturas.map((c, j) => j === ci ? { ...c, nombre: file.name, base64: b64 } : c) };
-      })};
+      let eps = f.escalasPorPagina;
+      if (!eps.some(ep => ep.pagina === crop.pagina)) {
+        eps = [...eps, { pagina: crop.pagina, capturas: [] }].sort((a, b) => a.pagina - b.pagina);
+      }
+      return { ...f, escalasPorPagina: eps.map(ep =>
+        ep.pagina === crop.pagina ? { ...ep, capturas: [...ep.capturas, crop] } : ep
+      )};
     }));
   }
   const togglePagina = (fileIdx, pagina) => setArchivos(prev => prev.map((f, idx) => {
@@ -1232,7 +1222,7 @@ ${printRef.current.innerHTML}
               for (const c of ep.capturas) {
                 if (!c.base64) continue;
                 content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: c.base64 } });
-                content.push({ type: "text", text: `[REFERENCIA ESCALA: "${f.name}" — página ${ep.pagina} — escala declarada: ${c.escala || "no especificada"}]` });
+                content.push({ type: "text", text: `[RECORTE: "${f.name}" — pág. ${ep.pagina} — sección "${c.nombre || "sin nombre"}" — posición x:${c.x_pct?.toFixed(0) ?? "?"}% y:${c.y_pct?.toFixed(0) ?? "?"}% tamaño ${c.w_pct?.toFixed(0) ?? "?"}%×${c.h_pct?.toFixed(0) ?? "?"}% — escala: ${c.escala || "no especificada"}]` });
               }
             }
           }
@@ -1497,64 +1487,42 @@ ${printRef.current.innerHTML}
                               </select>
                               <button onClick={() => toggleEscalasMultiples(i)}
                                 style={{ background: "rgba(74,114,196,0.07)", border: "1px solid #4A72C4", borderRadius: 5, padding: "4px 10px", color: "#2952A3", fontSize: 10, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-                                + capturas de escala por página
+                                Recortar secciones con escala distinta
                               </button>
                             </div>
                           ) : (
                             <div>
-                              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
-                                <span style={{ fontSize: 10, color: "#D68910", letterSpacing: "1px" }}>ESCALAS POR PÁGINA</span>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                                <span style={{ fontSize: 10, color: "#D68910", letterSpacing: "1px" }}>RECORTES DE SECCIÓN</span>
                                 <button onClick={() => toggleEscalasMultiples(i)}
                                   style={{ background: "none", border: "1px solid #D1D9EE", borderRadius: 5, padding: "2px 7px", color: "#6B7A99", fontSize: 10, cursor: "pointer", fontFamily: "inherit" }}>
                                   Una sola escala
                                 </button>
                               </div>
-                              {f.escalasPorPagina.filter(ep => f.paginasSeleccionadas.includes(ep.pagina)).map(ep => (
-                                <div key={ep.pagina} style={{ marginBottom: 10 }}>
-                                  {/* Encabezado de página + botón agregar */}
-                                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
-                                    <span style={{ fontSize: 11, color: "#6B7A99", minWidth: 50, flexShrink: 0 }}>Pág. {ep.pagina}</span>
-                                    <button onClick={() => addCaptura(i, ep.pagina)}
-                                      style={{ background: "rgba(74,114,196,0.06)", border: "1px solid #D1D9EE", borderRadius: 5, padding: "2px 9px", color: "#2952A3", fontSize: 10, cursor: "pointer", fontFamily: "inherit" }}>
-                                      + captura
-                                    </button>
-                                  </div>
-                                  {/* Lista de capturas */}
-                                  {ep.capturas.map((c, ci) => (
-                                    <div key={ci} style={{ paddingLeft: 58, marginBottom: 6 }}>
-                                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                                        <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: c.base64 ? "#1E8449" : "#2952A3", background: c.base64 ? "rgba(30,132,73,0.06)" : "rgba(74,114,196,0.06)", border: `1px solid ${c.base64 ? "rgba(30,132,73,0.3)" : "#D1D9EE"}`, borderRadius: 5, padding: "3px 8px" }}>
-                                          {c.base64 ? `✓ ${c.nombre.length > 14 ? c.nombre.slice(0,14)+"…" : c.nombre}` : "Subir captura"}
-                                          <input type="file" accept="image/*" style={{ display: "none" }}
-                                            onChange={e => handleScaleScreenshot(i, ep.pagina, ci, e.target.files[0])} />
-                                        </label>
-                                        {c.base64 && (
-                                          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                                            <span style={{ fontSize: 10, color: c.escala ? "#3D4A5C" : "#D68910", whiteSpace: "nowrap" }}>escala:</span>
-                                            <select value={c.escala} onChange={e => setCapturaEscala(i, ep.pagina, ci, e.target.value)}
-                                              style={{ background: "#FFFFFF", border: `1px solid ${c.escala ? "#D1D9EE" : "#D68910"}`, borderRadius: 5, padding: "3px 7px", color: c.escala ? "#3D4A5C" : "#D68910", fontSize: 11, fontFamily: "inherit", cursor: "pointer" }}>
-                                              <option value="">— indicar —</option>
-                                              {ESCALAS.map(s => <option key={s} value={s}>{s}</option>)}
-                                            </select>
-                                          </div>
-                                        )}
-                                        <button onClick={() => removeCaptura(i, ep.pagina, ci)}
-                                          style={{ background: "none", border: "none", color: "#6B7A99", cursor: "pointer", fontSize: 12, padding: "0 2px", lineHeight: 1 }}>✕</button>
+                              <button onClick={() => setCropModal({ fileIdx: i })}
+                                style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#1B3A8A", color: "#fff", border: "none", borderRadius: 7, padding: "8px 16px", fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", marginBottom: 10 }}>
+                                ✂ Abrir herramienta de recorte
+                              </button>
+                              {f.escalasPorPagina.some(ep => ep.capturas.length > 0) ? (
+                                <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                                  {f.escalasPorPagina.flatMap(ep =>
+                                    ep.capturas.map((c, ci) => ({ ...c, pagina: ep.pagina, ci }))
+                                  ).map(({ pagina, nombre, escala, ci }, idx) => (
+                                    <div key={idx} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                      <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 5, background: "rgba(30,132,73,0.06)", border: "1px solid rgba(30,132,73,0.22)", borderRadius: 5, padding: "4px 9px" }}>
+                                        <span style={{ fontSize: 10, color: "#1E8449" }}>✓</span>
+                                        <span style={{ fontSize: 10, color: "#3D4A5C" }}>Pág.{pagina} — {nombre || "sin nombre"} — {escala || "sin escala"}</span>
                                       </div>
-                                      {c.base64 && !c.escala && (
-                                        <div style={{ marginTop: 3, fontSize: 10, color: "#D68910" }}>
-                                          Indica la escala de esta captura
-                                        </div>
-                                      )}
+                                      <button onClick={() => removeCaptura(i, pagina, ci)}
+                                        style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 13, padding: "0 3px", lineHeight: 1 }}>✕</button>
                                     </div>
                                   ))}
-                                  {ep.capturas.length === 0 && (
-                                    <div style={{ paddingLeft: 58, fontSize: 10, color: "#B8C5E0" }}>
-                                      Sin capturas — haz clic en "+ captura" para agregar
-                                    </div>
-                                  )}
                                 </div>
-                              ))}
+                              ) : (
+                                <div style={{ fontSize: 10, color: "#B8C5E0" }}>
+                                  Sin recortes — usa la herramienta para recortar secciones del plano
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
@@ -2280,6 +2248,15 @@ ${printRef.current.innerHTML}
           </div>
         )}
       </main>
+
+      {/* CropModal */}
+      {cropModal && (
+        <CropModal
+          file={archivos[cropModal.fileIdx].file}
+          onSave={(crop) => saveCrop(cropModal.fileIdx, crop)}
+          onClose={() => setCropModal(null)}
+        />
+      )}
 
       {/* Toast de confirmación */}
       {toast && (
