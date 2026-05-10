@@ -9,10 +9,13 @@ import nunoa_normas from "../normativa/nunoa/normas_edificacion.json";
 import nunoa_meta from "../normativa/nunoa/metadata.json";
 import santiago_normas from "../normativa/santiago/normas_edificacion.json";
 import santiago_meta from "../normativa/santiago/metadata.json";
+import providencia_normas from "../normativa/providencia/normas_edificacion.json";
+import providencia_meta from "../normativa/providencia/metadata.json";
 
 const PRC_COMUNAS = {
-  nunoa:    { meta: nunoa_meta,    normas: nunoa_normas },
-  santiago: { meta: santiago_meta, normas: santiago_normas },
+  nunoa:       { meta: nunoa_meta,       normas: nunoa_normas },
+  santiago:    { meta: santiago_meta,    normas: santiago_normas },
+  providencia: { meta: providencia_meta, normas: providencia_normas },
 };
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -326,14 +329,18 @@ function buildPrompt(tipo, comuna, archivos, modo = "parcial", preguntas = {}, c
   const prcTexto = prcData
     ? `\nPRC ${prcData.meta.prc_nombre} — ${prcData.meta.prc_version}:\n` +
       Object.entries(prcData.normas)
+        .filter(([id, z]) => !id.startsWith("_") && typeof z === "object" && z !== null)
         .map(([id, z]) => {
           const lineas = [`Zona ${id} (${z.nombre}): ${z.descripcion || ""}`];
-          if (z.coef_ocupacion_suelo)    lineas.push(`  COS=${z.coef_ocupacion_suelo}`);
-          if (z.coef_constructibilidad)  lineas.push(`  Constructibilidad=${z.coef_constructibilidad}`);
-          if (z.altura_maxima_m)         lineas.push(`  Altura máx=${z.altura_maxima_m}m`);
+          const cos = z.coef_ocupacion_suelo ?? z.coef_ocupacion_suelo_1p;
+          if (cos)                            lineas.push(`  COS=${cos}`);
+          if (z.coef_constructibilidad)       lineas.push(`  CC=${z.coef_constructibilidad}`);
+          if (z.altura_maxima_m)              lineas.push(`  Altura máx=${z.altura_maxima_m}m`);
+          if (z.altura_maxima_pisos)          lineas.push(`  Pisos máx=${z.altura_maxima_pisos}`);
           if (z.densidad_bruta_maxima_hab_ha) lineas.push(`  Densidad máx=${z.densidad_bruta_maxima_hab_ha} Hab/Há`);
-          if (z.articulo)                lineas.push(`  Referencia: ${z.articulo}`);
-          if (z.notas)                   lineas.push(`  Notas: ${z.notas}`);
+          if (z.agrupamiento?.length)         lineas.push(`  Agrupamiento: ${z.agrupamiento.join(", ")}`);
+          if (z.articulo)                     lineas.push(`  Referencia: ${z.articulo}`);
+          if (z.notas)                        lineas.push(`  Notas: ${z.notas}`);
           return lineas.join("\n");
         }).join("\n")
     : "";
