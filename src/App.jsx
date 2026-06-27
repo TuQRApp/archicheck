@@ -387,9 +387,21 @@ Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de
 ${contextoTexto}Analiza solo los archivos adjuntos. No penalices por documentos no subidos.
 
 INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
-1. Las observaciones de cada sección (separacion, reconocimiento, vectorizacion, modelo, recintos_superficies, circulaciones) deben ser DISTINTAS y específicas de esa etapa. No repitas el mismo hallazgo en múltiples secciones.
-2. La sección iluminacion_ventilacion.tabla DEBE incluir una fila por cada recinto habitable visible. Si no puedes medir el área de ventana, usa area_ventana_m2:0 y cumple:"VERIFICAR".
-3. La sección normativa_urbanistica.tabla DEBE incluir filas para: rasante(s), constructibilidad, COS, uso de suelo, y distancias a deslindes si son visibles en elevaciones. Usa estado:"VERIFICAR" si no hay dato.
+1. Sé EXHAUSTIVO: identifica todos los incumplimientos y observaciones posibles. No te limites a los 2-3 más evidentes. El informe de mayo de este mismo proyecto tenía 18 incumplimientos y 7 observaciones técnicas.
+2. Verifica OBLIGATORIAMENTE cada uno de estos puntos si aplica al tipo de proyecto:
+   - Resistencia al fuego de elementos estructurales (OGUC Art. 4.3.3)
+   - Salidas de emergencia y segunda salida si carga de ocupación > 50 personas (OGUC Art. 4.3.4)
+   - Carga de ocupación calculada y documentada (OGUC Art. 4.2.4)
+   - Ductos de ventilación mecánica para baños y cocinas interiores (OGUC Art. 4.1.3)
+   - Certificado de informaciones previas y uso de suelo (LGUC Art. 57-59)
+   - Dotación de estacionamientos según uso (OGUC Art. 2.4.1)
+   - Distanciamiento a deslindes (OGUC Art. 2.6.3 y PRC)
+   - Altura libre interior en cortes (OGUC Art. 4.2.6 y 4.2.7)
+   - Accesibilidad universal: rampa, baño accesible, estacionamiento (OGUC Art. 4.1.7, DDU 351)
+   - Cuadro de iluminación y ventilación natural (OGUC Art. 4.1.2)
+3. Las observaciones de cada sección deben ser DISTINTAS y específicas de esa etapa. No repitas el mismo hallazgo en múltiples secciones.
+4. iluminacion_ventilacion.tabla: incluye una fila por cada recinto habitable. Si no puedes medir ventana, usa area_ventana_m2:0 y cumple:"VERIFICAR".
+5. normativa_urbanistica.tabla: incluye filas para rasante(s), constructibilidad, COS, uso de suelo, distancias a deslindes. Usa estado:"VERIFICAR" si no hay dato visible.
 
 Para cada planta de arquitectura identifica los recintos visibles con bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Si no puedes estimar coordenadas confiables para un recinto, omite bbox.
 ${buildColabTexto(colabData)}
