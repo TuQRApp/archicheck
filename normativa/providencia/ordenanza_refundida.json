@@ -1,0 +1,978 @@
+{
+  "fuente": "PRC-PRV",
+  "nombre": "Plan Regulador Comunal de Providencia — Ordenanza Local Refundida 2007 (May 2025)",
+  "comuna": "Providencia",
+  "region": "Metropolitana",
+  "ultima_version": "2025-05",
+  "total_articulos": 242,
+  "secciones": [
+    {
+      "codigo": "PRC-PRV-1.1.01",
+      "texto": "Documentos que conforman el PRCP.  ............................................................................. 9"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.02",
+      "texto": "Normas que regulan el territorio del PRCP. ..................................................................... 9"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.03",
+      "texto": "Materias que regula la presente OL. ................................................................................ 9  ART.1.1.04.  Planos de Detalle.  ............................................................................................................. 9"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.05",
+      "texto": "Área de aplicación del PRCP. ........................................................................................ 11"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.06",
+      "texto": "Zonas que componen el PRCP. ..................................................................................... 12"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.07",
+      "texto": "Restricción por actividad aeroportuaria de Aeródromo El Bosque................................. 12"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.08",
+      "texto": "Graficación de las Zonas que componen el PRCP. ....................................................... 12"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.09",
+      "texto": "Atribuciones, aplicación e interpretación de las normas. ............................................... 12"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.10",
+      "texto": "Denuncia de las infracciones.  ......................................................................................... 12"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.11",
+      "texto": "Sanciones a la inobservancia. ........................................................................................ 12"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.12",
+      "texto": "Competencia Judicial.  ..................................................................................................... 12"
+    },
+    {
+      "codigo": "PRC-PRV-1.2.01",
+      "texto": "Significado de los términos utilizados en esta OL. ......................................................... 13  CAPITULO 1.2. GLOSARIO"
+    },
+    {
+      "codigo": "PRC-PRV-2.1.01",
+      "texto": "BNUP o Bien Nacional de Uso Público. ......................................................................... 15"
+    },
+    {
+      "codigo": "PRC-PRV-2.1.02",
+      "texto": "Construcciones sobre el suelo y en el subsuelo del BNUP. .......................................... 15"
+    },
+    {
+      "codigo": "PRC-PRV-2.1.03",
+      "texto": "Informes y Permisos para proyectos en el BNUP. ......................................................... 15"
+    },
+    {
+      "codigo": "PRC-PRV-2.1.04",
+      "texto": "De la localización de las Antenas. .................................................................................. 15  CAPITULO 2.2  INFRAESTRUCTURA DE TRANSPORTE  EN EL BNUP"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.01",
+      "texto": "Infraestructura de Transporte. ................................................................................................ 15"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.02",
+      "texto": "Composición de la Red Vial Comunal. ........................................................................... 15"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.03",
+      "texto": "Vías que componen la Red Vial Comunal Estructurante. .............................................. 16"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.04",
+      "texto": "Sistema de Vialidad Local. ............................................................................................. 21"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.05",
+      "texto": "Ensanche de vías existentes y apertura de nuevas vías. .............................................. 22"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.06",
+      "texto": "Proyectos para el diseño de vías. .................................................................................. 22"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.07",
+      "texto": "Diseño de los veredones de las vías. ............................................................................. 22"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.08",
+      "texto": "Reposición de obras en el BNUP. .................................................................................. 23  CAPITULO 2.3. ÁREAS VERDES PUBLICAS Y ÁREAS VERDES PRIVADAS"
+    },
+    {
+      "codigo": "PRC-PRV-2.3.01",
+      "texto": "Terminología sobre Espacio Público y Áreas Verdes en la Comuna.  ............................ 23"
+    },
+    {
+      "codigo": "PRC-PRV-2.3.02",
+      "texto": "Conjuntos de Áreas Verdes.  ........................................................................................... 23"
+    },
+    {
+      "codigo": "PRC-PRV-2.3.03",
+      "texto": "Parques (Pq). Enumeración y ubicación. ....................................................................... 23"
+    },
+    {
+      "codigo": "PRC-PRV-2.3.04",
+      "texto": "Áreas Verdes Complementarias (AVC). Enumeración y ubicación. .............................. 24"
+    },
+    {
+      "codigo": "PRC-PRV-2.3.05",
+      "texto": "Plazas (Pz). Enumeración y ubicación. .......................................................................... 25"
+    },
+    {
+      "codigo": "PRC-PRV-2.3.06",
+      "texto": "De los árboles en la comuna. ......................................................................................... 27  CAPITULO 2.4.  INFRAESTRUCTURA DE SERVICIOS DOMICILIARIOS"
+    },
+    {
+      "codigo": "PRC-PRV-2.4.01",
+      "texto": "Infraestructura de Servicios Domiciliarios. ..................................................................... 27"
+    },
+    {
+      "codigo": "PRC-PRV-2.4.02",
+      "texto": "Redes de Infraestructura de Servicios Domiciliarios. ..................................................... 27"
+    },
+    {
+      "codigo": "PRC-PRV-2.4.03",
+      "texto": "Normativas aplicables a la Infraestructura de Servicios Domiciliarios. .......................... 28  ART 2.4.04.  Plan de soterramiento de redes...................................................................................... 28"
+    },
+    {
+      "codigo": "PRC-PRV-2.4.05",
+      "texto": "Construcción y administración de poliductos. ................................................................ 28"
+    },
+    {
+      "codigo": "PRC-PRV-2.4.06",
+      "texto": "Planos de las obras efectivamente ejecutadas. ............................................................. 28  TITULO 3.  BPP O BIEN DE PROPIEDAD PRIVADA  CAPITULO 3.1.  NORMAS GENERALES SOBRE EL BPP"
+    },
+    {
+      "codigo": "PRC-PRV-3.1.01",
+      "texto": "Permisos para proyectos en el BPP. .............................................................................. 29"
+    },
+    {
+      "codigo": "PRC-PRV-3.1.02",
+      "texto": "Normas de las zonas de edificación y de uso de suelo. ............................................... 29"
+    },
+    {
+      "codigo": "PRC-PRV-3.1.03",
+      "texto": "Extensión de las Zonas. ................................................................................................. 29"
+    },
+    {
+      "codigo": "PRC-PRV-3.1.04",
+      "texto": "Áreas de Recuperación Urbana. .................................................................................... 29  CAPITULO 3.2.  CESIONES Y EXPROPIACIONES"
+    },
+    {
+      "codigo": "PRC-PRV-3.2.01",
+      "texto": "Cesiones gratuitas al BNUP y Equipamientos. .............................................................. 29"
+    },
+    {
+      "codigo": "PRC-PRV-3.2.02",
+      "texto": "Expropiaciones extraordinarias totales.  .......................................................................... 29"
+    },
+    {
+      "codigo": "PRC-PRV-3.2.03",
+      "texto": "Pago en bonos transables para expropiaciones totales.  ................................................ 29"
+    },
+    {
+      "codigo": "PRC-PRV-3.2.04",
+      "texto": "Expropiaciones extraordinarias parciales.  ...................................................................... 30"
+    },
+    {
+      "codigo": "PRC-PRV-3.2.05",
+      "texto": "Cálculo de las indemnizaciones. ................................................................................... 30"
+    },
+    {
+      "codigo": "PRC-PRV-3.2.06",
+      "texto": "Incentivo al anticipo de las expropiaciones parciales y cesión al libre tránsito. ............. 30  CAPITULO 3.3. 30  SUBDIVISIONES, FUSIONES, LOTEOS Y URBANIZACIONES"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.01",
+      "texto": "Subdivisiones Mínimas. ................................................................................................. 30"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.02",
+      "texto": "Excepciones a las Subdivisiones................................................................................... 30"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.03",
+      "texto": "Condiciones para conformación de nuevos predios. .................................................... 30"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.04",
+      "texto": "Premio a la fusión de roles. ........................................................................................... 30"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.05",
+      "texto": "Premios automáticos y sus limitaciones.  ....................................................................... 30"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.06",
+      "texto": "Premio a las galerías interiores y al uso equipamiento. ................................................ 31"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.07",
+      "texto": "Derogado. ..................................................................................................................... 31"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.08",
+      "texto": "Vialidad mínima en propiedades iguales o mayores a una hectárea.  ........................... 31"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.09",
+      "texto": "Exigencia de catastro de árboles existentes. ................................................................ 31"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.10",
+      "texto": "Preservación de ejemplares vegetales valiosos............................................................ 31"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.11",
+      "texto": "Norma especial de pavimentación en paños para estacionamientos. .......................... 31"
+    },
+    {
+      "codigo": "PRC-PRV-3.3.12",
+      "texto": "Rebajes en accesos. ..................................................................................................... 31  TITULO 4  NORMAS DE EDIFICACIÓN  CAPITULO 4.1.  CIERROS Y ANTEJARDINES"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.01",
+      "texto": "Cierros en sitios eriazos. ............................................................................................... 33"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.02",
+      "texto": "Diseño de los cierros. .................................................................................................... 33"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.03",
+      "texto": "Transparencia y ubicación de los cierros. ..................................................................... 33"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.04",
+      "texto": "Cierros en medianeros. ................................................................................................. 33"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.05",
+      "texto": "Retranqueo de cierros para estacionamientos de visitas.  ............................................. 33"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.06",
+      "texto": "Dimensiones de los antejardines.  .................................................................................. 33"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.07",
+      "texto": "Excepción a medidas de antejardines de 5 metros.  ...................................................... 34"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.08",
+      "texto": "Uniformidad de los antejardines. ................................................................................... 34"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.09",
+      "texto": "Nivelación y construcción de antejardines. ................................................................... 34"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.10",
+      "texto": "Iluminación mínima de antejardines de edificios de copropiedad. ................................ 34"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.11",
+      "texto": "Eliminación de cierros y cesión al libre tránsito en cambios de destino........................ 34"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.12",
+      "texto": "Ochavos.  ........................................................................................................................ 34"
+    },
+    {
+      "codigo": "PRC-PRV-4.1.13",
+      "texto": "Cargo de los costos de adecuaciones.  .......................................................................... 35  CAPITULO 4.2.  NORMAS GENERALES DE EDIFICACIÓN"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.01",
+      "texto": "Permisos de demolición y excavación.  .......................................................................... 35  ART. 4.2.02  Permisos de trabajos nocturnos. ................................................................................... 35"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.03",
+      "texto": "Conexiones privadas sobre o bajo el espacio público. ................................................. 35"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.04",
+      "texto": "Reparos a proyectos que desmerezcan el entorno.  ...................................................... 35"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.05",
+      "texto": "Anteproyectos y Proyectos. ........................................................................................... 35"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.06",
+      "texto": "Ampliaciones con superficie igual o superior a lo existente, exigencia especial. ......... 35"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.07",
+      "texto": "Agrupamiento de las edificaciones, distintos tipos permitidos. ..................................... 35"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.08",
+      "texto": "Clases de construcciones aceptadas. ........................................................................... 36"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.09",
+      "texto": "Tratamiento de espacios libres a nivel de terreno.  ........................................................ 36"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.10",
+      "texto": "Cómputo de superficies para aplicar los coeficientes de constructibilidad. .................. 36"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.11",
+      "texto": "Aplicación de rasantes y envolventes máximas. ........................................................... 36"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.12",
+      "texto": "Alturas máximas de las edificaciones para las diversas Zonas de Edificación.  ............ 36"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.13",
+      "texto": "Alturas máximas por piso para las diversas Zonas de Edificación. .............................. 36"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.14",
+      "texto": "Restricciones a los adosamientos. ................................................................................ 37"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.15",
+      "texto": "Autorización excepcional de adosamientos en Zonas de edificación aislada.  .............. 37"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.16",
+      "texto": "Adosamiento con construcciones existentes................................................................. 37"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.17",
+      "texto": "Tratamiento de muros libres en adosamientos o edificaciones continuas. ................... 37"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.18",
+      "texto": "Encuentro entre Zonas de Edificación de distinta normativa. ....................................... 37"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.19",
+      "texto": "Distanciamientos mínimos a los medianeros de los paramentos no adosados.  ........... 38"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.20",
+      "texto": "Cuerpos salientes. ......................................................................................................... 38"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.21",
+      "texto": "Construcciones ligeras en terreno libre. ........................................................................ 39"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.22",
+      "texto": "Pavimentación del terreno libre y ubicación de los estacionamientos. ......................... 39"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.23",
+      "texto": "Emplazamiento de unidades habitacionales en edificios de copropiedad. ................... 39"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.24",
+      "texto": "Restricciones a la asignación de uso exclusivo de terrenos comunes. ........................ 40"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.25",
+      "texto": "Facultad para ordenar obras de mantención o reparación. .......................................... 40"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.26",
+      "texto": "Excepción a las normas de edificación para los predios con edificaciones de hasta tres pisos con destino residencial.  ........................................................................................ 40"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.27",
+      "texto": "Excepciones a las normas de edificación para los equipamientos. .............................. 40"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.28",
+      "texto": "Incentivos en las normas urbanísticas. ......................................................................... 41  CAPITULO 4.3.  ZONAS DE EDIFICACIÓN"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.01",
+      "texto": "Enumeración de las Zonas de Edificación. ................................................................... 42"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.02",
+      "texto": "Normas de edificación en áreas de protección de recursos de valor patrimonial cultural. ........................................................................................................................................ 43"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.03",
+      "texto": "EC3 – Zona de Edificación Continua, de máximo 3 pisos. ........................................... 44"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.04",
+      "texto": "EC5 – Zona de Edificación Continua, de máximo 5 pisos. ........................................... 44"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.05",
+      "texto": "EC7 – Zona de Edificación Continua, de máximo 7 pisos. ........................................... 45"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.06",
+      "texto": "EC12 – Zona de Edificación Continua, de máximo 12 pisos. ....................................... 45"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.07",
+      "texto": "E5 (C+A) - Zona de Edificación de máx 5 pisos, Continua más Aislada. ..................... 46"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.08",
+      "texto": "EC2 + A8 – Zona de Edif. Continua, de máx 2 pisos, más Aislada de máx. 8 pisos  ..  46 7"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.09",
+      "texto": "EC3 + AL - Zona de Edif. Continua, de máx. 3 pisos, más Aislada Libre. .................... 47"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.10",
+      "texto": "EA3 – Zona de Edificación Aislada, de máximo 3 pisos. .............................................. 48  ART. 4.3.10 bis.  E3 - Zona de Edificación de máximo 3 pisos; Aislada, Pareada o Continua. ............... 48"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.11",
+      "texto": "EA5 – Zona de Edificación Aislada, de máximo 5 pisos; permite o no adosamiento. .. 49"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.12",
+      "texto": "EA7 – Zona de Edificación Aislada, de máximo 7 pisos; permite o no adosamiento. .. 49"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.13",
+      "texto": "EA12 – Zona de Edificación Aislada, de máximo 12 pisos; permite o no adosamiento. .. ........................................................................................................................................ 50"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.14",
+      "texto": "EAL / pa – Zona de Edificación Aislada Libre, permite adosamiento........................... 50"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.15",
+      "texto": "Predios Especiales. ....................................................................................................... 51  ART. 4.3.16  Zona Especial Ex-CCU.  ................................................................................................. 51  TITULO 5.  ÁREAS, ZONAS E INMUEBLES PROTEGIDOS  CAPITULO 5.1.  DISPOSICIONES GENERALES"
+    },
+    {
+      "codigo": "PRC-PRV-5.1.01",
+      "texto": "Áreas, zonas e inmuebles protegidos. ........................................................................... 52  CAPITULO 5.2.  ÁREAS DE PROTECCIÓN DE RECURSOS DE VALOR PATRIMONIAL CULTURAL"
+    },
+    {
+      "codigo": "PRC-PRV-5.2.01",
+      "texto": "Enumeración de áreas de protección de recursos de valor patrimonial cultural.  ........... 52"
+    },
+    {
+      "codigo": "PRC-PRV-5.2.02",
+      "texto": "Zonas típicas (ZT).  .......................................................................................................... 52"
+    },
+    {
+      "codigo": "PRC-PRV-5.2.03",
+      "texto": "Monumentos históricos (MH).  ......................................................................................... 53"
+    },
+    {
+      "codigo": "PRC-PRV-5.2.04",
+      "texto": "Zonas de conservación histórica (ZCH). ........................................................................ 54"
+    },
+    {
+      "codigo": "PRC-PRV-5.2.05",
+      "texto": "Inmuebles de conservación histórica (ICH).  ................................................................... 55  CAPÍTULO 5.3."
+    },
+    {
+      "codigo": "PRC-PRV-5.3.01",
+      "texto": "Derogado. ...................................................................................................................... 58"
+    },
+    {
+      "codigo": "PRC-PRV-5.3.02",
+      "texto": "Derogado. ...................................................................................................................... 58"
+    },
+    {
+      "codigo": "PRC-PRV-5.3.03",
+      "texto": "Derogado. ...................................................................................................................... 58  CAPITULO 5.4.  NORMAS DE EXCEPCIÓN  PARA LAS ÁREAS DE PROTECCIÓN DE RECURSOS  DE VALOR PATRIMONIAL CULTURAL"
+    },
+    {
+      "codigo": "PRC-PRV-5.4.01",
+      "texto": "Normas generales y de excepción aplicables a las áreas de protección de recursos de valor patrimonial cultural. ............................................................................................... 58"
+    },
+    {
+      "codigo": "PRC-PRV-5.4.02",
+      "texto": "Restricciones a la instalación de publicidad y propaganda en las áreas de protección de recursos de valor patrimonial cultural. ............................................................................ 58  CAPÍTULO 5.5."
+    },
+    {
+      "codigo": "PRC-PRV-5.5.01",
+      "texto": "Derogado. ...................................................................................................................... 58"
+    },
+    {
+      "codigo": "PRC-PRV-5.5.02",
+      "texto": "Derogado. ...................................................................................................................... 58  CAPITULO 5.6.  ZONAS METROPOLITANAS PROTEGIDAS  ART. 5.6.01  Zona de Equipamiento Metropolitano o Intercomunal (ZEMoI)..................................... 58"
+    },
+    {
+      "codigo": "PRC-PRV-5.6.02",
+      "texto": "Zonas de Interés Metropolitano (ZIM). .......................................................................... 59  ART. 5.6.03  Normas de subdivisión y edificación ZEMoI y ZIM  ........................................................ 60  ART. 5.6.04  Normas de uso de suelo ZEMoI y ZIM .......................................................................... 60  ART. 5.6.05  Incentivos Normativos ZEMoI de Salud ........................................................................ 62  CAPITULO 5.7. ÁREAS VERDES PÚBLICAS Y PRIVADAS PROTEGIDAS"
+    },
+    {
+      "codigo": "PRC-PRV-5.7.01",
+      "texto": "De las Áreas Verdes Públicas y Privadas Protegidas. .................................................. 63"
+    },
+    {
+      "codigo": "PRC-PRV-5.7.02",
+      "texto": "Derogado. ...................................................................................................................... 63  TITULO 6.  DE LAS NORMAS DE USOS DE SUELO  CAPITULO 6.1.  DE LAS NORMAS GENERALES DE USOS DE SUELO"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.01",
+      "texto": "Tipos de uso de suelo.  .................................................................................................... 64"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.02",
+      "texto": "Derogado. ...................................................................................................................... 64"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.03",
+      "texto": "Derogado. ...................................................................................................................... 64"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.04",
+      "texto": "Derogado. ...................................................................................................................... 64"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.05",
+      "texto": "Derogado. ...................................................................................................................... 64"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.06",
+      "texto": "Derogado. ...................................................................................................................... 64"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.07",
+      "texto": "Derogado. ...................................................................................................................... 64"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.08",
+      "texto": "Uso de suelo en predios especiales. ............................................................................. 64"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.09",
+      "texto": "Usos de suelo en zonas e inmuebles protegidos. ......................................................... 65"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.10",
+      "texto": "Derogado. ...................................................................................................................... 65"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.11",
+      "texto": "Derogado. ...................................................................................................................... 65"
+    },
+    {
+      "codigo": "PRC-PRV-6.1.12",
+      "texto": "Derogado. ...................................................................................................................... 65  CAPITULO 6.2.  NORMAS DE LAS DISTINTAS ZONAS DE USO DEL SUELO"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.01",
+      "texto": "Delimitación de las zonas de uso de suelo. .................................................................. 65"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.02",
+      "texto": "Zonas de uso de suelo. ................................................................................................. 66"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.03",
+      "texto": "Zonas de uso de suelo en áreas de protección de recursos de valor patrimonial. ....... 66"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.04",
+      "texto": "Derogado. ...................................................................................................................... 66"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.05",
+      "texto": "Derogado. ...................................................................................................................... 66"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.06",
+      "texto": "Establecimientos industriales y de bodegaje................................................................. 67"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.07",
+      "texto": "Derogado. ...................................................................................................................... 67"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.08",
+      "texto": "Derogado. ...................................................................................................................... 67"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.09",
+      "texto": "Derogado. ...................................................................................................................... 67"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.10",
+      "texto": "Derogado. ...................................................................................................................... 67"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.11",
+      "texto": "Derogado. ...................................................................................................................... 67"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.12",
+      "texto": "Zona de uso residencial, UR. ........................................................................................ 68"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.13",
+      "texto": "Derogado. ...................................................................................................................... 69"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.14",
+      "texto": "Zona de uso preferentemente residencial y equipamiento restringido, UpR y Er.  ........ 70"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.15",
+      "texto": "Zona de uso preferentemente residencial y de equipamiento, UpR y E. ...................... 72"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.16",
+      "texto": "Zona de uso preferentemente residencial y equipamiento de comercio restringido, .... 76"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.17",
+      "texto": "Zona de uso preferentemente de equipamiento comercial, UpEC. .............................. 78"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.18",
+      "texto": "Zona de uso preferentemente de actividades productivas e industria restringida, ....... 80"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.19",
+      "texto": "Usos adicionales permitidos en las Áreas Verdes Complementarias (AVC). ............... 81"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.20",
+      "texto": "Usos en Zona Especial Ex - CCU. ................................................................................ 81"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.21",
+      "texto": "Zona de uso de suelo patrimonial residencial. .............................................................. 82"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.22",
+      "texto": "Zona de uso de suelo patrimonial residencial y de servicios. ....................................... 84"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.23",
+      "texto": "Zona de uso de suelo patrimonial cultural mixta. .......................................................... 86"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.24",
+      "texto": "Zona de uso de suelo patrimonial comercial mixta. ...................................................... 88  CAPITULO 6.3.  NORMAS ESPECIALES PARA ACTIVIDADES PRODUCTIVAS  O DE SERVICIOS"
+    },
+    {
+      "codigo": "PRC-PRV-6.3.01",
+      "texto": "Derogado. ...................................................................................................................... 89"
+    },
+    {
+      "codigo": "PRC-PRV-6.3.02",
+      "texto": "Locales para ventas de vehículos. ................................................................................ 89"
+    },
+    {
+      "codigo": "PRC-PRV-6.3.03",
+      "texto": "Derogado. ...................................................................................................................... 89"
+    },
+    {
+      "codigo": "PRC-PRV-6.3.04",
+      "texto": "Derogado. ...................................................................................................................... 89"
+    },
+    {
+      "codigo": "PRC-PRV-6.3.05",
+      "texto": "Derogado. ...................................................................................................................... 89"
+    },
+    {
+      "codigo": "PRC-PRV-6.3.06",
+      "texto": "Derogado. ...................................................................................................................... 89"
+    },
+    {
+      "codigo": "PRC-PRV-6.3.07",
+      "texto": "Derogado. ...................................................................................................................... 89"
+    },
+    {
+      "codigo": "PRC-PRV-6.3.08",
+      "texto": "Derogado. ...................................................................................................................... 89  CAPITULO 6.4.  CONGELAMIENTO, CAMBIO DE DESTINO, ADECUACIONES Y DENEGACIONES  EN LOS USOS"
+    },
+    {
+      "codigo": "PRC-PRV-6.4.01",
+      "texto": "Derogado. ...................................................................................................................... 90"
+    },
+    {
+      "codigo": "PRC-PRV-6.4.02",
+      "texto": "Derogado. ...................................................................................................................... 90"
+    },
+    {
+      "codigo": "PRC-PRV-6.4.03",
+      "texto": "Requisitos para cambio de destino en edificaciones residenciales a otros usos  .......... 90"
+    },
+    {
+      "codigo": "PRC-PRV-6.4.04",
+      "texto": "Derogado. ...................................................................................................................... 90"
+    },
+    {
+      "codigo": "PRC-PRV-6.4.05",
+      "texto": "Derogado. ...................................................................................................................... 90  TITULO 7.  DE LA DENSIDAD Y ESCALAS DE EQUIPAMIENTO  CAPITULO 7.1.  DE LAS NORMAS SOBRE DENSIDAD"
+    },
+    {
+      "codigo": "PRC-PRV-7.1.01",
+      "texto": "Densidades mínimas para la comuna. .......................................................................... 91"
+    },
+    {
+      "codigo": "PRC-PRV-7.1.02",
+      "texto": "Densidades máximas en los usos residenciales. .......................................................... 91"
+    },
+    {
+      "codigo": "PRC-PRV-7.1.03",
+      "texto": "Equivalencia de la densidad residencial en número de viviendas. ............................... 91"
+    },
+    {
+      "codigo": "PRC-PRV-7.1.04",
+      "texto": "La Densidad o Intensidad en usos no residenciales. .................................................... 91  CAPÍTULO 7.2  NORMAS SOBRE ESCALAS DE EQUIPAMIENTO  ART. 7.2.01  Escalas de equipamiento  ............................................................................................... 92  TITULO 8.  DE LOS ESTACIONAMIENTOS  CAPITULO 8.1.  NORMAS SOBRE ESTACIONAMIENTOS"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.01",
+      "texto": "Derogado. ...................................................................................................................... 93"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.02",
+      "texto": "Derogado. ...................................................................................................................... 93"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.03",
+      "texto": "Exigencias de estacionamiento. .................................................................................... 93"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.04",
+      "texto": "Restricción a la ubicación de los estacionamientos. ..................................................... 95"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.05",
+      "texto": "Derogado. ...................................................................................................................... 95"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.06",
+      "texto": "Derogado. ...................................................................................................................... 95"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.07",
+      "texto": "Derogado. ...................................................................................................................... 95"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.08",
+      "texto": "Exigencia de estacionamientos para bicicletas. ............................................................ 95"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.09",
+      "texto": "Derogado. ...................................................................................................................... 95\n DE LA PUBLICIDAD Y PROPAGANDA  CAPITULO 9.1.  DISPOSICIONES GENERALES"
+    },
+    {
+      "codigo": "PRC-PRV-9.1.01",
+      "texto": "Normas Generales sobre Publicidad y Propaganda en el BNUP. ................................ 96"
+    },
+    {
+      "codigo": "PRC-PRV-9.1.02",
+      "texto": "Normas Generales sobre Publicidad y Propaganda en el BPP. ................................... 96\n ÍNDICE DE CUADROS  Nº  01. ÁREA DE APLICACIÓN DEL PRCP ...............................................................................  11  Nº  02. RED VIAL COMUNAL ESTRUCTURANTE, Clasificación PRMS ..................................  16  Nº  03. RED VIAL COMUNAL ESTRUCTURANTE, Clasificación complementaria PRCP.........  20  Nº  04. APERTURA DE NUEVAS VIAS ......................................................................................  22  Nº 05. PARQUES ..............................................................................................................……..  23  Nº 06.  ÁREAS VERDES COMPLEMENTARIAS .......................................................................  24  Nº 07. PLAZAS ….......................................................................................................................  25  Nº 08 . EC3 – Zona Edif. Continua, de máximo 3 pisos .............................................................  44  Nº 09 . EC5 – Zona Edif. Continua, de máximo 5 pisos .............................................................  44  Nº 10 . EC7 – Zona Edif. Continua, de máximo 7 pisos .............................................................  45  Nº 11 . EC12 – Zona Edif. Continua, de máximo 12 pisos .........................................................  45  Nº 12 . E5 (C+A) – Zona Edif. de máx. 5 pisos, continua más aislada.......................................  46  Nº 13 . EC2 + A8 – Zona Edif. Continua, de máx. 2 pisos, más Aislada de máx. 8 pisos ..........  47  Nº 14 . EC3 + AL – Zona Edif. Continua, de máx. 3 pisos, más Aislada Libre ...........................  47  Nº 15 . EA3 – Zona Edificación Aislada, de máximo 3 pisos ......................................................  48  Nº 15 bis.  E3 – Zona Edificación Aislada, Continua o Pareada de máximo 3 pisos...................  48  Nº 16 . EA5 – Zona Edificación Aislada, de máximo 5 pisos; permite o no adosamiento ...........  49  Nº 17 . EA7 – Zona Edificación Aislada, de máximo 7 pisos; permite o no adosamiento ...........  50  Nº 18 . EA12 – Zona Edificación Aislada, de máximo 12 pisos; permite o no adosamiento .......  50  Nº 19 . EAL / pa – Zona Edif. Aislada Libre, permite adosamiento .............................................  51  Nº 20 . ZT – ZONAS TÍPICAS .....................................................................................................  53  Nº 21 . MH – MONUMENTOS HISTÓRICOS .............................................................................  54  Nº 22 . ZCH – ZONA DE CONSERVACIÓN HISTÓRICA ...........................................................  55  Nº 23 . ICH – INMUEBLE DE CONSERVACIÓN HISTÓRICA ...................................................  56  Nº 24 . ZEMoI – ZONA DE EQUIPAMIENTO METROPOLITANO O INTERCOMUNAL ............  59  Nº 25 . ZIM – ZONA DE INTERÉS METROPOLITANO ............................"
+    },
+    {
+      "codigo": "PRC-PRV-9.1.02-b",
+      "texto": "..................................  59  Nº 26 . USOS DE SUELO POR TIPO Y CLASE DE USO ..........................................................  64  Nº 27 . DEROGADO…………………………………………...........................................................  64  Nº 28 . ZONAS DE USO .............................................................................................................  64  Nº 29 . DEROGADO…………………………………………...........................................................  64  Nº 30 . DEROGADO…………………………………………...........................................................  64  Nº 31 . DEROGADO…………………………………………...........................................................  64  Nº 32 . UR – Zona de Uso Residencial .......................................................................................  68  Nº 33 . DEROGADO…………………………………………...........................................................  69  Nº 34 . UpR y Er – Zona de Uso pref. Residencial y Equipamiento Restringido .........................  70  Nº 35 . UpR y E – Zona de Uso pref. Residencial y Equipamiento .............................................  72  Nº 35 bis . UpR y E-CC – Zona de Uso pref. Residencial y Equipamiento Culto y Cultura..........  74  Nº 36 . UpR y ECr – Zona de Uso pref. Residencial y Equipamiento de Comercio Restringido  76  Nº 37 . UpEC – Zona de Uso pref. de Equipamiento Comercial .................................................  78  Nº 38 . UpAP e Ir – Zona de Uso pref. de Actividades Productivas e Industria Restringida .......  80  Nº 39 . DENSIDADES POR ZONA DE EDIFICACION.................................................................  91  Nº 40 . ESTACIONAMIENTOS – Estándares por Zona, Tipo y Clase de Uso ............................  94\n GENERALIDADES  CAPITULO 1.1.  DISPOSICIONES GENERALES"
+    },
+    {
+      "codigo": "PRC-PRV-1.1.03-b",
+      "texto": "Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile.  El Plano de Detalle de la ZCH Población Salvador Legión Militar de Chile está conformado por los siguientes documentos:  -  Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile; Memoria explicativa  -  Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile; L1: Objetivo general y límites del Plano de Detalle. Espacio público - Situación existente  -  Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile; L2: Espacio público - Lineamientos  -  Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile; L3: Espacio público - Lineamientos  -  Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile; L4: Espacio privado - Tipologías originales y sus alteraciones  -  Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile; L5: Espacio privado - Tipologías originales y sus alteraciones  -  Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile; L6 Espacio privado - Características de las tipologías originales  -  Plano de Detalle 01: ZCH 04 Población Salvador Legión Militar de Chile; L7 Espacio privado - Normas para la edificación  Plano de Detalle 02: ZCH 14 Conjunto Calle Triana.  El Plano de Detalle de la ZCH Conjunto Calle Triana está conformado por los siguientes documentos:  -  Plano de Detalle 02: ZCH 14 Conjunto Calle Triana; Memoria explicativa  -  Plano de Detalle 02: ZCH 14 Conjunto Calle Triana; L1: Objetivo general y límites del Plano de Detalle. Espacio público - Situación existente y lineamientos  -  Plano de Detalle 02: ZCH 14 Conjunto Calle Triana; L2: Espacio privado - Edificaciones originales y sus alteraciones  -  Plano de Detalle 02: ZCH 14 Conjunto Calle Triana; L3: Espacio privado - Características de las edificaciones originales - Normas para la edificación»  Plano de Detalle 03: Barrio El Aguilucho. 1  El Plano de Detalle del Barrio El Aguilucho está conformado por los siguientes documentos:  -  Plano de Detalle 03: Barrio El Aguilucho; Memoria explicativa  -  Plano de Detalle 03: Barrio El Aguilucho; L1: Objetivo general y límites del Plano de Detalle. Espacio público - Situación existente  -  Plano de Detalle 03: Barrio El Aguilucho; L2: Espacio público - Lineamientos  -  Plano de Detalle 03: Barrio El Aguilucho; L3: Espacio público - Lineamientos  -  Plano de Detalle 03: Barrio El Aguilucho; L4: Espacio privado - Edificaciones en calle El Aguilucho  -  Plano de Detalle 03: Barrio El Aguilucho; L5: Espacio privado - Edificaciones en calle El Aguilucho  -  Plano de Detalle 03: Barrio El Aguilucho; L6 Espacio privado - Características morfológicas en calle El Aguilucho  -  Plano de Detalle 03: Barrio El Aguilucho; L7 Espacio privado - Edificaciones en el barrio El Aguilucho  -  Plano de Detalle 03: Barrio El Aguilucho; L8 Espacio privado - Normas para la edificación  1  Párrafo incorporado en Modificación N° 7 Barrio El Aguilucho, D.O. 29.05.2025."
+    },
+    {
+      "codigo": "PRC-PRV-1.1.05-b",
+      "texto": "eje de Rengo y que une los puntos 13 y 14.  14  Punto de intersección de los ejes de Rengo y José Manuel Infante.  14 - 15  Línea recta que corre por el eje de José Manuel Infante y une los puntos 14 y 15.\n Punto de intersección de los ejes de José Manuel Infante y Caupolicán.  15 - 1  Línea  recta  que corre  por  el  eje  de  Caupolicán  y Malaquías Concha, y une los puntos 15 y 1."
+    },
+    {
+      "codigo": "PRC-PRV-1.2.01-b",
+      "texto": "ascotas”:  residencia  temporal  para  animales  domésticos,  la  que necesariamente debe estar asociada a una clínica veterinaria.  “Nivel de Solera” : el que tenga la solera frente a cada punto de la línea de edificación del terreno en cuestión. En las esquinas, el nivel se tomará en la bisectriz del ángulo de la esquina o en el eje del ochavo según corresponda.  “Parque Metropolitano (PqM)” :  Parques Metropolitanos: Son las áreas verdes de uso público de carácter metropolitano que pueden acoger actividades relacionadas con lo recreacional, deportivo, de culto, cultural,  científico,  de  esparcimiento  y  turismo  al  aire  libre.  Los  usos  antes  mencionados  deberán  ser complementarios y compatibles con el carácter de área verde de uso público, su valor paisajístico o su equilibrio ecológico.  Se encuentra identificado en la clasificación de áreas verdes del Art. 5.2.2. del PRMS.  “Parque Intercomunal (PqI)” :  Parque Intercomunal: Son áreas verdes de uso público o privado que pueden acoger actividades recreacionales, deportivas, de culto, culturales, científicas, de esparcimiento y turismo al aire libre; su alcance trasciende de los límites comunales de dos o más comunas. Los usos antes mencionados deberán ser complementarios y compatibles y no podrán alterar su carácter de área verde, su valor paisajístico o su equilibrio ecológico.”  Se encuentra identificado en la clasificación de áreas verdes del Art. 5.2.3. del PRMS.  “Parque Comunal (PqC)” : espacio al aire libre arborizado, de relativa magnitud, destinado al uso público o privado y que por sus características, ubicación y equipamiento puede acoger actividades"
+    },
+    {
+      "codigo": "PRC-PRV-1.2.01-c",
+      "texto": "recreacionales, deportivas, de culto, culturales, científicas, de esparcimiento y turismo de carácter mediano o comunal. Se privilegian los equipamientos recreacionales para todos los tramos etáreos.  “Plaza Comunal (PzCom)” :  espacio libre de uso público arborizado, destinado entre otros, al esparcimiento y circulación peatonal. Por que por su ubicación y equipamiento puede acoger algunas actividades recreacionales, deportivas, de culto, culturales, científicas, y esparcimiento de carácter mediano o comunal; se emplaza generalmente en la intersección de 2 vías con locomoción colectiva, potenciando a través de los usos de suelo, los centros de barrios. Se privilegian los equipamientos recreacionales para adolescentes y adultos.  “Plaza Vecinal (PzVec)” :  espacio libre de uso público arborizado, destinado entre otros, al esparcimiento y circulación peatonal. Para efectos de la presente OL, y por su ubicación y equipamiento puede acoger algunas actividades recreacionales, deportivas, de culto, culturales, científicas y de esparcimiento de carácter menor o vecinal; se emplaza generalmente en la intersección de vías de flujo vehicular local con o sin locomoción colectiva. Se privilegian los equipamientos recreacionales para niños de enseñanza pre escolar y básica. (2 a 12 años), y espacio para adultos mayores.  “Plazoleta (Pzt)” :  espacio libre de uso público, destinada principalmente a la circulación peatonal, o que su diseño y emplazamiento obedece al reordenamiento de la trama vial comunal.  Debido a su pequeño tamaño este tipo de espacios no admite un equipamiento urbano importante, y en los casos más favorables se podrá instalar algunos escaños, luminarias y papeleros.  “Piso retirado” : es aquel cuyo volumen edificado se inscribe dentro de un plano inclinado en un ángulo de 45º a partir de la línea de intersección de los paramentos verticales de la fachada con la losa de cielo del piso inmediatamente inferior.  “Pisos superiores” : serán todos aquellos cuyo nivel de piso terminado se ubica por sobre el primer piso.  “Piso Zócalo” : para efectos de la presente OL, serán los pisos hundidos en el terreno natural que no sobresalgan más de un metro, en cada uno de los puntos del perímetro, medido desde el nivel de dicho terreno. Para efectos de superficie, se asimilarán a los subterráneos; en estos pisos zócalos no podrán haber viviendas, excepto la del conserje.  “Poliducto”:  para efectos de la presente OL, será aquel conjunto ordenado de tuberías y cámaras de registro que, ubicado en el subsuelo urbano, permite coordinar la distribución de diferentes servicios y, a la vez, lograr el despeje, tanto visual como de tránsito peatonal y vehicular en el espacio público de superficie y aéreo.  “Pista Recreativa”:  Vía de carácter recreacional, destinada principalmente a la circulación de rodados no motorizados (bicicletas, patines, entre otros), y que forma parte del Proyecto Circuito Integrado de Parques y Plazas de la Comuna.  “Publicidad o Propa"
+    },
+    {
+      "codigo": "PRC-PRV-1.2.01-d",
+      "texto": "ganda Directa” : Es aquella destinada a informar o a atraer la atención pública sobre la actividad o rubro, que es ejercida o comercializada en un determinado local o edificio, cualquiera sea su giro, conforme a la autorización de funcionamiento otorgada.  “Publicidad o Propaganda Indirecta”:  Es aquella destinada a informar o a atraer la atención pública, sin que exista correspondencia entre el lugar de colocación o proyección del elemento y la actividad o producto que se promueve.  “Propaganda”  : Se entenderá por propaganda toda actividad o manifestación física (formas y colores) que se efectúe como manera de promover ideas o acciones.  “Taller Mecánico de Mantención” : recinto destinado a la reparación y mantención de vehículos, que no incluye trabajos de carrocería, desabolladura y pintura, por lo que no genera ruidos, ni emanación de olores o materiales particulados en suspensión por sobre la norma.  “Taller Mecánico de Reparación” : recinto destinado a la reparación y mantención de vehículos, incluyendo trabajos de carrocería, desabolladura y pintura. Deberá considerar medidas de mitigación y control de ruidos, emanación de olores y material particulado, cuando corresponda.  “Veredones” :  franja de ancho variable, no pavimentada y destinada a área verde en la acera.\n TITULO 2.  BNUP O BIEN NACIONAL DE USO PÚBLICO  CAPITULO 2.1.  NORMAS GENERALES SOBRE EL BNUP"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.03-b",
+      "texto": "ldivia Norte  Comodoro Arturo Merino Benitez / Andrés Bello  30  30  ---  Pedro de Valdivia  Andrés Bello / Providencia  20  30  Ensanche 5,00 mt en ambos frentes  Providencia / Diagonal Oriente  30  30  ---  TRONCALES INTERCOMUNALES  T 1.O  Vitacura  Presidente Riesco / Providencia  20  25  Ensanche 2,00 mt frente norte  y 3,00 frente sur  T 2.O  Providencia  Tobalaba / Román Díaz  Variable  30 - 42.5 m  PRCP, Variable  30 - 42.5 m  ---  Variable  ---\n Román Díaz / Benjamín Vicuña Mackenna (costado área verde)  PRCP, Variable  Once de Septiembre  Los Leones / Carlos Antúnez  Variable  28.4 - 34 m  PRCP, Variable  28.4 - 34 m  Ensanches variables (1,0 a 7,10 mt), en  frente norte de tramo M. Montt- Gral. Del Canto, esquina surponiente Diego de Velásquez y esq. norponiente Ricardo Lyon.  Antonio Varas / Miguel Claro  T 6.N  Pío Nono  Domínica / Río Mapocho  22  30  Ensanche 4,00 mt en frente oriente  T 7.O  Calle Del Arzobispo  Río Mapocho / Bellavista  20  22.5  Ensanche 2,50 mt frente oriente  Eliodoro Yánez  Río Mapocho / José Manuel Infante  20  25  Ensanche 2,50 mt en ambos frentes  José Manuel Infante / Rafael Cañas  22,5  25  Ensanche 2,50 mt frente norte  Rafael Cañas / Antonio Varas  20  25  Ensanche 2,50 mt en ambos frentes  Antonio Varas / Marchant Pereira  25  25  ---  Marchant Pereira / Tobalaba  20  25  Ensanche 2,50 mt en ambos frentes  ---  Rancagua  (Sistema Distribución  Central - PRMS)  Benjamín Vicuña Mackenna / General Bustamante  20 / 22,5  25  Ensanche 2,50 mt en ambos frentes  T 8.O  Rancagua  (*)  General Bustamante / Seminario  19  25  Ensanche 3,00 mt en ambos frentes  Seminario / Salvador  15  25  Ensanche 5,00 mt en ambos frentes  Salvador / José Manuel Infante  15  25  Ensanche 7,00 mt frente norte y 3,00 frente sur  (*): se contempla ensanche puntual de 48 mts en la intersección Rancagua-Condell, frente a los N° 0350, 0382, 0392, 0396, 0398, 406 y 422  Alférez Real  José Manuel Infante / Román Díaz  16  25  Ensanche 6,00 mt frente norte y 3,00 frente sur  Román Díaz / Miguel Claro  20  25  Ensanche 5,00 mt en frente sur  Miguel Claro / José Tomás Rider  16  25  Ensanche 4,50 mt en ambos frentes  José Tomás Rider / Manuel Montt  19  25  Ensanche 3,00 mt en ambos frentes  Manuel Montt / Antonio Varas  20  25  Ensanche 2,50 mt en ambos frentes  Pocuro  Antonio Varas / Pedro de Valdivia  25  25  ---  Pedro de Valdivia / Los Leones  20  25  Ensanche 2,50 mt en ambos frentes  Los Leones / Luis Thayer Ojeda  30  30  ---  Luis Thayer Ojeda / Los Pensamientos  47  47  ---  Los Pensamientos / Tobalaba  63 / 123  63 / 123  (incluye la Plaza Augusto Errázuriz)  ---  Francisco Bilbao  (Sistema Distribución  Central - PRMS)  Benjamín Vicuña Mackenna / General Bustamante  30  30  ---  T 9.O  Francisco Bilbao  General Bustamante / Seminario  20  25  Ensanche 5,00 mt en frente sur  Seminario / Condell  15  25  Ensanche 5,00 mt en ambos frentes  Condell / Italia  19  25  Ensanche 3,00 mt en ambos frentes  Italia / Salvador  20 / 63  2"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.03-c",
+      "texto": "5 / 68  Ensanche 2,50 mt en ambos frentes, en mitad  de cuadra poniente y ensanche 5,00 mt en  frente norte, en mitad de cuadra oriente  Salvador / José Manuel Infante  15  25  Ensanche 5,00 mt en ambos frentes  José Manuel Infante / Román Díaz  20  25  Ensanche 2,50 mt en ambos frentes  Román Díaz / Antonio Varas  30  30  Ensanches puntuales  para tomar línea existente  Antonio Varas / Regimiento Cazadores  37  37  ---  Regimiento Cazadores / Marchant Pereira  40  40  ---  Marchant Pereira / Pedro de Valdivia  25  37  Ensanche 5,00 mt frente norte y 7,00  en frente sur  Pedro de Valdivia / Andacollo  27,4  30  Ensanche 2,60 mt frente norte  Andacollo / Holanda  25  30  Ensanche 5,00 mt frente norte  Holanda / Tobalaba  30  30  ---  ---  Santa Isabel  (Sistema Distribución  Central - PRMS)  Benjamín Vicuña Mackenna / Arq. Tomás Reyes Prieto  37 / 32,8  50  Ensanche variable (13,00 mt y 17,20 mt)  en frente norte  Arq. Tomás Reyes Prieto / Gral. Bustamante  54  54  ---  T 11.O  Santa Isabel  General Bustamante / Emilio Vaisse  20  30  Ensanche 10,00 mt frente norte  Emilio Vaisse / Condell  20 / 28,7  30 / 48,1  Ensanche variable (10,00 mt y 19,40 mt)  en frente norte  Condell / José Manuel Infante  20  35  Ensanche 15,00 mt frente norte  José Manuel Infante / Miguel Claro  21,3 / 55  35  Ensanche variable (12,80 mt mitad poniente y 3,00 mt mitad oriente de frente norte; 4,00 mts corrección puntual en frente sur)  Miguel Claro / Caupolicán  32  35  Ensanche 3,00 mt frente norte y  corrección puntual en frente sur  Caupolicán / Manuel Montt  25 / 27,4  35  Ensanche variable (2,00 mt a 7,60 mt)"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.03-d",
+      "texto": "Santa Isabel / Manuel Montt  0  0  -  Manuel Montt / Antonio Varas  12  12  -  Antonio Varas / Diagonal Oriente  0  0  -  Diagonal Oriente  Manuel Montt / Antonio Varas  20  23  Ensanche 3,00 mt en frente norte  Antonio Varas / Granada  ( * )  15  21,5  Ensanche 4,00 mt en frente norte  Granada / Marchant Pereira  25  28,5 / 33,5  Ensanche variable en frente norte  Marchant Pereira / Pedro de Valdivia  25  35  Ensanche 5,00 mt en frente norte  Dr. Pedro Lautaro Ferrer  Pedro de Valdivia / Los Leones  21  35  Por ser el eje de la calzada el límite comunal, se aplica medio perfil (17,50m) desde éste hacia el norte, según plano PRCP 2007 – L1/4  Jaime Guzmán Errazuriz  Los Leones / Eliecer Parada  25  25  ---  ( *  )  : Para obtener el ancho de Diagonal Oriente fijado por el PRMS para el tramo Antonio Varas / Granada, el PRC de Providencia y el PRC de Ñuñoa deben implementar una afectación de 2,50 mt en ambos frentes de la vía. No obstante lo anterior, el PRC de Providencia implementará una afectación de 4,00 mt para mejorar las condiciones de la vialidad futura.  T 17.O  José Manuel Infante  2  Providencia / Eliodoro Yánez  14  20  Ensanche 6,00 mt en frente oriente  Eliodoro Yánez / Bravo  15,5  20  Ensanche 4,50 mt en frente oriente  Bravo / Dr Hernán Alessandri  13  20  Ensanche 7,00 mt en frente oriente  Dr Hernán Alessandri / Nueva Valenzuela Castillo  13,7  20  Ensanche oriente variable entre 3,5 y 9,0 mt; ensanche poniente variable entre 11,8 y 4,7 mt  Nueva Valenzuela Castillo / Caupolicán  15  20  Ensanche 5,00 mt en frente poniente  T 18.O  Nueva Los Leones  Costado Sur Río Mapocho / General Holley  25  35  Ensanche 5,00 mt en ambos frentes  General Holley / Providencia  26,2 / 26,9  35  Ensanche 5,00 mt frente oriente y variable  (de 3,10 mt a 3,80 mt), en frente poniente  Los Leones  Providencia / Diego de Almagro  25  35  Ensanche 5,00 mt en ambos frentes  Diego de Almagro / El Aguilucho  23,2 / 24,3  35  Ensanche 5,00 mt frente poniente y variable  (de 5,70 mt a 6,80 mt), en frente oriente  El Aguilucho / Pedro Lautaro Ferrer  22,1 / 23  35  Ensanche variable (5,50 mt mitad norte y 7,90 mt mitad sur del frente poniente; 6,50 mt mitad norte y 5,00 mts mitad sur del frente oriente)  T 19.O  El Cerro  Comodoro Arturo Merino Benítez / Río Mapocho  25  30  Ensanche 2,50 mt en ambos frentes  Tobalaba  ( * )  Andrés Bello / Vitacura  0  80  Apertura al poniente del canal San Carlos  Vitacura / Providencia  (**)  24,9 / 32,9  80  Ensanche variable (de 15,10 mt a 7,10 mt  en frente poniente)  Providencia / José Antonio Soffia  30  80  Ensanche 10,00 mt en frente poniente  José Antonio Soffia / El Bosque  30 / 32,4  80  Ensanche variable (de 7,60 mt a 10,00 mt  en frente poniente)  El Bosque / Lota  31,8  80  Ensanche 8,20 mt en frente poniente  Lota / Las Camelias  33,1 / 35,8  80  Ensanche variable en frente poniente  Las Camelias / Carmen Sylva  36,8 / 38,0  80  Ensanche variable en frente poniente  Carmen Sylva / Copihue  ( *** )  40  82"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.03-e",
+      "texto": "Ensanche de 2,00 mt en el frente poniente  Copihue / Carlos Antunez  ( *** )  43  85  Ensanche de 2,00 mt  en el frente poniente  Carlos Antunez / Las Hortensias  ( *** )  44  86  Ensanche de 2,00 mt  en el frente poniente  Las Hortensias / Ramón Sotomayor  ( *** )  42  84  Ensanche de 2,00 mt  en el frente poniente  Ramón Sotomayor / Eliodoro Yánez  ( *** )  41,5  83,5  Ensanche de 2,00 mt  en el frente poniente  Eliodoro Yánez / Marcel Duhaut  ( *** )  40,7  82,7  Ensanche de 2,00 mt  en el frente poniente  Marcel Duhaut / Tomás Guevara  ( *** )  41,5  83,5  Ensanche de 2,00 mt  en el frente poniente  Tomás Guevara / Pocuro  ( *** )  43,5  85,5  Ensanche de 2,00 mt  en el frente poniente  Pocuro / Los Diamelos  ( *** )  44,2  86,2  Ensanche de 2,00 mt  en el frente poniente  Los Diamelos / Francisco Bilbao  38  82  Ensanche de 2,00 mt  en el frente poniente  Francisco Bilbao / Mayflower  32,6 / 40  80  Ensanche variable  (de 0 mt a 7,40 mt en frente poniente)  Mayflower / Eliecer Parada  31,6 / 35,1  80  Ensanche variable  (de 4,90 mt a 8,40 mt en frente poniente)  ( * )  : El ancho total normado por el PRMS es de 80 mts, incluyendo Sánchez Fontecilla. La aplicación de esta faja  es 40 mt a cada lado del eje hidráulico del Canal San Carlos.  1  Se deja sin efecto declaratoria de utilidad pública de calle Pedro Lira en su totalidad mediante Resolución Ex. N°1.178 del 22.04.2015 publicada en el D.O. el 27/04/15 y Resolución Ex. N° 2452 del 30.08.2016 de la SEREMI MINVU.  2  Se deja sin efecto declaratoria de utilidad pública de tramo José Manuel Infante entre Dr. Hernán Alessandri y Nueva Valenzuela Castillo ajustando ancho entre L.O. a 20 mt. mediante Decreto EX N°595 de fecha 08.04.2015 – D.O. 28.04.2015."
+    },
+    {
+      "codigo": "PRC-PRV-2.2.03-f",
+      "texto": "(**)  : El nombre de la vía en este tramo (Vitacura-Providencia) es Once de Septiembre. En el plano L1/4 “Espacio Público,  Vialidad y Áreas Verdes Públicas” se denominará con el nombre correcto pero con el código PRMS T 19.O.  ( *** )  : El ancho existente es mayor que los 40 mts de faja pública correspondientes a la comuna de Providencia.  Se mantiene faja de afectación de 2,00 mts adicionales para mejorar las condiciones de la vereda poniente.  En cada caso puntual se deberá corroborar las medidas del ancho existente con levantamiento topográfico, para determinar la posición del eje hidráulico del Canal San Carlos.  COLECTORAS INTERCOMUNALES  (Sistema Vial Intercomunal, Vías Intercomunales)  C 6.O  La Concepción  Andrés Bello / Francisco Antonio Encina  20  20  ---  Francisco Antonio Encina / Providencia  20  30  Ensanche 5,00 mt en ambos frentes  Carlos Antunez  Providencia / Tobalaba  18  18  ---  C 7.O  Diego de Almagro  Pedro de Valdivia / Los Leones  20  PRCP, 20  ---  Los Leones / Sarragosi  17,7 / 25  PRCP,  17,7 / 25  ---  Sarragosi / Amapolas  25  PRCP, 25  ---  Amapolas / Eliecer Parada  20  PRCP, 20  ---  C 8.O  El Aguilucho  Suecia / Chile-España  20  20  ---  Echeñique  Renato Zanelli / Valenzuela Llanos  (Eliecer Parada límite comunal)  15  20  Ensanche 2,50 mt en ambos frentes  C 17.O  Seminario  1  Providencia / Ricardo Matte Pérez  20  PRCP, 20  ---  Ricardo Matte Pérez / Rancagua  18  18  ---  Rancagua / Malaquias Concha  20  PRCP, 20  ---  C 18.O  Salvador  Providencia / Nueva Valenzuela Castillo  20  25  Ensanche 5,00 mt en frente oriente  Nueva Valenzuela Castillo / María Luisa Santander  20  27  Ensanche 7,00 mt en frente oriente  Maria Luisa Santander / Rancagua  20  25  Ensanche 5,00 mt en frente oriente  Rancagua / Caupolicán  20  25  Ensanche 2,50 mt en ambos frentes  C 19.O  Miguel Claro  Andrés Bello / Pérez Valenzuela  20  20  ---  Pérez Valenzuela / Providencia  20  20  ---  Providencia / Rengo  20  20  Ensanche en frente poniente  (tramo Huáscar / Rengo)  C 20.O  Manuel Montt  Andrés Bello / Providencia  20  20  ---  Providencia / Once de Septiembre  17,5 / 20  20  Ensanche 2,50 mt mitad norte del frente poniente  Once de Septiembre / Eliodoro Yánez  20  25  Ensanche 5,00 mt en frente poniente  Eliodoro Yánez / Rengo  ( * )  20  25  Ensanche 2,50 mt en ambos frentes  ( * )  : El perfil propuesto para el tramo Eliodoro Yañez / Rengo es de 22,5 mts, en la vereda poniente de la Población Keller (incluye sólo las propiedades que enfrentan dicha calle), aplicándose sólo el ensanche de 2,50 mt en el frente oriente.  C 21.O  Antonio Varas  2  Providencia / Arturo Claro  20  20  ---  Arturo Claro / Carlos Wilson  20  20  ---  Carlos Wilson / Diagonal Oriente  20  20  ---  C 22.O  Ricardo Lyon  Providencia / Once de Septiembre  26,6 / 28,3  PRCP,  26, 6/28, 3  ---  Once de Septiembre / Diego de Velásquez  29 / 34  PRCP, 34  Ensanche 5,00 mt esquina norponiente  de Diego de Velásquez  Diego de Velásquez / Lota  29  PRCP,"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.03-g",
+      "texto": "29  ---  Lota / Diego de Almagro  25  PRCP, 25  ---  Diego de Almagro / Pedro Lautaro Ferrer  20  PRCP, 20  ---  C 23.O  Suecia  Andrés Bello / General Holley  14  25  Ensanche 5,50 mt en ambos frentes  General Holley / Providencia  22  25  Ensanche 3,00 mt en frente oriente  Providencia / Lota  15  25  Ensanche 5,00 mt en ambos frentes  Lota / Pedro Lautaro Ferrer  20  25  Ensanche 2,50 mt en ambos frentes  1  Se deja sin efecto declaratoria de utilidad pública de tramo Seminario entre Ricardo Matte Pérez y Rancagua mediante Decreto EX N°595 de fecha 08.04.2015 – D.O. 28.04.2015.  2  Se deja sin efecto declaratoria de utilidad pública de tramo Antonio Varias entre Arturo Claro y Carlos Wilson mediante Decreto EX N°595 de fecha 08.04.2015 – D.O. 28.04.2015.\n RED VIAL COMUNAL ESTRUCTURANTE  Clasificación Complementaria  PRCP  VIA  PERFIL  OBSERVACIONES  Código Comunal  Nombre  Tramo  Ancho entre L.O.  La afectación en cada predio será solo la necesaria para lograr el perfil propuesto Existente  Propuesto  COLECTORAS COMUNALES – C.c.  (Sistema Vial Comunal Complementario)  C.c. 01  Amapolas  Eliécer Parada / Eliodoro Yañez  20  20  ---  C.c. 02  Constitución  Bellavista / Antonia López de Bello  15  15  ---  Antonia López de Bello  Constitución / Chucre Manzur  15  15  ---  Chucre Manzur  1  Antonia López de Bello / Plaza del Poeta  0  Variable  Ancho variable  según plano PRCP 2007 – L1/4  Capellán Abarzua  Chucre Manzur / Monitor Araucano  0  15  Apertura  Monitor Araucano / Antonia López de Bello  7,5  15  Ensanche variable de 4,00 a 2,00 mt, en el frente poniente, y variable de 3,50 a 5,00 mt,  en el frente oriente  Antonia López de Bello / Bellavista  16  16  ---  ( *  )  : Incluye la apertura de Capellán Abarzúa (al norte de Monitor Araucano), futuro acceso a Parque “Pie de Monte Bellavista”  C.c. 03  Fidel Oteiza  Carlos Antúnez / Marchant Pereira  11  11  ---  Marchant Pereira / Pedro de Valdivia  11  22  Ensanche 6,00 mt en mitad oriente del frente norte y 5,00 mt en frente sur  C.c 04  Francisco Antonio Encina  2  La Concepción / Padre Mariano  20 / 25  25  Ensanche 5,00 mt  en mitad oriente del frente sur  Padre Mariano / Antonio Bellet  0  0  ---  Antonio Bellet / Santa Beatríz  0  0  ---  C.c 05  Granaderos  Miguel Claro / Manuel Montt  10  11  Ensanche 1,00 mt  en mitad poniente del frente norte  C.c 06  Guardia Vieja  Providencia / Once de Septiembre  10  10  ---  Once de Septiembre / Diego de Velásquez  15 / 15,8  17  Ensanche variable 1,20 a 1,00 mt  en frente poniente  Diego de Velásquez / Barcelona  22  22  ---  Barcelona / Jorge Isaacs  11  19  Ensanche 8,00 mt en frente oriente  Jorge Isaacs / Europa  11  14  Ensanche 3,00 mt aprox. en frente oriente  Europa  Guardia Vieja / Ricardo Lyon  10  10  ---  C.c. 07  San Pío X  Los Leones / Hernando de Aguirre  20  20  ---  Hernando de Aguirre  Tobalaba / José Antonio Soffia  20  25  Ensanche 5,00 mt en frente oriente  José Antonio Soffia / San Pío X  25  30  Ensanche 5,00 mt en fren"
+    },
+    {
+      "codigo": "PRC-PRV-2.2.03-h",
+      "texto": "te oriente  José Antonio Soffia  Tobalaba / Hernando de Aguirre  9  19  Ensanche 5,00 mt en ambos frente  C.c. 08  Lota  Ricardo Lyon / Tobalaba  20  20  ---  C.c. 09  Marchant Pereira  3  Providencia / Once de Septiembre  18  18  ---  Once de Septiembre / Fidel Oteiza  23  23  ---  Fidel Oteiza / Alfredo Barros Errázuriz  16 / 18  23  Ensanche 7,00 mt en mitad oriente frente norte  y 5,00 mt en mitad poniente del frente sur  Alfredo Barros Errázuriz / Carlos Antúnez  16  16  ---  Carlos Antúnez / Silvina Hurtado  15  15  ---  Silvina Hurtado / Pocuro  10 / 20  20  Ensanche 10,00 mt en cabezal norponiente y conexión de los tramos en extremo poniente de Los Estanques  Pocuro / California  0  0  ---  California / Vasconia  20  20  ---  Vasconia / José Forteza  0  20  Apertura de ancho variable  según plano PRCP 2007 – L1/4  José Forteza / Elvira Garcés  20  20  ---  Elvira Garcés / Diagonal Oriente  18,6 / 15  20  Ensanche variable 1,40 a 5,00 mt  en frente poniente  1  Se deja sin efecto declaratoria de utilidad pública de tramo Chrucre Manzur entre Plaza del Poeta y límite oriente de la propiedad de Antonia López de Bello 0120 mediante Decreto EX N°730 de fecha 22.04.2015 – D.O. 28.04.2015.  2  Se deja sin efecto declaratoria de utilidad pública de apertura de tramo Francisco Antonio Encina entre Padre Mariano y Santa Beatriz mediante Decreto EX N°595 de fecha 08.04.2015 – D.O. 28.04.2015.  3  Se deja sin efecto declaratoria de utilidad pública de apertura de tramo Marchant Pereira entre Pocuro y California mediante Decreto EX N°730 de fecha 22.04.2015 – D.O. 28.04.2015."
+    },
+    {
+      "codigo": "PRC-PRV-2.2.03-i",
+      "texto": "Nueva de Lyon  Andrés Bello / Providencia  14 / 18  15 / 18  Ensanches puntuales de 2,00 mt en ambos frentes (N° 110, 114, 129, 139 y 157)  C.c. 11  Nueva Valenzuela Castillo  1  Salvador / José Manuel Infante  0  0  ---  José Manuel Infante / Valenzuela Castillo  0  0  ---  Valenzuela Castillo  Nueva Valenzuela Castillo / Román Díaz  19  19  ---  Román Díaz / Marchant Pereira  20  20  ---  Mar del Plata  Marchant Pereira / Pedro de Valdivia  12  16  Ensanche 4,00 mt en frente norte y corrección de empalme variable en mitad poniente  del f rente sur (de 11,00 mt a 0 mt)  Pedro de Valdivia / Ricardo Lyon  12  16  Ensanche 4,00 mt en frente norte  Vicuña Cifuentes  Ricardo Lyon / Suecia  15  18  Ensanche 3,00 mt en frente sur  Suecia / Los Leones  15  15  ---  C.c. 12  Santa Beatríz  Providencia / Magnere  12,5  21,5  Ensanche 4,00 mt en frente poniente,  y 5,00 mt en frente oriente  General Calderón  2  Magnere / Pérez Valenzuela  0  0  ---  Pérez Valenzuela / Andrés Bello  16  16  ---  C.c. 13  Santa Victoria  General Bustamante / Seminario  10  15  Ensanche 5,00 mt en frente sur  Seminario / Emilio Vaisse  10,5 / 15  15  Ensanche 4,50 mt  en mitad poniente de frente norte  Emilio Vaisse / Condell  15  15  ---  Jesuitas  3  Condell / Girardi  0  0  ---  Girardi / Salvador  13,5  13,5  ---  Salvador / José Manuel Infante  13  13  ---  C.c. 14  Luis Thayer Ojeda  Providencia / San Pío X  20  30  Ensanches puntuales 5,00 mt  en ambos frentes  San Pío X / Diego de Almagro  20  20  ---  Renato Zanelli  Diego de Almagro / Echeñique  20  20  ---  Chile - España  Echeñique / Jaime Guzmán Errázuriz  20  20  ---  DE SERVICIO – S.c.  S.c. 01  Josefina Edwards de Ferrari  4  Los Conquistadores / El Cerro  13  13  ---  S.c. 02  Los Conquistadores  Puente Lo Saldes / Comodoro Arturo Merino Benítez  25  25  ---  S.c. 03  Luis Thayer Ojeda  Vitacura / Pasaje Escobar  20  25  Ensanche 3,00 mt en frente poniente  y 2,00 mt en frente oriente  Pasaje Escobar / Providencia  20 / 22,5  20 / 22,5  ---  S.c. 04  Mardoqueo Fernández  Once de Septiembre / San Pío X  15 / 20  15 / 20  Ensanche 5,00 mt  frente a los Nº 122 y 132 (frente oriente)  San Pío X  Mardoqueo Fernández / Los Leones  9,5 / 12,5  18  Ensanche 3,00 mt en mitad oriente del frente norte y 5,50 mt en el frente sur  S.c. 05  Jorge Matte Gormaz  Eliecer Parada / Marcel Duhaut  20  20  ---  Marcel Duhaut  Carlos Silvas Vildosola / Juan de Dios Vial  15  15  ---  Carlos Silvas Vildosola  Eliodoro Yánez / Marcel Duhaut  15  15  ---  Juan de Dios Vial  Eliodoro Yánez / Marcel Duhaut  15  15  ---"
+    },
+    {
+      "codigo": "PRC-PRV-2.3.03-b",
+      "texto": "cio Privado: Normas de Uso del Suelo”, respectivamente."
+    },
+    {
+      "codigo": "PRC-PRV-2.3.05-b",
+      "texto": "Camilo Mori  Esquina S.O. de Constitución y  Antonia López de Bello  Pública  08  Cardenal Antonio Samoré  Vereda sur de Once de Septiembre, entre Marchant Pereira e Instituto Cultural de Providencia  Pública  09 1  -  -  -  10  Chile España - Echeñique  Intersección de Chile España y Echeñique,  costados oriente y poniente.  Pública  11  Del Poeta  Esquina S.P. de Fernando Márquez de la Plata y Chucre Manzur  Pública  12  Diego de Velásquez  Triángulo entre Once de Septiembre,  Diego de Velásquez y Guardia Vieja  Pública  13  Dinamarca  Dinamarca, entre El Bosque y Jorge Matte Gormaz  Pública  14  El Bosque  Entre El Bosque, Diego de Almagro y Brown Norte  Pública  15  Pintor Alberto Valenzuela Llanos  Vereda sur de El Comendador, frente a la Facultad de Arquitectura, Diseño y Estudios Urbanos - PUC  Pública  16  El Mayorazgo  Vereda poniente de El Mayorazgo,  al norte de Los Misioneros  Pública  17  Elías IV  Esquina N.O. de Once de Septiembre y  Pedro de Valdivia  Pública  18  General Bonilla  Vereda N.O. de Echeñique, entre Eliecer Parada y Brown Norte  Pública  19  Ignacio Carrera Pinto  Vereda sur de Once de Septiembre,  entre Miguel Claro y Manuel Montt  Pública  20  Inés de Suárez  Entre Pocuro, Regimiento Cazadores,  Francisco Bilbao y Escuela de Telecomunicaciones  Pública  21  Isabel Riquelme  Esquina S.O. de Isabel Riquelme y Nueva Dardignac  Pública  22  Jorge Prats  Costado oriente de Torres de Tajamar,  entre Providencia y Perez Valenzuela  Pública  23  José Manuel Barros  Esquina N.O. de Obispo Pérez de Espinoza y  Rodolfo Vergara Antúnez  Pública  24  Juan Montalvo  Roberto del Río esquina Las Hortensias  Pública  25  Juan XXIII  Entre Once de Septiembre, Alcalde Rafael Vives,  Dr. Luis Middleton y Antonio Varas  Pública  26  Las Dalias  Las cuatro esquinas del cruce de Las Dalias y Roberto del Río  Pública  27  Los Nogales  Los Nogales, entre Carlos Antúnez y Las Hortensias.  Pública  28  Padre Letelier  Padre Letelier, entre Los Conquistadores y  Los Navegantes.  Pública  29  Río de Janeiro  Entre Pocuro, Presidente Alfaro, La Brabanzón y Augusto Ovalle Castillo  Pública  30  Santa Isabel  Vereda norte de Santa Isabel,  frente a Ana Luisa Prats  Pública  31  Sin Nombre I  Veredas norte y sur de Dr. Hernán Alessandri,  entre José Manuel Infante y Salvador  Pública  32  Sin nombre II  Vereda norte de Providencia, entre Antonio Bellet y Santa Beatríz  Pública  33  Sin nombre III  Vereda S.P. de Santa Isabel, entre Miguel Claro y Caupolicán  Pública  34  Sin nombre IV  Esquina N.P. de Santa Isabel y Juan Agustín Barriga  Pública  35  Sin nombre V  Esquina N.P. Santa Isabel y Miguel Claro  Pública  36  Sótero del Río  Esquina S.P. de Rancagua y José Manuel Infante  Pública  37  Teresa Salas  Esquina S.O. de Julio Prado y Néstor Aracena  Pública  38  Uruguay  El Bosque, entre Guillermo Edwards y  Guillermo Acuña  Pública  39  Vitacura  Esquina S.P. de Once de Septiembre y  Luis Thayer Ojeda  Pública  Plazoletas (Pzt)  1  PzVec 09 S"
+    },
+    {
+      "codigo": "PRC-PRV-2.3.05-c",
+      "texto": "in nombre, en esquina nororiente Alférez Real – José Manuel Infante, desafectada mediante Decreto EX N°595 de fecha 08.0415 – D.O. 13.04.2015\n Alcalde Díaz Egaña  Esquina S.P. de Andrés Bello y Antonio Bellet  Pública  02  Eliodoro Rodríguez Matte  Esquina de Inés Matte Urrejola y Alcalde  Dávalos  Pública  03  General del Canto  Esquina S.O. de Once de Septiembre y  General del Canto  Pública  04  La Virgen  Almirante Riveros esquina Eduardo Hyatt  Pública  05  Las Flores  Entre Providencia y Once de Septiembre,  al poniente de Los Leones  Pública  06  Los Infantes  Al final de calle Los Infantes  Pública  07  Miguel de Servet  Esquina S.P. de Pérez Valenzuela y  Almirante Pastene  Pública  08  Pérez Zujovic  Esquina S.O. de República de Cuba y Marcel Duhaut  Pública  09  Román Díaz  Entre Providencia y Eliodoro Yánez, por Román Díaz  Pública  10  Santa Isabel / Condell  Triángulo entre Condell y Santa Isabel  Pública  11  Villaseca  Triángulo entre Diego de Almagro y Villaseca  Pública  12  Europa  Guardia Vieja esquina Europa  Pública  13  Hernando de Aguirre  Esquina S.P. de Chile - España y  Hernando de Aguirre  Pública  14  Chile - España  Esquina S.O. de Chile – España y  Hernando de Aguirre  Pública"
+    },
+    {
+      "codigo": "PRC-PRV-4.2.22-b",
+      "texto": "s que se recibirán plantadas y con sistema de riego instalado;  g) Adicionalmente a lo señalado en el Art. 8.1.04. de esta OL, que prohíbe las playas de estacionamientos en toda la comuna, no podrán proyectarse estacionamientos de superficie en el interior de las Zonas Típicas, Zonas de Conservación Histórica, ni en la superficie del o de los predios que forman parte de un ICH."
+    },
+    {
+      "codigo": "PRC-PRV-4.2.28-b",
+      "texto": "●  Techos verdes:  techos, cubiertas o terrazas verdes de acuerdo a la NCh 3626 Techos Verdes o Norma Chilena Oficial vigente de la misma materia.  ●  Área libre plantada:  el área libre deberá estar ubicada a nivel de terreno natural y deberá contemplar áreas verdes, con especies vegetales y árboles de bajo requerimiento hídrico y adaptadas al cambio climático. Esta área libre se recibirá plantada y con sistema de riego instalado.  Para acceder al presente beneficio en las zonas de edificación E3, EA3, EA5, EA 5/pa y EA7/pa, será condición que el aporte cumpla con los siguientes requisitos:  ●  Apertura del antejardín al uso público:  este espacio deberá quedar abierto de forma permanente y perpetua al tránsito peatonal. Esta apertura deberá quedar singularizada en el Permiso de Edificación y al momento de solicitar la Recepción Definitiva, se deberá verificar que se haya materializado. Será responsabilidad del propietario la mantención de este espacio privado de uso público.  ●  El antejardín deberá estar a nivel de la vereda en toda su profundidad.  ●  No se permitirán estacionamientos de visitas en este espacio debiendo estos situarse al interior de la línea de edificación correspondiente. En el caso de medidores de servicios domiciliarios, estos deberán instalarse enterrados.  ●  Esta faja deberá entregarse urbanizada y plantada con especies de bajo requerimiento hídrico y adaptadas al cambio climático. No se autorizará la construcción de rampas, ni subterráneos, ni casetas de ningún tipo (ni para porteros, guardias o vigilantes).  ●  Los pavimentos que se proyecten deberán ser exclusivamente para el paso de peatones y vehículos, debiendo ser permeables en el caso de estos últimos.  c)  Incentivo al mejoramiento de los niveles de integración social  Todo proyecto de edificación que incluya una proporción de viviendas de interés público de los programas habitacionales del Ministerio de Vivienda y Urbanismo del total de unidades habitacionales, podrá acceder a los beneficios que se detallan en el siguiente cuadro:  INCENTIVO AL MEJORAMIENTO DE LOS NIVELES DE INTEGRACIÓN SOCIAL  por Zona de Edificación  Zonas de Edificación  Aporte  Beneficio  E5 (C+A)  Al menos 20% del total de viviendas destinadas a viviendas de interés público.  +30% de la densidad máxima permitida y +30% del coeficiente de constructibilidad para ser utilizado exclusivamente en las viviendas de interés público.  No se exige estacionamiento por cada unidad de vivienda de interés público.  E3  EA 3  EA 5  EA 5 / pa  EA 7 / pa  CAPITULO 4.3.  ZONAS DE EDIFICACIÓN"
+    },
+    {
+      "codigo": "PRC-PRV-4.3.10-b",
+      "texto": "esta OL  Art. 4.2.19.  de esta OL  2,50  SUPERFICIE  CONSTRUIBLE  Coeficiente de Constructibilidad  Coeficiente de Ocupación de Suelo Máximo  Edificación Aislada, Pareada o Continua  Edificación Aislada, Pareada o Continua  1,10  0,60  (*) Las características arquitectónicas de los proyectos a realizarse en el área de Modificación N°7 Barrio El Aguilucho deberán regirse por el Plano de Detalle N°03 Barrio El Aguilucho.  (**) La altura de la edificación adosada se fijará de acuerdo al art 2.6.2 de la OGUC.  1  Artículo incorporado por  Modificación N° 7 Barrio El Aguilucho, D.O. 29.05.2025."
+    },
+    {
+      "codigo": "PRC-PRV-4.3.15-b",
+      "texto": "TITULO 5.  ÁREAS, ZONAS E INMUEBLES PROTEGIDOS  CAPITULO 5.1.  DISPOSICIONES GENERALES 1"
+    },
+    {
+      "codigo": "PRC-PRV-5.2.02-b",
+      "texto": "bas aceras) 1127 al 1262 José Luis Cea (ambas aceras) 1924 al 1958 Agustín Barriga (ambas aceras) 1194, 1200, 1205 al 1265 Rodrigo Quiroga (ambas aceras) 1275 y 1276 Miguel Claro (acera oriente) 1580 al 1802  Entre Santa Isabel, Miguel Claro, Emilio del Porte y Manuel Montt  A3  09  138  29/04/16  23/05/16  Barrio Las Flores  Los Pensamientos (ambas aceras) 1953 al 2132  Los Nardos (ambas aceras) 1957 al 2066  Amapolas (ambas aceras) 1791 al 2158  Los Narcisos (ambas aceras) 1857 al 2109  Las Pimpinelas (ambas aceras) 1850 al 2066  José Manuel Cousiño Ortúzar 1798  José Manuel Cousiño Ortúzar (ambas aceras) 1848 al 2106  Jorge Matte Gormaz (acera poniente) 1831 al 1943 y 2019  Jorge Matte Gormaz (acera oriente) 1788 al 2084-A  Los Azahares (ambas aceras) 2853 al 2871  Los Alhelíes (ambas aceras) 2855 al 2875  Las Peonías (ambas aceras) 2860 al 2868  Las Achiras (ambas aceras) 2872 al 3066, excepto el 2902 y el 2886, y (acera norte) 3072 al 3086  Los Diamelos (ambas aceras) 2874 al 3025 y (acera norte) 3040 al 3052  Los Tulipanes (ambas aceras) 2954 al 2994  Las Nevadas (ambas aceras) 2955 al 2996  Pocuro (acera sur) 2889 y 2921 al 3049  Francisco Bilbao (acera norte) 2888 al 2974  Entre Pocuro, Bilbao, Tobalaba y Jorge Matte Gormaz  A3  * Ver Art. 4.3.02 de esta OL.  ** La altura máxima permitida para la ZEP CE2 será de 6,5 m para la ZT 06 Población Caja del Seguro Obrero 1 ."
+    },
+    {
+      "codigo": "PRC-PRV-5.2.04-b",
+      "texto": "Conjunto de viviendas  Benjamín Vicuña Mackenna (acera oriente) 434 al 490  Entre Santa Isabel y Marín  CE1  17  Edificio representativo y plaza adyacente  Hernando de Aguirre (acera poniente) 11 al 61, Providencia (acera sur) 2687 al 2699  Esquina entre Providencia y Hernando de Aguirre  AE  18  Conjunto de viviendas  Andacollo 1584, 1552, y Andacollo (ambas aceras) 2082 al 2158, California (ambas aceras) 2086 al 2140, California (acera norte) 2162 al 2170  Entre Andacollo y Ricardo Lyon  A3  19  Conjunto de edificios representativos  Providencia (acera sur) 201 al 225, Seminario (acera oriente) 6 al 10  Obispo Pérez de Espinoza 0222  Entre Rodolfo Vergara Antúnez y Providencia  CE1  20  Viviendas Chucre Manzur  Antonia López de Bello 0120  Entre Antonia López de Bello y el Parque Metropolitano  CE1  21  Galpones Chucre Manzur  Antonia López de Bello 0120  Entre Antonia López de Bello y el Parque Metropolitano  CE1  22  Conjunto de viviendas  Arturo Bührle (acera sur) 029 al 077  Entre Vicuña Mackenna y Ramón Carnicer  CE2  23 1  Calle Emilio Delporte  Emilio Delporte 1308 al 1492 (acera  norte) y 1345 al 1489 (acera sur)  Entre Manuel Montt y Antonio Varas  A3/A4  *Ver Art. 4.3.02 de esta OL."
+    },
+    {
+      "codigo": "PRC-PRV-5.2.05-b",
+      "texto": "Embajada de Italia  Miguel Claro 1359  ZIM  42  Edificio representativo  Orrego Luco 087 y 0111  AE  43  Vivienda  Orrego Luco 023  CE2  44  Capilla del antiguo Colegio de los Sagrados Corazones  Pedro de Valdivia 425  A3  45  Vivienda representativa  Pedro de Valdivia 942  A3  46  Edificio representativo  Pedro de Valdivia 1115  AE  47  Universidad Finis Terrae  Pedro de Valdivia 1509  A7  48  Clínica Sara Moncada de Arias  Pedro de Valdivia 2219  A7  49  Vivienda  Pedro de Valdivia 2257  A7  50  Teatro Oriente  Pedro de Valdivia 079, 099, 0119  CE2  51  Restaurant y salón de té Villa Real  Pedro de Valdivia 079, 099, 0119  CE2  52  Iglesia Ortodoxa Santísima Virgen María  Pedro de Valdivia 92  CE1  53  Colegio San Ignacio  Pocuro 2801  ZIM  54  Edificio representativo  Providencia 227 y 229  CE1  55  Vivienda colectiva  Providencia 309  CE1  56  Vivienda colectiva  Providencia 405  CE1  57  Iglesia Matriz de Providencia  Providencia 509  ZIM  58  Iglesia Nuestra Señora del Carmen  Providencia 1001  CE2  59  Edificio representativo  Providencia 2051 y 2063  CE2  60  Campus Oriente Universidad Católica  Jaime Guzmán Errázuriz 3300  ZEMoI  61  Iglesia Hermanas de San José  Rancagua 409 y 431  A3  62  Parroquia San Crescente  Salvador 1363  CE2  63  Colegio de Dentistas de Chile  Santa María 1990  A3  64  Oficinas Desco  Santa María 2020  A3  65  Clínica Santa María  Santa María 0410  AE  66  Edificios Turri  Providencia 03 al 091  CE1  67  Edificio representativo  Benjamín Vicuña Mackenna 4 y 6  CE1  68  Comité Olímpico  Benjamín Vicuña Mackenna 44  A7  69  Edificio representativo  Benjamín Vicuña Mackenna 152  A7  70  Iglesia y Monasterio las Agustinas  Benjamín Vicuña Mackenna 410, 420 y 430  CE2  71  Edificio representativo  Benjamín Vicuña Mackenna 530  CE2  72  Facultad de Derecho de la Universidad de Chile  Pio Nono 1  CE2  73  Vivienda  José Manuel Infante 1411  A3  74  Vivienda  Pedro de Valdivia 998  A3  75  Edificio de 4 pisos  Ricardo Lyon 2102  AE  76  Vivienda  Tegualda 1364  CE2  77  Vivienda  General Córdova 1156  A3  78  Vivienda  General Córdova 1168  A3  79  1er y 2do Juzgados de Policía Local  Pedro de Valdivia 706  A7  80  Vivienda  Orrego Luco 047  CE2  81  Vivienda  Juana de Arco 2031  A3  82  Vivienda  Condell 530  A3  *Ver Art. 4.3.02 de esta OL.  CAPÍTULO 5.3.  Derogado. 1  1  Capítulo derogado  por Modificación N°4 Patrimonio – D.O. 06.12.2016."
+    },
+    {
+      "codigo": "PRC-PRV-5.6.02-b",
+      "texto": "ZEMoI y/o  ZIM  Zona de Equipamiento Metropolitano o Intercomunal y/o Zona de Interés Metropolitano  USO  ACTIVIDADES ESPECÍFICAS  PERMITIDAS  PROHIBIDAS  RESIDENCIAL  Vivienda unifamiliar o colectiva, como complemento a la actividad de equipamiento permitida, hasta 5% de la superficie total del predio.  Hogares de acogida como complemento a equipamiento de salud.  Edificaciones destinadas al hospedaje remunerado o gratuito, que no presten servicios  comerciales adjuntos:  -  casas de pensión, residenciales,  hostales;  - hogares de acogida, excepto como complemento a equipamiento de salud.  Edificaciones destinadas al hospedaje remunerado :  -  apart-hoteles,  hosterías de turismo ,  hoteles y anexos de hoteles ,  hoteles de turismo ,  complejos hoteleros (resort),  moteles de turismo.  E Q U I P A M I E N T O  SERVICIOS  Edificaciones destinadas a la prestación de servicios:  - juzgados de policía local, oficinas de registro civil, oficinas y servicios municipales, consulados y embajadas.  Solo como complemento a equipamientos de educación, salud, culto y cultura, se admitirán edificaciones destinadas a:  -salas para pilates, yoga y disciplinas similares.  Edificaciones destinadas a la prestación de servicios:  - centros de pago, salones de belleza, lavasecos, tintorerías, servicios artesanales;  - oficinas, agencias,  agencias de viñas o de industrias de licores establecidas fuera de la comuna ;  - centros de llamados o de internet;  - notarías, correos;  - instituciones de salud previsional, instituciones financieras, cajas de compensación, administradoras de fondos de pensiones, compañías de seguros, bancos;  - productoras artísticas, audiovisuales, publicitarias;  - centros médicos, dentales, de estética, laboratorios médicos, locales de tatuajes, servicios funerarios, velatorios.  CIENTÍFICO  Edificaciones destinadas a investigación y divulgación científica, desarrollo y transferencia tecnológica e innovación técnica.  SEGURIDAD  Edificaciones destinadas a seguridad pública:  - unidades  policiales.  - cuarteles de bomberos;  -  cárceles, centros de detención o de rehabilitación delictual.  EDUCACIÓN  Edificaciones destinadas a:  - salas cuna, jardines infantiles.  - establecimientos de educación básica, media, diferenciales o especiales;  - institutos de idiomas, centros de formación o capacitación, academias e institutos profesionales en carreras u oficios artísticos, preuniversitarios, educación de adultos;  - sedes o campus universitarios, institutos técnicos y profesionales, estudios de postgrado.  Edificaciones destinadas a :  - centros de rehabilitación conductual .  SALUD  Edificaciones destinadas a:  - centros de salud pública tales como: policlínicos, Centros Comunitarios de Salud Mental COSAM, Centros de Salud Familiar CESFAM, Centros Comunitarios de Salud Familiar CECOF,  Centros Comunitarios de Rehabilitación CCR, Centros de Salud Urbanos CSU.  - terapias alternativas o complementarias;  - centros especializados de rehabilit"
+    },
+    {
+      "codigo": "PRC-PRV-5.6.02-c",
+      "texto": "ación, exploración, diagnóstico y tratamiento;  - rehabilitación y hospitalización de baja complejidad, cirugía plástica o estética, maternidades;  - consultas o clínicas veterinarias;  - hospitales, clínicas, servicios de atención primaria de urgencia (SAPU).  Edificaciones destinadas a:  - locales destinados al análisis o disposición de restos: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  -  sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de  la juventud, centros integrales de desarrollo social;  -  locales y centros comunitarios, sedes de organizaciones funcionales.  -  círculos o clubes sociales .  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas,  templos, parroquias ;  -  bibliotecas, galerías de arte, museos ;  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - cines y teatros.  Edificaciones destinadas a:  - radioemisoras,  prensa escrita, canales de televisión;  - multicines.  DEPORTE  Solo como complemento a equipamientos de educación, salud, culto y cultura, se admitirán edificaciones destinadas a:  - gimnasios, sedes, centros o clubes de instituciones de carácter deportivo;  - saunas, piscinas, SPA;  - polideportivos y multicanchas,  canchas de todo tipo,  estadios o complejos deportivos.  ESPARCI- MIENTO  Edificaciones o locales destinados a :  - juegos electrónicos,  juegos mecánicos,  -  parques zoológicos, parques de entretenciones, casinos.  COMERCIO  Solo como complemento a equipamientos de educación, salud, culto y  cultura, se admitirán edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar,  paquetería, librería, boutique, farmacias, tiendas de vestuario y calzado,  tiendas especializadas;  - ciber café, fotocopias, centro de copiado;  -  salones de té y cafeterías ,  restaurantes diurnos y nocturnos .  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como almacén, frutas y verduras;  -  cantinas, bares, pubs y tabernas, cabarés o peñas folclóricas;  fuentes de soda,  quintas de recreo o servicios al auto, expendio de cervezas o sidra de frutas, restaurant de turismo,  - salones de baile o discotecas;  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  -  depósito de bebidas alcohólicas (botillerías), casas importadoras de vinos y licores;  -  grandes tiendas, centros comerciales, mercados , minimarket o minimercado, supermercados;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y similares."
+    },
+    {
+      "codigo": "PRC-PRV-5.6.02-d",
+      "texto": "Art. 5.6.05  Incentivos Normativos ZEMoI de Salud 1  En aquellas Zonas de Equipamiento Metropolitano o Intercomunal con equipamiento de Salud, se podrán aplicar los siguientes incentivos normativos:  a) Para la ZEMoI N° 2 Hospital del Salvador e Instituto Nacional de Tórax se permitirá el aumento de las normas base señaladas en el art. 5.6.03 bajo los siguientes incentivos normativos:  i) Incentivo a la generación de espacios privados de uso público al interior del predio.  En aquellos nuevos proyectos que se desarrollen al interior del predio ZEMoI N° 2, se podrá superar la altura máxima permitida, hasta una altura máxima de 8 pisos (equivalente a 28 m), a condición que se habilite un área libre con las siguientes características:  -  Por cada área libre proyectada con una superficie equivalente a un 2% del predio, se podrá incrementar la altura máxima permitida en 5,25 m.  -  El área libre deberá estar ubicada a nivel de terreno natural.  -  Al menos un 75% del área libre no podrá tener construcciones subterráneas, y deberá contemplar áreas verdes, con especies de bajo requerimiento hídrico y adaptadas al cambio climático.  -  Esta área deberá ser accesible y estar abierta a todo tipo de público en horario diurno.  ii)  Incentivo a la sustentabilidad urbana: conservación y protección del patrimonio.  Aquellos nuevos proyectos que se desarrollen al interior del predio ZEMoI N° 2 podrán aumentar su coeficiente de ocupación de suelo hasta un máximo de 0,5 a condición que se conserven edificaciones de valor patrimonial existentes en el predio, que no estén explícitamente protegidas por el PRCP y/o por el CMN.  -  Por cada 1 m 2  de edificación patrimonial que se conserve, se premiará con 2 m 2  adicionales de ocupación de suelo.  b) Para la ZEMoI N° 4 Hospital Luis Calvo Mackenna se permitirá el aumento de las normas base señaladas en el art. 5.6.03 bajo los siguientes incentivos normativos:  i) Incentivo a la generación de espacios privados de uso público al interior del predio.  En aquellos nuevos proyectos que se desarrollen al interior del predio ZEMoI N° 4, se podrá superar la altura máxima permitida, hasta una altura máxima de 8 pisos (equivalente a 28 m), y se podrá aumentar el coeficiente de constructibilidad hasta un máximo de 2,5 a condición que se habilite un área libre bajo las siguientes condiciones:  -  Por cada área libre proyectada con una superficie equivalente a un 2,5% del predio, se podrá incrementar la altura máxima permitida en 5,25 m.  -  El área libre deberá estar ubicada a nivel de terreno natural.  -  Al menos un 50% del área libre deberá contemplar áreas verdes, con especies de bajo requerimiento hídrico y adaptadas al cambio climático.  ii) Incentivo a la sustentabilidad urbana: gestión de estacionamientos.  Aquellos nuevos proyectos que se desarrollen al interior del predio ZEMoI N° 4 podrán aumentar su coeficiente de ocupación de suelo hasta un máximo de 0,5 a condición que no se construyan estacionamientos de superf"
+    },
+    {
+      "codigo": "PRC-PRV-5.6.02-e",
+      "texto": "icie en el primer piso, con excepción de aquellos destinados a servicios de urgencia, abastecimiento y operación del establecimiento y/o a personas con discapacidad.  1  Artículo agregado en Modificación N°8 ZEMoI de Salud – D.O. 05.12.2024.  ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales de producción, panaderías, pastelerías;  - talleres y fábricas de confección, muebles, comestibles y productos diversos, editoriales, imprentas y otros locales en que se emplean productos químicos; laboratorios farmacéuticos;  - talleres mecánicos de mantención o  reparación;  - frigoríficos,  depósitos, bodegas, almacenes de explosivos;  -  empresas distribuidoras mayoristas en general ,  bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRA- ESTRUCTURA  Edificaciones o instalaciones destinadas al transporte y la distribución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o de telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace.\n CAPITULO 5.7.  ÁREAS VERDES PÚBLICAS Y PRIVADAS PROTEGIDAS"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.12-b",
+      "texto": "Centros de Salud Urbanos CSU.  Edificaciones destinadas a :  - terapias alternativas o complementarias;  - centros especializados de  rehabilitación , exploración, diagnóstico y tratamiento;  - rehabilitación y hospitalización de baja complejidad, cirugía plástica o estética, maternidades;  - consultas o clínicas veterinarias;  -  hospitales, clínicas, servicios de atención primaria de urgencia (SAPU);  - locales destinados al análisis o disposición de restos: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales.  Edificaciones destinadas a:  -  círculos o clubes sociales .  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas,  templos, parroquias ;  -  bibliotecas, galerías de arte, museos ;  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - radioemisoras,  prensa escrita, canales de televisión;  - cines y teatros; multicines.  DEPORTE  Edificaciones destinadas a:  - gimnasios, sedes, centros o clubes de instituciones de carácter deportivo;  - saunas, piscinas, SPA;  - polideportivos y multicanchas,  canchas de todo tipo,  estadios o complejos deportivos.  ESPARCI- MIENTO  Edificaciones o locales destinados a :  - juegos electrónicos,  juegos mecánicos,  -  parques zoológicos, parques de entretenciones, casinos.\n las actividades señaladas en cursiva están asociadas a patentes de alcohol, de acuerdo con lo establecido en la Ley N° 19.925 sobre expendio y consumo de bebidas alcohólicas."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.14-b",
+      "texto": "ón primaria de urgencia (SAPU).  Edificaciones destinadas a :  - terapias alternativas o complementarias;  - centros especializados de  rehabilitación , exploración, diagnóstico y tratamiento;  - rehabilitación y hospitalización de baja complejidad, cirugía plástica o estética, maternidades;  - consultas o clínicas veterinarias;  -  hospitales, clínicas;  - locales destinados al análisis o disposición de restos como: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales.  Edificaciones destinadas a:  -  círculos o clubes sociales .  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas,  templos, parroquias;  -  bibliotecas, galerías de arte, museos ;  - radioemisoras,  prensa escrita;  - cines y teatros.  Edificaciones destinadas a:  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - canales de televisión;  - multicines.  DEPORTE  Edificaciones destinadas a:  - gimnasios, sedes, centros o clubes de instituciones de carácter deportivo, canchas de todo tipo;  - saunas, piscinas, SPA;  - polideportivos y multicanchas,  estadios o complejos deportivos.  ESPARCI- MIENTO  Edificaciones o locales destinados a :  - juegos electrónicos,  juegos mecánicos ;  -  parques zoológicos, parques de entretenciones, casinos.  COMERCIO  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar, paquetería, librería, boutique, ferreterías, almacén, frutas y verduras, farmacias, tiendas de vestuario y calzado, tiendas especializadas;  - ciber café, fotocopias, centro de copiado;  - fuentes de soda;  -  salones de té y cafeterías  sin patente de alcohol, y con patente de alcohol sólo como complemento a hoteles;  - minimarket o minimercado  sin patente de alcohol;  -  restaurantes diurnos y nocturnos  solo como complemento a hoteles.  Edificaciones o locales destinados a:  - salones de té y cafeterías  con patente de alcohol, excepto cuando sean complemento de hoteles;  -  restaurantes diurnos y nocturnos,  excepto cuando sean complemento de hoteles;  -  cantinas, bares, pubs y tabernas, cabarés o peñas folclóricas, quintas de recreo o servicios al auto, expendio de cervezas o sidra de frutas, restaurant de turismo;  - salones de baile o discotecas;  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  -  depósito de bebidas alcohólicas (botillerías), casas importadoras de vinos y licores;  -  grandes tiendas, centros comerciales, mercado ; minimarket o minimercado  con patente de alcohol,  supermercados;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.14-c",
+      "texto": "similares.\n las actividades señaladas en cursiva están asociadas a patentes de alcohol, de acuerdo con lo establecido en la Ley N° 19.925 sobre expendio y consumo de bebidas alcohólicas.  ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales de producción, panaderías, pastelerías.  Edificaciones o locales destinados a:  - talleres y fábricas de confección, muebles, comestibles y productos diversos, editoriales, imprentas y otros locales en que se emplean productos químicos, laboratorios farmacéuticos;  - talleres mecánicos de mantención o  reparación;  - frigoríficos,  depósitos, bodegas, almacenes de explosivos;  -  empresas distribuidoras mayoristas en general ,  bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRA- ESTRUCTURA  Edificaciones  o instalaciones destinadas al transporte y la distribución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.15-b",
+      "texto": "de Salud Urbanos CSU;  - terapias alternativas o complementarias;  - centros especializados de  rehabilitación , exploración, diagnóstico y tratamiento;  - rehabilitación y hospitalización de baja complejidad, cirugía plástica o estética, maternidades;  - consultas o clínicas veterinarias;  -  hospitales, clínicas, servicios de atención primaria de urgencia (SAPU).  Locales destinados al análisis o disposición de restos como: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales;  -  círculos o clubes sociales .  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas,  templos, parroquias;  -  bibliotecas, galerías de arte, museos;  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - radioemisoras,  prensa escrita, canales de televisión;  - cines y teatros; multicines.  Edificaciones o locales destinados a:  - canales de televisión.  DEPORTE  Edificaciones destinadas a:  - sedes, centros o clubes de instituciones de carácter deportivo;  - gimnasios;  - saunas, piscinas, SPA;  - polideportivos y multicanchas solo en recintos cerrados.  Edificaciones destinadas a:  -  estadios o complejos deportivos.  ESPARCI- MIENTO  Edificaciones o locales destinados a :  - juegos electrónicos,  juegos mecánicos .  Edificaciones o locales destinados a :  -  parques zoológicos, parques de entretenciones, casinos .  COMERCIO  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar, paquetería, librería, boutique, ferreterías, almacén, frutas y verduras, farmacias, tiendas de vestuario y calzado, tiendas especializadas;  - ciber café, fotocopias, centro de copiado;  -  salones de té y cafeterías , fuentes de soda,  restaurantes diurnos y nocturnos ;  - minimarket o minimercado.  Edificaciones o locales destinados a:  -  cantinas, bares, pubs y tabernas, cabarés o peñas folclóricas, quintas de recreo o servicios al auto, expendio de cervezas o sidra de frutas, restaurant de turismo;  - salones de baile o discotecas;  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  -  depósito de bebidas alcohólicas (botillerías), casas importadoras de vinos y licores;"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.15-c",
+      "texto": "las actividades señaladas en cursiva están asociadas a patentes de alcohol, de acuerdo con lo establecido en la Ley N° 19.925 sobre expendio y consumo de bebidas alcohólicas.  -  grandes tiendas, centros comerciales, mercados,  supermercados;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y similares.  ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales de producción; panaderías, pastelerías.  Edificaciones o locales destinados a:  - talleres y fábricas de confección, muebles, comestibles y productos diversos, editoriales, imprentas y otros locales en que se emplean productos químicos, laboratorios farmacéuticos;  - talleres mecánicos de mantención o  reparación;  - frigoríficos,  depósitos, bodegas, almacenes de explosivos;  -  empresas distribuidoras mayoristas en general ,  bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRA-ESTRUCTURA  Edificaciones  o instalaciones destinadas al transporte y la distribución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.15-d",
+      "texto": "UpR y E-CC - Subzona de uso preferentemente residencial y de equipamiento culto y cultura.  Las actividades específicas permitidas o prohibidas en la subzona de uso preferentemente residencial y de equipamiento culto y cultura (UpR y E-CC) se consignan en el cuadro 35 bis a continuación.  CUADRO 35 BIS  UpR  y E-CC  Subzona de uso preferentemente residencial y de equipamiento culto y cultura  USO  ACTIVIDADES ESPECÍFICAS  PERMITIDAS  PROHIBIDAS  RESIDENCIAL  Vivienda unifamiliar o colectiva;  Edificaciones destinadas al hospedaje remunerado o gratuito, que no presten servicios comerciales adjuntos:  -  casas de pensión, residenciales,  hostales;  - hogares de acogida.  Edificaciones destinadas al hospedaje remunerado :  -  apart-hoteles,  hosterías de turismo ,  hoteles y anexos de hoteles ,  hoteles de turismo , complejos hoteleros (resort),  moteles de turismo.  E Q U I P A M I E N T O  SERVICIOS  Edificaciones destinadas a la prestación de servicios:  - juzgados de policía local, oficinas de registro civil, oficinas y servicios municipales, consulados y embajadas.  Edificaciones destinadas a la prestación de servicios:  - centros de pago, salones de belleza, lavasecos, tintorerías, servicios artesanales;  - oficinas, agencias,  agencias de viñas o de industrias de licores establecidas fuera de la comuna ;  - centros de llamados o de internet;  - notarías, correos;  - instituciones de salud previsional, instituciones financieras, cajas de compensación, administradoras de fondos de pensiones, compañías de seguros, bancos;  - productoras artísticas, audiovisuales, publicitarias;  - centros médicos, dentales, de estética, laboratorios médicos, locales de tatuajes, servicios funerarios, velatorios;  - salas para pilates, yoga y otras disciplinas similares.  CIENTÍFICO  Edificaciones destinadas a investigación y divulgación científica, desarrollo y transferencia tecnológica e innovación técnica.  SEGURIDAD  Edificaciones destinadas a la seguridad pública:  - unidades  policiales.  Edificaciones destinadas a seguridad pública:  - cuarteles de bomberos;  -  cárceles, centros de detención o de rehabilitación delictual.  EDUCACIÓN  Edificaciones destinadas a:  - salas cuna, jardines infantiles.  Edificaciones destinadas a :  - establecimientos de educación básica, media, diferenciales o especiales;  - institutos de idiomas, centros de formación o capacitación, academias e institutos profesionales en carreras u oficios artísticos, preuniversitarios, educación de adultos;  -  sedes o campus universitarios, institutos técnicos y profesionales, estudios de postgrado;  - centros de rehabilitación conductual .  SALUD  Edificaciones destinadas a:  - policlínicos, centros de salud pública tales como: COSAM, CESFAM, CECOF, CCR, CSU.  Edificaciones destinadas a :  - terapias alternativas o complementarias;  - centros especializados de  rehabilitación , exploración, diagnóstico y tratamiento;  - rehabilitación y hospitalización de baja complejidad, cirugía plást"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.15-e",
+      "texto": "ica o estética, maternidades;  - consultas o clínicas veterinarias;  -  hospitales, clínicas, servicios de atención primaria de urgencia (SAPU);  - locales destinados al análisis o disposición de restos: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  -  sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  -  locales y centros comunitarios, sedes de organizaciones funcionales.  Edificaciones destinadas a:  -  círculos o clubes sociales .  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas,  templos, parroquias ;  -  bibliotecas, galerías de arte, museos ;  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - radioemisoras,  prensa escrita, canales de televisión;  - cines y teatros; multicines.  DEPORTE  Edificaciones destinadas a:  - gimnasios, sedes, centros o clubes de instituciones de carácter deportivo;  - saunas, piscinas, SPA;  - polideportivos y multicanchas,  canchas de todo tipo,  estadios o complejos deportivos.  ESPARCI- MIENTO  Edificaciones o locales destinados a :  - juegos electrónicos,  juegos mecánicos,  -  parques zoológicos, parques de entretenciones, casinos.  COMERCIO  Edificaciones o locales destinados a:  - salones de té y cafeterías  sin patente de alcohol.  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar, paquetería, librería, boutique, ferreterías, almacén, frutas y verduras, farmacias, tiendas de vestuario y calzado, tiendas especializadas;  - ciber café, fotocopias, centro de copiado;  -  salones de té y cafeterías ; fuentes de soda,  restaurantes diurnos y nocturnos ;  cantinas, bares, pubs y tabernas, cabarés o peñas folclóricas, quintas de recreo o servicios al auto, expendio de cervezas o sidra de frutas, restaurant de turismo,  - salones de baile o discotecas;  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  -  depósito de bebidas alcohólicas (botillerías), casas importadoras de vinos y licores;  -  grandes tiendas, centros comerciales, mercados , minimarket o minimercado, supermercado;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y similares."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.15-f",
+      "texto": "ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales de producción, panaderías, pastelerías;  - talleres y fábricas de confección, muebles, comestibles y productos diversos, editoriales, imprentas y otros locales en que se emplean productos químicos, laboratorios farmacéuticos;  - talleres mecánicos de mantención o  reparación;  - frigoríficos,  depósitos, bodegas, almacenes de explosivos;  -  empresas distribuidoras mayoristas en general ,  bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRA- ESTRUCTURA  Edificaciones  o instalaciones destinadas al transporte y la distribución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o de telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.16-b",
+      "texto": "rnativas o complementarias;  - servicios de atención primaria de urgencia (SAPU);  - consultas o clínicas veterinarias.  Edificaciones destinadas a :  - centros especializados de  rehabilitación , exploración, diagnóstico y tratamiento;  - rehabilitación y hospitalización de baja complejidad, cirugía plástica o estética, maternidades;  -  hospitales, clínicas;  - locales destinados al análisis o disposición de restos como: morgue; cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales;  -  círculos o clubes sociales .  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas,  templos, parroquias ;  -  bibliotecas, galerías de arte, museos,  centros de exposición o difusión de toda especie ;  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - radioemisoras,  prensa escrita;  - cines y teatros.  Edificaciones destinadas a:  - canales de televisión;  - multicines.  DEPORTE  Edificaciones destinadas a:  - sedes, centros o clubes de instituciones de carácter deportivo;  - gimnasios;  - saunas, piscinas, SPA;  - polideportivos y multicanchas solo en recintos cerrados.  Edificaciones destinadas a:  - estadios o complejos deportivos.  ESPARCI- MIENTO  Edificaciones o locales destinados a :  - juegos electrónicos,  juegos mecánicos .  Edificaciones o locales destinados a :  -  parques zoológicos, parques de entretenciones, casinos .  COMERCIO  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar, paquetería, librería, boutique, ferreterías, almacén, frutas y verduras, farmacias, tiendas de vestuario y calzado, tiendas especializadas;  - ciber café, fotocopias, centros de copiado;  -  salones de té y cafeterías ; fuentes de soda,  restaurantes diurnos y nocturnos, restaurant de turismo; cantinas, bares, pubs y tabernas, expendio de cervezas o sidra de frutas;  -  depósito de bebidas alcohólicas (botillerías);  - minimarket o minimercado,  mercados,  supermercados.  Edificaciones o locales destinados a:  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  -  cabarés o peñas folclóricas, quintas de recreo o servicios al auto,  - salones de baile o discotecas;  -  casas importadoras de vinos y licores;  -  grandes tiendas, centros comerciales ;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y similares."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.16-c",
+      "texto": "las actividades señaladas en cursiva están asociadas a patentes de alcohol, de acuerdo con lo establecido en la Ley N° 19.925 sobre expendio y consumo de bebidas alcohólicas.  ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales de producción, panaderías, pastelerías;  - talleres y fábricas de confección, muebles, comestibles y productos diversos, editoriales, imprentas y otros locales en que se emplean productos químicos.  Edificaciones o locales destinados a:  - laboratorios farmacéuticos;  - talleres mecánicos de mantención y de  reparación;  - frigoríficos,  depósitos, bodegas, almacenes de explosivos;  -  empresas distribuidoras mayoristas en general ,  bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRA- ESTRUCTURA  Edificaciones  o instalaciones destinadas al transporte y la distribución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.17-b",
+      "texto": "iliar CESFAM, Centros Comunitarios de Salud Familiar CECOF,  Centros Comunitarios de Rehabilitación CCR, Centros de Salud Urbanos CSU;  -  servicios de atención primaria de urgencia (SAPU);  - terapias alternativas o complementarias;  - consultas o clínicas veterinarias;  - centros especializados de  rehabilitación , exploración, diagnóstico y tratamiento;  - rehabilitación y hospitalización de baja complejidad, cirugía plástica o estética, maternidades.  Edificaciones destinadas a :  -  hospitales, clínicas;  - locales destinados al análisis o disposición de restos como: morgue; cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales;  -  círculos o clubes sociales .  CULTO Y  CULTURA  Edificaciones destinadas al desarrollo espiritual, religioso o cultural:  - capillas, oratorios, iglesias, sinagogas, mezquitas,  templos, parroquias;  -  bibliotecas, galerías de arte, museos;  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - radioemisoras,  prensa escrita;  - cines y teatros.  Edificaciones destinadas a:  - canales de televisión;  - multicines.  DEPORTE  Edificaciones destinadas a:  - sedes, centros o clubes de instituciones de carácter deportivo;  - gimnasios;  - saunas, piscinas, SPA;  - polideportivos y multicanchas solo en recintos cerrados.  Edificaciones destinadas a:  - estadios o complejos deportivos.  ESPARCI- MIENTO  Edificaciones o locales destinados a:  - juegos electrónicos, juegos mecánicos.  Edificaciones o locales destinados a :  -  parques zoológicos, parques de entretenciones, casinos ."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.17-c",
+      "texto": "las actividades señaladas en cursiva están asociadas a patentes de alcohol, de acuerdo con lo establecido en la Ley N° 19.925 sobre expendio y consumo de bebidas alcohólicas.  COMERCIO  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar, paquetería, librería, boutique, ferreterías, almacén, frutas y verduras, farmacias, tiendas de vestuario y calzado; tiendas especializadas;  - ciber café, fotocopias, centro de copiado;  -  salones de té y cafeterías , fuentes de soda,  restaurantes diurnos y nocturnos ,  cantinas, bares, pubs y tabernas, expendio de cervezas o sidra de frutas, restaurant de turismo;  -  depósito de bebidas alcohólicas (botillerías), casas importadoras de vinos y licores;  -  grandes tiendas, centros comerciales, mercados,  minimarket o minimercado.  Edificaciones o locales destinados a:  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  -  cabarés o peñas folclóricas, quintas de recreo o servicios al auto;  - salones de baile o discotecas ;  -  supermercados.  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y similares.  ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales de producción, panaderías, pastelerías;  - talleres y fábricas de confección, muebles, comestibles y productos diversos, editoriales, imprentas y otros locales en que se emplean productos químicos.  Edificaciones o locales destinados a:  - laboratorios farmacéuticos;  - talleres mecánicos de mantención y de  reparación;  - frigoríficos,  depósitos, bodegas, almacenes de explosivos;  -  empresas distribuidoras mayoristas en general ,  bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRA- ESTRUCTURA  Edificaciones  o instalaciones destinadas al transporte y la distribución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.18-b",
+      "texto": "unitarios de Salud Familiar CECOF,  Centros Comunitarios de Rehabilitación CCR, Centros de Salud Urbanos CSU;  -  servicios de atención primaria de urgencia (SAPU).  Edificaciones destinadas a:  - terapias alternativas o complementarias;  - centros especializados de  rehabilitación , exploración, diagnóstico y tratamiento;  - rehabilitación y hospitalización de baja complejidad, cirugía plástica o estética, maternidades;  - consultas o clínicas veterinarias;  -  hospitales, clínicas;  - locales destinados al análisis o disposición de restos como: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales;  -  círculos o clubes sociales .  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas;  -  bibliotecas, galerías de arte;  - centros culturales;  - radioemisoras,  prensa escrita;  - cines y teatros.  Edificaciones destinadas a:  -  salas de concierto o espectáculos;  - centros de convenciones;  - canales de televisión;  - multicines.  DEPORTE  Edificaciones destinadas a:  - sedes, centros o clubes de instituciones de carácter deportivo;  - gimnasios;  - saunas, piscinas, SPA;  - polideportivos y multicanchas solo en recintos cerrados.  Edificaciones destinadas a:  - estadios o complejos deportivos.  ESPARCI- MIENTO  Edificaciones o locales destinados a :  - juegos electrónicos,  juegos mecánicos .  Edificaciones o locales destinados a :  -  parques zoológicos, parques de entretenciones, casinos .  COMERCIO  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar, paquetería, librería, boutique, ferreterías, almacén, frutas y verduras, farmacias, tiendas de vestuario y calzado, tiendas especializadas;  - ciber café, fotocopias, centro de copiado;  -  salones de té y cafeterías , fuentes de soda,  restaurantes diurnos y nocturnos ;  cantinas, bares, pubs y tabernas, expendio de cervezas o sidra de frutas, restaurant de turismo;  - compra, venta o arriendo de automóviles u otros vehículos en vitrinas de exposición cerradas;  Edificaciones o locales destinados a:  - estaciones o centros de servicio automotor, centros de lavado de automóviles;  -  cabarés o peñas folclóricas, quintas de recreo o servicios al auto;  - salones de baile o discotecas ;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y similares.\n las actividades señaladas en cursiva están asociadas a patentes de alcohol, de acuerdo con lo establecido en la Ley N° 19.925 sobre expendio y consumo de bebidas alcohólicas."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.21-b",
+      "texto": "icas veterinarias;  - hospitales, clínicas, servicios de atención primaria de urgencia (SAPU);  - locales destinados al análisis o disposición de restos: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales.  Edificaciones destinadas a:  - círculos o clubes sociales.  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas, templos, parroquias;  - bibliotecas, galerías de arte, museos;  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - radioemisoras, prensa escrita, canales de televisión;  - cines y teatros; multicines.  DEPORTE  Edificaciones destinadas a:  - gimnasios, sedes, centros o clubes de instituciones de carácter deportivo;  - saunas, piscinas, SPA;  - polideportivos y multicanchas, canchas de todo tipo, estadios o complejos deportivos.  ESPARCIMIENTO  Edificaciones o locales destinados a:  - juegos electrónicos, juegos mecánicos,  1  Artículo agregado en Modificación N°8 ZEMoI de Salud – D.O. 05.12.2024.\n - parques zoológicos, parques de entretenciones, casinos.  COMERCIO  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar, paquetería, librería, boutique, ferreterías, almacén, frutas y verduras, farmacias, tiendas de vestuario y calzado, tiendas especializadas;  - ciber café, fotocopias, centro de copiado;  - salones de té y cafeterías; fuentes de soda, restaurantes diurnos y nocturnos; cantinas, bares, pubs y tabernas, cabarés o peñas folclóricas, quintas de recreo o servicios al auto, expendio de cervezas o sidra de frutas, restaurant de turismo;  - salones de baile o discotecas;  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  - depósito de bebidas alcohólicas (botillerías), casas importadoras de vinos y licores;  - grandes tiendas, centros comerciales, mercados, minimarket o minimercado, supermercados;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y similares.  ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales de producción, panaderías, pastelerías;  - talleres y fábricas de confección, muebles, comestibles y productos diversos, editoriales, imprentas y otros locales en que se emplean productos químicos, laboratorios farmacéuticos;  - talleres mecánicos de mantención o reparación;  - frigoríficos, depósitos, bodegas, almacenes de explosivos;  - empresas distribuidoras mayoristas en general, bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRAESTRUCTURA  Edificaciones o instalaciones destinadas al transporte y la distrib"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.21-c",
+      "texto": "ución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o de telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.22-b",
+      "texto": "ón CCR, Centros de Salud Urbanos CSU;  - rehabilitación y hospitalización de baja complejidad, cirugía plástica o estética, maternidades;  - consultas o clínicas veterinarias;  - hospitales, clínicas, servicios de atención primaria de urgencia (SAPU);  - locales destinados al análisis o disposición de restos como: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales.  Edificaciones destinadas a:  - círculos o clubes sociales.  CULTO Y  CULTURA  Edificaciones destinadas a:  - bibliotecas, galerías de arte, museos;  - radioemisoras, prensa escrita.  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas, templos, parroquias;  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - canales de televisión;  - cines y teatros, multicines.  DEPORTE  Edificaciones destinadas a:  - gimnasios, sedes, centros o clubes de instituciones de carácter deportivo, canchas de todo tipo;  - saunas, piscinas, SPA;  - polideportivos y multicanchas, estadios o complejos deportivos.  ESPARCIMIENTO  Edificaciones o locales destinados a:  - juegos electrónicos, juegos mecánicos;  - parques zoológicos, parques de entretenciones, casinos.\n COMERCIO  Edificaciones o locales destinados a:  - salones de té y cafeterías sin patente de alcohol.  Edificaciones o locales destinados a:  -  compraventa de mercaderías y elementos diversos tales como bazar, paquetería, librería, boutique, ferreterías, almacén, frutas y verduras, farmacias, tiendas de vestuario y calzado, tiendas especializadas;  - ciber café, fotocopias, centro de copiado;  -  salones de té y cafeterías con patente de alcohol, fuentes de soda, restaurantes diurnos y nocturnos, cantinas, bares, pubs y tabernas, cabarés o peñas folclóricas, quintas de recreo o servicios al auto, expendio de cervezas o sidra de frutas, restaurant de turismo;  - salones de baile o discotecas;  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  - depósito de bebidas alcohólicas (botillerías), casas importadoras de vinos y licores;  - grandes tiendas, centros comerciales, mercado, minimarket o minimercado, supermercados;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y similares.  ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales de producción, panaderías, pastelerías;  - talleres y fábricas de confección, muebles, comestibles y productos diversos, editoriales, imprentas y otros locales en que se emplean productos químicos, laboratorios farmacéuticos;  - talleres mecánicos de mantención o reparación;  - frigoríficos, depósitos, bodegas, almacenes de explo"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.22-c",
+      "texto": "sivos;  - empresas distribuidoras mayoristas en general, bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRAESTRUCTURA  Edificaciones o instalaciones destinadas al transporte y la distribución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.23-b",
+      "texto": "tica o estética, maternidades;  - servicios de atención primaria de urgencia (SAPU).  Edificaciones destinadas a:  - clínicas veterinarias;  - hospitales, clínicas;  - locales destinados al análisis o disposición de restos como: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales.  - círculos o clubes sociales.  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas, templos, parroquias;  - bibliotecas, galerías de arte, museos;  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - radioemisoras, prensa escrita;  - cines y teatros.  Edificaciones destinadas a:  - canales de televisión;  - multicines.  DEPORTE  Edificaciones destinadas a:  - sedes, centros o clubes de instituciones de carácter deportivo;  - saunas, SPA.  Edificaciones destinadas a:  - gimnasios, canchas de todo tipo;  - piscinas;  - polideportivos y multicanchas, estadios o complejos deportivos.  1  Artículo agregado en Modificación N°8 ZEMoI de Salud – D.O. 05.12.2024.\n ESPARCIMIENTO  Edificaciones o locales destinados a:  - juegos electrónicos, juegos mecánicos;  - parques zoológicos, parques de entretenciones, casinos.|  COMERCIO  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como librería, boutique, almacén, frutas y verduras, tiendas de vestuario y calzado, tiendas especializadas;  - fotocopias, centro de copiado;  - salones de té y cafeterías sin patente de alcohol, y con patente de alcohol sólo como complemento a hoteles, actividades de culto y cultura, y servicios;  - restaurantes diurnos y nocturnos solo como complemento a hoteles, actividades de culto y cultura, y servicios.  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar, paquetería, ferreterías, farmacias;  - ciber café;  -  salones de té y cafeterías con patente de alcohol, excepto cuando sean complemento de hoteles, actividades de culto y cultura, y servicios;  - fuentes de soda;  - restaurantes diurnos y nocturnos, excepto cuando sean complemento de hoteles, actividades de culto y cultura, y servicios;  - cantinas, bares, pubs y tabernas, cabarés o peñas folclóricas, quintas de recreo o servicios al auto, expendio de cervezas o sidra de frutas, restaurant de turismo;  - salones de baile o discotecas;  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  - depósito de bebidas alcohólicas (botillerías), casas importadoras de vinos y licores;  - grandes tiendas, centros comerciales, mercado; minimarket o minimercado, supermercados;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocin"
+    },
+    {
+      "codigo": "PRC-PRV-6.2.23-c",
+      "texto": "as negras, restaurantes virtuales y similares.  ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales inofensivos de producción, panaderías, pastelerías;  - editoriales.  Edificaciones o locales destinados a:  - talleres y fábricas de confección, muebles, comestibles y productos diversos, imprentas y otros locales en que se emplean productos químicos, laboratorios farmacéuticos;  - talleres mecánicos de mantención o reparación;  - frigoríficos, depósitos, bodegas, almacenes de explosivos;  - empresas distribuidoras mayoristas en general, bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRAESTRUCTURA  Edificaciones o instalaciones destinadas al transporte y la distribución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.24-b",
+      "texto": "cirugía plástica o estética, maternidades;  - clínicas veterinarias;  - hospitales, clínicas, servicios de atención primaria de urgencia (SAPU);  - locales destinados al análisis o disposición de restos como: morgue, cementerios y crematorios, cementerios de mascotas.  SOCIAL  Edificaciones destinadas a:  - sedes de juntas de vecinos, centros de madres, centros del adulto mayor, centros de la juventud, centros integrales de desarrollo social;  - locales y centros comunitarios, sedes de organizaciones funcionales.  Edificaciones destinadas a:  - círculos o clubes sociales.  CULTO Y  CULTURA  Edificaciones destinadas a:  - capillas, oratorios, iglesias, sinagogas, mezquitas, templos, parroquias;  - bibliotecas, galerías de arte, museos;  - radioemisoras, prensa escrita.  Edificaciones destinadas a:  - auditorios, centros culturales, centros de convenciones, salas de concierto o espectáculos;  - canales de televisión;  - multicines.  DEPORTE  Edificaciones destinadas a:  - gimnasios, sedes, centros o clubes de instituciones de carácter deportivo, canchas de todo tipo;  - saunas, piscinas, SPA;  - polideportivos y multicanchas, estadios o complejos deportivos.  ESPARCIMIENTO  Edificaciones o locales destinados a:  - juegos electrónicos, juegos mecánicos;  - parques zoológicos, parques de entretenciones, casinos.  COMERCIO  Edificaciones o locales destinados a:  - compraventa de mercaderías y elementos diversos tales como bazar, paquetería, librería, boutique, ferreterías, almacén, frutas y  Edificaciones o locales destinados a:  -  ciber café, fotocopias, centro de copiado;  1  Artículo agregado en Modificación N°8 ZEMoI de Salud – D.O. 05.12.2024."
+    },
+    {
+      "codigo": "PRC-PRV-6.2.24-c",
+      "texto": "verduras, farmacias, tiendas de vestuario y calzado, tiendas especializadas;  - salones de té y cafeterías;  - minimarket o minimercado sin patente de alcohol;  - restaurantes diurnos y nocturnos.  - fuentes de soda, cantinas, bares, pubs y tabernas, cabarés o peñas folclóricas, quintas de recreo o servicios al auto, expendio de cervezas o sidra de frutas, restaurant de turismo;  - salones de baile o discotecas;  - compra, venta o arriendo de automóviles u otros vehículos, estaciones o centros de servicio automotor, centros de lavado de automóviles;  - depósito de bebidas alcohólicas (botillerías), casas importadoras de vinos y licores;  - grandes tiendas, centros comerciales, mercado; minimarket o minimercado con patente de alcohol, supermercados;  - black-kitchen, dark-kitchen, cocinas fantasmas, cocinas negras, restaurantes virtuales y similares.  ACTIVIDADES  PRODUCTIVAS  Edificaciones o locales destinados a:  - talleres artesanales inofensivos de producción, panaderías, pastelerías;  - editoriales.  Edificaciones o locales destinados a:  - talleres y fábricas de confección, muebles, comestibles y productos diversos, imprentas y otros locales en que se emplean productos químicos, laboratorios farmacéuticos;  - talleres mecánicos de mantención o reparación;  - frigoríficos, depósitos, bodegas, almacenes de explosivos;  -  empresas distribuidoras mayoristas en general, bodegas elaboradoras y distribuidoras de vinos, licores o cerveza que expendan al por mayor.  INFRAESTRUCTURA  Edificaciones o instalaciones destinadas al transporte y la distribución sanitaria y energética:  - terminales de transporte terrestre, estaciones de trasbordo del transporte público, paraderos de taxis y radiotaxi;  - estaciones ferroviarias, aeropuertos;  - estaciones exclusivas de transferencia de residuos sólidos, plantas de captación, distribución y tratamiento de aguas, rellenos sanitarios, vertederos;  - subestaciones y plantas repetidoras, central de generación o distribución de energía, de gas o telecomunicaciones, gasoductos.  ESPACIO PÚBLICO  Regidas por el artículo 2.1.30. de la OGUC, o aquel que en el futuro lo reemplace.  ÁREA VERDE  Regidas por el artículo 2.1.31. de la OGUC, o aquel que en el futuro lo reemplace.  CAPITULO 6.3.  NORMAS ESPECIALES PARA ACTIVIDADES PRODUCTIVAS  O DE SERVICIOS"
+    },
+    {
+      "codigo": "PRC-PRV-8.1.03-b",
+      "texto": "r del predio 1 c/ 15 personas**; mínimo 2 Sin exigencia  Sin exigencia  Sin exigencia  BICICLETAS  Sin exigencia Hospedaje remunerado o gratuito = mínimo 5 1 c/ 15 personas**; mínimo 2  VEHICULOS MOTORIZADOS USO RESIDENCIAL E Q U I P A M I E N T O  EDUCACION  Sin exigencia  ZONA  Hospedaje remunerado o gratuito = sin exigencia  CULTO Y CULTURA  Sin exigencia *Se considera la superficie de estacionamiento de vehículos livianos de 2,5 m x 5 m y de 3,6 m x 5 m (en caso de estacionamientos de personas con discapacidad) de acuerdo al art. 2.4.2 de la OGUC, con un rango de 20% de aumento por concepto de diseño. ** La cantidad de personas se calcula de acuerdo a la carga de ocupación. ***Se aplica la exigencia más alta.  CUADRO 40 ACTIVIDADES PRODUCTIVAS INFRAESTRUCTURA AREAS VERDES NO BNUP  Según clase de equipamiento y proyecto aprobado por la DOM 1 c/ 20 personas**; mínimo 5  DEPORTE  1 c/ 10 personas**; mínimo 5 Sin exigencia  ESTACIONAMIENTOS  Exigencia mínima por tipo de uso de suelo y clase de equipamiento 1 c/ 15 personas**; mínimo 5  SALUD  1 c/ 30 personas**; mínimo 5"
+    }
+  ]
+}

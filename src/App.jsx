@@ -372,10 +372,16 @@ Archivos:
 ${lista}
 
 CIRCULARES DDU VIGENTES (División de Desarrollo Urbano, MINVU):
-- DDU 279: Accesibilidad universal — rampas, ascensores, circulaciones accesibles
-- DDU 390: Presentación de expedientes DOM — documentos obligatorios por tipo de proyecto
-- DDU 320: Adosamiento y distanciamientos entre edificaciones
-- DDU 415: Estacionamientos — dotación mínima según uso y comuna
+- DDU 351: Accesibilidad universal — rampas, ascensores, circulaciones accesibles (DS 50/2015)
+- DDU 447: Aportes al espacio público y tramitación de permisos (Ley 20.958)
+- DDU 172: Plazos de las Direcciones de Obras Municipales (Ley 19.880 art. 24)
+- DDU 176: Aplicación art. 1.4.7 OGUC — certificados e informes previos
+- DDU 186: Aplicación arts. 2.1.18 y 2.1.43 OGUC — urbanismo y construcción
+- DDU 200: Subdivisión predial — procedimiento simplificado (Ley 20.234)
+- DDU 201: Permisos de edificación simplificados para viviendas (Ley 20.251)
+- DDU 157: Registro Nacional de Revisores Independientes de Obras (Ley 20.071)
+- DDU 912: Aplicación art. 5.1.2 N°2 OGUC — tipo y calidad de edificación
+- DDU 1022: Aplicación arts. 1.1.2, 5.1.14 y 5.1.17 OGUC — tipos de construcción
 
 Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de OGUC, LGUC o la circular DDU correspondiente cuando detectes cumplimiento o incumplimiento.
 ${contextoTexto}Analiza solo los archivos adjuntos. No penalices por documentos no subidos.
@@ -1235,7 +1241,14 @@ ${printRef.current.innerHTML}
       content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, "parcial", preguntas, colabJson) });
 
       setProgress("Analizando contra normativa OGUC / LGUC...");
-      const makeBody = m => JSON.stringify({ messages: [{ role: "user", content }], modelo: m });
+      // ragQuery separado del prompt instructivo para mejor precisión semántica del RAG
+      const ragQuery = [
+        tipo, comuna,
+        preguntas.situacion || "",
+        preguntas.analizarSituacion || "",
+        preguntas.niveles || "",
+      ].filter(Boolean).join(" ").substring(0, 500);
+      const makeBody = m => JSON.stringify({ messages: [{ role: "user", content }], modelo: m, ragQuery });
       const [resp1, resp2] = await Promise.all([
         fetch(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("claude") }),
         fetch(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("gpt4o") }),
