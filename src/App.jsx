@@ -1241,14 +1241,10 @@ ${printRef.current.innerHTML}
       content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, "parcial", preguntas, colabJson) });
 
       setProgress("Analizando contra normativa OGUC / LGUC...");
-      // ragQuery separado del prompt instructivo para mejor precisión semántica del RAG
-      const ragQuery = [
-        tipo, comuna,
-        preguntas.situacion || "",
-        preguntas.analizarSituacion || "",
-        preguntas.niveles || "",
-      ].filter(Boolean).join(" ").substring(0, 500);
-      const makeBody = m => JSON.stringify({ messages: [{ role: "user", content }], modelo: m, ragQuery });
+      // Sin ragQuery: el buildPrompt ya tiene OGUC/LGUC/PRC inline.
+      // Inyectar el system RAG sobre el análisis estructurado degrada la calidad
+      // (el modelo se ancla en los artículos del RAG e ignora el resto del esquema).
+      const makeBody = m => JSON.stringify({ messages: [{ role: "user", content }], modelo: m });
       const [resp1, resp2] = await Promise.all([
         fetch(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("claude") }),
         fetch(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("gpt4o") }),
