@@ -91,7 +91,7 @@ const TESTS = [
     query: BASE + '\n\nPROBLEMA: El proyecto no contempla rampas de acceso para personas con discapacidad.',
     checks: [
       { desc: 'Cita OGUC-4.1.7',                   pass: t => hasCita(t, 'OGUC-4\\.1\\.7') },
-      { desc: 'Cita algún DDU de accesibilidad',      pass: t => /\[DDU \d/.test(t) },
+      { desc: 'Cita algún DDU de accesibilidad',      pass: t => /\[DDU[\s-]\d/.test(t) },
       { desc: 'Menciona accesibilidad/rampa',       pass: t => /accesib|rampa|discapacidad/i.test(t) },
     ],
   },
