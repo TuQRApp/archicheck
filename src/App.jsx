@@ -372,19 +372,18 @@ Archivos:
 ${lista}
 
 CIRCULARES DDU VIGENTES (División de Desarrollo Urbano, MINVU):
-- DDU 351: Accesibilidad universal — rampas, ascensores, circulaciones accesibles (DS 50/2015)
-- DDU 447: Aportes al espacio público y tramitación de permisos (Ley 20.958)
-- DDU 172: Plazos de las Direcciones de Obras Municipales (Ley 19.880 art. 24)
-- DDU 176: Aplicación art. 1.4.7 OGUC — certificados e informes previos
-- DDU 186: Aplicación arts. 2.1.18 y 2.1.43 OGUC — urbanismo y construcción
-- DDU 200: Subdivisión predial — procedimiento simplificado (Ley 20.234)
-- DDU 201: Permisos de edificación simplificados para viviendas (Ley 20.251)
-- DDU 157: Registro Nacional de Revisores Independientes de Obras (Ley 20.071)
-- DDU 912: Aplicación art. 5.1.2 N°2 OGUC — tipo y calidad de edificación
-- DDU 1022: Aplicación arts. 1.1.2, 5.1.14 y 5.1.17 OGUC — tipos de construcción
+- DDU 351: Accesibilidad universal — rampas, ascensores, circulaciones accesibles
+- DDU 390: Presentación de expedientes DOM — documentos obligatorios por tipo de proyecto
+- DDU 320: Adosamiento y distanciamientos entre edificaciones
+- DDU 415: Estacionamientos — dotación mínima según uso y comuna
 
 Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de OGUC, LGUC o la circular DDU correspondiente cuando detectes cumplimiento o incumplimiento.
 ${contextoTexto}Analiza solo los archivos adjuntos. No penalices por documentos no subidos.
+
+INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
+1. Las observaciones de cada sección (separacion, reconocimiento, vectorizacion, modelo, recintos_superficies, circulaciones) deben ser DISTINTAS y específicas de esa etapa. No repitas el mismo hallazgo en múltiples secciones.
+2. La sección iluminacion_ventilacion.tabla DEBE incluir una fila por cada recinto habitable visible. Si no puedes medir el área de ventana, usa area_ventana_m2:0 y cumple:"VERIFICAR".
+3. La sección normativa_urbanistica.tabla DEBE incluir filas para: rasante(s), constructibilidad, COS, uso de suelo, y distancias a deslindes si son visibles en elevaciones. Usa estado:"VERIFICAR" si no hay dato.
 
 Para cada planta de arquitectura identifica los recintos visibles con bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Si no puedes estimar coordenadas confiables para un recinto, omite bbox.
 ${buildColabTexto(colabData)}
