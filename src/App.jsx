@@ -1638,7 +1638,7 @@ ${printRef.current.innerHTML}
                     <>
                       <span style={{ fontSize: 11, color: "#6B7A99" }}>
                         {colabJson.paginas
-                          ? `${colabJson.paginas.length} pág. · ${colabJson.resumen_global?.incumplimientos_geo_total ?? 0} incumplimientos`
+                          ? `${colabJson.paginas.length} pág. · ${colabJson.resumen_global?.incumplimientos_geo_total ?? 0} incump. Colab`
                           : `${colabJson.tabla_cruzada?.length ?? 0} recintos`}
                       </span>
                       <button onClick={() => { setColabJson(null); if (colabInputRef.current) colabInputRef.current.value = ""; }}
@@ -2268,7 +2268,7 @@ ${printRef.current.innerHTML}
                     ⚠ Análisis orientativo. No reemplaza la revisión oficial de la DOM. Consulte siempre el Plan Regulador Comunal y la DOM de su comuna.
                   </div>
                   <div style={{ display:"flex", gap:10 }}>
-                    <button onClick={() => { setResult(null); setArchivos([]); }} style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #D1D9EE", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>↩ Nuevo análisis</button>
+                    <button onClick={() => { setResult(null); setArchivos([]); setColabJson(null); setColabPngs([]); setObsStatus({}); setError(""); setExpandido({}); setActiveEtapa("e1"); }} style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #D1D9EE", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>↩ Nuevo análisis</button>
                     <button onClick={exportPDF} style={{ flex:1, padding:"13px", background:"linear-gradient(90deg,#1B3A8A,#2952A3)", border:"none", borderRadius:10, color:"#fff", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>🖨 Exportar informe</button>
                   </div>
                 </div>
