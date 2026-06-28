@@ -137,7 +137,7 @@ function repairAndParse(str) {
 
   // Intento 3: datos parciales — extrae campos de primer nivel que sí llegaron
   const partial = {};
-  const fields = ["resumen_general","puntaje_global","estado_global","alertas_especiales","capa2","analisis_por_archivo","pasos_siguientes","documentos_faltantes","capa1"];
+  const fields = ["capa2","capa1","analisis_por_archivo","resumen_general","puntaje_global","estado_global","alertas_especiales","pasos_siguientes","documentos_faltantes"];
   for (const field of fields) {
     const m = str.match(new RegExp(`"${field}"\\s*:\\s*("([^"\\\\]|\\\\.)*"|\\d+|\\[|\\{)`));
     if (m) {
@@ -325,6 +325,7 @@ ${contextoTexto}
 Tu tarea es el LEVANTAMIENTO GEOMÉTRICO: separación de capas gráficas, identificación de recintos y elementos arquitectónicos, evaluación de la vectorización, y descripción del modelo estructural por nivel.
 
 Para cada planta identifica los recintos visibles con bbox como fracción de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Omite bbox si no puedes estimarlo con confianza.
+IMPORTANTE: NO inventes ni estimes superficies. Usa SOLO los valores de cotas escritos claramente en el plano (números con dimensión). Si no hay cota visible, pon superficie_m2:null. No copies la escala como si fuera un área.
 ${buildColabTexto(colabData)}
 Responde SOLO con JSON puro sin markdown:
 {"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"capa1":{"separacion":{"capas":[{"nombre":"...","contenido":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"reconocimiento":{"stats":{"recintos_total":0,"niveles":0},"recintos_por_nivel":[{"nivel":"...","recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"estado":"OK|OBSERVADO|INCUMPLE"}]}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"vectorizacion":{"elementos":[{"tipo":"...","cantidad":0,"descripcion":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"modelo":{"organizacion_funcional":[{"nivel":"...","uso":"...","area_m2":0,"conexion":"..."}],"accesos_evacuacion":[{"elemento":"...","estado":"OK|OBSERVADO|INCUMPLE","nota":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}}}`;
@@ -350,15 +351,14 @@ function buildPromptCapa2(tipo, comuna, archivos, preguntas = {}, colabData = nu
     return `Archivo ${i + 1}: "${f.name}" (${f.tipoDoc || "sin clasificar"}) — ${tag}${escalaInfo}`;
   }).join("\n\n---\n\n");
 
-  // Artículos OGUC clave para el análisis
+  // Resumen compacto de OGUC y LGUC — el sistema RAG inyecta los artículos completos más relevantes vía system prompt
   const ogucTexto = Object.entries(ogucArticulos.articulos)
-    .map(([num, art]) => `Art. ${num} (${art.tema}):\n${art.texto}`)
-    .join("\n\n");
+    .map(([num, art]) => `Art. ${num} (${art.tema}): ${art.texto.replace(/\n+/g, " ").substring(0, 220).trimEnd()}…`)
+    .join("\n");
 
-  // Artículos LGUC — texto completo
   const lgucTexto = Object.entries(lgucArticulos.articulos)
-    .map(([num, art]) => `Art. ${num} (${art.tema}):\n${art.texto}`)
-    .join("\n\n");
+    .map(([num, art]) => `Art. ${num} (${art.tema}): ${art.texto.replace(/\n+/g, " ").substring(0, 220).trimEnd()}…`)
+    .join("\n");
 
   // Reglas de verificación nacional
   const reglasTexto = reglasNacionales.reglas
@@ -425,7 +425,17 @@ CIRCULARES DDU VIGENTES (División de Desarrollo Urbano, MINVU):
 
 Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de OGUC, LGUC o la circular DDU correspondiente cuando detectes cumplimiento o incumplimiento.
 ${contextoTexto}Analiza solo los archivos adjuntos. No penalices por documentos no subidos.
-${capa1Context ? `\nLEVANTAMIENTO GEOMÉTRICO YA REALIZADO (Fase 1):\n${JSON.stringify(capa1Context, null, 0)}\n\nUsa estos datos de geometría y recintos como base para tu evaluación normativa. Verifica cada medida contra la normativa aplicable.\n` : ""}
+${(() => {
+    if (!capa1Context?.capa1) return "";
+    const obs = [];
+    for (const [sec, data] of Object.entries(capa1Context.capa1)) {
+      for (const ob of (data?.observaciones || [])) {
+        obs.push(`[${sec}] ${ob.descripcion} — ${ob.articulo || ""} — ${ob.criticidad || ""}`);
+      }
+    }
+    if (!obs.length) return "";
+    return `\nOBSERVACIONES DEL LEVANTAMIENTO GEOMÉTRICO (Fase 1) — toma en cuenta estos issues al evaluar:\n${obs.map(o => `• ${o}`).join("\n")}\n`;
+  })()}
 
 INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
 1. EXHAUSTIVIDAD: Actúa como revisor DOM oficial. Examina sistemáticamente TODAS estas áreas normativas y genera observaciones para cada incumplimiento o punto que requiera verificación:
@@ -451,8 +461,8 @@ INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
 
 Para cada planta de arquitectura identifica los recintos visibles con bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Si no puedes estimar coordenadas confiables para un recinto, omite bbox.
 ${buildColabTexto(colabData)}
-Responde SOLO con JSON puro sin markdown. Tu respuesta contiene ÚNICAMENTE la evaluación normativa (capa2) — la descripción geométrica (capa1) se procesa por separado.
-{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","alertas_especiales":["..."],"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"pasos_siguientes":["..."]}`;
+Responde SOLO con JSON puro, sin markdown, sin texto previo. Produce ÚNICAMENTE la evaluación normativa — capa2 va PRIMERO en el JSON para protegerla de truncaciones.
+{"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
 
 // ── PDF → thumbnails (todas las páginas, baja res) + full-res bajo demanda ──
@@ -1325,9 +1335,19 @@ ${printRef.current.innerHTML}
         return fetch(url, { ...opts, signal: ac.signal }).finally(() => clearTimeout(tid));
       }
       const H = { "Content-Type": "application/json" };
-      const mkBody = (m, c) => JSON.stringify({ messages: [{ role: "user", content: c }], modelo: m });
-      const parse  = s => s.status === "fulfilled"
-        ? repairAndParse(s.value.replace(/```json|```/g, "").trim()) : null;
+      const mkBody = (m, c, ragQuery) => JSON.stringify({
+        messages: [{ role: "user", content: c }],
+        modelo: m,
+        ...(ragQuery ? { ragQuery } : {}),
+      });
+      const parse = s => {
+        if (s.status !== "fulfilled") return null;
+        let raw = s.value.replace(/```json|```/g, "").trim();
+        // Si el modelo antepuso texto antes del JSON, busca el primer {
+        const idx = raw.indexOf("{");
+        if (idx > 0) raw = raw.slice(idx);
+        return repairAndParse(raw);
+      };
 
       // ── FASE 1: Levantamiento geométrico (Claude + GPT-4o en paralelo) ────
       setProgress("Fase 1/2 — Levantamiento geométrico (Claude + GPT-4o)...");
@@ -1344,10 +1364,13 @@ ${printRef.current.innerHTML}
       // ── FASE 2: Evaluación normativa completa con contexto de Fase 1 ──────
       setProgress("Fase 2/2 — Evaluación normativa completa (Claude + GPT-4o)...");
       const contentC2 = [...imageContent, { type: "text", text: buildPromptCapa2(tipo, comuna, archivos, preguntas, colabJson, cap1) }];
+      const tipoLabel2 = TIPOS.find(t => t.id === tipo)?.label || tipo;
+      const comunaNombre2 = PRC_COMUNAS[comuna]?.meta?.nombre || comuna || "";
+      const ragQ = `${tipoLabel2} ${comunaNombre2} normativa OGUC LGUC accesibilidad circulaciones iluminación superficies evacuación urbanística`;
 
       const [rC2, rG2] = await Promise.all([
-        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: mkBody("claude", contentC2) }),
-        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: mkBody("gpt4o",  contentC2) }),
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: mkBody("claude", contentC2, ragQ) }),
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: mkBody("gpt4o",  contentC2, ragQ) }),
       ]);
       setProgress("Consolidando análisis...");
       const [sC2, sG2] = await Promise.allSettled([readModelStream(rC2), readModelStream(rG2)]);
