@@ -290,8 +290,48 @@ function buildColabTexto(json) {
   return "";
 }
 
-// ── Prompt ─────────────────────────────────────────────────────────────────
-function buildPrompt(tipo, comuna, archivos, modo = "parcial", preguntas = {}, colabData = null) {
+// ── Prompt Capa 1: levantamiento geométrico ────────────────────────────────
+function buildPromptCapa1(tipo, comuna, archivos, preguntas = {}, colabData = null) {
+  const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
+  const lista = archivos.map((f, i) => {
+    const selCount = f.paginasSeleccionadas?.length ?? f.pdfImages?.length ?? 0;
+    const tag = f.pdfImages?.length
+      ? `${selCount} pág. de ${f.pdfImages[0].total} adjunta${selCount !== 1 ? "s" : ""} como imagen`
+      : f.isImage ? "imagen adjunta" : "[formato no visual]";
+    let escalaInfo = "";
+    if (f.escalasMultiples && f.escalasPorPagina?.some(ep => ep.capturas?.some(c => c.escala))) {
+      escalaInfo = " — Escalas: " + f.escalasPorPagina
+        .flatMap(ep => ep.capturas.filter(c => c.escala).map(c => `pág.${ep.pagina} "${c.nombre || "sección"}"=${c.escala}`))
+        .join(", ");
+    } else if (f.escala) {
+      escalaInfo = ` — Escala: ${f.escala}`;
+    }
+    return `Archivo ${i + 1}: "${f.name}" (${f.tipoDoc || "sin clasificar"}) — ${tag}${escalaInfo}`;
+  }).join("\n\n---\n\n");
+
+  const comunaNombre = PRC_COMUNAS[comuna]?.meta?.nombre || (comuna || "comuna no especificada");
+  const contextoLineas = [];
+  if (preguntas.situacion) contextoLineas.push(`Expediente contiene: ${preguntas.situacion}`);
+  if (preguntas.analizarSituacion) contextoLineas.push(`Analizar: ${preguntas.analizarSituacion}`);
+  if (preguntas.niveles?.trim()) contextoLineas.push(`Niveles a priorizar: ${preguntas.niveles.trim()}`);
+  const contextoTexto = contextoLineas.length ? `\nCONTEXTO:\n${contextoLineas.map(l => `- ${l}`).join("\n")}\n` : "";
+
+  return `Eres revisor DOM de Chile. Analiza la calidad gráfica y el contenido geométrico de los planos adjuntos.
+
+Proyecto: ${tipoLabel} — ${comunaNombre}
+Archivos:
+${lista}
+${contextoTexto}
+Tu tarea es el LEVANTAMIENTO GEOMÉTRICO: separación de capas gráficas, identificación de recintos y elementos arquitectónicos, evaluación de la vectorización, y descripción del modelo estructural por nivel.
+
+Para cada planta identifica los recintos visibles con bbox como fracción de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Omite bbox si no puedes estimarlo con confianza.
+${buildColabTexto(colabData)}
+Responde SOLO con JSON puro sin markdown:
+{"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"capa1":{"separacion":{"capas":[{"nombre":"...","contenido":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"reconocimiento":{"stats":{"recintos_total":0,"niveles":0},"recintos_por_nivel":[{"nivel":"...","recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"estado":"OK|OBSERVADO|INCUMPLE"}]}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"vectorizacion":{"elementos":[{"tipo":"...","cantidad":0,"descripcion":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"modelo":{"organizacion_funcional":[{"nivel":"...","uso":"...","area_m2":0,"conexion":"..."}],"accesos_evacuacion":[{"elemento":"...","estado":"OK|OBSERVADO|INCUMPLE","nota":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}}}`;
+}
+
+// ── Prompt Capa 2: evaluación normativa ────────────────────────────────────
+function buildPromptCapa2(tipo, comuna, archivos, preguntas = {}, colabData = null) {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
   const lista = archivos.map((f, i) => {
     const selCount = f.paginasSeleccionadas?.length ?? f.pdfImages?.length ?? 0;
@@ -410,8 +450,8 @@ INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
 
 Para cada planta de arquitectura identifica los recintos visibles con bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Si no puedes estimar coordenadas confiables para un recinto, omite bbox.
 ${buildColabTexto(colabData)}
-Responde SOLO con JSON puro sin markdown. IMPORTANTE: escribe los campos en ESTE ORDEN exacto para que si la respuesta se corta, los datos normativos lleguen primero.
-{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","alertas_especiales":["..."],"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"pasos_siguientes":["..."],"capa1":{"separacion":{"capas":[{"nombre":"...","contenido":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"reconocimiento":{"stats":{"recintos_total":0,"niveles":0},"recintos_por_nivel":[{"nivel":"...","recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"estado":"OK|OBSERVADO|INCUMPLE"}]}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"vectorizacion":{"elementos":[{"tipo":"...","cantidad":0,"descripcion":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"modelo":{"organizacion_funcional":[{"nivel":"...","uso":"...","area_m2":0,"conexion":"..."}],"accesos_evacuacion":[{"elemento":"...","estado":"OK|OBSERVADO|INCUMPLE","nota":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}}}`;
+Responde SOLO con JSON puro sin markdown. Tu respuesta contiene ÚNICAMENTE la evaluación normativa (capa2) — la descripción geométrica (capa1) se procesa por separado.
+{"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","alertas_especiales":["..."],"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"pasos_siguientes":["..."]}`;
 }
 
 // ── PDF → thumbnails (todas las páginas, baja res) + full-res bajo demanda ──
@@ -1240,12 +1280,13 @@ ${printRef.current.innerHTML}
     setLoading(true); setError(""); setResult(null); setObsStatus({}); setActiveEtapa("e1");
     try {
       // Construir content (imágenes primero, luego el prompt)
+      // ── Construir imágenes (compartidas por capa1 y capa2) ────────────────
       setProgress("Convirtiendo PDFs a imágenes...");
-      const content = [];
+      const imageContent = [];
       for (const f of archivos) {
         if (f.isImage && f.base64) {
-          content.push({ type: "image", source: { type: "base64", media_type: f.type, data: f.base64 } });
-          content.push({ type: "text", text: `[Imagen: "${f.name}" — ${f.tipoDoc || "plano"}${f.escala ? ` — escala: ${f.escala}` : ""}]` });
+          imageContent.push({ type: "image", source: { type: "base64", media_type: f.type, data: f.base64 } });
+          imageContent.push({ type: "text", text: `[Imagen: "${f.name}" — ${f.tipoDoc || "plano"}${f.escala ? ` — escala: ${f.escala}` : ""}]` });
         }
         if (f.pdfImages?.length) {
           const pagSel = f.paginasSeleccionadas?.length ? f.paginasSeleccionadas : f.pdfImages.map(img => img.page);
@@ -1256,53 +1297,81 @@ ${printRef.current.innerHTML}
             const escalaPage = f.escalasMultiples
               ? (f.escalasPorPagina?.find(ep => ep.pagina === img.page)?.capturas?.find(c => c.escala)?.escala || "")
               : f.escala;
-            content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img.data } });
-            content.push({ type: "text", text: `[PDF: "${f.name}" — página ${img.page}/${totalPaginas} — ${f.tipoDoc || "plano"}${escalaPage ? ` — escala: ${escalaPage}` : ""}]` });
+            imageContent.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img.data } });
+            imageContent.push({ type: "text", text: `[PDF: "${f.name}" — página ${img.page}/${totalPaginas} — ${f.tipoDoc || "plano"}${escalaPage ? ` — escala: ${escalaPage}` : ""}]` });
           }
           if (f.escalasMultiples) {
             for (const ep of f.escalasPorPagina) {
               if (!pagSel.includes(ep.pagina)) continue;
               for (const c of ep.capturas) {
                 if (!c.base64) continue;
-                content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: c.base64 } });
-                content.push({ type: "text", text: `[RECORTE: "${f.name}" — pág. ${ep.pagina} — sección "${c.nombre || "sin nombre"}" — posición x:${c.x_pct?.toFixed(0) ?? "?"}% y:${c.y_pct?.toFixed(0) ?? "?"}% tamaño ${c.w_pct?.toFixed(0) ?? "?"}%×${c.h_pct?.toFixed(0) ?? "?"}% — escala: ${c.escala || "no especificada"}]` });
+                imageContent.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: c.base64 } });
+                imageContent.push({ type: "text", text: `[RECORTE: "${f.name}" — pág. ${ep.pagina} — sección "${c.nombre || "sin nombre"}" — posición x:${c.x_pct?.toFixed(0) ?? "?"}% y:${c.y_pct?.toFixed(0) ?? "?"}% tamaño ${c.w_pct?.toFixed(0) ?? "?"}%×${c.h_pct?.toFixed(0) ?? "?"}% — escala: ${c.escala || "no especificada"}]` });
               }
             }
           }
         }
       }
       for (const png of colabPngs) {
-        content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: png.base64 } });
-        content.push({ type: "text", text: `[COLAB PNG: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales]` });
+        imageContent.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: png.base64 } });
+        imageContent.push({ type: "text", text: `[COLAB PNG: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales]` });
       }
-      content.push({ type: "text", text: buildPrompt(tipo, comuna, archivos, "parcial", preguntas, colabJson) });
 
-      setProgress("Analizando contra normativa OGUC / LGUC...");
-      // Sin ragQuery: el buildPrompt ya tiene OGUC/LGUC/PRC inline.
-      // Inyectar el system RAG sobre el análisis estructurado degrada la calidad
-      // (el modelo se ancla en los artículos del RAG e ignora el resto del esquema).
-      const makeBody = m => JSON.stringify({ messages: [{ role: "user", content }], modelo: m });
+      // Cada capa recibe las mismas imágenes + su propio prompt enfocado
+      const contentC1 = [...imageContent, { type: "text", text: buildPromptCapa1(tipo, comuna, archivos, preguntas, colabJson) }];
+      const contentC2 = [...imageContent, { type: "text", text: buildPromptCapa2(tipo, comuna, archivos, preguntas, colabJson) }];
+
+      // ── 4 llamadas paralelas ───────────────────────────────────────────────
+      setProgress("Analizando expediente — 4 flujos paralelos...");
       function fetchWithTimeout(url, opts, ms = 270_000) {
         const ac = new AbortController();
         const tid = setTimeout(() => ac.abort(), ms);
         return fetch(url, { ...opts, signal: ac.signal }).finally(() => clearTimeout(tid));
       }
-      const [resp1, resp2] = await Promise.all([
-        fetchWithTimeout(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("claude") }),
-        fetchWithTimeout(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("gpt4o") }),
+      const H = { "Content-Type": "application/json" };
+      const body = (m, c) => JSON.stringify({ messages: [{ role: "user", content: c }], modelo: m });
+
+      const [rC1, rG1, rC2, rG2] = await Promise.all([
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: body("claude",  contentC1) }),
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: body("gpt4o",   contentC1) }),
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: body("claude",  contentC2) }),
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: body("gpt4o",   contentC2) }),
       ]);
 
       setProgress("Consolidando análisis...");
-      const [s1, s2] = await Promise.allSettled([readModelStream(resp1), readModelStream(resp2)]);
+      const [sC1, sG1, sC2, sG2] = await Promise.allSettled([
+        readModelStream(rC1), readModelStream(rG1),
+        readModelStream(rC2), readModelStream(rG2),
+      ]);
 
-      const r1 = s1.status === "fulfilled" ? repairAndParse(s1.value.replace(/```json|```/g, "").trim()) : null;
-      const r2 = s2.status === "fulfilled" ? repairAndParse(s2.value.replace(/```json|```/g, "").trim()) : null;
+      const parse = s => s.status === "fulfilled"
+        ? repairAndParse(s.value.replace(/```json|```/g, "").trim())
+        : null;
+      const pC1 = parse(sC1), pG1 = parse(sG1);
+      const pC2 = parse(sC2), pG2 = parse(sG2);
 
-      if (!r1 && !r2) throw new Error((s1.reason || s2.reason)?.message || "Error en ambos modelos de análisis");
-      const merged = r1 && r2 ? mergeResults(r1, r2) : (r1 || r2);
+      if (!pC1 && !pG1 && !pC2 && !pG2)
+        throw new Error((sC1.reason || sG1.reason || sC2.reason || sG2.reason)?.message || "Error en todos los modelos");
+
+      // Merge dentro de cada capa
+      const cap1 = (pC1 && pG1) ? mergeResults(pC1, pG1) : (pC1 || pG1 || {});
+      const cap2 = (pC2 && pG2) ? mergeResults(pC2, pG2) : (pC2 || pG2 || {});
+
+      // Combinar ambas capas en el resultado final
+      const merged = {
+        resumen_general:    cap2.resumen_general    || "",
+        puntaje_global:     cap2.puntaje_global     ?? 0,
+        estado_global:      cap2.estado_global      || "OBSERVADO",
+        alertas_especiales: cap2.alertas_especiales || [],
+        capa2:              cap2.capa2              || {},
+        analisis_por_archivo: cap1.analisis_por_archivo || [],
+        pasos_siguientes:   cap2.pasos_siguientes   || [],
+        capa1:              cap1.capa1              || {},
+      };
+
       const sinDatos = !merged.analisis_por_archivo?.length
-        && !Object.keys(merged.capa1 || {}).length
-        && !Object.keys(merged.capa2 || {}).length
+        && !Object.keys(merged.capa1).length
+        && !Object.keys(merged.capa2).length
         && !merged.alertas_especiales?.length;
       if (sinDatos) throw new Error("La respuesta llegó vacía o cortada. Reduce el número de páginas o archivos e intenta de nuevo.");
       setResult(merged);
