@@ -1282,9 +1282,14 @@ ${printRef.current.innerHTML}
       // Inyectar el system RAG sobre el análisis estructurado degrada la calidad
       // (el modelo se ancla en los artículos del RAG e ignora el resto del esquema).
       const makeBody = m => JSON.stringify({ messages: [{ role: "user", content }], modelo: m });
+      function fetchWithTimeout(url, opts, ms = 270_000) {
+        const ac = new AbortController();
+        const tid = setTimeout(() => ac.abort(), ms);
+        return fetch(url, { ...opts, signal: ac.signal }).finally(() => clearTimeout(tid));
+      }
       const [resp1, resp2] = await Promise.all([
-        fetch(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("claude") }),
-        fetch(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("gpt4o") }),
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("claude") }),
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: makeBody("gpt4o") }),
       ]);
 
       setProgress("Consolidando análisis...");
@@ -1294,7 +1299,12 @@ ${printRef.current.innerHTML}
       const r2 = s2.status === "fulfilled" ? repairAndParse(s2.value.replace(/```json|```/g, "").trim()) : null;
 
       if (!r1 && !r2) throw new Error((s1.reason || s2.reason)?.message || "Error en ambos modelos de análisis");
-      setResult(r1 && r2 ? mergeResults(r1, r2) : (r1 || r2));
+      const merged = r1 && r2 ? mergeResults(r1, r2) : (r1 || r2);
+      const sinDatos = !merged.analisis_por_archivo?.length
+        && !Object.keys(merged.capa1 || {}).length
+        && !Object.keys(merged.capa2 || {}).length;
+      if (sinDatos) throw new Error("La respuesta llegó vacía o cortada — la generación fue demasiado extensa. Reduce el número de páginas o archivos e intenta de nuevo.");
+      setResult(merged);
 
     } catch (e) {
       setError("Error al analizar: " + e.message);
