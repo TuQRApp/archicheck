@@ -1061,6 +1061,7 @@ export default function ArchiCheck() {
   const [sinTipo, setSinTipo] = useState(false);
   const [colabJson, setColabJson] = useState(null);
   const [colabPngs, setColabPngs] = useState([]);
+  const [colabExpanded, setColabExpanded] = useState(false);
   const [toast, setToast] = useState(null);
   const [activeEtapa, setActiveEtapa] = useState("e1");
   const [activeFloor, setActiveFloor] = useState(0);
@@ -1076,6 +1077,7 @@ export default function ArchiCheck() {
     setArchivos([]);
     setColabJson(null);
     setColabPngs([]);
+    setColabExpanded(false);
     setObsStatus({});
     setError("");
     setExpandido({});
@@ -1208,6 +1210,7 @@ ${printRef.current.innerHTML}
         return;
       }
       setColabJson(json);
+      setColabExpanded(true);
       setError("");
     } catch (e) {
       setError("No se pudo leer el JSON de Colab: " + e.message);
@@ -1221,6 +1224,7 @@ ${printRef.current.innerHTML}
       base64: await compressImage(f),
     })));
     setColabPngs(prev => [...prev, ...nuevos]);
+    setColabExpanded(true);
   }
 
   function removeColabPng(i) {
@@ -1630,59 +1634,88 @@ ${printRef.current.innerHTML}
             )}
 
             {/* Resultados Colab (opcional) */}
-            <div style={{ marginBottom: 18, border: "1px solid #D1D9EE", borderRadius: 10, overflow: "hidden" }}>
-              <div style={{ padding: "10px 14px", background: "#F4F6FB", borderBottom: "1px solid #D1D9EE", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "2px" }}>RESULTADOS COLAB</span>
-                <span style={{ fontSize: 10, color: "#B8C5E0" }}>opcional — medición geométrica OpenCV</span>
-              </div>
-              <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
-
-                {/* JSON */}
-                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                  <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: colabJson ? "#1E8449" : "#2952A3", background: colabJson ? "rgba(30,132,73,0.06)" : "#EEF2FB", border: `1px solid ${colabJson ? "rgba(30,132,73,0.35)" : "#D1D9EE"}`, borderRadius: 7, padding: "7px 13px", fontFamily: "inherit", transition: "all .15s" }}>
-                    <input ref={colabInputRef} type="file" accept=".json" style={{ display: "none" }}
-                      onChange={e => handleColabJson(e.target.files[0])} />
-                    <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace" }}>.json</span>
-                    {colabJson ? " ✓ cargado" : " — archicheck_geometrico.json"}
-                  </label>
-                  {colabJson && (
-                    <>
-                      <span style={{ fontSize: 11, color: "#6B7A99" }}>
-                        {colabJson.paginas
-                          ? `${colabJson.paginas.length} pág. · ${colabJson.resumen_global?.incumplimientos_geo_total ?? 0} incump. Colab`
-                          : `${colabJson.tabla_cruzada?.length ?? 0} recintos`}
-                      </span>
-                      <button onClick={() => { setColabJson(null); if (colabInputRef.current) colabInputRef.current.value = ""; }}
-                        style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 13, padding: "0 2px", lineHeight: 1 }}>✕</button>
-                    </>
-                  )}
+            {(colabJson || colabPngs.length > 0) ? (
+              <div style={{ marginBottom: 18, border: "1px solid #D1D9EE", borderRadius: 10, overflow: "hidden" }}>
+                <div style={{ padding: "10px 14px", background: "#F4F6FB", borderBottom: "1px solid #D1D9EE", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "2px" }}>RESULTADOS COLAB</span>
+                  <span style={{ fontSize: 10, color: "#B8C5E0" }}>medición geométrica OpenCV</span>
                 </div>
-
-                {/* PNGs */}
-                <div>
+                <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
+                  {/* JSON */}
                   <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                    <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: colabPngs.length ? "#1E8449" : "#2952A3", background: colabPngs.length ? "rgba(30,132,73,0.06)" : "#EEF2FB", border: `1px solid ${colabPngs.length ? "rgba(30,132,73,0.35)" : "#D1D9EE"}`, borderRadius: 7, padding: "7px 13px", fontFamily: "inherit", transition: "all .15s" }}>
-                      <input ref={colabPngInputRef} type="file" accept="image/png,image/jpeg" multiple style={{ display: "none" }}
-                        onChange={e => handleColabPngs(e.target.files)} />
-                      <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace" }}>.png</span>
-                      {colabPngs.length ? ` ✓ ${colabPngs.length} imagen${colabPngs.length > 1 ? "es" : ""} cargada${colabPngs.length > 1 ? "s" : ""}` : " — archicheck_geometrico_pagN.png"}
+                    <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: colabJson ? "#1E8449" : "#2952A3", background: colabJson ? "rgba(30,132,73,0.06)" : "#EEF2FB", border: `1px solid ${colabJson ? "rgba(30,132,73,0.35)" : "#D1D9EE"}`, borderRadius: 7, padding: "7px 13px", fontFamily: "inherit", transition: "all .15s" }}>
+                      <input ref={colabInputRef} type="file" accept=".json" style={{ display: "none" }}
+                        onChange={e => handleColabJson(e.target.files[0])} />
+                      <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace" }}>.json</span>
+                      {colabJson ? " ✓ cargado" : " — subir JSON"}
+                    </label>
+                    {colabJson && (
+                      <>
+                        <span style={{ fontSize: 11, color: "#6B7A99" }}>
+                          {colabJson.paginas
+                            ? `${colabJson.paginas.length} pág. · ${colabJson.resumen_global?.incumplimientos_geo_total ?? 0} incump. Colab`
+                            : `${colabJson.tabla_cruzada?.length ?? 0} recintos`}
+                        </span>
+                        <button onClick={() => { setColabJson(null); if (colabInputRef.current) colabInputRef.current.value = ""; }}
+                          style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 13, padding: "0 2px", lineHeight: 1 }}>✕</button>
+                      </>
+                    )}
+                  </div>
+                  {/* PNGs */}
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                      <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: colabPngs.length ? "#1E8449" : "#2952A3", background: colabPngs.length ? "rgba(30,132,73,0.06)" : "#EEF2FB", border: `1px solid ${colabPngs.length ? "rgba(30,132,73,0.35)" : "#D1D9EE"}`, borderRadius: 7, padding: "7px 13px", fontFamily: "inherit", transition: "all .15s" }}>
+                        <input ref={colabPngInputRef} type="file" accept="image/png,image/jpeg" multiple style={{ display: "none" }}
+                          onChange={e => handleColabPngs(e.target.files)} />
+                        <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace" }}>.png</span>
+                        {colabPngs.length ? ` ✓ ${colabPngs.length} imagen${colabPngs.length > 1 ? "es" : ""} cargada${colabPngs.length > 1 ? "s" : ""}` : " — subir PNGs"}
+                      </label>
+                    </div>
+                    {colabPngs.length > 0 && (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 7 }}>
+                        {colabPngs.map((p, i) => (
+                          <div key={i} style={{ display: "flex", alignItems: "center", gap: 4, background: "rgba(30,132,73,0.06)", border: "1px solid rgba(30,132,73,0.2)", borderRadius: 5, padding: "3px 8px 3px 6px" }}>
+                            <span style={{ fontSize: 10, color: "#1E8449", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
+                            <button onClick={() => removeColabPng(i)}
+                              style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 11, padding: 0, lineHeight: 1 }}>✕</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : colabExpanded ? (
+              <div style={{ marginBottom: 18, border: "1px solid #D1D9EE", borderRadius: 10, overflow: "hidden" }}>
+                <div style={{ padding: "10px 14px", background: "#F4F6FB", borderBottom: "1px solid #D1D9EE", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "2px" }}>RESULTADOS COLAB</span>
+                  <button onClick={() => setColabExpanded(false)} style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 13, padding: 0, lineHeight: 1 }}>✕</button>
+                </div>
+                <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                    <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#2952A3", background: "#EEF2FB", border: "1px solid #D1D9EE", borderRadius: 7, padding: "7px 13px", fontFamily: "inherit" }}>
+                      <input ref={colabInputRef} type="file" accept=".json" style={{ display: "none" }}
+                        onChange={e => handleColabJson(e.target.files[0])} />
+                      <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace" }}>.json</span> — subir JSON
                     </label>
                   </div>
-                  {colabPngs.length > 0 && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 7 }}>
-                      {colabPngs.map((p, i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 4, background: "rgba(30,132,73,0.06)", border: "1px solid rgba(30,132,73,0.2)", borderRadius: 5, padding: "3px 8px 3px 6px" }}>
-                          <span style={{ fontSize: 10, color: "#1E8449", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
-                          <button onClick={() => removeColabPng(i)}
-                            style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 11, padding: 0, lineHeight: 1 }}>✕</button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <div>
+                    <label style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#2952A3", background: "#EEF2FB", border: "1px solid #D1D9EE", borderRadius: 7, padding: "7px 13px", fontFamily: "inherit" }}>
+                      <input ref={colabPngInputRef} type="file" accept="image/png,image/jpeg" multiple style={{ display: "none" }}
+                        onChange={e => handleColabPngs(e.target.files)} />
+                      <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace" }}>.png</span> — subir PNGs
+                    </label>
+                  </div>
                 </div>
-
               </div>
-            </div>
+            ) : (
+              <div style={{ marginBottom: 18, textAlign: "center" }}>
+                <button onClick={() => setColabExpanded(true)}
+                  style={{ background: "none", border: "none", color: "#B8C5E0", fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px" }}>
+                  + Agregar resultados Colab (opcional)
+                </button>
+              </div>
+            )}
 
             {/* Botón analizar */}
             <button onClick={analizar}
