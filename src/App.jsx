@@ -1071,6 +1071,17 @@ export default function ArchiCheck() {
   const colabPngInputRef = useRef();
   const printRef = useRef();
 
+  function resetApp() {
+    setResult(null);
+    setArchivos([]);
+    setColabJson(null);
+    setColabPngs([]);
+    setObsStatus({});
+    setError("");
+    setExpandido({});
+    setActiveEtapa("e1");
+  }
+
   function exportPDF() {
     if (!printRef.current) return;
 
@@ -1370,7 +1381,7 @@ ${printRef.current.innerHTML}
 
       {/* Header */}
       <header style={{ padding: "18px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#1B3A8A" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div onClick={resetApp} style={{ display: "flex", alignItems: "center", gap: 14, cursor: "pointer" }}>
           <svg width="36" height="36" viewBox="0 0 36 36">
             <rect width="36" height="36" rx="9" fill="rgba(255,255,255,0.15)"/>
             <path d="M18 7L29 13V23L18 29L7 23V13Z" fill="none" stroke="#A8BFEE" strokeWidth="1.4" strokeLinejoin="round"/>
@@ -2268,7 +2279,7 @@ ${printRef.current.innerHTML}
                     ⚠ Análisis orientativo. No reemplaza la revisión oficial de la DOM. Consulte siempre el Plan Regulador Comunal y la DOM de su comuna.
                   </div>
                   <div style={{ display:"flex", gap:10 }}>
-                    <button onClick={() => { setResult(null); setArchivos([]); setColabJson(null); setColabPngs([]); setObsStatus({}); setError(""); setExpandido({}); setActiveEtapa("e1"); }} style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #D1D9EE", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>↩ Nuevo análisis</button>
+                    <button onClick={resetApp} style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #D1D9EE", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>↩ Nuevo análisis</button>
                     <button onClick={exportPDF} style={{ flex:1, padding:"13px", background:"linear-gradient(90deg,#1B3A8A,#2952A3)", border:"none", borderRadius:10, color:"#fff", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>🖨 Exportar informe</button>
                   </div>
                 </div>
