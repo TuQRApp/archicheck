@@ -387,7 +387,23 @@ Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de
 ${contextoTexto}Analiza solo los archivos adjuntos. No penalices por documentos no subidos.
 
 INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
-1. EXHAUSTIVIDAD: Por cada artículo de OGUC, LGUC, DDU y PRC listados en este prompt, verifica explícitamente si el proyecto cumple, incumple o no es posible determinarlo. Genera una observación para cada artículo que presente incumplimiento o requiera verificación. No te limites a los hallazgos más evidentes — un revisor DOM examina TODOS los requisitos normativos aplicables al tipo de proyecto y comuna.
+1. EXHAUSTIVIDAD: Actúa como revisor DOM oficial. Examina sistemáticamente TODAS estas áreas normativas y genera observaciones para cada incumplimiento o punto que requiera verificación:
+   • Superficies mínimas por tipo de recinto (OGUC Art. 4.1.1, 4.1.7)
+   • Alturas libres interiores en cortes (OGUC Art. 4.2.6, 4.2.7)
+   • Anchos de pasillos, escaleras, rampas y accesos (OGUC Art. 4.2.2, 4.2.5)
+   • Carga de ocupación calculada por recinto y nivel (OGUC Art. 4.2.4)
+   • Salidas de emergencia: cantidad y ancho según carga (OGUC Art. 4.3.4, 4.2.5)
+   • Resistencia al fuego de elementos estructurales (OGUC Art. 4.3.3)
+   • Iluminación y ventilación natural por recinto — ratio 1/6 (OGUC Art. 4.1.2, 4.5.7)
+   • Ductos de ventilación mecánica para baños y cocinas sin ventana (OGUC Art. 4.1.3)
+   • Accesibilidad universal: rampa, baño accesible, estacionamiento, ruta (OGUC Art. 4.1.7, DDU 351)
+   • Pasamanos en escaleras (OGUC Art. 4.2.7)
+   • Constructibilidad, COS, altura máxima, rasantes (OGUC Art. 2.6.1, PRC comuna)
+   • Distanciamientos y adosamiento a deslindes (OGUC Art. 2.6.2, 2.6.3, PRC comuna)
+   • Uso de suelo y cambio de destino si aplica (LGUC Art. 57-59, PRC comuna)
+   • Dotación de estacionamientos (OGUC Art. 2.4.1)
+   • Protección patrimonial si aplica (LGUC Art. 60)
+   • Documentación faltante: CIP, cuadro superficies, cuadro iluminación, estudio carga ocupación, especificaciones RF (DDU 390)
 2. Las observaciones de cada sección deben ser DISTINTAS y específicas de esa etapa. No repitas el mismo hallazgo en múltiples secciones.
 3. iluminacion_ventilacion.tabla: incluye una fila por cada recinto habitable visible. Si no puedes medir el área de ventana, usa area_ventana_m2:0 y cumple:"VERIFICAR".
 4. normativa_urbanistica.tabla: incluye una fila por cada parámetro del PRC y OGUC aplicable (rasante(s), constructibilidad, COS, altura máxima, uso de suelo, distancias a deslindes, adosamiento, línea de edificación). Usa estado:"VERIFICAR" si no hay dato visible en los planos.
