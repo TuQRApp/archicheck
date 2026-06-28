@@ -331,7 +331,7 @@ Responde SOLO con JSON puro sin markdown:
 }
 
 // ── Prompt Capa 2: evaluación normativa ────────────────────────────────────
-function buildPromptCapa2(tipo, comuna, archivos, preguntas = {}, colabData = null) {
+function buildPromptCapa2(tipo, comuna, archivos, preguntas = {}, colabData = null, capa1Context = null) {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
   const lista = archivos.map((f, i) => {
     const selCount = f.paginasSeleccionadas?.length ?? f.pdfImages?.length ?? 0;
@@ -352,13 +352,13 @@ function buildPromptCapa2(tipo, comuna, archivos, preguntas = {}, colabData = nu
 
   // Artículos OGUC clave para el análisis
   const ogucTexto = Object.entries(ogucArticulos.articulos)
-    .map(([num, art]) => `Art. ${num} (${art.tema}): ${art.texto.substring(0, 300)}`)
-    .join("\n");
+    .map(([num, art]) => `Art. ${num} (${art.tema}):\n${art.texto}`)
+    .join("\n\n");
 
-  // Artículos LGUC clave
+  // Artículos LGUC — texto completo
   const lgucTexto = Object.entries(lgucArticulos.articulos)
-    .map(([num, art]) => `Art. ${num} (${art.tema}): ${art.texto.substring(0, 300)}`)
-    .join("\n");
+    .map(([num, art]) => `Art. ${num} (${art.tema}):\n${art.texto}`)
+    .join("\n\n");
 
   // Reglas de verificación nacional
   const reglasTexto = reglasNacionales.reglas
@@ -425,6 +425,7 @@ CIRCULARES DDU VIGENTES (División de Desarrollo Urbano, MINVU):
 
 Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de OGUC, LGUC o la circular DDU correspondiente cuando detectes cumplimiento o incumplimiento.
 ${contextoTexto}Analiza solo los archivos adjuntos. No penalices por documentos no subidos.
+${capa1Context ? `\nLEVANTAMIENTO GEOMÉTRICO YA REALIZADO (Fase 1):\n${JSON.stringify(capa1Context, null, 0)}\n\nUsa estos datos de geometría y recintos como base para tu evaluación normativa. Verifica cada medida contra la normativa aplicable.\n` : ""}
 
 INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
 1. EXHAUSTIVIDAD: Actúa como revisor DOM oficial. Examina sistemáticamente TODAS estas áreas normativas y genera observaciones para cada incumplimiento o punto que requiera verificación:
@@ -1317,56 +1318,56 @@ ${printRef.current.innerHTML}
         imageContent.push({ type: "text", text: `[COLAB PNG: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales]` });
       }
 
-      // Cada capa recibe las mismas imágenes + su propio prompt enfocado
-      const contentC1 = [...imageContent, { type: "text", text: buildPromptCapa1(tipo, comuna, archivos, preguntas, colabJson) }];
-      const contentC2 = [...imageContent, { type: "text", text: buildPromptCapa2(tipo, comuna, archivos, preguntas, colabJson) }];
-
-      // ── 4 llamadas paralelas ───────────────────────────────────────────────
-      setProgress("Analizando expediente — 4 flujos paralelos...");
+      // ── Helpers ───────────────────────────────────────────────────────────
       function fetchWithTimeout(url, opts, ms = 270_000) {
         const ac = new AbortController();
         const tid = setTimeout(() => ac.abort(), ms);
         return fetch(url, { ...opts, signal: ac.signal }).finally(() => clearTimeout(tid));
       }
       const H = { "Content-Type": "application/json" };
-      const body = (m, c) => JSON.stringify({ messages: [{ role: "user", content: c }], modelo: m });
+      const mkBody = (m, c) => JSON.stringify({ messages: [{ role: "user", content: c }], modelo: m });
+      const parse  = s => s.status === "fulfilled"
+        ? repairAndParse(s.value.replace(/```json|```/g, "").trim()) : null;
 
-      const [rC1, rG1, rC2, rG2] = await Promise.all([
-        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: body("claude",  contentC1) }),
-        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: body("gpt4o",   contentC1) }),
-        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: body("claude",  contentC2) }),
-        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: body("gpt4o",   contentC2) }),
+      // ── FASE 1: Levantamiento geométrico (Claude + GPT-4o en paralelo) ────
+      setProgress("Fase 1/2 — Levantamiento geométrico (Claude + GPT-4o)...");
+      const contentC1 = [...imageContent, { type: "text", text: buildPromptCapa1(tipo, comuna, archivos, preguntas, colabJson) }];
+
+      const [rC1, rG1] = await Promise.all([
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: mkBody("claude", contentC1) }),
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: mkBody("gpt4o",  contentC1) }),
       ]);
-
-      setProgress("Consolidando análisis...");
-      const [sC1, sG1, sC2, sG2] = await Promise.allSettled([
-        readModelStream(rC1), readModelStream(rG1),
-        readModelStream(rC2), readModelStream(rG2),
-      ]);
-
-      const parse = s => s.status === "fulfilled"
-        ? repairAndParse(s.value.replace(/```json|```/g, "").trim())
-        : null;
+      const [sC1, sG1] = await Promise.allSettled([readModelStream(rC1), readModelStream(rG1)]);
       const pC1 = parse(sC1), pG1 = parse(sG1);
+      const cap1 = (pC1 && pG1) ? mergeResults(pC1, pG1) : (pC1 || pG1 || {});
+
+      // ── FASE 2: Evaluación normativa completa con contexto de Fase 1 ──────
+      setProgress("Fase 2/2 — Evaluación normativa completa (Claude + GPT-4o)...");
+      const contentC2 = [...imageContent, { type: "text", text: buildPromptCapa2(tipo, comuna, archivos, preguntas, colabJson, cap1) }];
+
+      const [rC2, rG2] = await Promise.all([
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: mkBody("claude", contentC2) }),
+        fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: mkBody("gpt4o",  contentC2) }),
+      ]);
+      setProgress("Consolidando análisis...");
+      const [sC2, sG2] = await Promise.allSettled([readModelStream(rC2), readModelStream(rG2)]);
       const pC2 = parse(sC2), pG2 = parse(sG2);
 
       if (!pC1 && !pG1 && !pC2 && !pG2)
         throw new Error((sC1.reason || sG1.reason || sC2.reason || sG2.reason)?.message || "Error en todos los modelos");
 
-      // Merge dentro de cada capa
-      const cap1 = (pC1 && pG1) ? mergeResults(pC1, pG1) : (pC1 || pG1 || {});
       const cap2 = (pC2 && pG2) ? mergeResults(pC2, pG2) : (pC2 || pG2 || {});
 
-      // Combinar ambas capas en el resultado final
+      // ── Resultado final ───────────────────────────────────────────────────
       const merged = {
-        resumen_general:    cap2.resumen_general    || "",
-        puntaje_global:     cap2.puntaje_global     ?? 0,
-        estado_global:      cap2.estado_global      || "OBSERVADO",
-        alertas_especiales: cap2.alertas_especiales || [],
-        capa2:              cap2.capa2              || {},
+        resumen_general:      cap2.resumen_general    || "",
+        puntaje_global:       cap2.puntaje_global     ?? 0,
+        estado_global:        cap2.estado_global      || "OBSERVADO",
+        alertas_especiales:   cap2.alertas_especiales || [],
+        capa2:                cap2.capa2              || {},
         analisis_por_archivo: cap1.analisis_por_archivo || [],
-        pasos_siguientes:   cap2.pasos_siguientes   || [],
-        capa1:              cap1.capa1              || {},
+        pasos_siguientes:     cap2.pasos_siguientes   || [],
+        capa1:                cap1.capa1              || {},
       };
 
       const sinDatos = !merged.analisis_por_archivo?.length
