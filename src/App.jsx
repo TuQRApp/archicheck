@@ -1,6 +1,7 @@
 ﻿import { useState, useRef, useCallback, useEffect } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import SelectorComuna from './components/SelectorComuna.jsx';
+import { verificarProyecto, listarZonas } from './normativa/verificador.js';
 import ogucArticulos from "../normativa/nacional/oguc_articulos.json";
 import lgucArticulos from "../normativa/nacional/lguc_articulos.json";
 import ley19300Articulos from "../normativa/nacional/ley19300_articulos.json";
@@ -676,7 +677,7 @@ function ObsSection({ obs, prefix, obsStatus, onAction, onComment }) {
 }
 
 // ── PrintReport — layout dedicado para PDF ──────────────────────────────────
-function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
+function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, verificadorResult, fichaProyecto }) {
   const ec = globalStyle(result.estado_global);
   const tienePRC = !!PRC_COMUNAS[comuna];
   const todas = getAllObs(result);
@@ -981,6 +982,25 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
         <div style={pg}>
           <CapaBanner>CAPA 2 — EVALUACIÓN NORMATIVA</CapaBanner>
           <EtapaTitle label="Etapa D — Normativa Urbanística" subtitle="Verificación de constructibilidad, altura, COS y uso de suelo" badge="Capa 2 · D/D" c2 />
+          {verificadorResult?.length > 0 && (
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ fontSize: 8, fontWeight: 700, color: "#2952A3", letterSpacing: "1.5px", marginBottom: 6 }}>
+                VERIFICACIÓN DETERMINISTA — ZONA {fichaProyecto?.zonaId}
+              </div>
+              <PrintTable
+                headers={["Parámetro","Proyectado","Límite normativo","Cumple","Referencia"]}
+                rows={verificadorResult.map((r, i) => (
+                  <tr key={i} style={{ background: i%2===0?"#fff":"#f8f9ff" }}>
+                    <td style={{ ...PTD, fontWeight: 700, color: "#1B3A8A" }}>{r.parametro}</td>
+                    <td style={PTD}>{r.propuesto}</td>
+                    <td style={{ ...PTD, fontFamily: "monospace", fontSize: 9 }}>{r.limiteNormativo}</td>
+                    <td style={PTD}><StatusBadge val={r.cumple === true ? "OK" : r.cumple === false ? "NO" : "VERIFICAR"} /></td>
+                    <td style={{ ...PTD, fontFamily: "monospace", fontSize: 9, color: "#2952A3" }}>{r.referencia}</td>
+                  </tr>
+                ))}
+              />
+            </div>
+          )}
           <PrintTable
             headers={["Parámetro","Referencia normativa","Valor del proyecto","Estado"]}
             rows={(result.capa2?.normativa_urbanistica?.tabla || []).map((r, i) => (
@@ -1125,6 +1145,9 @@ export default function ArchiCheck() {
   const [colabJson, setColabJson] = useState(null);
   const [colabPngs, setColabPngs] = useState([]);
   const [colabExpanded, setColabExpanded] = useState(false);
+  const [fichaProyecto, setFichaProyecto] = useState({ zonaId: "", superficieTerreno: "", cosProyectado: "", ccProyectado: "", alturaM: "", pisosProyectados: "", anchoCalleFrentera: "" });
+  const [fichaExpanded, setFichaExpanded] = useState(false);
+  const [verificadorResult, setVerificadorResult] = useState(null);
   const [toast, setToast] = useState(null);
   const [activeEtapa, setActiveEtapa] = useState("e1");
   const [activeFloor, setActiveFloor] = useState(0);
@@ -1140,6 +1163,7 @@ export default function ArchiCheck() {
     setColabJson(null);
     setColabPngs([]);
     setColabExpanded(false);
+    setVerificadorResult(null);
     setObsStatus({});
     setError("");
     setExpandido({});
@@ -1386,6 +1410,21 @@ ${printRef.current.innerHTML}
         && !Object.keys(merged.capa2).length
         && !merged.alertas_especiales?.length;
       if (sinDatos) throw new Error("La respuesta llegó vacía o cortada. Reduce el número de páginas o archivos e intenta de nuevo.");
+
+      // ── Verificación determinista (sincrónica, sin varianza) ────────────────
+      if (fichaProyecto.zonaId) {
+        const proj = {
+          superficieTerreno:  fichaProyecto.superficieTerreno  ? Number(fichaProyecto.superficieTerreno)  : null,
+          cosProyectado:      fichaProyecto.cosProyectado      ? Number(fichaProyecto.cosProyectado)      : null,
+          ccProyectado:       fichaProyecto.ccProyectado       ? Number(fichaProyecto.ccProyectado)       : null,
+          alturaM:            fichaProyecto.alturaM            ? Number(fichaProyecto.alturaM)            : null,
+          pisosProyectados:   fichaProyecto.pisosProyectados   ? Number(fichaProyecto.pisosProyectados)   : null,
+          anchoCalleFrentera: fichaProyecto.anchoCalleFrentera ? Number(fichaProyecto.anchoCalleFrentera) : null,
+          tiposProyecto: [tipo],
+        };
+        setVerificadorResult(verificarProyecto(proj, fichaProyecto.zonaId, comuna));
+      }
+
       setResult(merged);
 
     } catch (e) {
@@ -1725,6 +1764,59 @@ ${printRef.current.innerHTML}
                 </div>
               </div>
             </div>
+
+            {/* Parámetros cuantitativos — verificación determinista (opcional) */}
+            {(comuna === "nunoa" || comuna === "providencia") && (
+              <div style={{ marginBottom: 14, border: "1px solid #D1D9EE", borderRadius: 10, overflow: "hidden" }}>
+                <button
+                  onClick={() => setFichaExpanded(p => !p)}
+                  style={{ width: "100%", background: "#F4F6FB", border: "none", padding: "11px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer", fontFamily: "inherit" }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#2952A3" }}>
+                    ⚙️ Parámetros cuantitativos (opcional — para verificación determinista)
+                  </span>
+                  <span style={{ fontSize: 11, color: "#6B7A99" }}>{fichaExpanded ? "▾" : "▸"}</span>
+                </button>
+                {fichaExpanded && (
+                  <div style={{ padding: "14px 16px", background: "#fff" }}>
+                    <p style={{ fontSize: 11, color: "#6B7A99", margin: "0 0 12px", lineHeight: 1.6 }}>
+                      Si declaras estos valores, el sistema calculará cumplimiento de COS, CC, altura y subdivisión sin varianza — resultado determinista, no LLM.
+                    </p>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                      {/* Zona */}
+                      <label style={{ gridColumn: "1/-1", display: "flex", flexDirection: "column", gap: 4 }}>
+                        <span style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "1.5px" }}>ZONA NORMATIVA</span>
+                        <select value={fichaProyecto.zonaId}
+                          onChange={e => setFichaProyecto(p => ({ ...p, zonaId: e.target.value }))}
+                          style={{ background: "#fff", border: "1px solid #D1D9EE", borderRadius: 7, padding: "8px 10px", color: "#3D4A5C", fontSize: 12, fontFamily: "inherit" }}>
+                          <option value="">— Selecciona zona —</option>
+                          {listarZonas(comuna).map(z => (
+                            <option key={z.id} value={z.id}>{z.id} — {z.nombre}</option>
+                          ))}
+                        </select>
+                      </label>
+                      {[
+                        { key: "superficieTerreno",  label: "SUP. TERRENO (m²)",    placeholder: "ej. 320" },
+                        { key: "cosProyectado",       label: "COS PROYECTADO",       placeholder: "ej. 0.65" },
+                        { key: "ccProyectado",        label: "CC PROYECTADO",        placeholder: "ej. 1.8" },
+                        { key: "alturaM",             label: "ALTURA (m)",           placeholder: "ej. 9.5" },
+                        { key: "pisosProyectados",    label: "PISOS",                placeholder: "ej. 3" },
+                        { key: "anchoCalleFrentera",  label: "ANCHO CALLE FRONT. (m)", placeholder: "ej. 10" },
+                      ].map(({ key, label, placeholder }) => (
+                        <label key={key} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                          <span style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "1.5px" }}>{label}</span>
+                          <input
+                            type="number" min="0" step="any"
+                            value={fichaProyecto[key]}
+                            onChange={e => setFichaProyecto(p => ({ ...p, [key]: e.target.value }))}
+                            placeholder={placeholder}
+                            style={{ background: "#fff", border: "1px solid #D1D9EE", borderRadius: 7, padding: "8px 10px", color: "#3D4A5C", fontSize: 12, fontFamily: "inherit", width: "100%" }} />
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Botón analizar */}
             <button onClick={analizar}
@@ -2075,7 +2167,35 @@ ${printRef.current.innerHTML}
                       <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(214,137,16,0.08)", color:"#D68910", border:"1px solid rgba(214,137,16,0.25)", whiteSpace:"nowrap" }}>Capa 2 · D/D</span>
                     </div>
                   </div>
-                  <SectionTitle>🏙️ Marco normativo aplicable</SectionTitle>
+                  {/* Verificación determinista — solo si el usuario declaró zona + parámetros */}
+                  {verificadorResult?.length > 0 && (
+                    <div style={{ marginBottom: 24 }}>
+                      <SectionTitle>⚙️ Verificación determinista — Zona {fichaProyecto.zonaId}</SectionTitle>
+                      <div style={{ overflowX: "auto", marginBottom: 10 }}>
+                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                          <thead><tr>{["Parámetro", "Proyectado", "Límite normativo", "Cumple", "Referencia"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                          <tbody>
+                            {verificadorResult.map((r, i) => (
+                              <tr key={i} style={{ background: i % 2 === 0 ? "#fff" : "#F8F9FF" }}>
+                                <td style={{ ...TD, fontWeight: 600, color: "#1B3A8A" }}>{r.parametro}</td>
+                                <td style={TD}>{r.propuesto}</td>
+                                <td style={{ ...TD, fontFamily: "'DM Mono',monospace", fontSize: 10 }}>{r.limiteNormativo}</td>
+                                <td style={TD}><StatusBadge val={r.cumple === true ? "OK" : r.cumple === false ? "NO" : "VERIFICAR"} /></td>
+                                <td style={{ ...TD, fontFamily: "'DM Mono',monospace", fontSize: 10, color: "#2952A3" }}>{r.referencia}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      {verificadorResult.some(r => r.cumple === false) && (
+                        <div style={{ background: "rgba(192,57,43,0.06)", border: "1px solid rgba(192,57,43,0.2)", borderRadius: 6, padding: "10px 12px", fontSize: 11, color: "#C0392B", lineHeight: 1.6 }}>
+                          Los parámetros marcados NO son incumplimientos deterministas — calculados directamente desde los valores que declaraste, sin varianza entre ejecuciones.
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <SectionTitle>🏙️ Marco normativo aplicable (análisis LLM)</SectionTitle>
                   {d?.tabla?.length ? (
                     <div style={{ overflowX:"auto", marginBottom:8 }}>
                       <table style={{ width:"100%", borderCollapse:"collapse" }}>
@@ -2369,6 +2489,8 @@ ${printRef.current.innerHTML}
             comuna={comuna}
             archivos={archivos}
             colabPngs={colabPngs}
+            verificadorResult={verificadorResult}
+            fichaProyecto={fichaProyecto}
           />
         </div>
       )}
