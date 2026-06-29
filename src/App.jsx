@@ -260,23 +260,23 @@ function mergeResults(r1, r2) {
 function buildColabTexto(json) {
   if (!json) return "";
   if (json.paginas) {
-    const lines = ["\nMEDICIÓN GEOMÉTRICA REAL (Colab/OpenCV, medida desde píxeles reales):"];
+    const lines = ["\nMEDICIÓN GEOMÉTRICA ESTIMADA (Colab/OpenCV — referencia, requiere verificación contra planos acotados):\nADVERTENCIA: Las mediciones OpenCV son estimaciones desde píxeles. Pueden tener errores de escala, especialmente en elementos de elevación o láminas con escala mixta. NO las trates como medidas definitivas; úsalas para orientar la revisión pero verifica siempre contra cotas declaradas en plano."];
     for (const p of json.paginas) {
-      lines.push(`Página ${p.pagina} — escala ${p.escala} — área total medida: ${p.total_area_m2} m²:`);
+      lines.push(`Página ${p.pagina} — escala declarada ${p.escala} — área total estimada: ${p.total_area_m2} m²:`);
       const named = (p.mediciones_geometricas || []).filter(r => !r.nombre.startsWith("Espacio E"));
       for (const r of named) {
-        const a = r.ancho_min_m != null ? ` · ancho mín ${r.ancho_min_m} m` : "";
-        const e = r.cumple_geo === false ? " [INCUMPLE OGUC]" : "";
+        const a = r.ancho_min_m != null ? ` · ancho estimado ${r.ancho_min_m} m` : "";
+        const e = r.cumple_geo === false ? " [posible incumplimiento — verificar en plano]" : "";
         lines.push(`  - ${r.nombre} (${r.tipo}): ${r.area_m2} m²${a}${e}`);
       }
       for (const inc of (p.incumplimientos_geo || [])) {
         const u = inc.tipo === "area" ? "m²" : "m";
-        lines.push(`  INCUMPLIMIENTO CONFIRMADO [${inc.tipo.toUpperCase()}] ${inc.recinto}: ${inc.medido}${u} < ${inc.minimo}${u} mínimo — ${inc.ref} — déficit ${inc.deficit}${u}`);
+        lines.push(`  ALERTA OpenCV [${inc.tipo.toUpperCase()}] ${inc.recinto}: estimado ${inc.medido}${u} vs mínimo ${inc.minimo}${u} — ${inc.ref} — VERIFICAR contra cota en plano antes de clasificar`);
       }
     }
     const totalInc = json.resumen_global?.incumplimientos_geo_total ?? 0;
     if (totalInc > 0)
-      lines.push(`\nLos ${totalInc} incumplimientos marcados son MEDIDAS REALES confirmadas por OpenCV. Inclúyelos como observaciones ALTA criticidad.\n`);
+      lines.push(`\nHay ${totalInc} alertas OpenCV. Son estimaciones que pueden tener error de escala. Si la cota declarada en plano confirma el incumplimiento → ALTA. Si no hay cota o el valor parece fuera de escala → VERIFICAR.\n`);
     return lines.join("\n") + "\n";
   }
   if (json.tabla_cruzada) {
