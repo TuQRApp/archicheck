@@ -260,9 +260,20 @@ function mergeResults(r1, r2) {
 function buildColabTexto(json) {
   if (!json) return "";
   if (json.paginas) {
-    const lines = ["\nMEDICIÓN GEOMÉTRICA ESTIMADA (Colab/OpenCV — referencia, requiere verificación contra planos acotados):\nADVERTENCIA: Las mediciones OpenCV son estimaciones desde píxeles. Pueden tener errores de escala, especialmente en elementos de elevación o láminas con escala mixta. NO las trates como medidas definitivas; úsalas para orientar la revisión pero verifica siempre contra cotas declaradas en plano."];
+    const lines = ["\nANÁLISIS SEMÁNTICO COLAB (estimaciones OpenCV + interpretación por recinto):\nNOTA: Las áreas y anchos son estimaciones desde píxeles — úsalas como referencia orientativa. Para dimensiones definitivas usa siempre cotas declaradas en el plano. Las observaciones por recinto son alertas normativas del pipeline."];
     for (const p of json.paginas) {
-      lines.push(`Página ${p.pagina} — escala declarada ${p.escala} — área total estimada: ${p.total_area_m2} m²:`);
+      const sem = p.analisis_semantico || {};
+      const tipoPlano = sem.tipo_plano || "desconocido";
+      const nivel = sem.nivel || "";
+      lines.push(`\nPágina ${p.pagina} — escala ${p.escala} — tipo: ${tipoPlano}${nivel ? ` — ${nivel}` : ""}:`);
+      const recintos = sem.recintos || [];
+      for (const r of recintos) {
+        const area = r.area_estimada_m2 != null ? ` ~${r.area_estimada_m2} m²` : "";
+        const ancho = r.ancho_estimado_m != null ? ` · ancho ~${r.ancho_estimado_m} m` : "";
+        const cumple = r.cumple_oguc === false ? " [posible incumplimiento]" : r.cumple_oguc === true ? " [cumple]" : "";
+        lines.push(`  - ${r.nombre} (${r.tipo})${area}${ancho}${cumple}`);
+        if (r.observacion) lines.push(`    Obs: ${r.observacion}`);
+      }
       const named = (p.mediciones_geometricas || []).filter(r => !r.nombre.startsWith("Espacio E"));
       for (const r of named) {
         const a = r.ancho_min_m != null ? ` · ancho estimado ${r.ancho_min_m} m` : "";
@@ -271,12 +282,12 @@ function buildColabTexto(json) {
       }
       for (const inc of (p.incumplimientos_geo || [])) {
         const u = inc.tipo === "area" ? "m²" : "m";
-        lines.push(`  ALERTA OpenCV [${inc.tipo.toUpperCase()}] ${inc.recinto}: estimado ${inc.medido}${u} vs mínimo ${inc.minimo}${u} — ${inc.ref} — VERIFICAR contra cota en plano antes de clasificar`);
+        lines.push(`  ALERTA OpenCV [${inc.tipo.toUpperCase()}] ${inc.recinto}: estimado ${inc.medido}${u} vs mínimo ${inc.minimo}${u} — ${inc.ref} — verificar contra cota en plano`);
       }
     }
     const totalInc = json.resumen_global?.incumplimientos_geo_total ?? 0;
     if (totalInc > 0)
-      lines.push(`\nHay ${totalInc} alertas OpenCV. Son estimaciones que pueden tener error de escala. Si la cota declarada en plano confirma el incumplimiento → ALTA. Si no hay cota o el valor parece fuera de escala → VERIFICAR.\n`);
+      lines.push(`\nHay ${totalInc} alertas OpenCV. Si la cota declarada en plano confirma el incumplimiento → ALTA. Si no hay cota o el valor parece fuera de escala → VERIFICAR.\n`);
     return lines.join("\n") + "\n";
   }
   if (json.tabla_cruzada) {
@@ -441,7 +452,7 @@ INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
 1. EXHAUSTIVIDAD: Actúa como revisor DOM oficial. Examina sistemáticamente TODAS estas áreas normativas y genera observaciones para cada incumplimiento o punto que requiera verificación:
    • Superficies mínimas por tipo de recinto (OGUC Art. 4.1.1, 4.1.7)
    • Alturas libres interiores en cortes (OGUC Art. 4.2.6)
-   • Anchos de pasillos, escaleras, rampas y accesos (OGUC Art. 4.2.2, 4.2.5)
+   • Anchos de pasillos, escaleras, rampas y accesos (OGUC Art. 4.2.2, 4.2.5) — mide anchos SOLO desde planta o detalle acotado; NO estimes anchos desde láminas de elevación o corte (la elevación muestra profundidad, no ancho en planta)
    • Carga de ocupación calculada por recinto y nivel (OGUC Art. 4.2.4)
    • Salidas de emergencia: cantidad y ancho según carga (OGUC Art. 4.2.4, 4.2.5)
    • Resistencia al fuego de elementos estructurales (OGUC Art. 4.3.3); para determinar la clase (a/b/c/d) usa OGUC Art. 4.3.4 Tabla 1 cruzando destino × número de pisos: restaurante 250–500 m² en 2 pisos = clase 'b', en 1 piso = clase 'c'
