@@ -234,7 +234,12 @@ function mergeResults(r1, r2) {
   };
 
   return {
-    puntaje_global:       Math.round(((r1.puntaje_global || 0) + (r2.puntaje_global || 0)) / 2),
+    puntaje_global:       (() => {
+      const avg = Math.round(((r1.puntaje_global || 0) + (r2.puntaje_global || 0)) / 2);
+      if (estado === "OBSERVADO") return Math.max(25, Math.min(69, avg));
+      if (estado === "APROBABLE" || estado === "APROBADO") return Math.max(70, Math.min(100, avg));
+      return Math.min(24, avg);
+    })(),
     estado_global:        estado,
     resumen_general:      (r1.resumen_general?.length || 0) >= (r2.resumen_general?.length || 0) ? r1.resumen_general : r2.resumen_general,
     analisis_por_archivo: (r1.analisis_por_archivo?.length || 0) >= (r2.analisis_por_archivo?.length || 0) ? (r1.analisis_por_archivo || []) : (r2.analisis_por_archivo || []),
@@ -477,6 +482,7 @@ CRITERIOS OBLIGATORIOS PARA estado_global Y puntaje_global:
 • OBSERVADO (25–69): Existen incumplimientos corregibles mediante ajuste de diseño, tramitación de permisos o aporte de documentación faltante. Incluye: cambio de destino pendiente, documentación RF no adjunta, estacionamientos no justificados, rampa fuera de norma corregible, segunda salida pendiente de diseño. El proyecto PUEDE llegar a aprobarse con correcciones.
 • RECHAZABLE (0–24): Incumplimientos irresolubles sin rediseño estructural mayor — incompatibilidad de uso con zonificación PRC, edificio que excede parámetros absolutos sin alternativa normativa, o peligro estructural evidente. Usar SOLO cuando el proyecto NO PUEDE aprobarse bajo ningún ajuste menor.
 REGLA CRÍTICA: Falta de permisos tramitados, documentación pendiente, detalles constructivos no mostrados en planos → siempre OBSERVADO, NUNCA RECHAZABLE. El puntaje debe reflejar cuántas y cuán graves son las correcciones requeridas, no la cantidad de documentación faltante.
+CONSISTENCIA ESTADO/PUNTAJE OBLIGATORIA: El puntaje_global DEBE ser coherente con el estado_global. Si estado=OBSERVADO → puntaje entre 25 y 69 (mínimo absoluto 25). Si estado=APROBABLE → puntaje entre 70 y 100. Si estado=RECHAZABLE → puntaje entre 0 y 24. Un proyecto con 5–8 observaciones ALTA todas corregibles típicamente puntúa 28–45. Nunca devuelvas estado=OBSERVADO con puntaje inferior a 25.
 
 Responde SOLO con JSON puro, sin markdown, sin texto previo. Produce ÚNICAMENTE la evaluación normativa — capa2 va PRIMERO en el JSON para protegerla de truncaciones.
 {"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
