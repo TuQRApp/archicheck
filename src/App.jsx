@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+﻿import { useState, useRef, useCallback, useEffect } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import SelectorComuna from './components/SelectorComuna.jsx';
 import CropModal from './components/CropModal.jsx';
@@ -137,7 +137,7 @@ function repairAndParse(str) {
 
   // Intento 3: datos parciales — extrae campos de primer nivel que sí llegaron
   const partial = {};
-  const fields = ["capa2","capa1","analisis_por_archivo","resumen_general","puntaje_global","estado_global","alertas_especiales","pasos_siguientes","documentos_faltantes"];
+  const fields = ["capa2","capa1","analisis_por_archivo","resumen_general","tabla_observaciones","estado_global","alertas_especiales","pasos_siguientes","documentos_faltantes"];
   for (const field of fields) {
     const m = str.match(new RegExp(`"${field}"\\s*:\\s*("([^"\\\\]|\\\\.)*"|\\d+|\\[|\\{)`));
     if (m) {
@@ -150,7 +150,7 @@ function repairAndParse(str) {
   }
   if (!partial.resumen_general) partial.resumen_general = "⚠ Respuesta recibida incompleta — datos parciales.";
   if (!partial.estado_global)   partial.estado_global   = "OBSERVADO";
-  if (typeof partial.puntaje_global !== "number") partial.puntaje_global = 0;
+  if (!partial.tabla_observaciones) partial.tabla_observaciones = [];
   if (!partial.analisis_por_archivo) partial.analisis_por_archivo = [];
   if (!partial.documentos_faltantes) partial.documentos_faltantes = [];
   if (!partial.alertas_especiales)   partial.alertas_especiales   = [];
@@ -234,12 +234,7 @@ function mergeResults(r1, r2) {
   };
 
   return {
-    puntaje_global:       (() => {
-      const avg = Math.round(((r1.puntaje_global || 0) + (r2.puntaje_global || 0)) / 2);
-      if (estado === "OBSERVADO") return Math.max(25, Math.min(69, avg));
-      if (estado === "APROBABLE" || estado === "APROBADO") return Math.max(70, Math.min(100, avg));
-      return Math.min(24, avg);
-    })(),
+    tabla_observaciones:  (r1.tabla_observaciones?.length || 0) >= (r2.tabla_observaciones?.length || 0) ? (r1.tabla_observaciones || []) : (r2.tabla_observaciones || []),
     estado_global:        estado,
     resumen_general:      (r1.resumen_general?.length || 0) >= (r2.resumen_general?.length || 0) ? r1.resumen_general : r2.resumen_general,
     analisis_por_archivo: (r1.analisis_por_archivo?.length || 0) >= (r2.analisis_por_archivo?.length || 0) ? (r1.analisis_por_archivo || []) : (r2.analisis_por_archivo || []),
@@ -477,15 +472,20 @@ INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
 
 Para cada planta de arquitectura identifica los recintos visibles con bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Si no puedes estimar coordenadas confiables para un recinto, omite bbox.
 ${buildColabTexto(colabData)}
-CRITERIOS OBLIGATORIOS PARA estado_global Y puntaje_global:
-• APROBABLE (70–100): Todos los parámetros verificados cumplen o las observaciones son menores/formales. Sin incumplimientos ALTA.
-• OBSERVADO (25–69): Existen incumplimientos corregibles mediante ajuste de diseño, tramitación de permisos o aporte de documentación faltante. Incluye: cambio de destino pendiente, documentación RF no adjunta, estacionamientos no justificados, rampa fuera de norma corregible, segunda salida pendiente de diseño. El proyecto PUEDE llegar a aprobarse con correcciones.
-• RECHAZABLE (0–24): Incumplimientos irresolubles sin rediseño estructural mayor — incompatibilidad de uso con zonificación PRC, edificio que excede parámetros absolutos sin alternativa normativa, o peligro estructural evidente. Usar SOLO cuando el proyecto NO PUEDE aprobarse bajo ningún ajuste menor.
-REGLA CRÍTICA: Falta de permisos tramitados, documentación pendiente, detalles constructivos no mostrados en planos → siempre OBSERVADO, NUNCA RECHAZABLE. El puntaje debe reflejar cuántas y cuán graves son las correcciones requeridas, no la cantidad de documentación faltante.
-CONSISTENCIA ESTADO/PUNTAJE OBLIGATORIA: El puntaje_global DEBE ser coherente con el estado_global. Si estado=OBSERVADO → puntaje entre 25 y 69 (mínimo absoluto 25). Si estado=APROBABLE → puntaje entre 70 y 100. Si estado=RECHAZABLE → puntaje entre 0 y 24. Un proyecto con 5–8 observaciones ALTA todas corregibles típicamente puntúa 28–45. Nunca devuelvas estado=OBSERVADO con puntaje inferior a 25.
+CRITERIOS DE CRITICIDAD — aplicar en todas las observaciones:
+• ALTA: Impide la aprobación DOM o representa riesgo de seguridad. Requiere corrección de diseño antes de presentar expediente. Ej: segunda salida de emergencia ausente, baño universal fuera de norma confirmado por cota, cambio de destino no tramitado, pendiente de rampa excede máximo declarado en plano.
+• MEDIA: Debe resolverse pero no impide avanzar. Se corrige con documentación adicional o ajustes menores. Ej: falta cuadro de iluminación, dimensiones no acotadas, pasamanos no graficados.
+• BAJA: Detalle de presentación o recomendación menor. No afecta la aprobación. Ej: escala poco legible, leyenda incompleta.
+
+CRITERIOS PARA estado_global:
+• APROBABLE: Todos los parámetros verificados cumplen o las observaciones son menores. Sin incumplimientos ALTA.
+• OBSERVADO: Existen incumplimientos corregibles. El proyecto PUEDE aprobarse con correcciones.
+• RECHAZABLE: Incumplimientos irresolubles sin rediseño mayor — incompatibilidad de uso con zonificación PRC, parámetros absolutos excedidos. NUNCA usar por falta de documentación o permisos pendientes.
+
+tabla_observaciones: consolida en un solo lugar todas las observaciones ALTA y MEDIA del análisis completo, agrupadas por tema, SIN repetir la misma observación aunque aparezca en múltiples secciones. Temas disponibles: "Accesibilidad Universal", "Evacuación y Seguridad", "Ventilación e Iluminación", "Normativa Urbanística", "Documentación Faltante", "Geometría y Presentación". Incluye solo temas con observaciones.
 
 Responde SOLO con JSON puro, sin markdown, sin texto previo. Produce ÚNICAMENTE la evaluación normativa — capa2 va PRIMERO en el JSON para protegerla de truncaciones.
-{"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"resumen_general":"...","puntaje_global":0,"estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
+{"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"resumen_general":"...","estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","tabla_observaciones":[{"tema":"Accesibilidad Universal|Evacuación y Seguridad|Ventilación e Iluminación|Normativa Urbanística|Documentación Faltante|Geometría y Presentación","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
 
 // ── PDF → thumbnails (todas las páginas, baja res) + full-res bajo demanda ──
@@ -788,10 +788,6 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
           </div>
           <div style={{ textAlign:"right" }}>
             <span style={{ fontSize:9, fontWeight:700, letterSpacing:"1.5px", padding:"4px 14px", borderRadius:99, ...ec }}>{result.estado_global}</span>
-            <div style={{ marginTop:6 }}>
-              <span style={{ fontSize:44, fontWeight:900, fontFamily:"Arial,sans-serif", color:ec.color, lineHeight:1 }}>{result.puntaje_global}</span>
-              <span style={{ fontSize:13, color:"#6B7A99" }}>/100</span>
-            </div>
           </div>
         </div>
         <div style={{ borderLeft:"4px solid #1B3A8A", background:"#F4F6FB", borderRadius:"0 8px 8px 0", padding:"12px 16px", marginBottom:20, display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:"8px 20px" }}>
@@ -807,9 +803,21 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs }) {
             </div>
           ))}
         </div>
-        <div style={{ background:"#EEF2FB", borderRadius:99, height:5, marginBottom:6, overflow:"hidden" }}>
-          <div style={{ width:`${result.puntaje_global}%`, height:"100%", borderRadius:99, background:`linear-gradient(90deg,${ec.color}80,${ec.color})` }}/>
-        </div>
+        {result.tabla_observaciones?.length > 0 && (
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontSize:7, color:"#6B7A99", letterSpacing:"2px", marginBottom:8 }}>RESUMEN POR TEMA</div>
+            <table style={{ width:"100%", borderCollapse:"collapse", fontSize:8 }}>
+              <thead><tr style={{ background:"#EEF2FB" }}>{["Tema","Alta","Media","Baja"].map(h => <th key={h} style={{ padding:"4px 8px", textAlign:h==="Tema"?"left":"center", fontWeight:700, color:"#1B3A8A", letterSpacing:"0.5px" }}>{h}</th>)}</tr></thead>
+              <tbody>{result.tabla_observaciones.map((g, i) => {
+                const obs = g.observaciones || [];
+                const a = obs.filter(o => o.criticidad === "ALTA").length;
+                const m = obs.filter(o => o.criticidad === "MEDIA").length;
+                const b = obs.filter(o => o.criticidad === "BAJA").length;
+                return <tr key={i} style={{ borderBottom:"1px solid #EEF2FB" }}><td style={{ padding:"4px 8px", color:"#3D4A5C", fontWeight:500 }}>{g.tema}</td><td style={{ padding:"4px 8px", textAlign:"center", color:a>0?"#C0392B":"#B8C5E0", fontWeight:a>0?700:400 }}>{a||"—"}</td><td style={{ padding:"4px 8px", textAlign:"center", color:m>0?"#D68910":"#B8C5E0", fontWeight:m>0?700:400 }}>{m||"—"}</td><td style={{ padding:"4px 8px", textAlign:"center", color:b>0?"#6B7A99":"#B8C5E0" }}>{b||"—"}</td></tr>;
+              })}</tbody>
+            </table>
+          </div>
+        )}
         <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:20 }}>{result.resumen_general}</p>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
           {[
@@ -1408,14 +1416,14 @@ ${printRef.current.innerHTML}
 
       // ── Resultado final ───────────────────────────────────────────────────
       const merged = {
-        resumen_general:      cap2.resumen_general    || "",
-        puntaje_global:       cap2.puntaje_global     ?? 0,
-        estado_global:        cap2.estado_global      || "OBSERVADO",
-        alertas_especiales:   cap2.alertas_especiales || [],
-        capa2:                cap2.capa2              || {},
-        analisis_por_archivo: cap1.analisis_por_archivo || [],
-        pasos_siguientes:     cap2.pasos_siguientes   || [],
-        capa1:                cap1.capa1              || {},
+        resumen_general:      cap2.resumen_general       || "",
+        estado_global:        cap2.estado_global         || "OBSERVADO",
+        tabla_observaciones:  cap2.tabla_observaciones   || [],
+        alertas_especiales:   cap2.alertas_especiales    || [],
+        capa2:                cap2.capa2                 || {},
+        analisis_por_archivo: cap1.analisis_por_archivo  || [],
+        pasos_siguientes:     cap2.pasos_siguientes      || [],
+        capa1:                cap1.capa1                 || {},
       };
 
       const sinDatos = !merged.analisis_por_archivo?.length
@@ -2284,9 +2292,8 @@ ${printRef.current.innerHTML}
                       <h2 style={{ fontFamily:"'Inter',sans-serif", fontSize:22, fontWeight:800, margin:"0 0 4px", color:"#1B3A8A" }}>{TIPOS.find(t=>t.id===tipo)?.label} · {PRC_COMUNAS[comuna]?.meta?.nombre||comuna}</h2>
                       <div style={{ fontSize:11, color:"#6B7A99" }}>{new Date().toLocaleDateString("es-CL",{day:"2-digit",month:"long",year:"numeric"})}</div>
                     </div>
-                    <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:8, flexShrink:0 }}>
+                    <div style={{ flexShrink:0 }}>
                       <span style={{ fontSize:10, fontWeight:700, letterSpacing:"1.5px", padding:"5px 16px", borderRadius:99, ...ec2 }}>{result.estado_global}</span>
-                      <div><span style={{ fontSize:42, fontWeight:800, fontFamily:"'Inter',sans-serif", color:ec2.color, lineHeight:1 }}>{result.puntaje_global}</span><span style={{ fontSize:13, color:"#6B7A99" }}>/100</span></div>
                     </div>
                   </div>
                   <div style={{ borderLeft:"4px solid #1B3A8A", background:"#F4F6FB", borderRadius:"0 10px 10px 0", padding:"14px 18px", marginBottom:22, display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:"10px 24px" }}>
@@ -2297,7 +2304,26 @@ ${printRef.current.innerHTML}
                       { label:"FECHA", value:new Date().toLocaleDateString("es-CL",{day:"2-digit",month:"long",year:"numeric"}) },
                     ].map(({ label, value }) => <div key={label}><div style={{ fontSize:9, color:"#6B7A99", letterSpacing:"1.5px", marginBottom:3 }}>{label}</div><div style={{ fontSize:11, color:"#3D4A5C", fontWeight:500, lineHeight:1.4, wordBreak:"break-word" }}>{value}</div></div>)}
                   </div>
-                  <div style={{ background:"#EEF2FB", borderRadius:99, height:5, marginBottom:8, overflow:"hidden" }}><div style={{ width:`${result.puntaje_global}%`, height:"100%", borderRadius:99, background:`linear-gradient(90deg,${ec2.color}80,${ec2.color})`, transition:"width 1.2s ease" }}/></div>
+                  {result.tabla_observaciones?.length > 0 && (
+                    <div style={{ marginBottom:20, border:"1px solid #D1D9EE", borderRadius:10, overflow:"hidden" }}>
+                      <div style={{ background:"#EEF2FB", padding:"8px 14px", fontSize:9, fontWeight:700, color:"#1B3A8A", letterSpacing:"1.5px" }}>RESUMEN POR TEMA</div>
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead><tr style={{ background:"#F8F9FF" }}>{["Tema","Alta","Media","Baja"].map(h => <th key={h} style={{ padding:"6px 12px", textAlign:h==="Tema"?"left":"center", fontSize:10, fontWeight:700, color:"#6B7A99", letterSpacing:"0.5px", borderBottom:"1px solid #D1D9EE" }}>{h}</th>)}</tr></thead>
+                        <tbody>{result.tabla_observaciones.map((g, i) => {
+                          const obs = g.observaciones || [];
+                          const a = obs.filter(o => o.criticidad === "ALTA").length;
+                          const m = obs.filter(o => o.criticidad === "MEDIA").length;
+                          const b = obs.filter(o => o.criticidad === "BAJA").length;
+                          return <tr key={i} style={{ borderBottom:"1px solid #EEF2FB", background:i%2===0?"#fff":"#FAFBFF" }}>
+                            <td style={{ padding:"8px 12px", fontSize:12, color:"#3D4A5C", fontWeight:500 }}>{g.tema}</td>
+                            <td style={{ padding:"8px 12px", textAlign:"center", fontSize:12, fontWeight:700, color:a>0?"#C0392B":"#D1D9EE" }}>{a>0?a:"—"}</td>
+                            <td style={{ padding:"8px 12px", textAlign:"center", fontSize:12, fontWeight:700, color:m>0?"#D68910":"#D1D9EE" }}>{m>0?m:"—"}</td>
+                            <td style={{ padding:"8px 12px", textAlign:"center", fontSize:12, color:b>0?"#6B7A99":"#D1D9EE" }}>{b>0?b:"—"}</td>
+                          </tr>;
+                        })}</tbody>
+                      </table>
+                    </div>
+                  )}
                   <p style={{ fontSize:13, color:"#6B7A99", lineHeight:1.7, marginBottom:24 }}>{result.resumen_general}</p>
                   <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:12 }}>
                     {[{ n:altas.length, label:"🔴 Incumplimientos", c:"#C0392B" },{ n:tecnicas.length, label:"🟡 Observaciones", c:"#D68910" },{ n:resueltas, label:"✅ Resueltas", c:"#1E8449" }].map(m => (
