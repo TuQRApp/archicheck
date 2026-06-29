@@ -50,6 +50,23 @@ Hoy el LLM juzga todo, incluyendo reglas que son puro cálculo. Un dormitorio �
 
 ---
 
+## Decisiones de diseño — Pipeline Colab (actuales, a respetar en la automatización)
+
+Reglas validadas durante el uso manual que deben sobrevivir a la integración automática:
+
+| Regla | Detalle |
+|---|---|
+| **Colab procesa solo plantas** | Cortes, elevaciones, cuadros de superficies, estudios de carga de ocupación NO se configuran en Colab. Claude los lee directamente desde el PDF en la web. |
+| **Escala obligatoria por página de planta** | Toda entrada en `PAGINAS_Y_ESCALAS` que corresponda a una planta debe tener escala declarada. Páginas de corte o elevación pueden omitirla. |
+| **Crop solo cuando la página mezcla tipos** | Si una página tiene planta + elevación, recortar solo la zona de planta. Si la página es planta pura, no hace falta crop. |
+| **Planta con dos escalas → usar la mayor** | Si la misma planta aparece en 1:50 y 1:100, subir solo la 1:50 (más píxeles por metro, mejor precisión OpenCV). Excepción: si la de menor escala tiene cotas que la mayor no tiene, subir ambas. |
+| **Fracciones de crop en coordenadas relativas** | x1, y1, x2, y2 son fracciones 0.0–1.0 del ancho/alto total de la imagen. Para encontrarlas: abrir la imagen completa en un visor, anotar píxeles de las esquinas del recorte y dividir por dimensión total. |
+| **Una entrada por sección con escala distinta** | Si una misma página tiene dos zonas de planta a escalas distintas (ej. existente 1:100 + propuesta 1:50), agregar dos entradas para esa página con sus respectivos crops y escalas. |
+
+**En la automatización futura**: estas reglas deben traducirse en validaciones automáticas antes de lanzar el procesamiento — no dejar al usuario declarar una escala en una página de elevación o hacer crop fuera del área de planta.
+
+---
+
 ## Etapa 3 — Calidad de la extracción geométrica
 
 Colab sigue siendo manual — está bien por ahora. El foco es mejorar qué extrae y cómo llega al LLM.
