@@ -1334,7 +1334,15 @@ ${printRef.current.innerHTML}
       ]);
       const [sC1, sG1] = await Promise.allSettled([readModelStream(rC1), readModelStream(rG1)]);
       const pC1 = parse(sC1), pG1 = parse(sG1);
-      const cap1 = (pC1 && pG1) ? mergeResults(pC1, pG1) : (pC1 || pG1 || {});
+      const isComplete = p => p && !String(p.resumen_general || "").startsWith("⚠");
+      if (!isComplete(pC1) && !isComplete(pG1))
+        throw new Error(
+          (!pC1 && !pG1)
+            ? ((sC1.reason || sG1.reason)?.message || "Error en Fase 1 — sin respuesta de ningún modelo")
+            : "Fase 1 — respuesta incompleta en ambos modelos. Reintenta el análisis."
+        );
+      const cap1 = (isComplete(pC1) && isComplete(pG1)) ? mergeResults(pC1, pG1)
+                 : isComplete(pC1) ? pC1 : pG1;
 
       // ── FASE 2: Evaluación normativa completa con contexto de Fase 1 ──────
       setProgress("Fase 2/2 — Evaluación normativa completa (Claude + GPT-4o)...");
@@ -1351,10 +1359,15 @@ ${printRef.current.innerHTML}
       const [sC2, sG2] = await Promise.allSettled([readModelStream(rC2), readModelStream(rG2)]);
       const pC2 = parse(sC2), pG2 = parse(sG2);
 
-      if (!pC1 && !pG1 && !pC2 && !pG2)
-        throw new Error((sC1.reason || sG1.reason || sC2.reason || sG2.reason)?.message || "Error en todos los modelos");
+      if (!isComplete(pC2) && !isComplete(pG2))
+        throw new Error(
+          (!pC2 && !pG2)
+            ? ((sC2.reason || sG2.reason)?.message || "Error en Fase 2 — sin respuesta de ningún modelo")
+            : "Fase 2 — respuesta incompleta en ambos modelos. Reintenta el análisis."
+        );
 
-      const cap2 = (pC2 && pG2) ? mergeResults(pC2, pG2) : (pC2 || pG2 || {});
+      const cap2 = (isComplete(pC2) && isComplete(pG2)) ? mergeResults(pC2, pG2)
+                 : isComplete(pC2) ? pC2 : pG2;
 
       // ── Resultado final ───────────────────────────────────────────────────
       const merged = {
