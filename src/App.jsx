@@ -258,7 +258,7 @@ function mergeResults(r1, r2) {
 function buildColabTexto(json) {
   if (!json) return "";
   if (json.paginas) {
-    const lines = ["\nANÁLISIS SEMÁNTICO COLAB (estimaciones OpenCV + interpretación por recinto):\nNOTA: Las áreas y anchos son estimaciones desde píxeles — úsalas como referencia orientativa. Para dimensiones definitivas usa siempre cotas declaradas en el plano. Las observaciones por recinto son alertas normativas del pipeline."];
+    const lines = ["\nANÁLISIS SEMÁNTICO COLAB (estimaciones OpenCV + interpretación por recinto):\nNOTA: Las áreas son estimaciones geométricas desde píxeles. Para superficie_m2 en reconocimiento.recintos_por_nivel: usa la cota declarada en el plano si existe; si no hay cota visible, usa el área OpenCV del recinto correspondiente de esta lista (es medición real, no un invento). Para anchos, usa siempre la cota del plano. Las observaciones por recinto son alertas normativas del pipeline."];
     for (const p of json.paginas) {
       const sem = p.analisis_semantico || {};
       const tipoPlano = sem.tipo_plano || "desconocido";
@@ -474,7 +474,8 @@ INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
    • Protección patrimonial si aplica (LGUC Art. 60)
    • Documentación faltante: CIP, cuadro superficies, cuadro iluminación, estudio carga ocupación, especificaciones RF (DDU 390)
 2. Las observaciones de cada sección deben ser DISTINTAS y específicas de esa etapa. No repitas el mismo hallazgo en múltiples secciones.
-3. iluminacion_ventilacion.tabla: incluye una fila por cada recinto habitable visible. Si no puedes medir el área de ventana, usa area_ventana_m2:0 y cumple:"VERIFICAR".
+3. iluminacion_ventilacion.tabla: incluye una fila por cada recinto habitable visible. Si no puedes medir el área de ventana desde el plano, usa area_ventana_m2:null y cumple:"VERIFICAR".
+4b. circulaciones.tabla — ancho_minimo_m: usa SIEMPRE el mínimo MÁS RESTRICTIVO de todos los artículos aplicables. Si citas DS 50/2015 Art. 22 o Art. 23, el mínimo es 1.50m (no 1.20m). Si citas OGUC Art. 4.2.4 con carga >50 personas, el mínimo puede superar 1.20m según fórmula. El campo ancho_minimo_m debe coincidir con el valor que determina el resultado de 'cumple'.
 4. normativa_urbanistica.tabla: incluye una fila por cada parámetro del PRC y OGUC aplicable (rasante(s), constructibilidad, COS, altura máxima, uso de suelo, distancias a deslindes, adosamiento, línea de edificación). Usa estado:"VERIFICAR" si no hay dato visible en los planos.
 
 Para cada planta de arquitectura identifica los recintos visibles con bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Si no puedes estimar coordenadas confiables para un recinto, omite bbox.
@@ -988,6 +989,11 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
         <div style={pg}>
           <CapaBanner>CAPA 2 — EVALUACIÓN NORMATIVA</CapaBanner>
           <EtapaTitle label="Etapa C — Iluminación y Ventilación" subtitle="Verificación de relación ventana/área de recinto según OGUC Art. 4.5.7" badge="Capa 2 · C/D" c2 />
+          {(result.capa2?.iluminacion_ventilacion?.tabla || []).every(r => !r.area_ventana_m2) && (
+            <p style={{ fontSize:9, color:"#7B5800", background:"#FFF8E1", border:"1px solid #F9A825", borderRadius:4, padding:"5px 8px", marginBottom:6 }}>
+              ⚠ Áreas de ventana no detectadas automáticamente. Verificar cuadro de vanos en el plano (OGUC Art. 4.5.7).
+            </p>
+          )}
           <PrintTable
             headers={["Recinto","Área ventana m²","Área recinto m²","Ratio req.","Cumple"]}
             rows={(result.capa2?.iluminacion_ventilacion?.tabla || []).map((r, i) => (
@@ -1449,6 +1455,46 @@ ${printRef.current.innerHTML}
         setVerificadorResult(verificarProyecto(proj, fichaProyecto.zonaId, comuna));
       }
 
+      // ── Post-procesado: parchar datos desde Colab ────────────────────────
+      if (colabJson) {
+        // Fix 1: cantidades en vectorización desde resumen DINO/semántico
+        const rg = colabJson.resumen_global || {};
+        const dinoMap = {
+          puerta:   rg.puertas_detectadas   ?? 0,
+          ventana:  rg.ventanas_detectadas  ?? 0,
+          escalera: rg.escaleras_detectadas ?? 0,
+          rampa:    rg.rampas_detectadas    ?? 0,
+        };
+        if (merged.capa1?.vectorizacion?.elementos) {
+          for (const el of merged.capa1.vectorizacion.elementos) {
+            const tipo = (el.tipo || "").toLowerCase();
+            for (const [key, cnt] of Object.entries(dinoMap)) {
+              if (cnt > 0 && tipo.includes(key)) { el.cantidad = cnt; break; }
+            }
+          }
+        }
+        // Fix 2: superficie_m2 en reconocimiento desde mediciones_geometricas Colab
+        if (colabJson.paginas && merged.capa1?.reconocimiento?.recintos_por_nivel) {
+          const colabRecs = colabJson.paginas.flatMap(p =>
+            (p.mediciones_geometricas || []).filter(r => r.nombre && !r.nombre.startsWith("Espacio E"))
+          );
+          const norm = s => s.toLowerCase()
+            .replace(/[áàä]/g,"a").replace(/[éèë]/g,"e").replace(/[íìï]/g,"i")
+            .replace(/[óòö]/g,"o").replace(/[úùü]/g,"u").replace(/[^a-z0-9]/g,"");
+          for (const nivel of (merged.capa1.reconocimiento.recintos_por_nivel || [])) {
+            for (const r of (nivel.recintos || [])) {
+              if (r.superficie_m2 != null) continue;
+              const rn = norm(r.nombre);
+              if (rn.length < 4) continue;
+              const match = colabRecs.find(cr => {
+                const cn = norm(cr.nombre);
+                return cn === rn || (cn.length > 4 && cn.includes(rn)) || (rn.length > 4 && rn.includes(cn));
+              });
+              if (match) { r.superficie_m2 = match.area_m2; r._from_colab = true; }
+            }
+          }
+        }
+      }
       setResult(merged);
 
     } catch (e) {
@@ -1980,7 +2026,7 @@ ${printRef.current.innerHTML}
                         <div style={{ overflowX:"auto" }}>
                           <table style={{ width:"100%", borderCollapse:"collapse" }}>
                             <thead><tr>{["Recinto","Uso","Superficie m²","Estado"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
-                            <tbody>{(niveles[activeFloor].recintos||[]).map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.nombre}</td><td style={TD}>{r.uso||"—"}</td><td style={TD}>{r.superficie_m2??"—"}</td><td style={TD}><StatusBadge val={r.estado} /></td></tr>)}</tbody>
+                            <tbody>{(niveles[activeFloor].recintos||[]).map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.nombre}</td><td style={TD}>{r.uso||"—"}</td><td style={TD}>{r.superficie_m2!=null ? <>{r.superficie_m2}{r._from_colab && <span title="Estimación OpenCV Colab" style={{color:"#B8C5E0",fontSize:10}}> ~</span>}</> : "—"}</td><td style={TD}><StatusBadge val={r.estado} /></td></tr>)}</tbody>
                           </table>
                         </div>
                       )}
@@ -2159,14 +2205,24 @@ ${printRef.current.innerHTML}
                     </div>
                   </div>
                   <SectionTitle>🔆 Relación ventana / área por recinto</SectionTitle>
-                  {d?.tabla?.length ? (
-                    <div style={{ overflowX:"auto", marginBottom:8 }}>
-                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
-                        <thead><tr>{["Recinto","Área ventana m²","Área recinto m²","Ratio req.","Cumple"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
-                        <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.recinto}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_ventana_m2??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_recinto_m2??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ratio_requerido||"1/6"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
-                      </table>
-                    </div>
-                  ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de iluminación</p>}
+                  {d?.tabla?.length ? (() => {
+                    const sinVentanas = d.tabla.every(r => !r.area_ventana_m2);
+                    return (
+                      <>
+                        {sinVentanas && (
+                          <div style={{ background:"#FFF8E1", border:"1px solid #F9A825", borderRadius:6, padding:"8px 12px", marginBottom:10, fontSize:12, color:"#7B5800" }}>
+                            ⚠ Áreas de ventana no detectadas automáticamente. Verificar cuadro de vanos en el plano para determinar cumplimiento real de iluminación natural (OGUC Art. 4.5.7).
+                          </div>
+                        )}
+                        <div style={{ overflowX:"auto", marginBottom:8 }}>
+                          <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                            <thead><tr>{["Recinto","Área ventana m²","Área recinto m²","Ratio req.","Cumple"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                            <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.recinto}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_ventana_m2??<span style={{color:"#B8C5E0"}}>—</span>}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_recinto_m2??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ratio_requerido||"1/6"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
+                          </table>
+                        </div>
+                      </>
+                    );
+                  })() : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de iluminación</p>}
                   <ObsSection obs={d?.observaciones} prefix="n3" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
                 </div>
               );
