@@ -282,10 +282,23 @@ function buildColabTexto(json) {
         const u = inc.tipo === "area" ? "m²" : "m";
         lines.push(`  ALERTA OpenCV [${inc.tipo.toUpperCase()}] ${inc.recinto}: estimado ${inc.medido}${u} vs mínimo ${inc.minimo}${u} — ${inc.ref} — verificar contra cota en plano`);
       }
+      const dinoEls = p.elementos_dino || [];
+      if (dinoEls.length > 0) {
+        const conteo = {};
+        for (const e of dinoEls) conteo[e.tipo] = (conteo[e.tipo] || 0) + 1;
+        lines.push(`  DINO detectó: ${Object.entries(conteo).map(([t, n]) => `${t}=${n}`).join(", ")}`);
+        const puertasAngostas = dinoEls.filter(e => e.tipo === "puerta" && e.ancho_m < 0.90);
+        const escAngostas    = dinoEls.filter(e => e.tipo === "escalera" && e.ancho_m < 1.20);
+        if (puertasAngostas.length) lines.push(`    ⚠ DINO: ${puertasAngostas.length} puerta(s) con ancho <0.90 m detectadas`);
+        if (escAngostas.length)     lines.push(`    ⚠ DINO: ${escAngostas.length} escalera(s) con ancho <1.20 m detectadas`);
+      }
     }
     const totalInc = json.resumen_global?.incumplimientos_geo_total ?? 0;
     if (totalInc > 0)
       lines.push(`\nHay ${totalInc} alertas OpenCV. Si la cota declarada en plano confirma el incumplimiento → ALTA. Si no hay cota o el valor parece fuera de escala → VERIFICAR.\n`);
+    const rg = json.resumen_global || {};
+    if (rg.puertas_detectadas != null)
+      lines.push(`RESUMEN DINO global: puertas=${rg.puertas_detectadas}, ventanas=${rg.ventanas_detectadas ?? 0}, escaleras=${rg.escaleras_detectadas ?? 0}, rampas=${rg.rampas_detectadas ?? 0}. Usa estos conteos en el campo 'cantidad' de vectorizacion.elementos.`);
     return lines.join("\n") + "\n";
   }
   if (json.tabla_cruzada) {
@@ -327,6 +340,8 @@ Tu tarea es el LEVANTAMIENTO GEOMÉTRICO: separación de capas gráficas, identi
 
 Para cada planta identifica los recintos visibles con bbox como fracción de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Omite bbox si no puedes estimarlo con confianza.
 IMPORTANTE: NO inventes ni estimes superficies. Usa SOLO los valores de cotas escritos claramente en el plano (números con dimensión). Si no hay cota visible, pon superficie_m2:null. No copies la escala como si fuera un área.
+Para pasillos y circulaciones: reporta SIEMPRE el ancho MÍNIMO declarado en el plano (la cota más estrecha de todo el recorrido), no el ancho en un tramo específico ni el promedio.
+Si el análisis Colab incluye datos DINO, úsalos para informar el campo 'cantidad' de vectorizacion.elementos (puertas, ventanas, escaleras, rampas).
 ${buildColabTexto(colabData)}
 Responde SOLO con JSON puro sin markdown:
 {"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"capa1":{"separacion":{"capas":[{"nombre":"...","contenido":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"reconocimiento":{"stats":{"recintos_total":0,"niveles":0},"recintos_por_nivel":[{"nivel":"...","recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"estado":"OK|OBSERVADO|INCUMPLE"}]}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"vectorizacion":{"elementos":[{"tipo":"...","cantidad":0,"descripcion":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"modelo":{"organizacion_funcional":[{"nivel":"...","uso":"...","area_m2":0,"conexion":"..."}],"accesos_evacuacion":[{"elemento":"...","estado":"OK|OBSERVADO|INCUMPLE","nota":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}}}`;
@@ -1079,7 +1094,6 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
           </div>
           <div style={{ textAlign:"right" }}>
             <span style={{ fontSize:8, fontWeight:700, padding:"3px 12px", borderRadius:99, ...ec }}>{result.estado_global}</span>
-            <div><span style={{ fontSize:32, fontWeight:900, color:ec.color, lineHeight:1 }}>{result.puntaje_global}</span><span style={{ fontSize:11, color:"#6B7A99" }}>/100</span></div>
           </div>
         </div>
         <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:16 }}>{result.resumen_general}</p>
@@ -1852,13 +1866,8 @@ ${printRef.current.innerHTML}
             <div style={{ width:240, background:"#fff", borderRight:"1px solid #E0E6F3", flexShrink:0, position:"sticky", top:0, height:"100vh", overflowY:"auto", alignSelf:"flex-start" }}>
               <div style={{ padding:"16px 16px 12px", borderBottom:"1px solid #EEF2FB" }}>
                 <div style={{ fontSize:9, color:"#6B7A99", letterSpacing:"2px", marginBottom:6 }}>REVISIÓN NORMATIVA</div>
-                <div style={{ display:"flex", alignItems:"flex-end", gap:6 }}>
-                  <span style={{ fontSize:30, fontWeight:800, color:ec.color, lineHeight:1, fontFamily:"'Inter',sans-serif" }}>{result.puntaje_global}</span>
-                  <span style={{ fontSize:12, color:"#6B7A99", marginBottom:3 }}>/100</span>
-                  <span style={{ marginLeft:"auto", fontSize:9, fontWeight:700, padding:"3px 10px", borderRadius:99, ...ec }}>{result.estado_global}</span>
-                </div>
-                <div style={{ background:"#EEF2FB", borderRadius:99, height:4, marginTop:8, overflow:"hidden" }}>
-                  <div style={{ width:`${result.puntaje_global}%`, height:"100%", borderRadius:99, background:`linear-gradient(90deg,${ec.color}80,${ec.color})`, transition:"width 1.2s ease" }} />
+                <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                  <span style={{ fontSize:9, fontWeight:700, padding:"3px 10px", borderRadius:99, ...ec }}>{result.estado_global}</span>
                 </div>
               </div>
               <div style={{ padding:"12px 0" }}>
