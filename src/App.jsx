@@ -292,12 +292,22 @@ function buildColabTexto(json) {
         if (puertasAngostas.length) lines.push(`    ⚠ DINO: ${puertasAngostas.length} puerta(s) con ancho <0.90 m detectadas`);
         if (escAngostas.length)     lines.push(`    ⚠ DINO: ${escAngostas.length} escalera(s) con ancho <1.20 m detectadas`);
       }
+      const semEls = p.analisis_semantico?.elementos_detectados;
+      if (semEls) {
+        const semParts = [];
+        if (semEls.puertas)            semParts.push(`puertas=${semEls.puertas}`);
+        if (semEls.ventanas)           semParts.push(`ventanas=${semEls.ventanas}`);
+        if (semEls.escaleras)          semParts.push(`escaleras=${semEls.escaleras}`);
+        if (semEls.salidas_emergencia) semParts.push(`salidas_emergencia=${semEls.salidas_emergencia}`);
+        if (semParts.length > 0)
+          lines.push(`  Análisis semántico Colab detectó: ${semParts.join(", ")}. Usa estos conteos en el campo 'cantidad' de vectorizacion.elementos.`);
+      }
     }
     const totalInc = json.resumen_global?.incumplimientos_geo_total ?? 0;
     if (totalInc > 0)
       lines.push(`\nHay ${totalInc} alertas OpenCV. Si la cota declarada en plano confirma el incumplimiento → ALTA. Si no hay cota o el valor parece fuera de escala → VERIFICAR.\n`);
     const rg = json.resumen_global || {};
-    if (rg.puertas_detectadas != null)
+    if (rg.puertas_detectadas != null && (rg.puertas_detectadas > 0 || rg.ventanas_detectadas > 0 || rg.escaleras_detectadas > 0))
       lines.push(`RESUMEN DINO global: puertas=${rg.puertas_detectadas}, ventanas=${rg.ventanas_detectadas ?? 0}, escaleras=${rg.escaleras_detectadas ?? 0}, rampas=${rg.rampas_detectadas ?? 0}. Usa estos conteos en el campo 'cantidad' de vectorizacion.elementos.`);
     return lines.join("\n") + "\n";
   }
