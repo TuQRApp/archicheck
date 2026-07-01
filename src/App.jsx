@@ -272,16 +272,13 @@ function buildColabTexto(json) {
         lines.push(`  - ${r.nombre} (${r.tipo})${area}${ancho}${cumple}`);
         if (r.observacion) lines.push(`    Obs: ${r.observacion}`);
       }
-      for (const r of (p.mediciones_geometricas || [])) {
+      const named = (p.mediciones_geometricas || []).filter(r => !r.nombre.startsWith("Espacio E"));
+      for (const r of named) {
         const a = r.ancho_min_m != null ? ` · ancho estimado ${r.ancho_min_m} m` : "";
         const e = r.cumple_geo === false ? " [posible incumplimiento — verificar en plano]" : "";
         const idTag = r.id ? ` [${r.id}]` : "";
-        const esEspacio = r.nombre.startsWith("Espacio E");
-        const label = esEspacio ? r.id : `${r.nombre}${idTag}`;
-        lines.push(`  - ${label} (${r.tipo}): ${r.area_m2} m²${a}${e}`);
+        lines.push(`  - ${r.nombre}${idTag} (${r.tipo}): ${r.area_m2} m²${a}${e}`);
       }
-      if ((p.mediciones_geometricas || []).length > 0)
-        lines.push(`  IMPORTANTE: Cuando hagas referencia a cualquier recinto o elemento en tus observaciones e incumplimientos, cita SIEMPRE su código entre corchetes, ej: "Baño Universal [E03] incumple..." o "E14 (espacio sin identificar en plano)".`);
       for (const inc of (p.incumplimientos_geo || [])) {
         const u = inc.tipo === "area" ? "m²" : "m";
         lines.push(`  ALERTA OpenCV [${inc.tipo.toUpperCase()}] ${inc.recinto}: estimado ${inc.medido}${u} vs mínimo ${inc.minimo}${u} — ${inc.ref} — verificar contra cota en plano`);
@@ -307,6 +304,7 @@ function buildColabTexto(json) {
           lines.push(`  Análisis semántico Colab detectó: ${semParts.join(", ")}. Usa estos conteos en el campo 'cantidad' de vectorizacion.elementos.`);
       }
     }
+    lines.push(`\nCÓDIGOS DE ELEMENTO: Cada recinto listado arriba tiene un código [E##] asignado por el análisis geométrico. Cuando hagas referencia a un recinto en tus observaciones e incumplimientos, cita su código, ej: "Baño Universal [E03] incumple...". Si un elemento no tiene nombre en el plano, refiérete solo por su código.`);
     const totalInc = json.resumen_global?.incumplimientos_geo_total ?? 0;
     if (totalInc > 0)
       lines.push(`\nHay ${totalInc} alertas OpenCV. Si la cota declarada en plano confirma el incumplimiento → ALTA. Si no hay cota o el valor parece fuera de escala → VERIFICAR.\n`);
