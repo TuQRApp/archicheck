@@ -272,12 +272,16 @@ function buildColabTexto(json) {
         lines.push(`  - ${r.nombre} (${r.tipo})${area}${ancho}${cumple}`);
         if (r.observacion) lines.push(`    Obs: ${r.observacion}`);
       }
-      const named = (p.mediciones_geometricas || []).filter(r => !r.nombre.startsWith("Espacio E"));
-      for (const r of named) {
+      for (const r of (p.mediciones_geometricas || [])) {
         const a = r.ancho_min_m != null ? ` · ancho estimado ${r.ancho_min_m} m` : "";
         const e = r.cumple_geo === false ? " [posible incumplimiento — verificar en plano]" : "";
-        lines.push(`  - ${r.nombre} (${r.tipo}): ${r.area_m2} m²${a}${e}`);
+        const idTag = r.id ? ` [${r.id}]` : "";
+        const esEspacio = r.nombre.startsWith("Espacio E");
+        const label = esEspacio ? r.id : `${r.nombre}${idTag}`;
+        lines.push(`  - ${label} (${r.tipo}): ${r.area_m2} m²${a}${e}`);
       }
+      if ((p.mediciones_geometricas || []).length > 0)
+        lines.push(`  IMPORTANTE: Cuando hagas referencia a cualquier recinto o elemento en tus observaciones e incumplimientos, cita SIEMPRE su código entre corchetes, ej: "Baño Universal [E03] incumple..." o "E14 (espacio sin identificar en plano)".`);
       for (const inc of (p.incumplimientos_geo || [])) {
         const u = inc.tipo === "area" ? "m²" : "m";
         lines.push(`  ALERTA OpenCV [${inc.tipo.toUpperCase()}] ${inc.recinto}: estimado ${inc.medido}${u} vs mínimo ${inc.minimo}${u} — ${inc.ref} — verificar contra cota en plano`);
@@ -644,6 +648,17 @@ function SectionTitle({ children }) {
   return <h3 style={{ fontSize:14, fontWeight:700, color:"#1B3A8A", margin:"0 0 12px", paddingBottom:8, borderBottom:"2px solid #EEF2FB", display:"flex", alignItems:"center", gap:8 }}>{children}</h3>;
 }
 
+function ElemLabel({ nombre, id }) {
+  if (!id) return <>{nombre}</>;
+  const esEspacio = nombre && nombre.startsWith("Espacio E");
+  return (
+    <>
+      {!esEspacio && <>{nombre} </>}
+      <span style={{ fontFamily:"'DM Mono',monospace", fontSize:9, fontWeight:700, color:"#2952A3", background:"#EEF3FF", borderRadius:3, padding:"1px 5px", border:"1px solid #C5D5F0", whiteSpace:"nowrap" }}>{id}</span>
+    </>
+  );
+}
+
 function StatusBadge({ val }) {
   const cfg = {
     OK:       { bg:"rgba(30,132,73,0.08)",   bo:"rgba(30,132,73,0.25)",   c:"#1E8449" },
@@ -883,9 +898,9 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
                 headers={["Recinto","Uso","Superficie m²","Estado"]}
                 rows={(nivel.recintos || []).map((r, i) => (
                   <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
-                    <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{r.nombre}</td>
+                    <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}><ElemLabel nombre={r.nombre} id={r._colab_id} /></td>
                     <td style={PTD}>{r.uso || "—"}</td>
-                    <td style={PTD}>{r.superficie_m2 ?? "—"}</td>
+                    <td style={PTD}>{r.superficie_m2!=null ? <>{r.superficie_m2}{r._from_colab && <span title="Estimación OpenCV Colab" style={{color:"#B8C5E0",fontSize:9}}> ~</span>}</> : "—"}</td>
                     <td style={PTD}><StatusBadge val={r.estado} /></td>
                   </tr>
                 ))}
@@ -974,7 +989,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
             headers={["Elemento","Ancho real (m)","Ancho mín. (m)","Artículo","Cumple"]}
             rows={(result.capa2?.circulaciones?.tabla || []).map((r, i) => (
               <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
-                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{r.elemento}</td>
+                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}><ElemLabel nombre={r.elemento} id={r._colab_id} /></td>
                 <td style={{ ...PTD, textAlign:"center" }}>{r.ancho_real_m ?? "—"}</td>
                 <td style={{ ...PTD, textAlign:"center" }}>{r.ancho_minimo_m ?? "—"}</td>
                 <td style={{ ...PTD, fontFamily:"monospace", fontSize:9, color:"#2952A3" }}>{r.articulo || "—"}</td>
@@ -998,7 +1013,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
             headers={["Recinto","Área ventana m²","Área recinto m²","Ratio req.","Cumple"]}
             rows={(result.capa2?.iluminacion_ventilacion?.tabla || []).map((r, i) => (
               <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
-                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{r.recinto}</td>
+                <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}><ElemLabel nombre={r.recinto} id={r._colab_id} /></td>
                 <td style={{ ...PTD, textAlign:"center" }}>{r.area_ventana_m2 ?? "—"}</td>
                 <td style={{ ...PTD, textAlign:"center" }}>{r.area_recinto_m2 ?? "—"}</td>
                 <td style={{ ...PTD, textAlign:"center" }}>{r.ratio_requerido || "1/6"}</td>
@@ -1494,6 +1509,31 @@ ${printRef.current.innerHTML}
             }
           }
         }
+        // Fix 3: inyectar _colab_id en recintos y elementos del informe
+        const colabAllElems = colabJson.paginas.flatMap(p => p.mediciones_geometricas || []);
+        const normId = s => s.toLowerCase()
+          .replace(/[áàä]/g,"a").replace(/[éèë]/g,"e").replace(/[íìï]/g,"i")
+          .replace(/[óòö]/g,"o").replace(/[úùü]/g,"u").replace(/[^a-z0-9]/g,"");
+        const findColabId = (nombre) => {
+          if (!nombre) return null;
+          const rn = normId(nombre);
+          if (rn.length < 3) return null;
+          const m = colabAllElems.find(e => {
+            const cn = normId(e.nombre);
+            return cn === rn || (cn.length > 4 && cn.includes(rn)) || (rn.length > 4 && rn.includes(cn));
+          });
+          return m?.id || null;
+        };
+        for (const nivel of (merged.capa1?.reconocimiento?.recintos_por_nivel || []))
+          for (const r of (nivel.recintos || []))
+            if (!r._colab_id) r._colab_id = findColabId(r.nombre);
+        for (const r of (merged.capa2?.circulaciones?.tabla || []))
+          if (!r._colab_id) r._colab_id = findColabId(r.elemento);
+        for (const r of (merged.capa2?.iluminacion_ventilacion?.tabla || []))
+          if (!r._colab_id) r._colab_id = findColabId(r.recinto);
+        for (const nivel of (merged.capa2?.recintos_superficies?.por_nivel || []))
+          for (const r of (nivel.recintos || []))
+            if (!r._colab_id) r._colab_id = findColabId(r.nombre);
       }
       setResult(merged);
 
@@ -2026,7 +2066,7 @@ ${printRef.current.innerHTML}
                         <div style={{ overflowX:"auto" }}>
                           <table style={{ width:"100%", borderCollapse:"collapse" }}>
                             <thead><tr>{["Recinto","Uso","Superficie m²","Estado"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
-                            <tbody>{(niveles[activeFloor].recintos||[]).map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.nombre}</td><td style={TD}>{r.uso||"—"}</td><td style={TD}>{r.superficie_m2!=null ? <>{r.superficie_m2}{r._from_colab && <span title="Estimación OpenCV Colab" style={{color:"#B8C5E0",fontSize:10}}> ~</span>}</> : "—"}</td><td style={TD}><StatusBadge val={r.estado} /></td></tr>)}</tbody>
+                            <tbody>{(niveles[activeFloor].recintos||[]).map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}><ElemLabel nombre={r.nombre} id={r._colab_id} /></td><td style={TD}>{r.uso||"—"}</td><td style={TD}>{r.superficie_m2!=null ? <>{r.superficie_m2}{r._from_colab && <span title="Estimación OpenCV Colab" style={{color:"#B8C5E0",fontSize:10}}> ~</span>}</> : "—"}</td><td style={TD}><StatusBadge val={r.estado} /></td></tr>)}</tbody>
                           </table>
                         </div>
                       )}
@@ -2181,7 +2221,7 @@ ${printRef.current.innerHTML}
                     <div style={{ overflowX:"auto", marginBottom:8 }}>
                       <table style={{ width:"100%", borderCollapse:"collapse" }}>
                         <thead><tr>{["Elemento","Ancho real (m)","Ancho mín. (m)","Artículo","Cumple"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
-                        <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.elemento}</td><td style={{ ...TD, textAlign:"center" }}>{r.ancho_real_m??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ancho_minimo_m??"—"}</td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{r.articulo||"—"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
+                        <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}><ElemLabel nombre={r.elemento} id={r._colab_id} /></td><td style={{ ...TD, textAlign:"center" }}>{r.ancho_real_m??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ancho_minimo_m??"—"}</td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{r.articulo||"—"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
                       </table>
                     </div>
                   ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de circulaciones</p>}
@@ -2217,7 +2257,7 @@ ${printRef.current.innerHTML}
                         <div style={{ overflowX:"auto", marginBottom:8 }}>
                           <table style={{ width:"100%", borderCollapse:"collapse" }}>
                             <thead><tr>{["Recinto","Área ventana m²","Área recinto m²","Ratio req.","Cumple"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
-                            <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}>{r.recinto}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_ventana_m2??<span style={{color:"#B8C5E0"}}>—</span>}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_recinto_m2??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ratio_requerido||"1/6"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
+                            <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}><ElemLabel nombre={r.recinto} id={r._colab_id} /></td><td style={{ ...TD, textAlign:"center" }}>{r.area_ventana_m2??<span style={{color:"#B8C5E0"}}>—</span>}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_recinto_m2??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ratio_requerido||"1/6"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
                           </table>
                         </div>
                       </>
