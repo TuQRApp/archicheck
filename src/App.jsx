@@ -84,6 +84,46 @@ function getAllObs(result) {
   );
 }
 
+function assignObsCodes(result) {
+  const SECTIONS = [
+    result.capa1?.separacion,
+    result.capa1?.reconocimiento,
+    result.capa1?.vectorizacion,
+    result.capa1?.modelo,
+    result.capa2?.recintos_superficies,
+    result.capa2?.circulaciones,
+    result.capa2?.iluminacion_ventilacion,
+    result.capa2?.normativa_urbanistica,
+  ];
+  let iIdx = 1, oIdx = 1;
+  for (const sec of SECTIONS) {
+    if (!sec) continue;
+    sec._refs = [];
+    for (const obs of (sec.observaciones || [])) {
+      if (!obs._codigo)
+        obs._codigo = obs.criticidad === "ALTA" ? `I${iIdx++}` : `O${oIdx++}`;
+      sec._refs.push(obs._codigo);
+    }
+  }
+}
+
+function EtapaRefs({ refs }) {
+  if (!refs?.length) return null;
+  return (
+    <div style={{ marginTop:10, padding:"8px 12px", background:"#F8F9FF", borderRadius:6, border:"1px solid #E0E6F3", display:"flex", alignItems:"center", flexWrap:"wrap", gap:4 }}>
+      <span style={{ fontSize:11, color:"#6B7A99", marginRight:4, flexShrink:0 }}>Hallazgos →</span>
+      {refs.map(code => (
+        <span key={code} style={{ fontFamily:"'DM Mono',monospace", fontWeight:700, fontSize:10,
+          color: code.startsWith("I") ? "#C0392B" : "#D68910",
+          background: code.startsWith("I") ? "rgba(192,57,43,0.07)" : "rgba(214,137,16,0.07)",
+          border: `1px solid ${code.startsWith("I") ? "rgba(192,57,43,0.25)" : "rgba(214,137,16,0.25)"}`,
+          borderRadius:4, padding:"2px 7px" }}>{code}</span>
+      ))}
+      <span style={{ fontSize:9, color:"#B8C5E0", marginLeft:4 }}>ver consolidado ↓</span>
+    </div>
+  );
+}
+
 // ── Reparar JSON cortado ───────────────────────────────────────────────────
 function repairJSON(str) {
   // Elimina trailing parcial: coma suelta al final antes de cerrar
@@ -492,6 +532,8 @@ CRITERIOS PARA estado_global:
 • OBSERVADO: Existen incumplimientos corregibles. El proyecto PUEDE aprobarse con correcciones.
 • RECHAZABLE: Incumplimientos irresolubles sin rediseño mayor — incompatibilidad de uso con zonificación PRC, parámetros absolutos excedidos. NUNCA usar por falta de documentación o permisos pendientes.
 
+VALORES NUMÉRICOS — PRIORIDAD DE FUENTE: Para todo valor numérico (pendientes %, dimensiones en m, áreas en m², alturas): lee DIRECTAMENTE de las cotas acotadas en la imagen. El análisis semántico Colab puede tener errores de transcripción. Si el valor Colab contradice lo que ves claramente en el plano, usa el valor del plano. Si hay ambigüedad y no puedes confirmarlo desde la imagen, usa estado:"VERIFICAR" y describe la discrepancia en la observación (ej: "Colab reporta X pero imagen parece mostrar Y — verificar en plano original").
+
 tabla_observaciones: consolida en un solo lugar todas las observaciones ALTA y MEDIA del análisis completo, agrupadas por tema, SIN repetir la misma observación aunque aparezca en múltiples secciones. Temas disponibles: "Accesibilidad Universal", "Evacuación y Seguridad", "Ventilación e Iluminación", "Normativa Urbanística", "Documentación Faltante", "Geometría y Presentación". Incluye solo temas con observaciones.
 
 Responde SOLO con JSON puro, sin markdown, sin texto previo. Produce ÚNICAMENTE la evaluación normativa — capa2 va PRIMERO en el JSON para protegerla de truncaciones.
@@ -676,7 +718,10 @@ function ObsCard({ obs, obsKey, obsState, onAction, onComment }) {
   return (
     <div className="obs-card" style={{ ...cs, borderRadius:8, padding:"12px 14px", opacity:obsState?.status === "descartada" ? 0.5 : 1 }}>
       <div style={{ display:"flex", justifyContent:"space-between", gap:10, marginBottom:6 }}>
-        <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.5, flex:1 }}>{obs.descripcion}</div>
+        <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.5, flex:1 }}>
+          {obs._codigo && <span style={{ fontFamily:"'DM Mono',monospace", fontWeight:700, fontSize:10, color:"#D68910", background:"rgba(214,137,16,0.08)", border:"1px solid rgba(214,137,16,0.25)", borderRadius:4, padding:"1px 6px", marginRight:7 }}>{obs._codigo}</span>}
+          {obs.descripcion}
+        </div>
         <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:4, flexShrink:0 }}>
           <span style={{ fontSize:10, fontWeight:700, color:cs.color, background:cs.background, border:cs.border, borderRadius:4, padding:"2px 8px" }}>{obs.criticidad}</span>
           {isResolved && <span style={{ fontSize:10, fontWeight:600, color:STATUS_COLORS[obsState.status], background:STATUS_COLORS[obsState.status]+"18", border:`1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius:4, padding:"1px 7px", whiteSpace:"nowrap" }}>✓ {STATUS_LABELS[obsState.status]}</span>}
@@ -703,18 +748,6 @@ function ObsCard({ obs, obsKey, obsState, onAction, onComment }) {
   );
 }
 
-function ObsSection({ obs, prefix, obsStatus, onAction, onComment }) {
-  if (!obs?.length) return null;
-  return (
-    <div style={{ marginTop:20 }}>
-      <SectionTitle>⚠️ Observaciones — {obs.length}</SectionTitle>
-      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-        {obs.map((o,i) => <ObsCard key={i} obs={o} obsKey={`${prefix}-${i}`} obsState={obsStatus[`${prefix}-${i}`]} onAction={onAction} onComment={onComment} />)}
-      </div>
-    </div>
-  );
-}
-
 // ── PrintReport — layout dedicado para PDF ──────────────────────────────────
 function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, verificadorResult, fichaProyecto }) {
   const ec = globalStyle(result.estado_global);
@@ -729,40 +762,6 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
 
   const PTH = { padding:"5px 9px", textAlign:"left", color:"#fff", fontWeight:700, fontSize:9, background:"#1B3A8A", whiteSpace:"nowrap" };
   const PTD = { padding:"5px 9px", borderBottom:"1px solid #e8ecf5", fontSize:10, color:"#2d3748", verticalAlign:"top" };
-
-  function ObsPrint({ arr, prefix }) {
-    if (!arr?.length) return null;
-    return (
-      <div style={{ marginTop:10 }}>
-        <div style={{ fontSize:8, fontWeight:700, color:"#6B7A99", letterSpacing:"1.5px", marginBottom:6 }}>OBSERVACIONES — {arr.length}</div>
-        {arr.map((obs, i) => {
-          const key = `${prefix}-${i}`;
-          const st = obsStatus[key];
-          const cs = critStyle(obs.criticidad);
-          return (
-            <div key={i} className="obs-no-break" style={{ ...cs, borderRadius:5, padding:"8px 10px", marginBottom:5, pageBreakInside:"avoid", breakInside:"avoid" }}>
-              <div style={{ display:"flex", justifyContent:"space-between", gap:8, marginBottom:3 }}>
-                <div style={{ fontSize:10, color:"#3D4A5C", lineHeight:1.4, flex:1 }}>{obs.descripcion}</div>
-                <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:2, flexShrink:0 }}>
-                  <span style={{ fontSize:8, fontWeight:700, color:cs.color, background:cs.background, border:cs.border, borderRadius:99, padding:"1px 5px" }}>{obs.criticidad}</span>
-                  {st?.status && <span style={{ fontSize:8, fontWeight:600, color:STATUS_COLORS[st.status], background:STATUS_COLORS[st.status]+"18", border:`1px solid ${STATUS_COLORS[st.status]}40`, borderRadius:99, padding:"1px 5px" }}>✓ {STATUS_LABELS[st.status]}</span>}
-                </div>
-              </div>
-              {obs.articulo && (
-                <div style={{ display:"flex", flexWrap:"wrap", gap:3, marginBottom: obs.correccion ? 5 : 0 }}>
-                  {obs.articulo.split(/[,;]/).map(p => p.trim()).filter(Boolean).map((p, pi) => (
-                    <span key={pi} style={{ fontSize:8, color:"#2952A3", background:"rgba(41,82,163,0.08)", border:"1px solid rgba(41,82,163,0.2)", borderRadius:3, padding:"1px 4px", fontFamily:"monospace" }}>§ {p}</span>
-                  ))}
-                </div>
-              )}
-              {obs.correccion && <div style={{ fontSize:9, color:"#6B7A99", borderTop:"1px solid rgba(0,0,0,0.08)", paddingTop:5, lineHeight:1.4 }}><span style={{ color:"#2952A3", fontWeight:700 }}>→ </span>{obs.correccion}</div>}
-              {st?.comment && <div style={{ fontSize:9, color:"#2952A3", marginTop:3, fontStyle:"italic" }}>Nota: {st.comment}</div>}
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
 
   function EtapaTitle({ label, subtitle, badge, c2 = false }) {
     const col = c2 ? "#D68910" : "#2952A3";
@@ -871,7 +870,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
             </tr>
           ))}
         />
-        <ObsPrint arr={result.capa1?.separacion?.observaciones} prefix="sep" />
+        <EtapaRefs refs={result.capa1?.separacion?._refs} />
 
         {/* E2 */}
         <div style={pg}>
@@ -905,7 +904,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
               />
             </div>
           ))}
-          <ObsPrint arr={result.capa1?.reconocimiento?.observaciones} prefix="rec" />
+          <EtapaRefs refs={result.capa1?.reconocimiento?._refs} />
         </div>
 
         {/* E3 */}
@@ -924,7 +923,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
               </tr>
             ))}
           />
-          <ObsPrint arr={result.capa1?.vectorizacion?.observaciones} prefix="vec" />
+          <EtapaRefs refs={result.capa1?.vectorizacion?._refs} />
         </div>
 
         {/* E4 */}
@@ -954,7 +953,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
               </tr>
             ))}
           />
-          <ObsPrint arr={result.capa1?.modelo?.observaciones} prefix="mod" />
+          <EtapaRefs refs={result.capa1?.modelo?._refs} />
         </div>
       </div>
 
@@ -977,7 +976,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
             </tr>
           ))}
         />
-        <ObsPrint arr={result.capa2?.recintos_superficies?.observaciones} prefix="n1" />
+        <EtapaRefs refs={result.capa2?.recintos_superficies?._refs} />
 
         {/* N2 */}
         <div style={pg}>
@@ -995,7 +994,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
               </tr>
             ))}
           />
-          <ObsPrint arr={result.capa2?.circulaciones?.observaciones} prefix="n2" />
+          <EtapaRefs refs={result.capa2?.circulaciones?._refs} />
         </div>
 
         {/* N3 */}
@@ -1019,7 +1018,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
               </tr>
             ))}
           />
-          <ObsPrint arr={result.capa2?.iluminacion_ventilacion?.observaciones} prefix="n3" />
+          <EtapaRefs refs={result.capa2?.iluminacion_ventilacion?._refs} />
         </div>
 
         {/* N4 */}
@@ -1056,7 +1055,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
               </tr>
             ))}
           />
-          <ObsPrint arr={result.capa2?.normativa_urbanistica?.observaciones} prefix="n4" />
+          <EtapaRefs refs={result.capa2?.normativa_urbanistica?._refs} />
         </div>
 
         {/* N5 — Consolidación */}
@@ -1071,7 +1070,10 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
                 return (
                   <div key={key} className="obs-no-break" style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.04)", borderRadius:"0 6px 6px 0", padding:"8px 10px", marginBottom:6, pageBreakInside:"avoid", breakInside:"avoid" }}>
                     <div style={{ display:"flex", justifyContent:"space-between", gap:8, marginBottom:3 }}>
-                      <div style={{ fontSize:9, fontWeight:700, color:"#C0392B" }}>{etapa}</div>
+                      <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                        {obs._codigo && <span style={{ fontFamily:"monospace", fontWeight:700, fontSize:9, color:"#C0392B", background:"rgba(192,57,43,0.08)", border:"1px solid rgba(192,57,43,0.25)", borderRadius:3, padding:"1px 5px" }}>{obs._codigo}</span>}
+                        <span style={{ fontSize:9, fontWeight:700, color:"#C0392B" }}>{etapa}</span>
+                      </div>
                       {st?.status && <span style={{ fontSize:8, fontWeight:600, color:STATUS_COLORS[st.status], background:STATUS_COLORS[st.status]+"18", border:`1px solid ${STATUS_COLORS[st.status]}40`, borderRadius:99, padding:"1px 5px" }}>✓ {STATUS_LABELS[st.status]}</span>}
                     </div>
                     <div style={{ fontSize:10, color:"#3D4A5C", lineHeight:1.4, marginBottom:4 }}>{obs.descripcion}</div>
@@ -1087,9 +1089,10 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
             <div style={{ marginBottom:14 }}>
               <div style={{ fontSize:9, fontWeight:700, color:"#D68910", letterSpacing:"1.5px", marginBottom:8 }}>OBSERVACIONES TÉCNICAS — {tecnicas.length}</div>
               <table style={{ width:"100%", borderCollapse:"collapse" }}>
-                <thead><tr>{["Etapa","Descripción","Criticidad","Artículo"].map(h => <th key={h} style={PTH}>{h}</th>)}</tr></thead>
+                <thead><tr>{["Cód.","Etapa","Descripción","Criticidad","Artículo"].map(h => <th key={h} style={PTH}>{h}</th>)}</tr></thead>
                 <tbody>{tecnicas.map(({ obs, key, etapa }, i) => (
                   <tr key={key} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                    <td style={{ ...PTD, fontFamily:"monospace", fontWeight:700, color:"#D68910", whiteSpace:"nowrap" }}>{obs._codigo || "—"}</td>
                     <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A", whiteSpace:"nowrap" }}>{etapa}</td>
                     <td style={PTD}>{obs.descripcion}</td>
                     <td style={PTD}><StatusBadge val={obs.criticidad === "ALTA" ? "INCUMPLE" : obs.criticidad === "MEDIA" ? "OBSERVADO" : "OK"} /></td>
@@ -1176,7 +1179,8 @@ export default function ArchiCheck() {
   const [comuna,     setComuna]     = useState("");
   const [loading,    setLoading]    = useState(false);
   const [progress,   setProgress]   = useState("");
-  const [result,     setResult]     = useState(null);
+  const [result,           setResult]           = useState(null);
+  const [analysisTimestamp, setAnalysisTimestamp] = useState(null);
   const [error,      setError]      = useState("");
   const [expandido,  setExpandido]  = useState({});
   const [dragOver,   setDragOver]   = useState(false);
@@ -1217,14 +1221,17 @@ export default function ArchiCheck() {
     if (!printRef.current) return;
 
     const slug = TIPOS.find(t => t.id === tipo)?.label?.replace(/\s+/g, "-").toLowerCase() || "informe";
-    const fecha = new Date().toISOString().slice(0, 10);
+    const ts = analysisTimestamp || new Date();
+    const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+    const tsStr = `${ts.getDate().toString().padStart(2,"0")}${MESES[ts.getMonth()]}_${ts.getHours().toString().padStart(2,"0")}${ts.getMinutes().toString().padStart(2,"0")}`;
+    const titulo = `ArchiCheck — ${slug} — ${tsStr}`;
 
     // Abre el informe en una nueva pestaña y dispara window.print() automáticamente.
     // Usa el renderer nativo del browser — sin html2canvas, sin canvas blancos.
     const html = `<!DOCTYPE html>
 <html><head>
 <meta charset="utf-8">
-<title>ArchiCheck — ${slug} — ${fecha}</title>
+<title>${titulo}</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;}
 html,body{margin:0;padding:0;font-family:Arial,sans-serif;background:#fff;}
@@ -1533,6 +1540,8 @@ ${printRef.current.innerHTML}
           for (const r of (nivel.recintos || []))
             if (!r._colab_id) r._colab_id = findColabId(r.nombre);
       }
+      assignObsCodes(merged);
+      setAnalysisTimestamp(new Date());
       setResult(merged);
 
     } catch (e) {
@@ -2019,7 +2028,7 @@ ${printRef.current.innerHTML}
                       </table>
                     </div>
                   ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de separación — analiza un plano para ver resultados</p>}
-                  <ObsSection obs={d?.observaciones} prefix="sep" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                  <EtapaRefs refs={result.capa1?.separacion?._refs} />
                 </div>
               );
             })()}
@@ -2102,7 +2111,7 @@ ${printRef.current.innerHTML}
                       </div>
                     </div>
                   )}
-                  <ObsSection obs={d?.observaciones} prefix="rec" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                  <EtapaRefs refs={result.capa1?.reconocimiento?._refs} />
                 </div>
               );
             })()}
@@ -2130,7 +2139,7 @@ ${printRef.current.innerHTML}
                       </table>
                     </div>
                   ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de vectorización</p>}
-                  <ObsSection obs={d?.observaciones} prefix="vec" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                  <EtapaRefs refs={result.capa1?.vectorizacion?._refs} />
                 </div>
               );
             })()}
@@ -2167,7 +2176,7 @@ ${printRef.current.innerHTML}
                       </table>
                     </div>
                   ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de accesos</p>}
-                  <ObsSection obs={d?.observaciones} prefix="mod" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                  <EtapaRefs refs={result.capa1?.modelo?._refs} />
                 </div>
               );
             })()}
@@ -2195,7 +2204,7 @@ ${printRef.current.innerHTML}
                       </table>
                     </div>
                   ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de superficies</p>}
-                  <ObsSection obs={d?.observaciones} prefix="n1" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                  <EtapaRefs refs={result.capa2?.recintos_superficies?._refs} />
                 </div>
               );
             })()}
@@ -2223,7 +2232,7 @@ ${printRef.current.innerHTML}
                       </table>
                     </div>
                   ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de circulaciones</p>}
-                  <ObsSection obs={d?.observaciones} prefix="n2" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                  <EtapaRefs refs={result.capa2?.circulaciones?._refs} />
                 </div>
               );
             })()}
@@ -2261,7 +2270,7 @@ ${printRef.current.innerHTML}
                       </>
                     );
                   })() : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos de iluminación</p>}
-                  <ObsSection obs={d?.observaciones} prefix="n3" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                  <EtapaRefs refs={result.capa2?.iluminacion_ventilacion?._refs} />
                 </div>
               );
             })()}
@@ -2317,7 +2326,7 @@ ${printRef.current.innerHTML}
                       </table>
                     </div>
                   ) : <p style={{ color:"#B8C5E0", fontSize:12 }}>Sin datos urbanísticos</p>}
-                  <ObsSection obs={d?.observaciones} prefix="n4" obsStatus={obsStatus} onAction={setObsAction} onComment={setObsComment} />
+                  <EtapaRefs refs={result.capa2?.normativa_urbanistica?._refs} />
                 </div>
               );
             })()}
@@ -2360,7 +2369,10 @@ ${printRef.current.innerHTML}
                           return (
                             <div key={key} style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.04)", borderRadius:"0 8px 8px 0", padding:"14px 16px", opacity:obsState?.status==="descartada"?0.5:1 }}>
                               <div style={{ display:"flex", justifyContent:"space-between", gap:10, marginBottom:6 }}>
-                                <div style={{ fontSize:11, fontWeight:700, color:"#C0392B" }}>{etapa}</div>
+                                <div style={{ display:"flex", alignItems:"center", gap:7 }}>
+                                  {obs._codigo && <span style={{ fontFamily:"'DM Mono',monospace", fontWeight:700, fontSize:11, color:"#C0392B", background:"rgba(192,57,43,0.08)", border:"1px solid rgba(192,57,43,0.3)", borderRadius:4, padding:"2px 8px" }}>{obs._codigo}</span>}
+                                  <span style={{ fontSize:11, fontWeight:700, color:"#C0392B" }}>{etapa}</span>
+                                </div>
                                 {obsState?.status && <span style={{ fontSize:10, fontWeight:600, color:STATUS_COLORS[obsState.status], background:STATUS_COLORS[obsState.status]+"18", border:`1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius:4, padding:"1px 7px" }}>✓ {STATUS_LABELS[obsState.status]}</span>}
                               </div>
                               <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.6, marginBottom:8 }}>{obs.descripcion}</div>
@@ -2381,8 +2393,8 @@ ${printRef.current.innerHTML}
                       <SectionTitle>🟡 Observaciones técnicas</SectionTitle>
                       <div style={{ overflowX:"auto" }}>
                         <table style={{ width:"100%", borderCollapse:"collapse" }}>
-                          <thead><tr>{["Etapa","Descripción","Criticidad","Artículo"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
-                          <tbody>{tecnicas.map(({ obs, key, etapa },i) => <tr key={key} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A", whiteSpace:"nowrap" }}>{etapa}</td><td style={TD}>{obs.descripcion}</td><td style={TD}><StatusBadge val={obs.criticidad==="ALTA"?"INCUMPLE":obs.criticidad==="MEDIA"?"OBSERVADO":"OK"} /></td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{obs.articulo||"—"}</td></tr>)}</tbody>
+                          <thead><tr>{["Cód.","Etapa","Descripción","Criticidad","Artículo"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
+                          <tbody>{tecnicas.map(({ obs, key, etapa },i) => <tr key={key} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontWeight:700, color:"#D68910", whiteSpace:"nowrap" }}>{obs._codigo||"—"}</td><td style={{ ...TD, fontWeight:600, color:"#1B3A8A", whiteSpace:"nowrap" }}>{etapa}</td><td style={TD}>{obs.descripcion}</td><td style={TD}><StatusBadge val={obs.criticidad==="ALTA"?"INCUMPLE":obs.criticidad==="MEDIA"?"OBSERVADO":"OK"} /></td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{obs.articulo||"—"}</td></tr>)}</tbody>
                         </table>
                       </div>
                     </div>
@@ -2483,7 +2495,10 @@ ${printRef.current.innerHTML}
                           return (
                             <div key={key} style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.05)", borderRadius:"0 8px 8px 0", padding:"14px 16px", opacity:obsState?.status==="descartada"?0.5:1 }}>
                               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:10, marginBottom:6 }}>
-                                <div style={{ fontSize:12, fontWeight:700, color:"#C0392B" }}>{etapa}</div>
+                                <div style={{ display:"flex", alignItems:"center", gap:7 }}>
+                                  {obs._codigo && <span style={{ fontFamily:"'DM Mono',monospace", fontWeight:700, fontSize:11, color:"#C0392B", background:"rgba(192,57,43,0.08)", border:"1px solid rgba(192,57,43,0.3)", borderRadius:4, padding:"2px 8px" }}>{obs._codigo}</span>}
+                                  <span style={{ fontSize:12, fontWeight:700, color:"#C0392B" }}>{etapa}</span>
+                                </div>
                                 {obsState?.status && <span style={{ fontSize:10, fontWeight:600, color:STATUS_COLORS[obsState.status], background:STATUS_COLORS[obsState.status]+"18", border:`1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius:4, padding:"1px 7px" }}>✓ {STATUS_LABELS[obsState.status]}</span>}
                               </div>
                               <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.6, marginBottom:8 }}>{obs.descripcion}</div>
