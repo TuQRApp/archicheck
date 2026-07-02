@@ -112,18 +112,29 @@ function assignObsCodes(result) {
   }
 }
 
+// Letra en sans-serif + número en monoespaciado: la "O" de mayúscula nunca se
+// confunde con el dígito "0" (el problema persiste si sólo se distingue por color).
+function CodigoBadge({ codigo, size = 10, pill = true }) {
+  if (!codigo) return null;
+  const isInc = codigo[0] === "I";
+  const color = isInc ? "#C0392B" : "#D68910";
+  const style = pill
+    ? { background:isInc ? "rgba(192,57,43,0.08)" : "rgba(214,137,16,0.08)", border:`1px solid ${isInc ? "rgba(192,57,43,0.3)" : "rgba(214,137,16,0.3)"}`, borderRadius:4, padding:"1px 6px" }
+    : { whiteSpace:"nowrap" };
+  return (
+    <span style={{ display:"inline-flex", fontWeight:800, fontSize:size, color, lineHeight:1.3, ...style }}>
+      <span style={{ fontFamily:"Arial,Helvetica,sans-serif" }}>{codigo[0]}</span>
+      <span style={{ fontFamily:"'DM Mono',monospace" }}>{codigo.slice(1)}</span>
+    </span>
+  );
+}
+
 function EtapaRefs({ refs }) {
   if (!refs?.length) return null;
   return (
     <div style={{ marginTop:10, padding:"8px 12px", background:"#F8F9FF", borderRadius:6, border:"1px solid #E0E6F3", display:"flex", alignItems:"center", flexWrap:"wrap", gap:4 }}>
       <span style={{ fontSize:11, color:"#6B7A99", marginRight:4, flexShrink:0 }}>Hallazgos →</span>
-      {refs.map(code => (
-        <span key={code} style={{ fontFamily:"'DM Mono',monospace", fontWeight:700, fontSize:10,
-          color: code.startsWith("I") ? "#C0392B" : "#D68910",
-          background: code.startsWith("I") ? "rgba(192,57,43,0.07)" : "rgba(214,137,16,0.07)",
-          border: `1px solid ${code.startsWith("I") ? "rgba(192,57,43,0.25)" : "rgba(214,137,16,0.25)"}`,
-          borderRadius:4, padding:"2px 7px" }}>{code}</span>
-      ))}
+      {refs.map(code => <CodigoBadge key={code} codigo={code} size={10} />)}
       <span style={{ fontSize:9, color:"#B8C5E0", marginLeft:4 }}>ver consolidado ↓</span>
     </div>
   );
@@ -724,7 +735,7 @@ function ObsCard({ obs, obsKey, obsState, onAction, onComment }) {
     <div className="obs-card" style={{ ...cs, borderRadius:8, padding:"12px 14px", opacity:obsState?.status === "descartada" ? 0.5 : 1 }}>
       <div style={{ display:"flex", justifyContent:"space-between", gap:10, marginBottom:6 }}>
         <div style={{ fontSize:13, color:"#3D4A5C", lineHeight:1.5, flex:1 }}>
-          {obs._codigo && <span style={{ fontFamily:"'DM Mono',monospace", fontWeight:700, fontSize:10, color:"#D68910", background:"rgba(214,137,16,0.08)", border:"1px solid rgba(214,137,16,0.25)", borderRadius:4, padding:"1px 6px", marginRight:7 }}>{obs._codigo}</span>}
+          {obs._codigo && <span style={{ marginRight:7, display:"inline-block" }}><CodigoBadge codigo={obs._codigo} size={10} /></span>}
           {obs.descripcion}
         </div>
         <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:4, flexShrink:0 }}>
@@ -832,30 +843,32 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
           <div style={{ marginBottom:16 }}>
             <div style={{ fontSize:7, color:"#6B7A99", letterSpacing:"2px", marginBottom:8 }}>RESUMEN POR TEMA</div>
             <table style={{ width:"100%", borderCollapse:"collapse", fontSize:8 }}>
-              <thead><tr style={{ background:"#EEF2FB" }}>{["Tema","Alta","Media","Baja"].map(h => <th key={h} style={{ padding:"4px 8px", textAlign:h==="Tema"?"left":"center", fontWeight:700, color:"#1B3A8A", letterSpacing:"0.5px" }}>{h}</th>)}</tr></thead>
-              <tbody>{result.tabla_observaciones.map((g, i) => {
-                const obs = g.observaciones || [];
-                const a = obs.filter(o => o.criticidad === "ALTA").length;
-                const m = obs.filter(o => o.criticidad === "MEDIA").length;
-                const b = obs.filter(o => o.criticidad === "BAJA").length;
-                return <tr key={i} style={{ borderBottom:"1px solid #EEF2FB" }}><td style={{ padding:"4px 8px", color:"#3D4A5C", fontWeight:500 }}>{g.tema}</td><td style={{ padding:"4px 8px", textAlign:"center", color:a>0?"#C0392B":"#B8C5E0", fontWeight:a>0?700:400 }}>{a||"—"}</td><td style={{ padding:"4px 8px", textAlign:"center", color:m>0?"#D68910":"#B8C5E0", fontWeight:m>0?700:400 }}>{m||"—"}</td><td style={{ padding:"4px 8px", textAlign:"center", color:b>0?"#6B7A99":"#B8C5E0" }}>{b||"—"}</td></tr>;
-              })}</tbody>
+              <thead>
+                <tr style={{ background:"#F4F6FB" }}>
+                  <th style={{ padding:"3px 8px" }}></th>
+                  <th style={{ padding:"3px 8px", textAlign:"center", fontWeight:700, color:"#C0392B", letterSpacing:"0.5px" }}>Incumplimientos</th>
+                  <th colSpan={2} style={{ padding:"3px 8px", textAlign:"center", fontWeight:700, color:"#D68910", letterSpacing:"0.5px" }}>Observaciones</th>
+                </tr>
+                <tr style={{ background:"#EEF2FB" }}>{["Tema","Alta","Media","Baja"].map(h => <th key={h} style={{ padding:"4px 8px", textAlign:h==="Tema"?"left":"center", fontWeight:700, color:"#1B3A8A", letterSpacing:"0.5px" }}>{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {result.tabla_observaciones.map((g, i) => {
+                  const obs = g.observaciones || [];
+                  const a = obs.filter(o => o.criticidad === "ALTA").length;
+                  const m = obs.filter(o => o.criticidad === "MEDIA").length;
+                  const b = obs.filter(o => o.criticidad === "BAJA").length;
+                  return <tr key={i} style={{ borderBottom:"1px solid #EEF2FB" }}><td style={{ padding:"4px 8px", color:"#3D4A5C", fontWeight:500 }}>{g.tema}</td><td style={{ padding:"4px 8px", textAlign:"center", color:a>0?"#C0392B":"#B8C5E0", fontWeight:a>0?700:400 }}>{a||"—"}</td><td style={{ padding:"4px 8px", textAlign:"center", color:m>0?"#D68910":"#B8C5E0", fontWeight:m>0?700:400 }}>{m||"—"}</td><td style={{ padding:"4px 8px", textAlign:"center", color:b>0?"#6B7A99":"#B8C5E0" }}>{b||"—"}</td></tr>;
+                })}
+                <tr style={{ borderTop:"2px solid #1B3A8A", background:"#F8F9FF" }}>
+                  <td style={{ padding:"5px 8px", fontWeight:800, color:"#1B3A8A" }}>Total</td>
+                  <td style={{ padding:"5px 8px", textAlign:"center", fontWeight:800, color:"#C0392B" }}>{altas.length || "—"}</td>
+                  <td colSpan={2} style={{ padding:"5px 8px", textAlign:"center", fontWeight:800, color:"#D68910" }}>{tecnicas.length || "—"}</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         )}
         <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:20 }}>{result.resumen_general}</p>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:16 }}>
-          {[
-            { n:altas.length,    label:"Incumplimientos", c:"#C0392B" },
-            { n:tecnicas.length, label:"Observaciones",   c:"#D68910" },
-            { n:resueltas,       label:"Resueltas",        c:"#1E8449" },
-          ].map(m => (
-            <div key={m.label} style={{ border:`1px solid ${m.c}30`, borderRadius:8, padding:"10px", textAlign:"center", background:`${m.c}06` }}>
-              <div style={{ fontSize:28, fontWeight:900, color:m.c, lineHeight:1 }}>{m.n}</div>
-              <div style={{ fontSize:9, color:"#6B7A99", marginTop:2 }}>{m.label}</div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* ── CAPA 1 ── */}
@@ -1076,7 +1089,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
                   <div key={key} className="obs-no-break" style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.04)", borderRadius:"0 6px 6px 0", padding:"8px 10px", marginBottom:6, pageBreakInside:"avoid", breakInside:"avoid" }}>
                     <div style={{ display:"flex", justifyContent:"space-between", gap:8, marginBottom:3 }}>
                       <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-                        {obs._codigo && <span style={{ fontFamily:"monospace", fontWeight:700, fontSize:9, color:"#C0392B", background:"rgba(192,57,43,0.08)", border:"1px solid rgba(192,57,43,0.25)", borderRadius:3, padding:"1px 5px" }}>{obs._codigo}</span>}
+                        <CodigoBadge codigo={obs._codigo} size={9} />
                         <span style={{ fontSize:9, fontWeight:700, color:"#C0392B" }}>{tema}</span>
                       </div>
                       {st?.status && <span style={{ fontSize:8, fontWeight:600, color:STATUS_COLORS[st.status], background:STATUS_COLORS[st.status]+"18", border:`1px solid ${STATUS_COLORS[st.status]}40`, borderRadius:99, padding:"1px 5px" }}>✓ {STATUS_LABELS[st.status]}</span>}
@@ -1097,7 +1110,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
                 <thead><tr>{["Cód.","Tema","Descripción","Criticidad","Artículo"].map(h => <th key={h} style={PTH}>{h}</th>)}</tr></thead>
                 <tbody>{tecnicas.map(({ obs, key, tema }, i) => (
                   <tr key={key} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
-                    <td style={{ ...PTD, fontFamily:"monospace", fontWeight:700, color:"#D68910", whiteSpace:"nowrap" }}>{obs._codigo || "—"}</td>
+                    <td style={PTD}>{obs._codigo ? <CodigoBadge codigo={obs._codigo} size={9} pill={false} /> : "—"}</td>
                     <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A", whiteSpace:"nowrap" }}>{tema}</td>
                     <td style={PTD}>{obs.descripcion}</td>
                     <td style={PTD}><StatusBadge val={obs.criticidad === "ALTA" ? "INCUMPLE" : obs.criticidad === "MEDIA" ? "OBSERVADO" : "OK"} /></td>
@@ -1122,7 +1135,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
       </div>
 
       {/* ── INFORME FINAL ── */}
-      <div style={pg}>
+      <div style={{ ...pg, pageBreakInside:"avoid", breakInside:"avoid" }}>
         <CapaBanner>★ INFORME FINAL</CapaBanner>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16, gap:12 }}>
           <div>
@@ -2375,7 +2388,7 @@ ${printRef.current.innerHTML}
                             <div key={key} style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.04)", borderRadius:"0 8px 8px 0", padding:"14px 16px", opacity:obsState?.status==="descartada"?0.5:1 }}>
                               <div style={{ display:"flex", justifyContent:"space-between", gap:10, marginBottom:6 }}>
                                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
-                                  {obs._codigo && <span style={{ fontFamily:"'DM Mono',monospace", fontWeight:700, fontSize:11, color:"#C0392B", background:"rgba(192,57,43,0.08)", border:"1px solid rgba(192,57,43,0.3)", borderRadius:4, padding:"2px 8px" }}>{obs._codigo}</span>}
+                                  <CodigoBadge codigo={obs._codigo} size={11} />
                                   <span style={{ fontSize:11, fontWeight:700, color:"#C0392B" }}>{tema}</span>
                                 </div>
                                 {obsState?.status && <span style={{ fontSize:10, fontWeight:600, color:STATUS_COLORS[obsState.status], background:STATUS_COLORS[obsState.status]+"18", border:`1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius:4, padding:"1px 7px" }}>✓ {STATUS_LABELS[obsState.status]}</span>}
@@ -2399,7 +2412,7 @@ ${printRef.current.innerHTML}
                       <div style={{ overflowX:"auto" }}>
                         <table style={{ width:"100%", borderCollapse:"collapse" }}>
                           <thead><tr>{["Cód.","Tema","Descripción","Criticidad","Artículo"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
-                          <tbody>{tecnicas.map(({ obs, key, tema },i) => <tr key={key} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontWeight:700, color:"#D68910", whiteSpace:"nowrap" }}>{obs._codigo||"—"}</td><td style={{ ...TD, fontWeight:600, color:"#1B3A8A", whiteSpace:"nowrap" }}>{tema}</td><td style={TD}>{obs.descripcion}</td><td style={TD}><StatusBadge val={obs.criticidad==="ALTA"?"INCUMPLE":obs.criticidad==="MEDIA"?"OBSERVADO":"OK"} /></td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{obs.articulo||"—"}</td></tr>)}</tbody>
+                          <tbody>{tecnicas.map(({ obs, key, tema },i) => <tr key={key} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={TD}>{obs._codigo ? <CodigoBadge codigo={obs._codigo} size={10} pill={false} /> : "—"}</td><td style={{ ...TD, fontWeight:600, color:"#1B3A8A", whiteSpace:"nowrap" }}>{tema}</td><td style={TD}>{obs.descripcion}</td><td style={TD}><StatusBadge val={obs.criticidad==="ALTA"?"INCUMPLE":obs.criticidad==="MEDIA"?"OBSERVADO":"OK"} /></td><td style={{ ...TD, fontFamily:"'DM Mono',monospace", fontSize:10, color:"#2952A3" }}>{obs.articulo||"—"}</td></tr>)}</tbody>
                         </table>
                       </div>
                     </div>
@@ -2501,7 +2514,7 @@ ${printRef.current.innerHTML}
                             <div key={key} style={{ borderLeft:"4px solid #C0392B", background:"rgba(192,57,43,0.05)", borderRadius:"0 8px 8px 0", padding:"14px 16px", opacity:obsState?.status==="descartada"?0.5:1 }}>
                               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:10, marginBottom:6 }}>
                                 <div style={{ display:"flex", alignItems:"center", gap:7 }}>
-                                  {obs._codigo && <span style={{ fontFamily:"'DM Mono',monospace", fontWeight:700, fontSize:11, color:"#C0392B", background:"rgba(192,57,43,0.08)", border:"1px solid rgba(192,57,43,0.3)", borderRadius:4, padding:"2px 8px" }}>{obs._codigo}</span>}
+                                  <CodigoBadge codigo={obs._codigo} size={11} />
                                   <span style={{ fontSize:12, fontWeight:700, color:"#C0392B" }}>{tema}</span>
                                 </div>
                                 {obsState?.status && <span style={{ fontSize:10, fontWeight:600, color:STATUS_COLORS[obsState.status], background:STATUS_COLORS[obsState.status]+"18", border:`1px solid ${STATUS_COLORS[obsState.status]}40`, borderRadius:4, padding:"1px 7px" }}>✓ {STATUS_LABELS[obsState.status]}</span>}
