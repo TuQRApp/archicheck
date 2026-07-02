@@ -552,6 +552,8 @@ VALORES NUMÉRICOS — PRIORIDAD DE FUENTE: Para todo valor numérico (pendiente
 
 tabla_observaciones: ES LA ÚNICA FUENTE DE VERDAD DEL INFORME — consolida aquí TODAS las observaciones (ALTA, MEDIA y BAJA) del análisis completo, agrupadas por tema. Si el mismo hallazgo aplica a varias secciones (por ejemplo aparece tanto en capa1 como en capa2), inclúyelo UNA SOLA VEZ aquí — nunca lo dupliques. Temas disponibles: "Accesibilidad Universal", "Evacuación y Seguridad", "Ventilación e Iluminación", "Normativa Urbanística", "Documentación Faltante", "Geometría y Presentación". Incluye solo temas con observaciones. Cada observación de tabla_observaciones debe incluir "etapas": un array con una o más de estas etiquetas EXACTAS (las secciones donde ese hallazgo es relevante o fue detectado): "Separación", "Reconocimiento", "Vectorización", "Modelo", "Recintos", "Circulaciones", "Iluminación", "Urbanística". Usa varias etiquetas cuando el hallazgo involucre a más de una sección.
 
+resumen_general — CONSISTENCIA NUMÉRICA OBLIGATORIA: escribe primero tabla_observaciones completa, cuenta cuántas observaciones quedaron con criticidad ALTA y cuántas con MEDIA+BAJA, y usa EXACTAMENTE esos totales si mencionas una cantidad de incumplimientos u observaciones en el párrafo (ej. "el análisis identifica N incumplimientos de criticidad ALTA", donde N debe ser el conteo real, no un subconjunto). Puedes describir en detalle solo los hallazgos más críticos, pero el número que declares nunca puede ser menor al total real de tabla_observaciones — si listas ejemplos numerados (1), (2), (3)..., dejarlos incompletos está bien, pero el conteo declarado en el texto SIEMPRE debe ser el total exacto.
+
 Responde SOLO con JSON puro, sin markdown, sin texto previo. Produce ÚNICAMENTE la evaluación normativa — capa2 va PRIMERO en el JSON para protegerla de truncaciones.
 {"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"resumen_general":"...","estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","tabla_observaciones":[{"tema":"Accesibilidad Universal|Evacuación y Seguridad|Ventilación e Iluminación|Normativa Urbanística|Documentación Faltante|Geometría y Presentación","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"...","etapas":["Separación|Reconocimiento|Vectorización|Modelo|Recintos|Circulaciones|Iluminación|Urbanística"]}]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
 }
@@ -1158,10 +1160,10 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
             </div>
           </div>
         )}
-        {result.alertas_especiales?.length > 0 && (
+        {result.alertas_especiales?.filter(a => a?.trim()).length > 0 && (
           <div style={{ marginBottom:14 }}>
             <div style={{ fontSize:9, fontWeight:700, color:"#D68910", letterSpacing:"1.5px", marginBottom:6 }}>ALERTAS ESPECIALES</div>
-            {result.alertas_especiales.map((a, i) => (
+            {result.alertas_especiales.filter(a => a?.trim()).map((a, i) => (
               <div key={i} style={{ background:"#FEF3CD", border:"1px solid #D68910", borderRadius:5, padding:"7px 10px", marginBottom:4, fontSize:10, color:"#7D5A00", lineHeight:1.5 }}>⚠ {a}</div>
             ))}
           </div>
@@ -2583,10 +2585,10 @@ ${printRef.current.innerHTML}
                       </div>
                     </div>
                   )}
-                  {result.alertas_especiales?.length > 0 && (
+                  {result.alertas_especiales?.filter(a => a?.trim()).length > 0 && (
                     <div style={{ marginBottom:26 }}>
                       <SectionTitle>⚡ Alertas especiales</SectionTitle>
-                      {result.alertas_especiales.map((a,i) => <div key={i} style={{ background:"#FEF3CD", border:"1px solid #D68910", borderRadius:8, padding:"11px 14px", marginBottom:6, fontSize:13, color:"#7D5A00", lineHeight:1.6 }}>⚠ {a}</div>)}
+                      {result.alertas_especiales.filter(a => a?.trim()).map((a,i) => <div key={i} style={{ background:"#FEF3CD", border:"1px solid #D68910", borderRadius:8, padding:"11px 14px", marginBottom:6, fontSize:13, color:"#7D5A00", lineHeight:1.6 }}>⚠ {a}</div>)}
                     </div>
                   )}
                   <div style={{ marginBottom:22 }}>
