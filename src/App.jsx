@@ -2475,19 +2475,33 @@ ${printRef.current.innerHTML}
                     <div style={{ marginBottom:20, border:"1px solid #D1D9EE", borderRadius:10, overflow:"hidden" }}>
                       <div style={{ background:"#EEF2FB", padding:"8px 14px", fontSize:9, fontWeight:700, color:"#1B3A8A", letterSpacing:"1.5px" }}>RESUMEN POR TEMA</div>
                       <table style={{ width:"100%", borderCollapse:"collapse" }}>
-                        <thead><tr style={{ background:"#F8F9FF" }}>{["Tema","Alta","Media","Baja"].map(h => <th key={h} style={{ padding:"6px 12px", textAlign:h==="Tema"?"left":"center", fontSize:10, fontWeight:700, color:"#6B7A99", letterSpacing:"0.5px", borderBottom:"1px solid #D1D9EE" }}>{h}</th>)}</tr></thead>
-                        <tbody>{result.tabla_observaciones.map((g, i) => {
-                          const obs = g.observaciones || [];
-                          const a = obs.filter(o => o.criticidad === "ALTA").length;
-                          const m = obs.filter(o => o.criticidad === "MEDIA").length;
-                          const b = obs.filter(o => o.criticidad === "BAJA").length;
-                          return <tr key={i} style={{ borderBottom:"1px solid #EEF2FB", background:i%2===0?"#fff":"#FAFBFF" }}>
-                            <td style={{ padding:"8px 12px", fontSize:12, color:"#3D4A5C", fontWeight:500 }}>{g.tema}</td>
-                            <td style={{ padding:"8px 12px", textAlign:"center", fontSize:12, fontWeight:700, color:a>0?"#C0392B":"#D1D9EE" }}>{a>0?a:"—"}</td>
-                            <td style={{ padding:"8px 12px", textAlign:"center", fontSize:12, fontWeight:700, color:m>0?"#D68910":"#D1D9EE" }}>{m>0?m:"—"}</td>
-                            <td style={{ padding:"8px 12px", textAlign:"center", fontSize:12, color:b>0?"#6B7A99":"#D1D9EE" }}>{b>0?b:"—"}</td>
-                          </tr>;
-                        })}</tbody>
+                        <thead>
+                          <tr style={{ background:"#F4F6FB" }}>
+                            <th style={{ padding:"5px 12px" }}></th>
+                            <th style={{ padding:"5px 12px", textAlign:"center", fontSize:10, fontWeight:700, color:"#C0392B", letterSpacing:"0.5px" }}>Incumplimientos</th>
+                            <th colSpan={2} style={{ padding:"5px 12px", textAlign:"center", fontSize:10, fontWeight:700, color:"#D68910", letterSpacing:"0.5px" }}>Observaciones</th>
+                          </tr>
+                          <tr style={{ background:"#F8F9FF" }}>{["Tema","Alta","Media","Baja"].map(h => <th key={h} style={{ padding:"6px 12px", textAlign:h==="Tema"?"left":"center", fontSize:10, fontWeight:700, color:"#6B7A99", letterSpacing:"0.5px", borderBottom:"1px solid #D1D9EE" }}>{h}</th>)}</tr>
+                        </thead>
+                        <tbody>
+                          {result.tabla_observaciones.map((g, i) => {
+                            const obs = g.observaciones || [];
+                            const a = obs.filter(o => o.criticidad === "ALTA").length;
+                            const m = obs.filter(o => o.criticidad === "MEDIA").length;
+                            const b = obs.filter(o => o.criticidad === "BAJA").length;
+                            return <tr key={i} style={{ borderBottom:"1px solid #EEF2FB", background:i%2===0?"#fff":"#FAFBFF" }}>
+                              <td style={{ padding:"8px 12px", fontSize:12, color:"#3D4A5C", fontWeight:500 }}>{g.tema}</td>
+                              <td style={{ padding:"8px 12px", textAlign:"center", fontSize:12, fontWeight:700, color:a>0?"#C0392B":"#D1D9EE" }}>{a>0?a:"—"}</td>
+                              <td style={{ padding:"8px 12px", textAlign:"center", fontSize:12, fontWeight:700, color:m>0?"#D68910":"#D1D9EE" }}>{m>0?m:"—"}</td>
+                              <td style={{ padding:"8px 12px", textAlign:"center", fontSize:12, color:b>0?"#6B7A99":"#D1D9EE" }}>{b>0?b:"—"}</td>
+                            </tr>;
+                          })}
+                          <tr style={{ borderTop:"2px solid #1B3A8A", background:"#F8F9FF" }}>
+                            <td style={{ padding:"9px 12px", fontSize:12, fontWeight:800, color:"#1B3A8A" }}>Total</td>
+                            <td style={{ padding:"9px 12px", textAlign:"center", fontSize:12, fontWeight:800, color:"#C0392B" }}>{altas.length || "—"}</td>
+                            <td colSpan={2} style={{ padding:"9px 12px", textAlign:"center", fontSize:12, fontWeight:800, color:"#D68910" }}>{tecnicas.length || "—"}</td>
+                          </tr>
+                        </tbody>
                       </table>
                     </div>
                   )}
