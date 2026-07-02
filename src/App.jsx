@@ -539,9 +539,11 @@ INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
 Para cada planta de arquitectura identifica los recintos visibles con bbox como fraccion de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Si no puedes estimar coordenadas confiables para un recinto, omite bbox.
 ${buildColabTexto(colabData)}
 CRITERIOS DE CRITICIDAD — aplicar en todas las observaciones:
-• ALTA: Impide la aprobación DOM o representa riesgo de seguridad. Requiere corrección de diseño antes de presentar expediente. Ej: segunda salida de emergencia ausente, baño universal fuera de norma confirmado por cota, cambio de destino no tramitado, pendiente de rampa excede máximo declarado en plano.
+• ALTA: Impide la aprobación DOM o representa riesgo de seguridad. Requiere corrección de diseño antes de presentar expediente. Ej: segunda salida de emergencia ausente, baño universal fuera de norma confirmado por cota, cambio de destino no tramitado formalmente cuando el expediente lo declara explícitamente, pendiente de rampa excede máximo declarado en plano.
 • MEDIA: Debe resolverse pero no impide avanzar. Se corrige con documentación adicional o ajustes menores. Ej: falta cuadro de iluminación, dimensiones no acotadas, pasamanos no graficados.
 • BAJA: Detalle de presentación o recomendación menor. No afecta la aprobación. Ej: escala poco legible, leyenda incompleta.
+
+REGLA CLAVE — falta de documentación NO equivale a incumplimiento confirmado: si un parámetro no se puede verificar porque falta un dato o documento en el expediente (zona PRC no declarada, CIP ausente, planos de evacuación no incluidos, cuadro de superficies ilegible, etc.), clasifícalo SIEMPRE como MEDIA con estado:"VERIFICAR" — nunca como ALTA, aunque esa falta de información sea relevante para el proyecto. Reserva ALTA exclusivamente para incumplimientos CONFIRMADOS por una cota, dimensión o dato explícito visible en el plano (ej. pendiente de rampa declarada en 13.58%, ancho de pasillo acotado en 1.22m). La única excepción es un trámite legal que el propio expediente declara explícitamente como no realizado (ej. "cambio de destino: solicitado" ausente en carátula) — eso sí puede ser ALTA, porque es un hecho declarado, no una ausencia de información.
 
 CRITERIOS PARA estado_global:
 • APROBABLE: Todos los parámetros verificados cumplen o las observaciones son menores. Sin incumplimientos ALTA.
