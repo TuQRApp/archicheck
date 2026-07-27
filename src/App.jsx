@@ -341,7 +341,7 @@ function buildColabTexto(json) {
       }
       const incOguc = sem.incumplimientos_oguc || [];
       if (incOguc.length > 0) {
-        lines.push(`  CANDIDATAS de Colab (ya evaluadas por Claude en el notebook, revisar/validar — NO las repitas como hallazgo nuevo si ya están cubiertas aquí, consolídalas en una sola observación final citando el artículo correcto):`);
+        lines.push(`  CANDIDATAS de Colab (ya evaluadas por Claude en el notebook, revisar/validar — NO las repitas como hallazgo nuevo si ya están cubiertas aquí, consolídalas en una sola observación final citando el artículo correcto). IMPORTANTE: antes de aceptar una candidata, crúzala contra la tabla de mediciones geométricas del mismo recinto listada arriba en esta misma página (ancho/área ya medidos por OpenCV) — si la candidata contradice esa medición (ej. dice "no se especifica el ancho" cuando arriba ya hay un ancho_min_m para ese mismo recinto), prioriza el dato medido y corrige el texto de la observación, no repitas la contradicción:`);
         for (const o of incOguc) {
           const medida = o.medida_detectada ? ` (detectado: ${o.medida_detectada}${o.medida_requerida ? `, requerido: ${o.medida_requerida}` : ""})` : "";
           lines.push(`    [Colab-Claude ${o.gravedad || "?"}] ${o.recinto_afectado || "(sin recinto asociado)"}: ${o.descripcion || ""} — ${o.articulo || "sin artículo citado"}${medida}`);
