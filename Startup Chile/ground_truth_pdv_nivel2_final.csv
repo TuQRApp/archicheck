@@ -1,0 +1,51 @@
+id,tipo,cx_rel,cy_rel,ancho_aprox_m,notas
+GT-N2-PU01,puerta,0.244,0.349,,"Puerta de entrada, Baño Clientes Mujeres, cota 2.4"
+GT-N2-VE01,ventana,0.435,0.3137,,Ventana del vano arqueado superior
+GT-N2-PU02,puerta,0.243,0.487,,"Puerta dentro de Baño Clientes Mujeres, cota 0.8"
+GT-N2-PU03,puerta,0.3119,0.4973,,"Puerta entre compartimentos de baños, cota 0.8"
+GT-N2-PU04,puerta,0.27,0.524,,Puerta dentro de Baño Clientes Hombres
+GT-N2-VE02,ventana,0.2103,0.5258,,"Ventana muro izquierdo (deslinde), altura Baño Hombres"
+GT-N2-PU05,puerta,0.512,0.413,,"Puerta Bodega izquierda, pared curva"
+GT-N2-PU06,puerta,0.626,0.447,,"Puerta Bodega derecha, junto a Pasillo"
+GT-N2-VE03,ventana,0.675,0.401,,"Ventana Bodega derecha, muro superior"
+GT-N2-VE04,ventana,0.784,0.447,,"Ventana Bodega derecha, muro vertical"
+GT-N2-ES01,escalera,0.639,0.521,,"Escalera, junto a Pasillo"
+GT-N2-VE05,ventana,0.7779,0.5259,,"Ventana muro derecho (deslinde), altura Pasillo"
+GT-N2-PU07,puerta,0.4603,0.592,,Puerta límite Oficina izquierda-Pasillo
+GT-N2-PU08,puerta,0.603,0.595,,Puerta límite Oficina derecha-Pasillo
+GT-N2-PU09,puerta,0.596,0.647,,"Puerta Oficina derecha, junto a cuarto pequeño (E31)"
+GT-N2-VE06,ventana,0.308,0.7313,,Ventana muro inferior Oficina izquierda
+GT-N2-VE07,ventana,0.68,0.7313,,Ventana muro inferior Oficina derecha
+GT-N2-VE08,ventana,0.6659,0.3171,,"Ventana centrada en el vano ""0.85"" (izquierda)"
+GT-N2-VE09,ventana,0.7548,0.3171,,"Ventana centrada en el vano ""0.85"" (derecha)"
+GT-N2-PU10,puerta,0.3247,0.4612,,Puerta un poco arriba de la puerta 5
+GT-N2-MU01,muro,0.6211,0.317,,Muro arco superior (izquierdo)
+GT-N2-MU02,muro,0.708,0.317,,Muro arco superior (derecho)
+GT-N2-MU03,muro,0.3155,0.3123,,Muro superior de Baño Clientes Mujeres
+GT-N2-MU04,muro,0.6021,0.3611,,Muro interior de Bodega derecha
+GT-N2-MU05,muro,0.3036,0.4037,,Muro de Baño Clientes Hombres
+GT-N2-MU06,muro,0.8541,0.4164,,Muro de Bodega derecha / deslinde
+GT-N2-MU07,muro,0.6863,0.4735,,Muro entre Bodega derecha y Pasillo
+GT-N2-MU08,muro,0.2141,0.4743,,Muro de Baño Clientes Hombres (izquierdo)
+GT-N2-MU09,muro,0.4016,0.4809,,Muro de Pasillo
+GT-N2-MU10,muro,0.6955,0.5734,,Muro junto a la escalera
+GT-N2-MU11,muro,0.5331,0.5754,,Muro entre Pasillo y Oficina
+GT-N2-MU12,muro,0.7816,0.5899,,"Muro derecho, junto a Pasillo"
+GT-N2-MU13,muro,0.215,0.63,,Muro de Oficina izquierda
+GT-N2-MU14,muro,0.5023,0.6406,,Muro junto al cuarto pequeño (E31)
+GT-N2-MU15,muro,0.5048,0.6911,,Muro junto a la cota 1.4
+GT-N2-MU16,muro,0.4461,0.7307,,Muro inferior de Oficina
+GT-N2-MU17,muro,0.2384,0.3123,,Muro junto a la entrada de Baño Clientes Mujeres
+GT-N2-MU18,muro,0.2398,0.5098,,"Muro en L a la derecha de M10, en Baño Clientes Hombres"
+GT-N2-MU19,muro,0.3078,0.3421,,"Muro corto debajo de M5, tramo vertical junto a Baño Clientes Mujeres"
+GT-N2-MU20,muro,0.5023,0.5966,,Muro vertical entre M13 y M16
+GT-N2-MU21,muro,0.3618,0.5098,,Muro de Baño Clientes Hombres (2 de 4)
+GT-N2-MU22,muro,0.4179,0.5261,,"Muro de Baño Clientes Hombres (3 de 4, borde derecho)"
+GT-N2-MU23,muro,0.345,0.5696,,Muro inferior de Baño Clientes Hombres (4 de 4)
+GT-N2-MU24,muro,0.4105,0.4296,,Muro debajo de Bodega izquierda (tramo largo)
+GT-N2-MU25,muro,0.5698,0.43,,"Muro debajo de Bodega izquierda (tramo corto, junto a cota 0.8)"
+GT-N2-MU26,muro,0.2607,0.5696,,"Muro inferior de Baño Clientes Hombres, extremo izquierdo (mismo muro que M26)"
+GT-N2-MU27,muro,0.4185,0.5726,,"Muro inferior de Baño Clientes Hombres, extremo derecho (mismo muro que M26)"
+
+NOTA: ground truth DEFINITIVO v13 (2026-07-23), reemplaza a _v3 y a _v12. Construido a mano por el usuario en "archicheck/Fase 2/Desarrollos/Test/marcas_planos_v13.xlsx" (hojas "Nivel 2 - PU-VE-ES" y "Nivel 2 - MU"), verificado visualmente contra "plano_nivel2_marcado_v12.png". Incluye por primera vez categoria MU (muro). NO incluye todavia PE (Perimetro).
+NOTA GENERAL: confirmado por el usuario (2026-07-22) que en este nivel NO hay salidas de emergencia -- ninguna fila de tipo "puerta" debe re-clasificarse como salida_emergencia en este plano.

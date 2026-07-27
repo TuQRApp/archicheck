@@ -1,0 +1,39 @@
+Estas son las tecnologías y módulos que dan vida a REVI, combinando motores líderes a nivel global con desarrollos propios para la normativa chilena. Si tienes algún plano o documento de tu proyecto a mano, podemos usar estas herramientas ahora mismo para analizarlo.
+
+--- Respuesta detallada ---
+
+Para cada uno de los procesos del sistema REVI, se combinan tecnologías de clase mundial (motores y modelos base de la industria) con módulos de software propietarios desarrollados específicamente para la plataforma. 
+
+A continuación, se detallan los nombres de las herramientas, librerías y modelos que componen la arquitectura de REVI:
+
+### 1. Vectorización y normalización de planos
+*   **Herramientas World-Class (Base):** **OpenCV** (Open Source Computer Vision Library) para el procesamiento de imágenes, junto con **PyMuPDF (Fitz)** y **pdfminer.six** para la extracción de vectores y metadatos directamente desde archivos PDF.
+*   **Módulo Propietario de REVI:** **REVI Vector Engine (RVE)**, el algoritmo encargado de la alineación de plantas, detección de la escala del dibujo y conversión de coordenadas de píxeles/vectores a metros reales.
+
+### 2. Detección de estructura (muros, tabiques y elementos)
+*   **Herramientas World-Class (Base):** **YOLOv8 / YOLOv10** (de Ultralytics) y arquitecturas de **Swin Transformer** para la detección de objetos en tiempo real y segmentación de elementos constructivos.
+*   **Módulo Propietario de REVI:** **REVI Structural Detector**, un modelo entrenado con pesos personalizados (*custom weights*) obtenidos a partir del etiquetado de muros soportantes y tabiquerías en planos chilenos.
+
+### 3. Análisis semántico (puertas, ventanas y componentes)
+*   **Herramientas World-Class (Base):** **Faster R-CNN** y **ResNet-101** (implementados sobre PyTorch), que son estándares de la industria para la clasificación y localización de objetos detallados.
+*   **Módulo Propietario de REVI:** **REVI Semantic Mapper**, el componente que traduce los símbolos detectados (arcos de puertas, ventanas, símbolos de escaleras) en entidades con significado arquitectónico y funcional.
+
+### 4. Segmentación de instancias (contornos precisos)
+*   **Herramientas World-Class (Base):** **SAM (Segment Anything Model)** de Meta AI y **Mask R-CNN**, tecnologías líderes a nivel mundial para delimitar contornos con precisión de píxel.
+*   **Módulo Propietario de REVI:** **REVI Area Segmenter**, el software que toma los contornos geométricos de SAM y los agrupa bajo las reglas de cálculo de superficie útil y construida definidas en el artículo 1.1.2. de la OGUC.
+
+### 5. Interpretación cognitiva (cotas, usos e inconsistencias)
+*   **Herramientas World-Class (Base):** **GPT-4o** (OpenAI) y **Claude 3.5 Sonnet** (Anthropic) como motores de razonamiento multimodal, integrados con **Google Cloud Vision OCR** y **Azure Document Intelligence** para la lectura de textos complejos en planos.
+*   **Módulo Propietario de REVI:** **REVI Cognitive Orchestrator**, el sistema de orquestación que guía a los modelos de lenguaje mediante flujos de trabajo lógicos (*workflows*) para contrastar cotas, identificar recintos y detectar discrepancias entre plantas y cortes.
+
+### 6. Verificación de normativas
+*   **Herramientas World-Class (Base):** **Qdrant / pgvector** como bases de datos vectoriales para la búsqueda semántica rápida, y frameworks de orquestación como **LangChain** o **LlamaIndex**.
+*   **Módulo Propietario de REVI:** **REVI Normative Engine (RNE)**, el motor de reglas y el sistema RAG (Generación Recuperada por Aprendizaje) que contiene la base de datos indexada de la OGUC, LGUC y los Planes Reguladores Comunales de Chile (como el PRC de Providencia), traduciendo el lenguaje legal en parámetros de verificación.
+
+### 7. Dataset de entrenamiento para Chile (Planos en Hi-RES)
+*   **Herramientas World-Class (Base):** **CVAT (Computer Vision Annotation Tool)** y **Roboflow** para la gestión, etiquetado y control de calidad de las imágenes de entrenamiento.
+*   **Módulo Propietario de REVI:** **REVI Hi-Res Chile Dataset**, el conjunto de datos propietario y confidencial que contiene miles de planos de edificación chilenos debidamente anonimizados, estructurados y etiquetados por arquitectos revisores.
+
+### 8. Lectura de formularios
+*   **Herramientas World-Class (Base):** **Azure Document Intelligence (Layout Model)** y **Amazon Textract**, herramientas de clase mundial especializadas en la extracción de tablas y formularios estructurados.
+*   **Módulo Propietario de REVI:** **REVI Form Parser**, un conjunto de plantillas de extracción y modelos de lenguaje ajustados para mapear e interpretar exactamente las casillas del Formulario Único Nacional (FUN), el Certificado de Informaciones Previas (CIP) y otros documentos municipales chilenos.

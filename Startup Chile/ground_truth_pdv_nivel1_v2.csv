@@ -1,0 +1,31 @@
+id,tipo,cx_rel,cy_rel,ancho_aprox_m,notas
+GT-N1-PU01,puerta,0.286,0.1358,,Baño Personal Mujeres (inodoro + lavamanos visibles en el recorte)
+GT-N1-PU02,puerta,0.6538,0.152,0.8,junto a cota 0.8 - área Personal
+GT-N1-PU03,puerta,0.4308,0.158,0.8,junto a cota 0.8 - área con overlay morado (rótulo m2 parcial visible)
+GT-N1-PU04,puerta,0.3678,0.1683,0.8,junto a cota 0.8 - Baño Personal Hombres (texto "...sonal...es" parcial)
+GT-N1-VE01,ventana,0.7332,0.173,,Cocina derecha
+GT-N1-VE02,ventana,0.7336,0.1968,,Cocina derecha
+GT-N1-VE03,ventana,0.7332,0.2526,,Cocina derecha
+GT-N1-ES01,escalera,0.4766,0.2684,,Escalera 1 de 2 (curva doble/arco visible) - confirmado por usuario: son 2 escaleras distintas en este nivel
+GT-N1-VE04,ventana,0.7343,0.2791,,Cocina derecha
+GT-N1-PU05,puerta,0.1727,0.2799,,área verde junto a arco - verificar destino (posible bodega/pasillo)
+GT-N1-VE05,ventana,0.5542,0.2937,,junto a arco/Escalera 1 - verificar si corresponde a la escalera o a otro recinto
+GT-N1-VE06,ventana,0.3892,0.2965,,junto a arco/Escalera 1 - verificar si corresponde a la escalera o a otro recinto
+GT-N1-PU06,puerta,0.2126,0.3029,,área morada con rótulo de superficie cerca (posible bodega) - verificar recinto
+GT-N1-PU07,puerta,0.3517,0.4105,,área verde
+GT-N1-PU08,puerta,0.292,0.4426,,esquina de muros
+GT-N1-PU09,puerta,0.665,0.4782,0.9,junto a cota 0.9 - marca roja pequeña ya presente en el plano (vano)
+GT-N1-PU10,puerta,0.4713,0.4826,1.6,junto a cota 1.6
+GT-N1-PU11,puerta,0.8371,0.4826,,junto a barra roja vertical + forma azul cercana (posible equipamiento) - verificar recinto
+GT-N1-VE07,ventana,0.2217,0.519,,área amarilla/tostada
+GT-N1-ES02,escalera,0.6741,0.5372,,Escalera 2 de 2 (numeración de peldaños visible) - confirmado por usuario: son 2 escaleras distintas en este nivel
+GT-N1-PU12,puerta,0.6143,0.595,,"FALTA EN EL PLANO - marcada explícitamente por el usuario (""FALTA PU""), zona con achurado ""Se construye"" cerca de Terraza"
+GT-N1-VE08,ventana,0.2178,0.6362,,área amarilla/tostada, cerca de Terraza
+GT-N1-PU13,puerta,0.579,0.6504,0.9,junto a cota 0.9 - área turquesa, cerca de rótulo de superficie y cota 1.2
+GT-N1-PU14,puerta,0.478,0.6671,1.6,junto a cota 1.6 - área turquesa/verde
+GT-N1-PU15,puerta,0.5427,0.7112,0.8,"junto a cota 0.8 y marcador de nivel ""+0.45"" (rombo) - posible acceso principal / salida_emergencia, verificar si da a exterior"
+GT-N1-VE09,ventana,0.3885,0.7205,,área verde pálido, cerca de texto "Línea Edificatoria" parcial
+GT-N1-VE10,ventana,0.7185,0.7213,,área verde
+GT-N1-RA01,rampa,0.4339,0.7696,,cerca de texto "...Universal" parcial - Rampa Acceso Universal
+
+NOTA METODOLOGICA: posiciones (cx_rel/cy_rel) extraídas por detección de píxeles rojos de las etiquetas dibujadas sobre "Planta 1 rotulada.png" y verificadas visualmente con recorte-zoom + cruz (ver verif_zoom_n1.png). Se descartó 1 cluster detectado que resultó ser un falso positivo (fragmento de la nota del plano "línea segmentada no es muro, es viga", no una etiqueta). El total real verificado es 28 elementos (15 puertas incl. 1 "FALTA", 10 ventanas, 2 escaleras, 1 rampa), corrigiendo la versión anterior que tenía 3 valores de cy_rel fuera de rango (>1.0) por estimación visual imprecisa.

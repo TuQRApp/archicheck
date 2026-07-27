@@ -1,0 +1,55 @@
+id,tipo,cx_rel,cy_rel,ancho_aprox_m,notas
+GT-N1-PU01,puerta,0.285,0.1351,,"Baño Personal Mujeres, junto al lavamanos"
+GT-N1-PU02,puerta,0.3675,0.168,,"Puerta Baño Personal Hombres, cota 0.8"
+GT-N1-PU03,puerta,0.4302,0.1577,,"Puerta entre Baño Personal Mujeres y Hombres, cota 0.8"
+GT-N1-PU04,puerta,0.6526,0.1562,,"Puerta Baño Personal (derecha), cota 0.8"
+GT-N1-VE01,ventana,0.7047,0.1714,,"Ventana muro Cocina, panel superior"
+GT-N1-VE02,ventana,0.7047,0.1979,,"Ventana muro Cocina, segundo panel"
+GT-N1-VE03,ventana,0.7047,0.2536,,"Ventana muro Cocina, panel inferior"
+GT-N1-VE04,ventana,0.7047,0.2802,,"Ventana muro Cocina, panel inferior (extremo)"
+GT-N1-PU05,puerta,0.1596,0.2731,,"Puerta bajo Bodega, sobre el arco de giro"
+GT-N1-PU06,puerta,0.2113,0.3006,,"Puerta junto a la anterior, bajo Bodega"
+GT-N1-VE05,ventana,0.3883,0.2968,,"Ventana a la izquierda del vano arqueado central, cota 1.5"
+GT-N1-ES01,escalera,0.4752,0.2688,,Vano arqueado central (paso entre Cocina y Bodega derecha)
+GT-N1-VE06,ventana,0.5542,0.294,,Ventana a la derecha del vano arqueado central
+GT-N1-PU07,puerta,0.3236,0.4085,,"Puerta dentro de Cocina, sobre el muro"
+GT-N1-PU08,puerta,0.2911,0.4425,,Puerta entre Cocina y Pasillo
+GT-N1-PU09,puerta,0.4703,0.4831,,"Puerta Cocina-Pasillo, cota 1.6"
+GT-N1-VE07,ventana,0.75,0.314,,"Ventana muro de Bodega derecha, colindante con Cocina"
+GT-N1-PU10,puerta,0.6622,0.4775,,"Puerta Baño Universal, cota 0.9"
+GT-N1-PU11,puerta,0.8345,0.482,,Puerta de salida del Baño Universal hacia la escalera
+GT-N1-ES02,escalera,0.674,0.537,,Escalera
+GT-N1-PU12,puerta,0.4699,0.6496,,"Puerta Cocina (Barra), cota 1.6"
+GT-N1-PU13,puerta,0.5819,0.6497,,"Puerta junto a Oficina/escalera, cota 0.9"
+GT-N1-PU14,puerta,0.5433,0.7123,,"Puerta límite Cocina-Oficina, cota 0.8 (+0.45)"
+GT-N1-VE08,ventana,0.3868,0.731,,Ventana muro inferior de Cocina (Barra)
+GT-N1-VE09,ventana,0.7178,0.731,,Ventana muro inferior de Oficina
+GT-N1-RA01,rampa,0.4348,0.769,,Rampa de Acceso Universal
+GT-N1-PU15,puerta,0.7047,0.2259,,"Puerta a la derecha de la Cocina, muro Cocina/Baño Universal"
+GT-N1-PU16,puerta,0.5185,0.898,,"Puerta de Acceso a Nivel, junto a cota 1.45"
+GT-N1-VE10,ventana,0.2405,0.5439,,Ventana muro Terraza izquierdo
+GT-N1-VE11,ventana,0.2405,0.665,,"Ventana muro Terraza izquierdo, segundo tramo"
+GT-N1-PU17,puerta,0.1417,0.2989,,Puerta en el muro a la izquierda de las puertas 9 y 10
+GT-N1-MU01,muro,0.6745,0.069,,"Muro superior, sobre Baño Personal"
+GT-N1-MU02,muro,0.8025,0.0695,,"Muro superior, sobre Cocina"
+GT-N1-MU03,muro,0.2194,0.0714,,"Muro superior, sobre Baño Personal Mujeres/Bodega"
+GT-N1-MU04,muro,0.943,0.2004,,"Muro derecho, junto a Cocina"
+GT-N1-MU05,muro,0.3298,0.332,,Muro entre Terraza y Cocina
+GT-N1-MU06,muro,0.6156,0.398,,Muro entre Cocina y Baño Universal
+GT-N1-MU07,muro,0.8771,0.4135,,Muro de Bodega derecha / deslinde
+GT-N1-MU08,muro,0.241,0.3166,,"Muro junto a la puerta 10, entre Bodega y Terraza"
+GT-N1-MU09,muro,0.5757,0.4779,,Muro entre Pasillo y Baño Universal
+GT-N1-MU10,muro,0.7996,0.5415,,"Muro derecho, junto a la escalera"
+GT-N1-MU11,muro,0.2433,0.7122,,"Muro de Terraza izquierdo, tramo inferior"
+GT-N1-MU12,muro,0.6906,0.5737,,Muro junto a la escalera
+GT-N1-MU13,muro,0.3682,0.5746,,Muro entre Oficina y Pasillo
+GT-N1-MU14,muro,0.2377,0.5927,,Muro entre Terraza y Cocina (Barra)
+GT-N1-MU15,muro,0.5864,0.6247,,Muro interior de Oficina
+GT-N1-MU16,muro,0.3304,0.4661,,Muro junto a la puerta 15 (tramo 1)
+GT-N1-MU17,muro,0.2451,0.4666,,Muro junto a la puerta 15 (tramo 2)
+GT-N1-MU18,muro,0.5792,0.7129,,"Muro en L a la izquierda de la ventana 27, tramo vertical junto a Cocina (Barra)"
+GT-N1-MU19,muro,0.6978,0.4195,,"Muro horizontal en Baño Universal, cota 2.9"
+GT-N1-MU20,muro,0.8001,0.4407,,"Muro vertical en Baño Universal, cota 1.55"
+GT-N1-MU21,muro,0.6208,0.454,,"Muro vertical en Baño Universal, extremo izquierdo junto al lavamanos"
+
+NOTA: ground truth DEFINITIVO v13 (2026-07-23), reemplaza a _v3 y a _v12 (v13 tiene las mismas coordenadas que v12, con notas limpias/finales en vez de comentarios de correccion). Construido a mano por el usuario en "archicheck/Fase 2/Desarrollos/Test/marcas_planos_v13.xlsx" (hojas "Nivel 1 - PU-VE-ES-RA" y "Nivel 1 - MU"), verificado visualmente contra "plano_nivel1_marcado_v12.png" (mismo PNG, coordenadas identicas a v13). Incluye por primera vez categoria MU (muro, puntos de referencia sobre el eje/tramo del muro, no un contorno completo) -- habilita evaluar U-Net+MLSTRUCT-FP (Pizarro), que solo detecta muros. NO incluye todavia la categoria PE (Perimetro) acordada -- pendiente confirmar con el usuario si se agrega en una proxima vuelta. Objetivo explicito del usuario: este ground truth es para afinar al maximo la extraccion geometrica automatica (CubiCasa5K, DINO, U-Net+Pizarro, futuro detector determinista), no solo para documentar.

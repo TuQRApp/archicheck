@@ -1,0 +1,74 @@
+Dame un listado de todas las observaciones e incumplimientos de todo este chat, quitando tus hallazgos en el listado. Dame además el artículo específico de la OGUC, LGUC o PRC que certifica el hallazgo u observación
+
+Copiar
+
+Ver proceso (3)
+Clara
+
+A continuación se presenta la consolidación de los hallazgos técnicos e inconsistencias formales identificados en los documentos analizados en esta conversación, junto con su respectiva fundamentación en el Art. 4.1.7 de la OGUC 
+OGUC
+ y el Art. 5.1.6 de la OGUC 
+OGUC
+.
+
+Sugerencia de advertencia
+Croquis de emplazamiento a escala (obra menor)
+Advertencia
+Aclarar la inconsistencia en la pendiente de la rampa de accesibilidad entre la Lámina 2 (10,58%) y el Informe de Accesibilidad (10,36%), ajustando el desarrollo para no superar la pendiente máxima del Art. 4.1.7 de la OGUC.
+
+Art. o norma transgredida
+
+Art. 4.1.7
+Descartar
+Guardar advertencia
+¿Deseas que revise la concordancia de la rampa o la superficie con las demás láminas del plano o con el Formulario Único de Solicitud (FUN)?
+
+Respuesta detallada
+Listado Consolidado de Observaciones e Incumplimientos Normativos
+A partir de la revisión realizada a la Lámina 2 (05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf) y su cruce con el Informe de Accesibilidad (08_Inf_Acces_Rest_Pza_PdV.pdf), se extraen las siguientes observaciones e incumplimientos técnicos:
+
+1. Incumplimiento de la Pendiente Máxima en Rampa de Acceso Universal
+Descripción del Hallazgo:
+En la Lámina 2 del plano de arquitectura se indica un desarrollo de rampa de aproximadamente 4,25 m – 4,50 m para salvar un desnivel de 0,45 m, declarando una pendiente del 10,58% 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+En el Informe de Accesibilidad la misma rampa se declara con una pendiente del 10,36% 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+.
+Cuerpo Normativo y Artículo Aplicable:
+Art. 4.1.7 N° 2 de la OGUC: Establece que la pendiente máxima de 12% aplica únicamente para desarrollos de rampa de hasta 1,50 m. Para rampas con desarrollos mayores (hasta 9,00 m), la pendiente debe disminuir progresivamente hasta un 8% 
+OGUC
+.
+Para un largo de 4,50 m, la pendiente máxima admisible es de aproximadamente 9,60%. Ambos valores del expediente (10,58% y 10,36%) superan el límite máximo permitido por la norma 
+OGUC
+.
+2. Incongruencia Documental en la Pendiente Declarada de la Rampa
+Descripción del Hallazgo:
+Existe una discrepancia entre la cifra de pendiente graficada en la Lámina 2 del plano de arquitectura (10,58%) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+ y la señalada en la Memoria/Informe de Accesibilidad (10,36%) 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+.
+Cuerpo Normativo y Artículo Aplicable:
+Art. 5.1.6 N° 14 de la OGUC: Exige que el Plano de Accesibilidad y la Memoria de Accesibilidad concuerden explícitamente en los datos de cálculo de cada rampa y demuestren el cumplimiento de las disposiciones de accesibilidad universal 
+OGUC
+.
+3. Observación Formal por Error en el Cuadro de Rotulación (Viñeta)
+Descripción del Hallazgo:
+En la Lámina 2/4 del plano de arquitectura, el campo Contenido de la viñeta repite erróneamente -Plano Situacion Existente y Propuesta / - Cuadro superficie Exis. y Propuesta 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+, texto correspondiente a la Lámina 1. La Lámina 2 no contiene plantas existentes ni cuadros de superficie, sino las plantas cotadas a escala 1:50 y el emplazamiento 1:500 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Cuerpo Normativo y Artículo Aplicable:
+Art. 5.1.6 N° 7 de la OGUC: Regula la presentación de planos de arquitectura numerados y su adecuada identificación de contenidos 
+OGUC
+.
+Resumen Normativo
+Item	Hallazgo / Observación	Norma Y Artículo Aplicable
+1	Pendiente de rampa (10,58% / 10,36%) excede el máximo permitido para 4,50 m de desarrollo	Art. 4.1.7 N° 2 de la OGUC 
+OGUC
+2	Inconsistencia en la cifra de pendiente entre el plano de arquitectura y el Informe de Accesibilidad	Art. 5.1.6 N° 14 de la OGUC 
+OGUC
+3	Inconsistencia en el campo 'Contenido' de la viñeta de la Lámina 2/4	Art. 5.1.6 N° 7 de la OGUC 
+OGUC

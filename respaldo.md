@@ -228,3 +228,49 @@ Sí — Claude recibe (1) la imagen de la página completa y (2) la imagen del r
 - Herramienta de recorte PDF desplegada en producción
 - Commit: `2186d6f` — feat: PDF crop tool replacing manual capture upload
 - Sitio en producción: https://archicheck-xi.vercel.app/
+
+---
+
+## Sesión 2026-07-20
+
+### Limpieza: un solo roadmap, un solo notebook
+
+El proyecto tenía roadmaps y notebooks duplicados acumulados de sesiones anteriores. El usuario decidió consolidar todo:
+- **Roadmap único**: `archicheck\Proyecto\Roadmap_Revision_Dossier_ArchiCheck.md` queda como el único documento de roadmap del proyecto. Se eliminaron (a Papelera de reciclaje) todos los demás archivos con "roadmap" en el nombre encontrados en `archicheck\`, `archicheck\Fase 2\`, `archicheck\Startup Chile\` y `Docs archicheck\` — incluyendo versiones viejas en .md, .docx, .pptx y .txt. No se tocaron los roadmaps de otros proyectos del usuario (Trading bot, SurveyPanel) que coincidían por nombre pero son de carpetas distintas.
+- **Notebook único**: del pipeline de extracción geométrica en Colab quedó solo `ArchiCheck_Base incluye Crop + Dino + SAM 30jun 1734.ipynb` (`Docs archicheck\Doc prueba\`), que ya sirve de plantilla base para cualquier proyecto nuevo. Se eliminaron (a Papelera) los notebooks de casos puntuales anteriores: `ArchiCheck_MVP_Capa1`, `ArchiCheck_Restaurant P_Pdv`, `ArchiCheck_Beauchef`, `ArchiCheck_TEMPLATE`.
+
+### Reordenamiento de prioridades del roadmap (Fase 2 — Planos al 100%)
+
+El usuario pidió cambiar el orden: primero validar la precisión del análisis geométrico con las herramientas ya construidas, después normativa OGUC+RAG, y recién al final otros PRC (antes esto último se había descartado sin fecha; ahora queda tercero en la fila, no descartado).
+
+Nueva numeración P1→P5 en el roadmap (con todas las referencias cruzadas del documento actualizadas):
+- **P1** — Validar precisión del análisis geométrico (antes P3, ahora primera prioridad)
+- **P1b** — U-Net + MLSTRUCT-FP (misma familia que P1, en paralelo, arranca ya)
+- **P2** — Normativa OGUC completo + RAG (antes parte de P1)
+- **P3** — Otros PRC (nuevo ítem separado, tercera prioridad — foco actual sigue siendo solo afinar Santiago y Ñuñoa)
+- **P4** — Motor de reglas determinista (antes P2 — posición inferida por Claude, no confirmada explícitamente por el usuario)
+- **P5** — Loop de validación con arquitectos (antes P4)
+
+### Hallazgo crítico en P1: Grounding DINO + SAM 2 casi no detecta nada
+
+Al revisar las 5 corridas guardadas del pipeline (`archicheck\Startup Chile\archicheck_geometrico*.json`), se encontró que DINO detectó en total **1 solo elemento real** (una puerta, 13% de confianza) en las 5 corridas combinadas — muy por debajo del ~60-75% de recall que el propio notebook documenta como esperado, y nunca antes comparado contra ningún conteo verificado a mano (no existía ground truth en el proyecto).
+
+**Causa hipotética identificada y corregida**: el prompt de Grounding DINO (Celda 4c) no terminaba en punto (`"door . window . staircase . ramp . column . emergency exit"`). La convención oficial del modelo agrupa frases por punto en el post-proceso — sin el punto final, la última frase puede no agruparse bien. Se corrigió a `"... emergency exit ."` directamente en el notebook. También se agregó un flag `DEBUG_THRESHOLD_MINIMO` (baja threshold a 0.05) para diagnosticar si hay señal real o si el problema de fondo es la brecha de dominio (DINO entrenado en fotografías, no en símbolos de plano CAD 2D) — en cuyo caso el fix del prompt no alcanzaría y convendría apoyarse más en el conteo semántico de Claude Vision (ya existe como fallback automático en el propio notebook).
+
+**Ground truth creado — el primero del proyecto**: `archicheck\Startup Chile\ground_truth_pdv_pag2.csv` + instrucciones, sobre el caso Plaza Pedro de Valdivia página 2 (único con corridas DINO previas guardadas). El usuario está llenándolo a mano en esta misma sesión, contando puertas/ventanas/escaleras directamente del plano.
+
+**Corrida de prueba post-fix**: el usuario re-ejecutó el notebook completo (Celdas 1 a 7) sin errores tras el fix — quedó pendiente comparar el JSON resultante contra el ground truth una vez que el usuario termine de llenarlo, para tener el primer dato empírico real de precisión/recall del pipeline.
+
+### P1b — runbook de entrenamiento U-Net
+
+Se investigó el repositorio oficial de Pizarro y se encontró que no hace falta escribir el U-Net desde cero: `MLSTRUCT/MLStructFP_benchmarks` (archivado pero clonable) ya trae el notebook de entrenamiento (`fp_unet.ipynb`) y, más importante, **un checkpoint ya entrenado** (`no_rot_256_50`, vía Google Drive). Runbook completo en `archicheck\Fase 2\P1b_Runbook_UNet_MLSTRUCT-FP.md`.
+
+Recomendación clave del runbook: antes de gastar en GPU (RunPod/Vast.ai, ~$50-150 estimado), bajar el checkpoint pre-entrenado y probarlo directo contra planos chilenos del proyecto — gratis, y dice si hace falta entrenar desde cero o solo un fine-tuning corto. Alcance confirmado: MLSTRUCT-FP/U-Net segmenta **solo muros**, no puertas/ventanas/escaleras — complementa a P1 (DINO+SAM2), no lo reemplaza. El dataset (954 planos) no se descarga directo, requiere completar un formulario en el repo — gestionar ese trámite antes de reservar GPU.
+
+### Estado al cierre de sesión
+- Roadmap único y notebook único consolidados, resto movido a Papelera de reciclaje.
+- Prioridad P1→P5 reordenada en el roadmap, con nota explícita de que la posición de P4 (motor de reglas) fue inferida, no confirmada por el usuario.
+- Fix de prompt aplicado al notebook (Celda 4c) — pendiente de validar con datos reales.
+- Primer ground truth del proyecto creado, en proceso de llenado por el usuario.
+- Runbook P1b listo, apuntando al checkpoint pre-entrenado real de Pizarro en vez de proponer entrenar desde cero sin necesidad.
+- Pendiente para la próxima sesión: comparar JSON post-fix vs. ground truth llenado, calcular recall/precisión real, y decidir si el pipeline DINO+SAM2 es viable tal cual o si hace falta un enfoque distinto para detección de elementos.

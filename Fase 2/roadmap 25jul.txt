@@ -1,0 +1,9 @@
+Necesito hacerte una pregunta importante antes de seguir: Dime si cada elemento que está tageado puedes leerlo como elemento completo. Por ejemplo, las ventanas desde el inicio hasta el final de la triple línea, las puertas con si linea de "cerrada" y su arco, los muros completos como dos lineas continuas, inlcuyendo aquellos que tienen ángulos, escaleras, etc.
+
+Te voy a subir unas capturas y quiero que escribas la mejor descripción que puedas sobre cada una, diciéndome cómo son cada una de las cosas que ves.
+
+Dime con qué motor estás trabajando y has estado trabajando (Haiku 4.XX, Sonnet 4.XX, Opus 5, Fable 5) y cuál es el que debería usar. Estoy en un momento crítico, pero tanmpoco quiero gastar una fortuna.
+
+Benchmark 
+
+https://www.fiverr.com/archviz_delowar/render-2d-architectural-visualization-plan-elevation-section-site-plan-etc?utm_source=google&utm_medium=cpc&utm_campaign=g_ge-row_ln-en_dv-desktop_cst-dsa_all-pages_tier1_troas&utm_term=row_dsa_all_pages&utm_content=AdID^759904022595^Keyword^^Placement^^Device^c&caid=22706456363&agid=181950617432&ad_id=759904022595&kw=&lpcat=&show_join=true&gad_source=1&gad_campaignid=22706456363&gbraid=0AAAAADsPu6t4NaZaqLnwHYXMI83S4NvR7&gclid=Cj0KCQjw94bTBhDQARIsAN3vv0woKhtdeyKNbdaqsozs4Aa9hbzfocjwIsa0ogNkbT--mRkFQE-96_YaAoZyEALw_wcB

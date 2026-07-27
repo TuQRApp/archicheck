@@ -78,12 +78,20 @@ async function main() {
     articulos.push(...partirLargo(codigo, textoArt));
   }
 
-  const vistos = new Set();
-  const dedup = articulos.filter(a => {
-    if (vistos.has(a.codigo)) return false;
-    vistos.add(a.codigo); return true;
-  });
-  console.log(`  ${dedup.length} secciones (${articulos.length - dedup.length} duplicados eliminados)`);
+  // FIX 2026-07-26: el documento repite cada "ART. X.Y.Z." dos veces -- una vez en
+  // el indice (linea corta con puntos de relleno y numero de pagina, ej. "...... 34")
+  // y otra vez en el cuerpo real del articulo (texto normativo completo). El dedup
+  // anterior se quedaba con la PRIMERA ocurrencia (el indice, ~100-150 caracteres)
+  // y descartaba la real -- 191 de 242 codigos quedaban con solo la linea de indice,
+  // sin contenido normativo utilizable. Ahora se agrupa por codigo y se conserva la
+  // ocurrencia MAS LARGA (el cuerpo real), no la primera.
+  const porCodigo = new Map();
+  for (const a of articulos) {
+    const actual = porCodigo.get(a.codigo);
+    if (!actual || a.texto.length > actual.texto.length) porCodigo.set(a.codigo, a);
+  }
+  const dedup = [...porCodigo.values()].sort((x, y) => x.codigo.localeCompare(y.codigo, 'es', { numeric: true }));
+  console.log(`  ${dedup.length} secciones unicas (${articulos.length - dedup.length} ocurrencias duplicadas/indice descartadas, se conservo la mas larga de cada codigo)`);
 
   writeFileSync(SALIDA, JSON.stringify({
     fuente: 'PRC-PRV',

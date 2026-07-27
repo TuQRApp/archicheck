@@ -1,0 +1,200 @@
+[
+  {
+    "archivo": "archicheck_geometrico_remodelacion_pdv_23jul_0618_pag2-1.png",
+    "w": 1132,
+    "h": 2000,
+    "puertas": [
+      {
+        "cx_rel": 0.252,
+        "cy_rel": 0.446,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.36,
+        "cy_rel": 0.086,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.641,
+        "cy_rel": 0.332,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.242,
+        "cy_rel": 0.587,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.243,
+        "cy_rel": 0.144,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.415,
+        "cy_rel": 0.067,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.303,
+        "cy_rel": 0.067,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.669,
+        "cy_rel": 0.069,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.681,
+        "cy_rel": 0.314,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.912,
+        "cy_rel": 0.314,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.793,
+        "cy_rel": 0.314,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.715,
+        "cy_rel": 0.231,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.623,
+        "cy_rel": 0.446,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.708,
+        "cy_rel": 0.478,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.697,
+        "cy_rel": 0.42,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.67,
+        "cy_rel": 0.478,
+        "clase": "Door"
+      }
+    ],
+    "ventanas": [
+      {
+        "cx_rel": 0.242,
+        "cy_rel": 0.653,
+        "clase": "Window"
+      },
+      {
+        "cx_rel": 0.242,
+        "cy_rel": 0.526,
+        "clase": "Window"
+      },
+      {
+        "cx_rel": 0.715,
+        "cy_rel": 0.252,
+        "clase": "Window"
+      },
+      {
+        "cx_rel": 0.715,
+        "cy_rel": 0.252,
+        "clase": "Window"
+      }
+    ]
+  },
+  {
+    "archivo": "archicheck_geometrico_remodelacion_pdv_23jul_0618_pag2-2.png",
+    "w": 1104,
+    "h": 2000,
+    "puertas": [
+      {
+        "cx_rel": 0.213,
+        "cy_rel": 0.653,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.36,
+        "cy_rel": 0.733,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.255,
+        "cy_rel": 0.317,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.577,
+        "cy_rel": 0.317,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.505,
+        "cy_rel": 0.656,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.299,
+        "cy_rel": 0.494,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.299,
+        "cy_rel": 0.512,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.778,
+        "cy_rel": 0.524,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.25,
+        "cy_rel": 0.511,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.213,
+        "cy_rel": 0.478,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.213,
+        "cy_rel": 0.543,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.299,
+        "cy_rel": 0.454,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.666,
+        "cy_rel": 0.317,
+        "clase": "Door"
+      },
+      {
+        "cx_rel": 0.754,
+        "cy_rel": 0.317,
+        "clase": "Door"
+      }
+    ],
+    "ventanas": [
+      {
+        "cx_rel": 0.447,
+        "cy_rel": 0.317,
+        "clase": "Window"
+      },
+      {
+        "cx_rel": 0.778,
+        "cy_rel": 0.525,
+        "clase": "Window"
+      }
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+id,tipo,cx_rel,cy_rel,ancho_aprox_m,notas
+GT-N1-PU01,puerta,0.291,0.135,,"Baño Personal Mujeres, junto al lavamanos"
+GT-N1-PU02,puerta,0.37,0.161,,"Puerta Baño Personal Hombres, junto a cota 0.8"
+GT-N1-PU03,puerta,0.431,0.157,,"Entre Baño Mujeres y Hombres, junto a cota 0.8"
+GT-N1-PU04,puerta,0.653,0.153,,"Puerta Baño Personal (derecha), junto a cota 0.8"
+GT-N1-VE01,ventana,0.736,0.174,,Muro derecho de Cocina (superior)
+GT-N1-VE02,ventana,0.736,0.198,,Muro derecho de Cocina
+GT-N1-VE03,ventana,0.736,0.253,,Muro derecho de Cocina
+GT-N1-VE04,ventana,0.736,0.278,,Muro derecho de Cocina (inferior)
+GT-N1-PU05,puerta,0.174,0.28,,"Bajo Bodega, hacia Punto Aplicación Rasante izquierdo"
+GT-N1-PU06,puerta,0.212,0.303,,"NUEVO - junto al anterior, hacia Punto Aplicación Rasante izquierdo (antes no marcado)"
+GT-N1-VE05,ventana,0.392,0.295,,"Izquierda del vano ES, junto a cota 1.5"
+GT-N1-ES01,escalera,0.478,0.268,,"Vano arqueado central, junto a cota 1.5"
+GT-N1-VE06,ventana,0.562,0.294,,"Derecha del vano ES, junto a cota 1.5"
+GT-N1-PU07,puerta,0.35,0.411,,Dentro de Cocina (sala central)
+GT-N1-PU08,puerta,0.293,0.444,,Entre Cocina y Pasillo
+GT-N1-PU09,puerta,0.471,0.482,,"Puerta Cocina-Pasillo, junto a cota 1.6"
+GT-N1-VE07,ventana,0.75,0.314,,"Bodega (derecha), en el muro que la separa de la Cocina superior"
+GT-N1-PU10,puerta,0.661,0.482,,"Puerta Baño Universal, junto a cota 0.9"
+GT-N1-PU11,puerta,0.836,0.482,,"Salida Baño Universal hacia escalera, junto a cota 0.5"
+GT-N1-ES02,escalera,0.674,0.537,,"Escalera (numeración 2-8), junto a cota 1.4"
+GT-N1-VE08,ventana,0.221,0.519,,Terraza izquierda (muro)
+GT-N1-VE09,ventana,0.221,0.636,,"Terraza izquierda (muro, inferior)"
+GT-N1-PU12,puerta,0.475,0.666,,"Cocina (Barra sin atención de público), junto a cota 1.6"
+GT-N1-PU13,puerta,0.578,0.651,,"Junto a Oficina / escalera, cota 0.9"
+GT-N1-PU14,puerta,0.542,0.712,,"Límite Cocina-Oficina, junto a cota 0.8 (+0.45)"
+GT-N1-VE10,ventana,0.39,0.718,,Muro inferior de Cocina (Barra)
+GT-N1-VE11,ventana,0.723,0.721,,Muro inferior de Oficina
+GT-N1-RA01,rampa,0.43,0.771,,"Rampa Acceso Universal, junto a cota 1.3"
+
+NOTA: ground truth CANONICO, confirmado 100% correcto por el usuario (2026-07-23), construido a mano en "archicheck/Fase 2/Desarrollos/Test/marcas_planos_v3.xlsx" (hoja "Nivel 1"). Reemplaza a ground_truth_pdv_nivel1_v2.csv (reconstruccion automatica por deteccion de pixeles rojos) como fuente de verdad para medir recall/precision de las herramientas de deteccion.
+NOTA COMPARATIVA: la reconstruccion automatica (v2) coincidio en 27 de 28 posiciones (dist<0.03). Diferencias: (a) v2 incluia una fila "FALTA PU" (puerta marcada como ausente en el plano) que el usuario decidio no incluir en su tabla, correctamente, porque no es una puerta real presente; (b) v2 no detecto GT-N1-VE07 (0.75,0.314, Bodega derecha) -- la etiqueta roja debe ser mas tenue o pequeña de lo que el filtro de pixeles capturo.

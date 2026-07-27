@@ -1,0 +1,75 @@
+Entendido. He preparado un informe detallado con todas las observaciones detectadas en las secciones 1 a 10 del Formulario Único Nacional (FUN) para tu revisión. ¿Hay algún punto que quieras que aclaremos o prefieres que continuemos con la confirmación de la sección 9?
+
+--- Respuesta detallada ---
+
+A continuación, te presento el detalle completo de las observaciones identificadas en las secciones 1 a 10 del Formulario Único Nacional (FUN) para el proyecto **CLA** (Plaza Pedro de Valdivia 2025, Providencia) Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf:
+
+---
+
+# Detalle de Observaciones al Formulario Único Nacional (FUN)
+
+### Sección 1: DATOS DE LA PROPIEDAD
+*   **Estado:** Conforme.
+*   **Análisis:** La dirección (Plaza Pedro de Valdivia 2025) y el Rol de Avalúo (3228-12) coinciden plenamente con el Certificado de Informaciones Previas (CIP) 02_CIP_PEDRO_DE_VALDIVIA_2025.pdf y el Certificado de Avalúo Fiscal Detallado 01_b_Avaluo_FIscal_Detallado.pdf.
+
+### Sección 2: DECLARACIÓN JURADA DEL PROPIETARIO
+*   **Estado:** Con observaciones.
+*   **Observaciones:**
+    1.  **Campos de Dominio Vacíos:** Se omitió completar los campos obligatorios de la declaración de dominio: Nombre del propietario, Cédula de Identidad, Inscrito a Fojas, Número de inscripción, Año y Conservador de Bienes Raíces Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+    2.  **Plano Topográfico:** Se omitió marcar una de las casillas (SÍ o NO) en el ítem "ADJUNTA PLANO TOPOGRÁFICO", encontrándose ambas vacías Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+
+### Sección 3: DATOS DEL PROPIETARIO
+*   **Estado:** Con observaciones.
+*   **Observaciones:**
+    1.  **Dirección y Contacto Vacíos:** Los campos de dirección del propietario (Calle, N° y Comuna), correo electrónico y teléfono se encuentran vacíos o con guiones Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+    2.  **Falta de Firma:** El recuadro destinado a la firma del propietario o de su representante legal se encuentra completamente en blanco Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+    3.  **Falta de Individualización del Representante Legal:** Al tratarse de una persona jurídica (*Asesorías en Inversiones Conchalí Ltda.*), es obligatorio individualizar al representante legal indicando su nombre y R.U.T., campos que actualmente están vacíos Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+    4.  **Acreditación de Personería Incorrecta:** Se indica un "Contrato de Arriendo" como documento de acreditación. Se debe corregir especificando el instrumento público (como escritura de constitución o mandato) que acredite legalmente la representación Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+    5.  **Inconsistencia de Dirección:** La dirección del propietario en la sección 3 debe completarse y ser consistente con la dirección del predio declarada en la sección 2 Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+
+### Sección 4: DATOS PROFESIONALES RESPONSABLES
+*   **Estado:** Con observaciones.
+*   **Observaciones:**
+    1.  **Falta de Firma del Arquitecto:** El recuadro destinado a la firma del arquitecto proyectista (Cristian Wrbka Moreno) en la sección 4 se encuentra en blanco Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+    2.  **Patente Profesional Vencida:** La patente profesional del arquitecto adjunta en el expediente venció el 31 de julio de 2021 04_Patente_2021_1.pdf. Se debe presentar una patente vigente a la fecha de la solicitud (año 2026).
+
+### Sección 5: PARTICIPACIÓN DE REVISORES
+*   **Estado:** Con observaciones.
+*   **Observaciones:**
+    1.  **Omisión de Revisor Independiente:** El proyecto se declaró como Edificio de Uso Público en la sección 7, pero se marcó "NO" en la casilla "CUENTA CON INFORME FAVORABLE REVISOR INDEPENDIENTE" de la sección 5, omitiendo la contratación obligatoria de este profesional para dicha categoría Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+
+### Sección 6: CARACTERÍSTICAS PROYECTO DE AMPLIACIÓN (OBRA MENOR)
+*   **Estado:** Con observaciones.
+*   **Observaciones:**
+    1.  **Discrepancia de Superficies (Sección 6.1):** La superficie total existente (399,0 m²) y proyectada (22,43 m²) declaradas en el formulario no coinciden con las superficies indicadas en el cuadro de superficies del plano de arquitectura (298,90 m² existente y 17,90 m² proyectada) Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+    2.  **Inconsistencia en Coeficiente de Ocupación (Sección 6.2):** El coeficiente de ocupación de suelo proyectado declarado en el formulario (0,80) es inconsistente con el calculado en el plano de arquitectura (0,51 o 51%) Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+    3.  **Inconsistencia en Coeficiente de Constructibilidad (Sección 6.2):** El coeficiente de constructibilidad proyectado declarado en el formulario es de 1,1, lo cual difiere del coeficiente proyectado de 0,8 indicado en el plano de arquitectura Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+    4.  **Discrepancia de Destinos (Sección 6.3):** El destino principal declarado en el formulario es "Comercio (Restaurant)", pero en el cuadro de superficies normativas del plano de arquitectura figura erróneamente como "Vivienda" Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+    5.  **Omisión de Estacionamientos (Sección 6.2):** Se omitió incorporar y graficar en los planos la dotación mínima de estacionamientos requerida para el destino Restaurante (1 cada 50 m² de superficie útil para automóviles y un mínimo de 5 para bicicletas) 02_CIP_PEDRO_DE_VALDIVIA_2025.pdf.
+    6.  **Omisión de Ley de Aportes (Secciones 6.5, 6.8 y 6.9):** Al tratarse de un proyecto que genera crecimiento urbano por densificación (habilitación de restaurante con carga de ocupación de 12 personas), se omitió presentar el Formulario Único de la Ley de Aportes (Ley N° 20.958) y el cálculo de aportes al espacio público Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+    7.  **Omisión de Clasificación de Construcción (Sección 6.14):** Se omitió declarar la clasificación de la construcción de la ampliación (la cual corresponde a Clase G según las especificaciones técnicas) Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf 07_Especificaciones_Técnicas_Pedro_de_Valdivia.pdf.
+
+### Sección 7: PERMISO(S) ANTERIOR(ES)
+*   **Estado:** Con observaciones.
+*   **Observaciones:**
+    1.  **Falta de Fecha del Permiso Primitivo (Sección 7.1):** Se omitió completar el campo 'FECHA' del Permiso Primitivo N° 17/44 Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+    2.  **Discrepancia en Número de Permiso (Sección 7.1):** Existe una discrepancia entre el número de permiso primitivo declarado en el FUN ('17 / 44') y el graficado en el plano de arquitectura ('14/44') Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+    3.  **Omisión de Permiso Anterior (Sección 7.2):** Se omitió declarar el permiso anterior 'DOM 2285 del 29-9-85' (asociado al cambio de destino a Preuniversitario), el cual figura detallado en el plano de arquitectura pero no en el FUN 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+    4.  **Discrepancia en Superficie de Modificación Anterior (Sección 7.2):** Se declaró erróneamente una superficie de '399.00' m² para la modificación anterior 'OM 205 / 08' (cierre de fachada), lo cual coincide con la superficie del terreno y no es consistente con el tipo de obra Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+
+### Sección 8: OTRAS SOLICITUDES ACOMPAÑANTES
+*   **Estado:** Conforme.
+*   **Análisis:** No se acompaña ninguna otra solicitud (como demolición u otros), lo cual es coherente con el expediente.
+
+### Sección 9: ANTECEDENTES QUE SE ADJUNTAN
+*   **Estado:** Conforme.
+*   **Análisis:** Todos los antecedentes marcados como adjuntos se encuentran físicamente en el expediente (CIP, Patente, Declaración Simple, Croquis/Planos, Cuadro de Superficies y Especificaciones Técnicas) Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+
+### Sección 10: MONTO A CONSIGNAR AL INGRESO / COMPROBANTE DE INGRESO
+*   **Estado:** Con observaciones.
+*   **Observaciones:**
+    1.  **Campos de Pago Vacíos:** Los campos de pago (monto, GIM, fecha) y de dirección (calle, número) en el comprobante de ingreso se encuentran vacíos Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf. Deben ser completados por la DOM al momento de la recepción y pago de derechos.
+
+---
+
+¿Hay algún punto específico de este informe que quieras que revisemos en detalle, o prefieres que continuemos con la confirmación de la sección 9?

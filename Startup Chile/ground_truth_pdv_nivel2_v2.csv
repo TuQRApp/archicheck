@@ -1,0 +1,19 @@
+id,tipo,cx_rel,cy_rel,ancho_aprox_m,notas
+GT-N2-VE01,ventana,0.4301,0.304,,arriba centro, sobre línea de arco
+GT-N2-PU01,puerta,0.509,0.4181,,área verde/turquesa, junto a doble arco
+GT-N2-VE02,ventana,0.6867,0.4014,,área celeste (Bodega/Baño)
+GT-N2-PU02,puerta,0.6151,0.4501,,área celeste, junto a achurado amarillo de vano ya marcado en el plano
+GT-N2-PU03,puerta,0.2925,0.4584,0.8,junto a cota 0.8, achurado de vano cerca
+GT-N2-PU04,puerta,0.3412,0.4933,0.8,junto a cota 0.8, achurado rojo de vano ya marcado en el plano
+GT-N2-VE03,ventana,0.195,0.5186,,área naranja/tostada (posible Baño)
+GT-N2-ES01,escalera,0.6366,0.5198,,línea diagonal de peldaños con numeración visible
+GT-N2-PU05,puerta,0.2767,0.5257,,achurado de vano cerca, junto a Baño (inodoro visible en el recorte)
+GT-N2-VE04,ventana,0.7957,0.5261,,área tostada
+GT-N2-PU06,puerta,0.4387,0.5911,,área verde, línea de arco
+GT-N2-PU07,puerta,0.6079,0.595,,área verde, línea de arco
+GT-N2-PU08,puerta,0.5964,0.6473,,"achurado morado cerca (""Se construye""), rótulo de superficie parcial visible (""21 09 m2 1.08m"")"
+GT-N2-VE05,ventana,0.2982,0.7193,,área amarilla pálida
+GT-N2-VE06,ventana,0.681,0.7221,,área verde
+
+NOTA GENERAL: confirmado por el usuario (2026-07-22) que en este nivel NO hay salidas de emergencia (ninguna puerta da directo al exterior - acceso solo por la escalera interna desde Nivel 1). Ninguna fila de tipo "puerta" debe re-clasificarse como salida_emergencia en este plano.
+NOTA METODOLOGICA: posiciones (cx_rel/cy_rel) extraídas por detección de píxeles rojos de las etiquetas dibujadas sobre "Planta 2 rotulada.png" y verificadas visualmente con recorte-zoom + cruz (ver verif_zoom_n2.png). Se descartaron 6 clusters detectados que resultaron ser falsos positivos: 2 fragmentos del texto de título del plano y 4 barras de achurado rojo ya existentes (marcas de vano previas del plano, no etiquetas). El total real verificado es 16 elementos (9 puertas, 6 ventanas, 1 escalera), no 18 como se había asumido en la versión anterior del CSV.

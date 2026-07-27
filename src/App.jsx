@@ -314,7 +314,7 @@ function mergeResults(r1, r2) {
 function buildColabTexto(json) {
   if (!json) return "";
   if (json.paginas) {
-    const lines = ["\nANÁLISIS SEMÁNTICO COLAB (estimaciones OpenCV + interpretación por recinto):\nNOTA: Las áreas son estimaciones geométricas desde píxeles. Para superficie_m2 en reconocimiento.recintos_por_nivel: usa la cota declarada en el plano si existe; si no hay cota visible, usa el área OpenCV del recinto correspondiente de esta lista (es medición real, no un invento). Para anchos, usa siempre la cota del plano. Las observaciones por recinto son alertas normativas del pipeline."];
+    const lines = ["\nANÁLISIS SEMÁNTICO COLAB (estimaciones OpenCV + interpretación por recinto):\nNOTA: Las áreas son estimaciones geométricas desde píxeles. Para superficie_m2 en reconocimiento.recintos_por_nivel: usa la cota declarada en el plano si existe; si no hay cota visible, usa el área OpenCV del recinto correspondiente de esta lista (es medición real, no un invento). Para anchos, usa siempre la cota del plano. Las observaciones por recinto son alertas normativas del pipeline.\nIMPORTANTE — CONSOLIDACIÓN: más abajo verás bloques 'CANDIDATAS de Colab' — son observaciones normativas que Claude ya generó dentro del notebook de Colab, mirando solo la lámina y sin el contexto normativo completo que tú sí tienes (RAG + PRC de la comuna + expediente completo). Tu trabajo es VALIDARLAS con tu normativa completa (puedes corregir el artículo, la criticidad o el texto si tu fuente dice algo distinto) y fusionarlas en UNA sola observación final por hallazgo — nunca las dupliques como una observación aparte de la tuya sobre el mismo elemento."];
     for (const p of json.paginas) {
       const sem = p.analisis_semantico || {};
       const tipoPlano = sem.tipo_plano || "desconocido";
@@ -338,6 +338,14 @@ function buildColabTexto(json) {
       for (const inc of (p.incumplimientos_geo || [])) {
         const u = inc.tipo === "area" ? "m²" : "m";
         lines.push(`  ALERTA OpenCV [${inc.tipo.toUpperCase()}] ${inc.recinto}: estimado ${inc.medido}${u} vs mínimo ${inc.minimo}${u} — ${inc.ref} — verificar contra cota en plano`);
+      }
+      const incOguc = sem.incumplimientos_oguc || [];
+      if (incOguc.length > 0) {
+        lines.push(`  CANDIDATAS de Colab (ya evaluadas por Claude en el notebook, revisar/validar — NO las repitas como hallazgo nuevo si ya están cubiertas aquí, consolídalas en una sola observación final citando el artículo correcto):`);
+        for (const o of incOguc) {
+          const medida = o.medida_detectada ? ` (detectado: ${o.medida_detectada}${o.medida_requerida ? `, requerido: ${o.medida_requerida}` : ""})` : "";
+          lines.push(`    [Colab-Claude ${o.gravedad || "?"}] ${o.recinto_afectado || "(sin recinto asociado)"}: ${o.descripcion || ""} — ${o.articulo || "sin artículo citado"}${medida}`);
+        }
       }
       const dinoEls = p.elementos_dino || [];
       if (dinoEls.length > 0) {
@@ -532,6 +540,7 @@ INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
    • Protección patrimonial si aplica (LGUC Art. 60)
    • Documentación faltante: CIP, cuadro superficies, cuadro iluminación, estudio carga ocupación, especificaciones RF (DDU 390)
 2. Las observaciones de cada sección deben ser DISTINTAS y específicas de esa etapa. No repitas el mismo hallazgo en múltiples secciones.
+2b. Si el contexto incluye "CANDIDATAS de Colab" para un recinto/elemento, no generes una observación aparte sobre el mismo hallazgo — consolídala: usa tu normativa completa para confirmar o corregir el artículo y la criticidad, y entrega una única observación final.
 3. iluminacion_ventilacion.tabla: incluye una fila por cada recinto habitable visible. Si no puedes medir el área de ventana desde el plano, usa area_ventana_m2:null y cumple:"VERIFICAR".
 4b. circulaciones.tabla — ancho_minimo_m: usa SIEMPRE el mínimo MÁS RESTRICTIVO de todos los artículos aplicables. Si citas DS 50/2015 Art. 22 o Art. 23, el mínimo es 1.50m (no 1.20m). Si citas OGUC Art. 4.2.4 con carga >50 personas, el mínimo puede superar 1.20m según fórmula. El campo ancho_minimo_m debe coincidir con el valor que determina el resultado de 'cumple'.
 4. normativa_urbanistica.tabla: incluye una fila por cada parámetro del PRC y OGUC aplicable (rasante(s), constructibilidad, COS, altura máxima, uso de suelo, distancias a deslindes, adosamiento, línea de edificación). Usa estado:"VERIFICAR" si no hay dato visible en los planos.

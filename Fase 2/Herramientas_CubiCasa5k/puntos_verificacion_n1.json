@@ -1,0 +1,9 @@
+[
+  {"cx_rel": 0.55, "cy_rel": 0.40, "nota": "1-lineas_punteadas: borde Terraza/Cocina-Bodega"},
+  {"cx_rel": 0.37, "cy_rel": 0.16, "nota": "2-cotas: Bano Personal, cota 0.8"},
+  {"cx_rel": 0.70, "cy_rel": 0.19, "nota": "3-nombres: etiqueta Cocina"},
+  {"cx_rel": 0.70, "cy_rel": 0.44, "nota": "6-Bano Universal (antes cero coloreado)"},
+  {"cx_rel": 0.75, "cy_rel": 0.31, "nota": "5-Bodega.jpg artefacto/estanteria"},
+  {"cx_rel": 0.33, "cy_rel": 0.44, "nota": "7-Puertas2.jpg arco de puerta"},
+  {"cx_rel": 0.69, "cy_rel": 0.57, "nota": "8-Puertas.jpg esquina M12"}
+]

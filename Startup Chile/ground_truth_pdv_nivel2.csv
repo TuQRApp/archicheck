@@ -1,0 +1,22 @@
+id,tipo,cx_rel,cy_rel,ancho_aprox_m,notas
+GT01,puerta,0.25,0.36,,Baño Clientes mujeres
+GT02,puerta,0.52,0.66,0.8,junto a cota 0.8 centro
+GT03,puerta,0.625,0.685,,derecha bajo Bodega/Baño
+GT04,puerta,0.32,0.735,,
+GT05,puerta,0.24,0.765,,columna izquierda
+GT06,puerta,0.32,0.79,0.8,junto a cota 0.8
+GT07,puerta,0.28,0.825,,Baño Clientes hombres
+GT08,puerta,0.45,0.94,1.22,izquierda de cota 1.22, entrada Oficina izquierda
+GT09,puerta,0.60,0.94,1.22,derecha de cota 1.22, entrada Oficina derecha
+GT10,puerta,0.59,1.04,1.4,cuarto violeta pequeño (posible WC), junto a cota 1.4
+GT11,ventana,0.44,0.335,,arriba centro, sobre el arco
+GT12,ventana,0.695,0.44,,derecha junto a Bodega/Baño
+GT13,ventana,0.80,0.485,,más a la derecha
+GT14,ventana,0.18,0.70,,izquierda junto a Limite Propiedad
+GT15,ventana,0.80,0.735,,derecha junto a Limite Propiedad
+GT16,ventana,0.32,1.13,,Oficina izquierda, abajo
+GT17,ventana,0.69,1.13,,Oficina derecha, abajo
+GT18,escalera,0.65,0.79,,junto a numeración de peldaños 19-11
+
+NOTA GENERAL: confirmado por el usuario (2026-07-22) que en este nivel NO hay salidas de emergencia (ninguna puerta da directo al exterior — acceso solo por la escalera interna desde Nivel 1). Ninguna fila de tipo "puerta" debe re-clasificarse como salida_emergencia en este plano.
+Zonas excluidas a propósito: las áreas coloreadas fuera del contorno blanco del edificio ("nivel 1 se ve proyectado" / "nivel 1 svve proyectado") NO son parte de Nivel 2 — son elementos del Nivel 1 proyectados hacia arriba en el dibujo, no se cuentan aquí.

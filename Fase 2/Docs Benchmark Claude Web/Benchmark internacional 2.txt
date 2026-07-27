@@ -1,0 +1,48 @@
+Dame un listado de las mejores herramientas de análisis de planos arquitectónicos en el mundo, que permiten hacer análisis geométrico, vectorizar y analizar por capas de manera tal de poder generar archivos de datos o descriptivos como un JSON en el que se encuentren todas las componentes o elementos de un plano como puertas, ventanas, muros, escaleras, rampas, que pueda saber cuáles son las superficies de cada de cada espacio, como baños, cocinas, dormitorios, pasillos, etc. Después de eso sea capaz de, con esa información, comparar contra alguna normativa o ley de algún país o de alguna comuna (esto último no es obligatorio, pero ayuda). Necesito los nombres y alguna información resumida.
+
+Se buscó en la web, herramientas cargadas
+Se buscó en la web, herramientas cargadas
+
+Aquí tienes un panorama de las herramientas más relevantes hoy en día para lo que buscas. En la práctica no existe una sola herramienta "todo en uno" perfecta que haga las tres cosas (vectorizar, generar JSON estructurado por elementos, y comparar contra normativa local) con calidad profesional — lo habitual es combinar una herramienta de digitalización/extracción con una de verificación normativa (o con reglas propias). Te las agrupo por función.
+
+Vectorización y extracción de elementos con salida estructurada (JSON/vectores)
+
+CubiCasa (Finlandia) — el estándar de facto para digitalizar planos: convierte fotos/escaneos de planos en modelos 2D/3D vectoriales, identifica muros, puertas, ventanas y habitaciones, y calcula áreas por espacio. Tiene API para integrarlo en flujos propios y salida de datos estructurados. Nace del dataset académico CubiCasa5K, que también está disponible en abierto (GitHub) si quieres entrenar tu propio modelo.
+Floor Plan API (floorplanapi.com) — producto enfocado exactamente en tu caso de uso: recibe una imagen/PDF de plano y devuelve JSON estructurado con muros, puertas, ventanas y habitaciones con sus áreas.
+Togal.AI (EE. UU.) — pensado para estimación de obra (takeoff), pero su motor de IA extrae automáticamente elementos medibles de planos PDF (muros, puertas, ventanas, superficies) con bastante precisión geométrica.
+Kreo Software — plataforma de takeoff 2D/3D con reconocimiento automático de elementos de plano (muros, puertas, ventanas, cómputo de áreas) orientada a presupuestación de construcción.
+Swapp.ai — automatiza la generación de documentación constructiva a partir de diseños esquemáticos dentro de Revit, organizando y clasificando los elementos del edificio; más orientado a producción de planos que a auditoría, pero relevante si trabajas en BIM.
+Archilogic — plataforma de "digital twin" que convierte planos en modelos 3D navegables con datos de espacios, mobiliario y áreas; ofrece API para desarrolladores.
+FloorPlanParser (GitHub, open source) — herramienta académica que recibe una imagen de plano residencial vía POST y devuelve el resultado vectorizado; útil como base si quieres construir tu propio pipeline sin depender de un SaaS.
+Roboflow — no es un producto cerrado, sino una plataforma de visión por computador que te permite entrenar/desplegar tus propios modelos de detección de elementos de plano (hay tutoriales específicos de "floor plan analysis" con esta herramienta), útil si necesitas control total sobre las clases y el formato de salida JSON.
+
+Verificación normativa / compliance checking (sobre modelos BIM o planos)
+
+Solibri (Nemetschek, Finlandia) — el líder en revisión de modelos BIM/IFC: valida geometría, superficies por espacio, accesibilidad, evacuación y reglas de diseño configurables; tiene versión cloud ligera (Solibri CheckPoint) y la de escritorio (Solibri Office). Requiere que el plano ya esté en un modelo BIM (IFC), no trabaja directo sobre una imagen 2D.
+Archistar (Australia) — su producto AiPrecheck / AI Plan Review está muy alineado con lo que pides: analiza planos arquitectónicos automáticamente y los coteja contra normativa de zonificación y códigos de construcción, usado por municipios para acelerar permisos.
+Autodesk Forma — análisis normativo temprano (retranqueos, alturas, asoleamiento, zonificación) sobre volumetría de proyecto; más orientado a etapa de anteproyecto/masterplan que a plano de detalle.
+UpCodes (EE. UU.) — más una base de datos normativa con IA de consulta que un analizador geométrico, pero relevante si necesitas cruzar resultados con el texto legal de forma automatizada (tiene funciones de comparación asistida por IA).
+Hypar — motor generativo/BIM basado en funciones, permite programar validaciones paramétricas de diseño contra reglas de código.
+
+
+Cómo armaría el flujo si tuviera que construirlo
+
+Para llegar al JSON con muros/puertas/ventanas/escaleras/rampas y superficies por espacio, la ruta más realista hoy es CubiCasa (o Floor Plan API / Togal.AI) para la vectorización y extracción de datos, y luego una capa propia de reglas (o Solibri si ya trabajas en BIM/IFC, o Archistar si necesitas algo llave en mano) para comparar contra la normativa. Para normativa chilena específicamente, Revi es la opción más madura, aunque no es una API abierta de uso general sino un servicio orientado a la tramitación municipal.
+
+Sources:
+
+Introducing CubiCasa 2.0
+Archilogic | Developers
+GitHub - CubiCasa/CubiCasa5k
+Floor Plan API - Extract Structured Data from Floor Plans
+GitHub - TINY-KE/FloorPlanParser
+Floor Plan Analysis with Computer Vision (Roboflow)
+Top AI-Powered Tools for the Building Industry (Togal.AI)
+Kreo Software - Floor Plan Recognition Technologies
+Solibri CheckPoint
+Archistar - AI Plan Review
+Archistar - AI for Building Code Compliance
+Revi - Tramitación de permisos con IA en Chile
+Google y CChC sellan acuerdo para tramitar permisos con IA
+ArquiAI — Normativa Arquitectónica con IA
+miarquitectoIA

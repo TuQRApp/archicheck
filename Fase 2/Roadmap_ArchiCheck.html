@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArchiCheck — Roadmap Resumido</title>
+<style>
+  :root {
+    --bg: #f7f7f9;
+    --bg-panel: #ffffff;
+    --bg-panel-2: #f0f1f4;
+    --text: #1c1e21;
+    --text-muted: #5c6270;
+    --border: #e1e3e8;
+    --accent: #4f46e5;
+    --accent-soft: #eef0ff;
+    --done: #1a9c5b;
+    --done-bg: #e6f6ee;
+    --progress: #b8860b;
+    --progress-bg: #fdf3d8;
+    --pending: #8a8f98;
+    --pending-bg: #eef0f3;
+    --paused: #b45309;
+    --paused-bg: #fdf0e0;
+    --code-bg: #f0f1f4;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+  :root[data-theme="dark"] {
+    --bg: #14151a;
+    --bg-panel: #1c1e24;
+    --bg-panel-2: #23252c;
+    --text: #e7e8ea;
+    --text-muted: #9a9fab;
+    --border: #2e313a;
+    --accent: #8b85f7;
+    --accent-soft: #292a52;
+    --done: #4ade95;
+    --done-bg: #113322;
+    --progress: #e5c158;
+    --progress-bg: #3a2f10;
+    --pending: #7d8290;
+    --pending-bg: #23252c;
+    --paused: #e8a15c;
+    --paused-bg: #3a2712;
+    --code-bg: #23252c;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14151a;
+      --bg-panel: #1c1e24;
+      --bg-panel-2: #23252c;
+      --text: #e7e8ea;
+      --text-muted: #9a9fab;
+      --border: #2e313a;
+      --accent: #8b85f7;
+      --accent-soft: #292a52;
+      --done: #4ade95;
+      --done-bg: #113322;
+      --progress: #e5c158;
+      --progress-bg: #3a2f10;
+      --pending: #7d8290;
+      --pending-bg: #23252c;
+      --paused: #e8a15c;
+      --paused-bg: #3a2712;
+      --code-bg: #23252c;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  a { color: var(--accent); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px 80px; }
+
+  header.top {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .top-inner {
+    max-width: 980px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand h1 { font-size: 1.15rem; margin: 0; font-weight: 700; }
+  .brand .sub { font-size: 0.78rem; color: var(--text-muted); }
+  nav.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  nav.tabs a {
+    text-decoration: none; color: var(--text-muted); font-size: 0.82rem; font-weight: 600;
+    padding: 6px 10px; border-radius: 6px; border: 1px solid transparent;
+  }
+  nav.tabs a:hover { background: var(--bg-panel-2); color: var(--text); }
+
+  .hero {
+    margin: 24px 0 20px; padding: 18px 20px; border-radius: 12px;
+    background: var(--accent-soft); border: 1px solid var(--border);
+  }
+  .hero p { margin: 0; font-size: 0.92rem; }
+  .hero .updated { font-size: 0.76rem; color: var(--text-muted); margin-top: 8px; }
+
+  .section-title {
+    display: flex; align-items: center; gap: 10px; margin: 40px 0 12px;
+    scroll-margin-top: 70px;
+  }
+  .section-title h2 { font-size: 1.3rem; margin: 0; }
+  .badge {
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+    padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+  }
+  .badge.done { background: var(--done-bg); color: var(--done); }
+  .badge.progress { background: var(--progress-bg); color: var(--progress); }
+  .badge.pending { background: var(--pending-bg); color: var(--pending); }
+  .badge.paused { background: var(--paused-bg); color: var(--paused); }
+
+  .phase-desc { color: var(--text-muted); font-size: 0.88rem; margin: 0 0 16px; }
+
+  details.item {
+    background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 10px; box-shadow: var(--shadow); overflow: hidden;
+  }
+  details.item summary {
+    cursor: pointer; padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 0.92rem; list-style: none;
+  }
+  details.item summary::-webkit-details-marker { display: none; }
+  details.item summary::before {
+    content: "▸"; display: inline-block; transition: transform 0.15s ease; color: var(--text-muted); font-size: 0.8rem;
+  }
+  details.item[open] summary::before { transform: rotate(90deg); }
+  summary .badge { margin-left: auto; flex-shrink: 0; }
+  .item-body { padding: 0 16px 16px 38px; font-size: 0.86rem; color: var(--text); }
+  .item-body p { margin: 6px 0; }
+  .item-body ul { margin: 6px 0; padding-left: 18px; }
+  .item-body li { margin: 4px 0; }
+  .item-body code {
+    background: var(--code-bg); padding: 1px 5px; border-radius: 4px; font-size: 0.82em;
+  }
+  .item-body .note { color: var(--text-muted); font-size: 0.82rem; }
+
+  table.gap { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: var(--bg-panel);
+    border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+  table.gap th, table.gap td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+  table.gap th { background: var(--bg-panel-2); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.02em; color: var(--text-muted); }
+  table.gap tr:last-child td { border-bottom: none; }
+  .tbl-wrap { overflow-x: auto; border-radius: 10px; }
+
+  .order-list { counter-reset: ord; list-style: none; padding: 0; margin: 0; }
+  .order-list li {
+    counter-increment: ord; position: relative; padding: 10px 14px 10px 44px; margin-bottom: 8px;
+    background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; font-size: 0.88rem;
+  }
+  .order-list li::before {
+    content: counter(ord); position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff;
+    font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  }
+
+  .today-box {
+    background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+    margin-bottom: 10px; font-size: 0.86rem;
+  }
+  .today-box h4 { margin: 0 0 6px; font-size: 0.88rem; }
+  .today-box.warn { border-left: 4px solid var(--paused); }
+  .today-box.win { border-left: 4px solid var(--done); }
+
+  footer {
+    margin-top: 50px; padding-top: 16px; border-top: 1px solid var(--border);
+    font-size: 0.76rem; color: var(--text-muted);
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <h1>ArchiCheck</h1>
+      <span class="sub">Roadmap resumido — navegable</span>
+    </div>
+    <nav class="tabs">
+      <a href="#hoy">Sesión reciente</a>
+      <a href="#orden">Qué sigue</a>
+      <a href="#fase1">Fase 1</a>
+      <a href="#fase2">Fase 2</a>
+      <a href="#fase3">Fase 3</a>
+      <a href="#fase4">Fase 4</a>
+      <a href="#fase5">Fase 5</a>
+      <a href="#revi">vs. Revi</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <p><strong>Foco actual:</strong> dejar 100% afinada la revisión de planos (Fase 2) antes de arrancar el MVP de dossier (Fase 3). Dentro de Fase 2, orden: <strong>P1</strong> (precisión geométrica) → <strong>P2</strong> (normativa OGUC+RAG) → <strong>P3</strong> (otros PRC) — con <strong>P1b</strong> (U-Net) en paralelo desde el día 1, y <strong>P4</strong>/<strong>P5</strong> después.</p>
+    <div class="updated">Este resumen se actualiza junto con el roadmap base en <code>archicheck/Proyecto/Roadmap_Revision_Dossier_ArchiCheck.md</code> — ese archivo tiene todo el detalle técnico; esta página es solo la vista rápida de estado y orden. Última actualización: 27 julio 2026.</div>
+  </div>
+
+  <!-- ============ SESIÓN RECIENTE ============ -->
+  <div class="section-title" id="hoy">
+    <h2>🕓 Sesión más reciente (26–27 julio 2026)</h2>
+  </div>
+  <p class="phase-desc">Resumen de lo hecho hoy, para retomar mañana sin releer todo el detalle.</p>
+
+  <div class="today-box win">
+    <h4>✅ Hecho y confirmado</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Auditoría completa de <code>OGUC_REGLAS</code> contra las 2 fuentes OGUC cargadas (curada + extracción completa de 770 artículos) — 3 errores propios encontrados y corregidos (rampa, escalera, pasillo).</li>
+      <li>Fórmula real de pendiente de rampa implementada (<code>i% = 12,8 − 0,5333·L</code>) — la fórmula que se creía "fabricada por Revi" resultó ser real; el error estaba en la aritmética de Revi, no en el artículo citado.</li>
+      <li>PRC Providencia: bug de extracción encontrado y corregido (191/242 artículos solo tenían texto de índice, no el contenido real) — re-indexado en producción (Supabase).</li>
+      <li>Nuevos campos en el prompt de Claude Vision: <code>escalas_detectadas</code>, <code>puertas_detalle</code>, <code>cuadro_superficies_oficial</code>, <code>circulo_giro_1_50_detectado</code> — con cruces reales contra medición propia (no solo lectura).</li>
+      <li>Función opcional <code>detectar_figuras_lamina()</code> — primer paso hacia reducir el crop/escala manual (no reemplaza el flujo actual todavía).</li>
+    </ul>
+  </div>
+
+  <div class="today-box warn">
+    <h4>🔴 Encontrado y revertido — no repetir</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>El fix de "achurado" (para medir bien el ancho de rampa/escalera) causó una regresión real en Colab: desprotegió 37% de los segmentos de muro y volvió a aparecer la fusión catastrófica de ~140m² ya peleada antes. <strong>Desactivado</strong> (<code>ACHURADO_DESPROTEGER_ACTIVO = False</code>). La rampa/escalera vuelven a medir mal — es una limitación conocida, no un bug nuevo.</li>
+      <li>Causa raíz: el agrupamiento por Union-Find es transitivo, no local — un cluster disperso por toda la página puede pasar la salvaguarda de "extensión perpendicular amplia" sin que haya achurado real en ningún punto. Es un error de diseño del enfoque, no de calibración de umbrales.</li>
+    </ul>
+  </div>
+
+  <div class="today-box">
+    <h4>🔲 Pendiente para mañana</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Investigar qué representan los 3 valores de superficie por nivel en el Cuadro de Superficies real (Lámina 1/4 del PDF — <strong>no</strong> está en las páginas que procesa Colab hoy). Comparación preliminar: Nivel 1 impreso 199,05m² vs. medido 159,7m² (-19,8%); Nivel 2 impreso 119,76m² vs. medido 178,9m² (+49,4%) — discrepancia grande y en direcciones opuestas, sin explicar todavía.</li>
+      <li>Decidir si se amplía <code>PAGINAS_Y_ESCALAS</code> para incluir la Lámina 1/4 (donde vive el cuadro de superficies real).</li>
+      <li>Rediseñar (o descartar) el fix de achurado con un criterio que sí sea local/acotado.</li>
+      <li>Estimar cuántas observaciones normativas propias podríamos levantar sobre el expediente PDV vs. las 5 de Revi (pedido explícito, dejado para después).</li>
+      <li>Correr de nuevo en Colab para confirmar que el revert del achurado dejó todo como antes del bug.</li>
+    </ul>
+  </div>
+
+  <!-- ============ QUÉ SIGUE / ORDEN ============ -->
+  <div class="section-title" id="orden">
+    <h2>🎯 Qué sigue, en orden</h2>
+  </div>
+  <p class="phase-desc">Orden de prioridad reconfirmado — de lo más inmediato a lo más lejano.</p>
+  <ol class="order-list">
+    <li><strong>P1 — Precisión geométrica</strong> (Fase 2): terminar de validar OpenCV+Claude Vision contra ground truth; decidir el rediseño del achurado.</li>
+    <li><strong>P1b — U-Net + MLSTRUCT-FP</strong> (Fase 2, en paralelo, arranca ya): probar el checkpoint pre-entrenado antes de gastar en GPU propia.</li>
+    <li><strong>P2 — Normativa OGUC completa + RAG</strong> (Fase 2): pgvector, +15-20 circulares DDU adicionales.</li>
+    <li><strong>P3 — Otros PRC</strong> (Fase 2, pausado a propósito): no se agregan comunas nuevas hasta cerrar P1 y P2.</li>
+    <li><strong>P4 — Motor de reglas determinista</strong> (Fase 2, ya con avance real): se reutiliza sin cambios en Fase 3.</li>
+    <li><strong>P5 — Loop de validación con arquitectos</strong> (Fase 2): espera a que P2 y P4 estén listos.</li>
+    <li><strong>Fase 3 — MVP de dossier</strong>: Obra Menor (SOM) primero, Edificación de Vivienda Nueva recién después de validar SOM.</li>
+    <li><strong>Fase 4 — Profundización del dossier</strong>: Módulo F, cobertura ≥ Revi con trazabilidad a artículo.</li>
+    <li><strong>Fase 5 — Productización SaaS</strong>: multi-tenancy, billing, aprendizaje continuo.</li>
+  </ol>
+
+  <!-- ============ FASE 1 ============ -->
+  <div class="section-title" id="fase1">
+    <h2>Fase 1 — Estado actual</h2>
+    <span class="badge done">En producción</span>
+  </div>
+  <p class="phase-desc">Claude Sonnet + GPT-4o en paralelo · OGUC/LGUC/Ley 19.300/DDU como JSON estático · 3 PRC (Ñuñoa, Santiago, Providencia) · pipeline geométrico en Colab manual · deploy Vercel + Cloudflare Worker · análisis de plano único, sin dossier todavía.</p>
+
+  <!-- ============ FASE 2 ============ -->
+  <div class="section-title" id="fase2">
+    <h2>Fase 2 — Planos al 100%</h2>
+    <span class="badge progress">Foco actual</span>
+  </div>
+  <p class="phase-desc">Agotar la profundización del análisis de planos antes de tocar el dossier. Orden: P1 → P2 → P3, con P1b en paralelo desde el inicio; P4 y P5 después.</p>
+
+  <details class="item" open>
+    <summary>P1 — Validar precisión del análisis geométrico <span class="badge progress">En curso</span></summary>
+    <div class="item-body">
+      <p>Primera prioridad. OpenCV (geometría de recintos) + Claude Vision/GPT-4o (semántica) trabajando juntos — es lo que da valor real hoy.</p>
+      <ul>
+        <li>✅ 3 rondas de fixes al detector de recintos (texto/líneas discontinuas, artefactos/arcos de puerta, fusión exterior+interior por umbral de área) — confirmadas funcionando.</li>
+        <li>✅ Ground truth definitivo (v13) construido a mano por el usuario, con categoría de muro habilitando evaluar U-Net.</li>
+        <li>🔴 Fix de achurado para rampa/escalera — <strong>revertido</strong>, causaba regresión de fusión de recintos. Ver sección "Sesión reciente".</li>
+        <li>🔲 DINO+SAM2: 0% recall confirmado en el plano de prueba — descartado invertir más en tuning, brecha de dominio estructural (entrenado en fotos, no en símbolos CAD).</li>
+        <li>🔲 Detector determinista de convenciones CAD (biblioteca que crece con el tiempo, no reglas fijas por plano) — pendiente, es el núcleo de "leer elementos completos".</li>
+        <li>🔲 Interfaz de validación gráfica del arquitecto — pieza de confianza/transparencia todavía sin construir.</li>
+        <li class="note">Precisión "alta" no se puede prometer de antemano — depende de que el feedback del arquitecto convierta lo no identificado en preguntas resueltas, no en errores silenciosos.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>P1b — U-Net + MLSTRUCT-FP <span class="badge pending">Pendiente</span></summary>
+    <div class="item-body">
+      <p>Misma familia que P1, en paralelo, no depende de nada — puede arrancar ya.</p>
+      <ul>
+        <li>Dataset MLSTRUCT-FP (Pizarro, 954 planos chilenos), target IoU ≥0.90 (referencia publicada: promedio 0.77, moda 0.90).</li>
+        <li>Alcance real: solo segmenta muros, no puertas/ventanas/escaleras — complementario a P1, no reemplazo.</li>
+        <li>Paso recomendado antes de gastar en GPU: probar el checkpoint pre-entrenado (<code>no_rot_256_50</code>) contra 1-2 planos chilenos reales — gratis, dice si hace falta entrenar desde cero.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>P2 — Normativa: OGUC completo + RAG <span class="badge pending">Pendiente</span></summary>
+    <div class="item-body">
+      <p>Segunda prioridad. OGUC completo vía RAG (pgvector), +15-20 circulares DDU adicionales.</p>
+      <ul>
+        <li>Candidatos de framework evaluados: LangChain o LlamaIndex para orquestación del RAG, en vez de armarlo a mano.</li>
+        <li><code>pgvector</code> como base vectorial ya confirmado (coincide con lo planeado).</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>P3 — Otros PRC <span class="badge paused">Pausado a propósito</span></summary>
+    <div class="item-body">
+      <p>Tercera prioridad, después de P1 y P2. Decisión vigente: no se agregan comunas nuevas todavía — foco en afinar Santiago y Ñuñoa.</p>
+      <ul>
+        <li>Providencia no es foco activo de expansión, pero su extracción se corrigió esta sesión (bug de índice-en-vez-de-contenido, ver "Sesión reciente") y ya está re-indexada en producción.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="item" open>
+    <summary>P4 — Motor de reglas determinista <span class="badge progress">Con avance real</span></summary>
+    <div class="item-body">
+      <p>Separa los cálculos objetivos del juicio del LLM. Se construye en Fase 2 y se reutiliza sin cambios en Fase 3 (dossier) — acorta esa fase cuando llegue.</p>
+      <ul>
+        <li>✅ Regla real de pendiente de rampa (fórmula OGUC verificada, no una simplificación).</li>
+        <li>✅ Ancho de escalera corregido a Art. 4.2.10 (tabla por carga de ocupación, no valor fijo — usamos el piso mínimo de la tabla mientras no calculemos ocupación real).</li>
+        <li>✅ Ancho de pasillo con cita corregida (Art. 4.2.5).</li>
+        <li>⚠️ 6 mínimos de área (dormitorio/sala/living/comedor/cocina/baño) sin base normativa confirmada tras auditar OGUC completo y descartar DS49 — marcados <code>SIN VERIFICAR</code> en vez de citar con falsa confianza. Pendiente decidir si se retiran.</li>
+        <li>✅ Cruce declarado-vs-medido para área (cuadro de superficies vs. OpenCV) y círculo de giro (accesibilidad) — implementados, sin probar todavía contra un cuadro de superficies real (el de prueba salió vacío en las páginas procesadas).</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>P5 — Loop de validación con arquitectos <span class="badge pending">Pendiente</span></summary>
+    <div class="item-body">
+      <p>Campo "¿Correcto?" por observación, dashboard de recall/precisión por etapa. Arranca cuando P2 y P4 estén listos — necesita normativa completa y motor de reglas operativos para medir algo representativo.</p>
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>Ganancia rápida — verificación aritmética de superficies <span class="badge progress">Mitad hecha</span></summary>
+    <div class="item-body">
+      <ul>
+        <li>✅ Cruce del cuadro de superficies contra el área medida por OpenCV — implementado.</li>
+        <li>🔲 Contraste del campo "destino" declarado contra el proyecto — no tocado.</li>
+        <li class="note">El cuadro de superficies real del plano de prueba está en una lámina que Colab no procesa hoy — ver "Sesión reciente".</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- ============ FASE 3 ============ -->
+  <div class="section-title" id="fase3">
+    <h2>Fase 3 — MVP: Análisis de dossier completo</h2>
+    <span class="badge pending">No iniciado</span>
+  </div>
+  <p class="phase-desc">Arranca solo cuando Fase 2 esté cerrada. Obra Menor (SOM) primero, validado con arquitectos, antes de sumar Edificación de Vivienda Nueva como segunda ola — estrictamente secuencial, no en paralelo.</p>
+  <details class="item">
+    <summary>Alcance del MVP <span class="badge pending">Pendiente</span></summary>
+    <div class="item-body">
+      <ul>
+        <li>2.0 — Selector de tipo de formulario + mapeo manual de documentos.</li>
+        <li>2.2 — Taxonomía de documentos (hecha por arquitectos, en paralelo a la ingeniería dentro de cada ola).</li>
+        <li>2.3 — Mapeo asistido / clasificador de admisibilidad.</li>
+        <li>2.4 — Motor de verificación de firma/vigencia + consistencia cruzada básica (hereda P4 de Fase 2, ya no hay que construirlo de cero).</li>
+        <li>2.6 — Revisión del FUN, versión MVP, también en dos olas.</li>
+      </ul>
+      <p class="note">Gate post-MVP: loop de validación con arquitectos, dos rondas secuenciales (SOM primero, Edificación después de aprobar SOM).</p>
+    </div>
+  </details>
+
+  <!-- ============ FASE 4 ============ -->
+  <div class="section-title" id="fase4">
+    <h2>Fase 4 — Profundización del dossier</h2>
+    <span class="badge pending">Futuro</span>
+  </div>
+  <p class="phase-desc">Post-MVP y post-loop de validación. Objetivo: que el dossier termine <em>superando</em> a Revi, no solo empatándolo.</p>
+  <details class="item">
+    <summary>Módulo F — diseño ya validado <span class="badge pending">Futuro</span></summary>
+    <div class="item-body">
+      <p>Matriz de exigibilidad como dato (no como prompt), ligada a artículo (DDU 390, OGUC Art. 5.1.4, Ley 20.958, Ley 19.300), construida sobre el mismo patrón que <code>verificarCumplimiento()</code> del motor de PRC (P4). El LLM entra solo para el residuo ambiguo, con Claude + GPT-4o en paralelo como filtro. Cobertura objetivo: igual o mayor a los ~51 tipos de trámite de Revi, cada resultado citando el artículo que lo sustenta — reproducibilidad y trazabilidad que el enfoque conversacional de Revi no tiene por diseño.</p>
+    </div>
+  </details>
+
+  <!-- ============ FASE 5 ============ -->
+  <div class="section-title" id="fase5">
+    <h2>Fase 5 — Productización SaaS</h2>
+    <span class="badge pending">Futuro</span>
+  </div>
+  <p class="phase-desc">Fase final, hacia producto comercial. Mayormente posterior a Fase 4, con excepción del modelo de datos (conviene decidirlo en paralelo a Fase 2 para no migrar estructura después).</p>
+  <details class="item">
+    <summary>Piezas de esta fase <span class="badge pending">Futuro</span></summary>
+    <div class="item-body">
+      <ul>
+        <li>5.1 — Modelo de datos (decidir en paralelo a Fase 2).</li>
+        <li>5.2 — Gestión de usuarios, perfiles y multi-tenancy.</li>
+        <li>5.3 — Repositorio de proyectos y versionado.</li>
+        <li>5.4 — Sistema de aprendizajes / mejora continua en producción — la pieza que más valor agrega de esta fase.</li>
+        <li>5.5 — Billing y suscripciones.</li>
+        <li>5.6 — Administración, auditoría y compliance.</li>
+        <li>5.7 — Notificaciones.</li>
+        <li>5.8 — Reportes y exportación avanzada.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- ============ VS REVI ============ -->
+  <div class="section-title" id="revi">
+    <h2>📊 Brecha actual vs. Revi</h2>
+  </div>
+  <p class="phase-desc">Evaluación honesta, no una comparación de venta. Actualizada tras auditar el motor de reglas y el informe consolidado de Revi sobre el mismo expediente de prueba.</p>
+  <div class="tbl-wrap">
+  <table class="gap">
+    <thead>
+      <tr><th>Capacidad</th><th>ArchiCheck</th><th>Revi</th><th>Nota</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Normativa anclada a fuente verificada, no solo citada</td>
+        <td>✅ Ventaja de diseño — pero tuvimos 3 errores de cita/fórmula propios esta sesión, recién corregidos</td>
+        <td>⚠️ Cita artículos reales de forma consistente, pero comete errores de aritmética al aplicar fórmulas</td>
+        <td>Ventaja de diseño, no de ejecución todavía</td>
+      </tr>
+      <tr>
+        <td>Medición geométrica independiente</td>
+        <td>⚠️ En construcción, no confiable de punta a punta (bugs esta sesión)</td>
+        <td>❌ No hay evidencia de que midan — solo transcriben</td>
+        <td>Activo en construcción, no diferencial probado aún</td>
+      </tr>
+      <tr>
+        <td>Identificación de componentes (apertura de puertas, círculo de giro, tablas, multi-escala)</td>
+        <td>⚠️ Recién agregado al prompt, sin probar en un run real</td>
+        <td>✅ Demostrado</td>
+        <td>Brecha de prompt en gran parte cerrada, falta validar</td>
+      </tr>
+      <tr>
+        <td>Clasificación de documentos, firma/vigencia, FUN</td>
+        <td>❌ No construido (Fase 3)</td>
+        <td>✅ Demostrado (CLA-Benchmark, ~90 observaciones)</td>
+        <td>Se cierra en Fase 3</td>
+      </tr>
+      <tr>
+        <td>PRC comunal estructurado y determinista</td>
+        <td>✅ Gana ArchiCheck</td>
+        <td>⚠️ Parcial, admite huecos</td>
+        <td>Ya ganado; ampliar cobertura de comunas sin fecha (P3)</td>
+      </tr>
+      <tr>
+        <td>Consistencia metodológica entre corridas</td>
+        <td>✅ Gana ArchiCheck</td>
+        <td>⚠️ Inconsistente</td>
+        <td>Se refuerza con P4</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <footer>
+    Vista resumida — el detalle técnico completo (auditorías, código, capturas, decisiones y su porqué) vive en <code>archicheck/Proyecto/Roadmap_Revision_Dossier_ArchiCheck.md</code>. Esta página se actualiza junto con ese archivo, no reemplaza su contenido.
+  </footer>
+
+</div>
+</body>
+</html>

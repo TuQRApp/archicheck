@@ -1,0 +1,37 @@
+id,subplanta,tipo,cx_rel,cy_rel,ancho_aprox_m,notas
+GT-A01,Acceso,puerta,0.65,0.135,,Taller
+GT-A02,Acceso,puerta,0.185,0.245,,Guardería - salida
+GT-A03,Acceso,puerta,0.30,0.28,,junto a Camarín
+GT-A04,Acceso,puerta,0.29,0.30,,junto a Camarín
+GT-A05,Acceso,puerta,0.375,0.32,,Baño
+GT-A06,Acceso,ventana,0.145,0.145,,Guardería
+GT-A07,Acceso,ventana,0.185,0.19,,Guardería
+GT-A08,Acceso,ventana,0.245,0.19,,Guardería
+GT-A09,Acceso,ventana,0.335,0.29,,junto a Baño
+GT-K01,Kiosco/Enfermeria,puerta,0.755,0.09,,arriba derecha
+GT-K02,Kiosco/Enfermeria,puerta,0.72,0.155,,Enfermería
+GT-K03,Kiosco/Enfermeria,puerta,0.79,0.185,,junto a Baños
+GT-K04,Kiosco/Enfermeria,puerta,0.83,0.185,,Baño
+GT-K05,Kiosco/Enfermeria,puerta,0.86,0.185,,Baño
+GT-K06,Kiosco/Enfermeria,puerta,0.72,0.31,,abajo, Kiosco
+GT-K07,Kiosco/Enfermeria,ventana,0.685,0.06,,arriba centro
+GT-K08,Kiosco/Enfermeria,ventana,0.745,0.155,,junto a Enfermería
+GT-K09,Kiosco/Enfermeria,ventana,0.775,0.235,,Kiosco
+GT-C01,Camarines,ventana,0.24,0.68,,cluster izquierdo (revisar conteo - cluster denso)
+GT-C02,Camarines,ventana,0.255,0.68,,cluster izquierdo
+GT-C03,Camarines,ventana,0.27,0.68,,cluster izquierdo
+GT-C04,Camarines,ventana,0.285,0.68,,cluster izquierdo
+GT-C05,Camarines,ventana,0.20,0.71,,izquierda, debajo del cluster
+GT-C06,Camarines,ventana,0.62,0.68,,cluster derecho (revisar conteo - cluster denso)
+GT-C07,Camarines,ventana,0.635,0.68,,cluster derecho
+GT-C08,Camarines,ventana,0.65,0.68,,cluster derecho
+GT-C09,Camarines,ventana,0.665,0.68,,cluster derecho
+GT-C10,Camarines,ventana,0.75,0.71,,derecha, junto a cluster
+GT-C11,Camarines,ventana,0.29,0.91,,fila inferior
+GT-C12,Camarines,ventana,0.40,0.91,,fila inferior
+GT-C13,Camarines,ventana,0.55,0.91,,fila inferior
+GT-C14,Camarines,ventana,0.68,0.91,,fila inferior
+GT-B01,Sala de Basura,puerta,0.775,0.685,,única puerta de esta sub-planta
+
+NOTA: en Camarines (GT-C01 a GT-C14) las ventanas están en 3 clusters muy densos donde varias letras "Ve" se superponen visualmente - el conteo de 14 es el mejor esfuerzo pero tiene más margen de error que el resto de este archivo. Vale la pena que el usuario lo verifique con una mirada rápida antes de usarlo para calcular precisión.
+No se marcaron columnas ni salidas de emergencia en ninguna de las 4 sub-plantas de este plano.

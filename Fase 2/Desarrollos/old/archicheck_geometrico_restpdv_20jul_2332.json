@@ -1,0 +1,1505 @@
+{
+  "fuente": "colab_opencv_multipagina",
+  "proyecto": "RestPdV",
+  "archivo": "05+06 Planos Rest Pza PdV (021 06 21).pdf",
+  "fecha": "2026-07-20T23:41:00.402026",
+  "basename": "archicheck_geometrico_restpdv_20jul_2332",
+  "dpi": 216,
+  "paginas": [
+    {
+      "entry_idx": 0,
+      "fname_tag": "pag2-1",
+      "pagina": 2,
+      "escala": "1:50",
+      "crop": [
+        0.0,
+        0.0,
+        0.4,
+        1.0
+      ],
+      "analisis_semantico": {
+        "tipo_plano": "planta",
+        "uso_del_proyecto": "restaurante",
+        "nivel": "Nivel 1 - Situacion Propuesta (±0.00)",
+        "recintos": [
+          {
+            "nombre": "Bodega Norte",
+            "tipo": "bodega",
+            "etiqueta_en_plano": "Bodega",
+            "area_estimada_m2": 8.5,
+            "ancho_estimado_m": 2.8,
+            "cx_relativo": 0.08,
+            "cy_relativo": 0.18,
+            "cumple_oguc": true,
+            "observacion": "Bodega sin ventilacion natural visible en plano"
+          },
+          {
+            "nombre": "Baño Personal Mujeres",
+            "tipo": "bano",
+            "etiqueta_en_plano": "Baño Personal Mujeres",
+            "area_estimada_m2": 5.2,
+            "ancho_estimado_m": 2.2,
+            "cx_relativo": 0.28,
+            "cy_relativo": 0.13,
+            "cumple_oguc": true,
+            "observacion": "Baño de personal femenino con acceso desde interior. Ancho mínimo de puerta marcado 0.8m, cumple Art.4.1.7 OGUC para uso personal no público"
+          },
+          {
+            "nombre": "Baño Personal Hombres",
+            "tipo": "bano",
+            "etiqueta_en_plano": "Baño Personal Hombres",
+            "area_estimada_m2": 3.8,
+            "ancho_estimado_m": 1.8,
+            "cx_relativo": 0.28,
+            "cy_relativo": 0.22,
+            "cumple_oguc": true,
+            "observacion": "Puerta 0.8m, cumple norma personal. Ventilacion no verificable en planta"
+          },
+          {
+            "nombre": "Baño Personal Norte",
+            "tipo": "bano",
+            "etiqueta_en_plano": "Baño Personal",
+            "area_estimada_m2": 4.2,
+            "ancho_estimado_m": 2.0,
+            "cx_relativo": 0.62,
+            "cy_relativo": 0.13,
+            "cumple_oguc": true,
+            "observacion": "Puerta 0.8m, acceso desde cocina norte"
+          },
+          {
+            "nombre": "Cocina Norte",
+            "tipo": "cocina",
+            "etiqueta_en_plano": "Cocina",
+            "area_estimada_m2": 18.0,
+            "ancho_estimado_m": 5.5,
+            "cx_relativo": 0.72,
+            "cy_relativo": 0.2,
+            "cumple_oguc": true,
+            "observacion": "Cocina de restaurante sector norte. Requiere verificacion de extraccion de humos y ventilacion forzada segun DS977 Minsal y OGUC"
+          },
+          {
+            "nombre": "Bodega Este",
+            "tipo": "bodega",
+            "etiqueta_en_plano": "Bodega",
+            "area_estimada_m2": 6.0,
+            "ancho_estimado_m": 2.5,
+            "cx_relativo": 0.82,
+            "cy_relativo": 0.42,
+            "cumple_oguc": true,
+            "observacion": "Bodega adyacente a baño universal, verificar separacion higienica"
+          },
+          {
+            "nombre": "Terraza Norte-Oeste",
+            "tipo": "terraza",
+            "etiqueta_en_plano": "Terraza",
+            "area_estimada_m2": 12.0,
+            "ancho_estimado_m": 3.5,
+            "cx_relativo": 0.18,
+            "cy_relativo": 0.42,
+            "cumple_oguc": true,
+            "observacion": "Terraza exterior sector norte-oeste"
+          },
+          {
+            "nombre": "Baño Universal",
+            "tipo": "bano",
+            "etiqueta_en_plano": "Baño Universal",
+            "area_estimada_m2": 4.5,
+            "ancho_estimado_m": 2.9,
+            "cx_relativo": 0.7,
+            "cy_relativo": 0.5,
+            "cumple_oguc": false,
+            "observacion": "Dimensiones marcadas: ancho 2.9m + antecámara 0.4m, largo 1.55m. Profundidad interior 1.55m es INSUFICIENTE para baño accesible universal. OGUC Art.4.1.7 y DDU 279 exigen mínimo 1.70m libre interior y radio de giro 1.50m diámetro libre. Puerta 0.9m cumple ancho mínimo accesible"
+          },
+          {
+            "nombre": "Pasillo Central",
+            "tipo": "pasillo",
+            "etiqueta_en_plano": "Pasillo",
+            "area_estimada_m2": 14.0,
+            "ancho_estimado_m": 1.6,
+            "cx_relativo": 0.4,
+            "cy_relativo": 0.62,
+            "cumple_oguc": false,
+            "observacion": "Ancho marcado 1.6m en sector. Para uso público en restaurante OGUC Art.4.2.4 exige mínimo 1.80m en pasillos de evacuacion con doble sentido y ocupacion mayor a 50 personas. Verificar aforo"
+          },
+          {
+            "nombre": "Cocina Barra",
+            "tipo": "cocina",
+            "etiqueta_en_plano": "Cocina (Barra sin atencion de publico)",
+            "area_estimada_m2": 10.0,
+            "ancho_estimado_m": 3.2,
+            "cx_relativo": 0.33,
+            "cy_relativo": 0.8,
+            "cumple_oguc": true,
+            "observacion": "Cocina barra sin atencion directa al publico. Puerta 0.8m interior. Requiere verificacion ventilacion y extraccion DS977"
+          },
+          {
+            "nombre": "Oficina",
+            "tipo": "oficina",
+            "etiqueta_en_plano": "Oficina",
+            "area_estimada_m2": 16.0,
+            "ancho_estimado_m": 5.0,
+            "cx_relativo": 0.68,
+            "cy_relativo": 0.82,
+            "cumple_oguc": true,
+            "observacion": "Oficina con acceso desde pasillo. Altura y ventilacion no verificable en planta"
+          },
+          {
+            "nombre": "Terraza Sur-Oeste",
+            "tipo": "terraza",
+            "etiqueta_en_plano": "Terraza",
+            "area_estimada_m2": 20.0,
+            "ancho_estimado_m": 5.0,
+            "cx_relativo": 0.12,
+            "cy_relativo": 0.9,
+            "cumple_oguc": true,
+            "observacion": "Terraza exterior sur-oeste sobre Linea Edificacion"
+          },
+          {
+            "nombre": "Terraza Sur-Este",
+            "tipo": "terraza",
+            "etiqueta_en_plano": "Terraza",
+            "area_estimada_m2": 20.0,
+            "ancho_estimado_m": 5.0,
+            "cx_relativo": 0.78,
+            "cy_relativo": 0.9,
+            "cumple_oguc": true,
+            "observacion": "Terraza exterior sur-este. Pavimento podotactil indicado en eje central de acceso"
+          },
+          {
+            "nombre": "Rampa Acceso Universal",
+            "tipo": "rampa",
+            "etiqueta_en_plano": "Rampa Acceso Universal Pendiente 13.58% P=13.14-(0.57x4.53)/100",
+            "area_estimada_m2": 3.5,
+            "ancho_estimado_m": 1.3,
+            "cx_relativo": 0.28,
+            "cy_relativo": 0.88,
+            "cumple_oguc": false,
+            "observacion": "INCUMPLIMIENTO CRITICO: Pendiente indicada 13.58% SUPERA el maximo permitido por OGUC Art.4.1.7 y DDU 279 que establece pendiente maxima 8% para rampas de acceso universal en edificios de uso publico. Ancho 1.3m cumple minimo de 1.20m"
+          }
+        ],
+        "elementos_detectados": {
+          "puertas": 12,
+          "ventanas": 0,
+          "escaleras": 0,
+          "salidas_emergencia": 1
+        },
+        "incumplimientos_oguc": [
+          {
+            "articulo": "Art. 4.1.7 OGUC / DDU 279",
+            "descripcion": "Rampa de acceso universal con pendiente de 13.58%, supera el máximo permitido de 8% para rampas de uso público en edificaciones de concurrencia masiva",
+            "gravedad": "ALTA",
+            "recinto_afectado": "Rampa Acceso Universal",
+            "medida_requerida": "Pendiente máxima 8% (OGUC Art.4.1.7 inc.3), con descansos de 1.50m cada 9m de desarrollo",
+            "medida_detectada": "13.58% según etiqueta en plano"
+          },
+          {
+            "articulo": "Art. 4.1.7 OGUC / DDU 279 Tabla 1",
+            "descripcion": "Baño Universal con profundidad interior de 1.55m insuficiente para radio de giro de silla de ruedas. Se requiere espacio libre mínimo de 1.50m x 1.50m para maniobra y dimensión mínima de recinto 1.70m x 2.20m",
+            "gravedad": "ALTA",
+            "recinto_afectado": "Baño Universal",
+            "medida_requerida": "Dimensión mínima 1.70m de profundidad libre interior, espacio de transferencia lateral 0.90m al costado del WC",
+            "medida_detectada": "Profundidad 1.55m según cota en plano"
+          },
+          {
+            "articulo": "Art. 4.2.4 OGUC / DS 47",
+            "descripcion": "Pasillo de circulacion pública con ancho de 1.60m potencialmente insuficiente para restaurante con aforo elevado. Para edificios de uso público con más de 50 personas se exige 1.80m mínimo en pasillos de evacuacion bidireccional",
+            "gravedad": "MEDIA",
+            "recinto_afectado": "Pasillo Central",
+            "medida_requerida": "Ancho mínimo 1.80m para pasillo de evacuacion en uso público (verificar según cálculo de aforo)",
+            "medida_detectada": "1.60m según cota en plano"
+          },
+          {
+            "articulo": "Art. 4.2.9 OGUC / NCh 853",
+            "descripcion": "No se aprecian ventanas ni vanos de ventilacion natural en recintos interiores (baños de personal, bodega norte). Los baños sin ventilacion al exterior requieren ventilacion forzada certificada",
+            "gravedad": "MEDIA",
+            "recinto_afectado": "Baño Personal Mujeres, Baño Personal Hombres, Baño Personal Norte",
+            "medida_requerida": "Ventilacion natural (vano min 0.20m2) o forzada con extraccion de 10 renovaciones/hora segun DS 594 Minsal",
+            "medida_detectada": "Sin vanos de ventilacion visibles en planta"
+          },
+          {
+            "articulo": "Art. 4.2.1 OGUC / DS 977 Minsal",
+            "descripcion": "Cocinas de restaurante requieren sistema de extraccion de humos, grasas y vapores con campana extractora, filtros y ducto de evacuacion al exterior. No es verificable en planta pero debe constar en proyecto de especialidades",
+            "gravedad": "MEDIA",
+            "recinto_afectado": "Cocina Norte, Cocina Barra",
+            "medida_requerida": "Proyecto de ventilacion con campana extractora, caudal mínimo según DS977, ducto independiente al exterior",
+            "medida_detectada": "No se aprecia en planta de arquitectura"
+          },
+          {
+            "articulo": "Art. 4.2.4 OGUC / DS 594 Art. 8",
+            "descripcion": "Separacion entre bodega este y baño universal debe garantizar condiciones higienicas. La proximidad inmediata entre ambos recintos puede vulnerar normas sanitarias si se almacenan alimentos",
+            "gravedad": "BAJA",
+            "recinto_afectado": "Bodega Este / Baño Universal",
+            "medida_requerida": "Verificar que bodega no almacene alimentos o establecer barrera sanitaria. DS 977 Art.18 prohíbe almacenamiento contiguo a servicios higienicos sin separacion adecuada",
+            "medida_detectada": "Recintos colindantes sin separacion visible en plano"
+          },
+          {
+            "articulo": "Art. 4.1.7 OGUC / DDU 279",
+            "descripcion": "No se aprecia señalizacion de pavimento podotactil continuo desde acceso hasta baño universal en el interior del edificio. El pavimento podotactil indicado parece limitarse al área exterior",
+            "gravedad": "BAJA",
+            "recinto_afectado": "Circulacion general interior",
+            "medida_requerida": "Franja guía podotactil de 0.60m ancho desde acceso hasta baño universal y principales recintos de atencion al público",
+            "medida_detectada": "Pavimento podotactil solo en terraza acceso exterior según plano"
+          }
+        ],
+        "documentos_que_faltan": [
+          "Planta de evacuacion y vias de escape (exigida por OGUC Art.4.2.4 y DS 594)",
+          "Cuadro de superficies con calculo de aforo por recinto",
+          "Plano de corte longitudinal y transversal (verificacion alturas libres minimas 2.30m OGUC Art.4.1.6)",
+          "Elevaciones de fachada (verificacion Linea Oficial y altura edificacion)",
+          "Proyecto de instalaciones sanitarias (SS.HH. publicos para restaurante segun OGUC Art.4.1.12 y DS 594)",
+          "Calculo de dotacion de SS.HH. publicos (hombres y mujeres separados para publico, no solo personal)",
+          "Proyecto de ventilacion forzada cocinas y baños interiores",
+          "Memoria de calculo de aforo total del restaurante",
+          "Certificado de factibilidad sanitaria (SEREMI Salud para restaurante)",
+          "Especificaciones tecnicas de materiales (pisos, terminaciones cocina segun DS977)",
+          "Plano de señaletica de emergencia y extintores (DS 594 / OGUC)",
+          "Calculo estructura rampa acceso universal con pasamanos a ambos lados (DDU 279)",
+          "Plano de instalacion electrica (certificacion SEC)",
+          "Formulario unico de estadistica de edificacion (INE)"
+        ],
+        "resumen_ejecutivo": "El proyecto corresponde a un restaurante en Nivel 1 (±0.00), escala 1:50, que incluye cocina profesional, barra de servicio, baños de personal segregados por sexo, baño universal, bodega, oficina, pasillo central y terrazas exteriores con acceso desde vía pública. Se detectan 2 incumplimientos de gravedad ALTA: (1) la rampa de acceso universal presenta pendiente de 13.58%, superando ampliamente el máximo de 8% exigido por OGUC Art.4.1.7 y DDU 279, constituyendo una barrera de accesibilidad ilegal para usuarios de silla de ruedas; (2) el baño universal tiene profundidad interior de 1.55m, insuficiente para el radio de giro mínimo de 1.50m requerido, lo que impide su uso efectivo por personas con movilidad reducida. Adicionalmente, el pasillo central de 1.60m puede resultar deficiente según el aforo calculado, y los baños de personal carecen de ventilacion natural visible. El proyecto no presenta planos de SS.HH. públicos para comensales, lo que constituye una omision grave ya que OGUC Art.4.1.12 y el DS 594 del Minsal exigen dotacion de servicios higienicos diferenciados para público en restaurantes según capacidad de atención. Se recomienda rediseñar la rampa con pendiente ≤8% y el baño universal con dimensiones mínimas 1.70x2.20m antes de someter a revision DOM."
+      },
+      "mediciones_geometricas": [
+        {
+          "id": "E03",
+          "nombre": "Baño Universal",
+          "tipo": "bano",
+          "pagina": 2,
+          "area_m2": 65.92,
+          "ancho_min_m": 15.65,
+          "largo_max_m": 28.39,
+          "cumple_geo": true,
+          "cx_rel": 0.635,
+          "cy_rel": 0.568,
+          "bbox": {
+            "x": 198,
+            "y": 114,
+            "w": 2662,
+            "h": 4829
+          }
+        },
+        {
+          "id": "E24",
+          "nombre": "Oficina",
+          "tipo": "oficina",
+          "pagina": 2,
+          "area_m2": 43.81,
+          "ancho_min_m": 4.64,
+          "largo_max_m": 13.71,
+          "cumple_geo": true,
+          "cx_rel": 0.539,
+          "cy_rel": 0.83,
+          "bbox": {
+            "x": 332,
+            "y": 3730,
+            "w": 2332,
+            "h": 791
+          }
+        },
+        {
+          "id": "E04",
+          "nombre": "Baño Personal Norte",
+          "tipo": "bano",
+          "pagina": 2,
+          "area_m2": 26.75,
+          "ancho_min_m": 6.85,
+          "largo_max_m": 8.17,
+          "cumple_geo": true,
+          "cx_rel": 0.503,
+          "cy_rel": 0.212,
+          "bbox": {
+            "x": 590,
+            "y": 370,
+            "w": 1390,
+            "h": 1166
+          }
+        },
+        {
+          "id": "E01",
+          "nombre": "Bodega Norte",
+          "tipo": "bodega",
+          "pagina": 2,
+          "area_m2": 22.31,
+          "ancho_min_m": 10.35,
+          "largo_max_m": 22.13,
+          "cumple_geo": true,
+          "cx_rel": 0.072,
+          "cy_rel": 0.316,
+          "bbox": {
+            "x": 0,
+            "y": 0,
+            "w": 1761,
+            "h": 3765
+          }
+        },
+        {
+          "id": "E06",
+          "nombre": "Cocina Norte",
+          "tipo": "cocina",
+          "pagina": 2,
+          "area_m2": 20.94,
+          "ancho_min_m": 3.52,
+          "largo_max_m": 6.7,
+          "cumple_geo": true,
+          "cx_rel": 0.822,
+          "cy_rel": 0.189,
+          "bbox": {
+            "x": 2030,
+            "y": 395,
+            "w": 600,
+            "h": 1140
+          }
+        },
+        {
+          "id": "E13",
+          "nombre": "Terraza Norte-Oeste",
+          "tipo": "terraza",
+          "pagina": 2,
+          "area_m2": 17.67,
+          "ancho_min_m": 1.81,
+          "largo_max_m": 10.13,
+          "cumple_geo": true,
+          "cx_rel": 0.169,
+          "cy_rel": 0.553,
+          "bbox": {
+            "x": 332,
+            "y": 1953,
+            "w": 308,
+            "h": 1724
+          }
+        },
+        {
+          "id": "E16",
+          "nombre": "Bodega Este",
+          "tipo": "bodega",
+          "pagina": 2,
+          "area_m2": 13.71,
+          "ancho_min_m": 1.95,
+          "largo_max_m": 10.09,
+          "cumple_geo": true,
+          "cx_rel": 0.88,
+          "cy_rel": 0.588,
+          "bbox": {
+            "x": 2323,
+            "y": 1953,
+            "w": 332,
+            "h": 1717
+          }
+        },
+        {
+          "id": "E19",
+          "nombre": "Pasillo Central",
+          "tipo": "pasillo",
+          "pagina": 2,
+          "area_m2": 11.47,
+          "ancho_min_m": 3.75,
+          "largo_max_m": 4.09,
+          "cumple_geo": true,
+          "cx_rel": 0.356,
+          "cy_rel": 0.652,
+          "bbox": {
+            "x": 741,
+            "y": 2947,
+            "w": 638,
+            "h": 697
+          }
+        },
+        {
+          "id": "E26",
+          "nombre": "Terraza Sur-Oeste",
+          "tipo": "terraza",
+          "pagina": 2,
+          "area_m2": 9.42,
+          "ancho_min_m": 7.26,
+          "largo_max_m": 10.35,
+          "cumple_geo": true,
+          "cx_rel": 0.129,
+          "cy_rel": 0.917,
+          "bbox": {
+            "x": 0,
+            "y": 3817,
+            "w": 1761,
+            "h": 1235
+          }
+        },
+        {
+          "id": "E14",
+          "nombre": "Espacio E14",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 9.32,
+          "ancho_min_m": 2.44,
+          "largo_max_m": 4.2,
+          "cumple_geo": true,
+          "cx_rel": 0.473,
+          "cy_rel": 0.424,
+          "bbox": {
+            "x": 996,
+            "y": 1953,
+            "w": 716,
+            "h": 416
+          }
+        },
+        {
+          "id": "E05",
+          "nombre": "Baño Personal Mujeres",
+          "tipo": "bano",
+          "pagina": 2,
+          "area_m2": 8.68,
+          "ancho_min_m": 1.69,
+          "largo_max_m": 5.97,
+          "cumple_geo": true,
+          "cx_rel": 0.177,
+          "cy_rel": 0.171,
+          "bbox": {
+            "x": 359,
+            "y": 395,
+            "w": 289,
+            "h": 1016
+          }
+        },
+        {
+          "id": "E17",
+          "nombre": "Espacio E17",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 8.26,
+          "ancho_min_m": 2.24,
+          "largo_max_m": 4.3,
+          "cumple_geo": true,
+          "cx_rel": 0.473,
+          "cy_rel": 0.523,
+          "bbox": {
+            "x": 996,
+            "y": 2463,
+            "w": 733,
+            "h": 382
+          }
+        },
+        {
+          "id": "E22",
+          "nombre": "Terraza Sur-Este",
+          "tipo": "terraza",
+          "pagina": 2,
+          "area_m2": 7.36,
+          "ancho_min_m": 2.95,
+          "largo_max_m": 2.95,
+          "cumple_geo": true,
+          "cx_rel": 0.695,
+          "cy_rel": 0.673,
+          "bbox": {
+            "x": 1719,
+            "y": 3141,
+            "w": 503,
+            "h": 503
+          }
+        },
+        {
+          "id": "E09",
+          "nombre": "Baño Personal Hombres",
+          "tipo": "bano",
+          "pagina": 2,
+          "area_m2": 7.27,
+          "ancho_min_m": 2.0,
+          "largo_max_m": 4.2,
+          "cumple_geo": true,
+          "cx_rel": 0.473,
+          "cy_rel": 0.344,
+          "bbox": {
+            "x": 996,
+            "y": 1558,
+            "w": 716,
+            "h": 342
+          }
+        },
+        {
+          "id": "E11",
+          "nombre": "Espacio E11",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 3.57,
+          "ancho_min_m": 1.54,
+          "largo_max_m": 3.8,
+          "cumple_geo": true,
+          "cx_rel": 0.737,
+          "cy_rel": 0.35,
+          "bbox": {
+            "x": 1813,
+            "y": 1637,
+            "w": 647,
+            "h": 263
+          }
+        },
+        {
+          "id": "E21",
+          "nombre": "Espacio E21",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 2.91,
+          "ancho_min_m": 1.59,
+          "largo_max_m": 2.53,
+          "cumple_geo": true,
+          "cx_rel": 0.534,
+          "cy_rel": 0.632,
+          "bbox": {
+            "x": 1370,
+            "y": 2962,
+            "w": 272,
+            "h": 431
+          }
+        },
+        {
+          "id": "E12",
+          "nombre": "Espacio E12",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 2.64,
+          "ancho_min_m": 0.39,
+          "largo_max_m": 10.14,
+          "cumple_geo": true,
+          "cx_rel": 0.079,
+          "cy_rel": 0.574,
+          "bbox": {
+            "x": 198,
+            "y": 1951,
+            "w": 68,
+            "h": 1726
+          }
+        },
+        {
+          "id": "E02",
+          "nombre": "Espacio E02",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 2.21,
+          "ancho_min_m": 0.35,
+          "largo_max_m": 6.14,
+          "cumple_geo": true,
+          "cx_rel": 0.817,
+          "cy_rel": 0.006,
+          "bbox": {
+            "x": 1814,
+            "y": 0,
+            "w": 1046,
+            "h": 61
+          }
+        },
+        {
+          "id": "E28",
+          "nombre": "Espacio E28",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 2.06,
+          "ancho_min_m": 0.33,
+          "largo_max_m": 6.14,
+          "cumple_geo": true,
+          "cx_rel": 0.817,
+          "cy_rel": 0.994,
+          "bbox": {
+            "x": 1814,
+            "y": 4995,
+            "w": 1046,
+            "h": 57
+          }
+        },
+        {
+          "id": "E18",
+          "nombre": "Espacio E18",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 2.0,
+          "ancho_min_m": 0.9,
+          "largo_max_m": 2.2,
+          "cumple_geo": true,
+          "cx_rel": 0.286,
+          "cy_rel": 0.526,
+          "bbox": {
+            "x": 741,
+            "y": 2470,
+            "w": 154,
+            "h": 375
+          }
+        },
+        {
+          "id": "E15",
+          "nombre": "Espacio E15",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 1.89,
+          "ancho_min_m": 2.64,
+          "largo_max_m": 3.8,
+          "cumple_geo": true,
+          "cx_rel": 0.814,
+          "cy_rel": 0.416,
+          "bbox": {
+            "x": 1813,
+            "y": 1953,
+            "w": 647,
+            "h": 450
+          }
+        },
+        {
+          "id": "E10",
+          "nombre": "Espacio E10",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 1.47,
+          "ancho_min_m": 1.0,
+          "largo_max_m": 1.55,
+          "cumple_geo": true,
+          "cx_rel": 0.283,
+          "cy_rel": 0.345,
+          "bbox": {
+            "x": 724,
+            "y": 1619,
+            "w": 171,
+            "h": 264
+          }
+        },
+        {
+          "id": "E08",
+          "nombre": "Espacio E08",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 1.42,
+          "ancho_min_m": 1.19,
+          "largo_max_m": 1.81,
+          "cumple_geo": true,
+          "cx_rel": 0.171,
+          "cy_rel": 0.316,
+          "bbox": {
+            "x": 332,
+            "y": 1468,
+            "w": 308,
+            "h": 203
+          }
+        },
+        {
+          "id": "E27",
+          "nombre": "Cocina Barra",
+          "tipo": "cocina",
+          "pagina": 2,
+          "area_m2": 1.34,
+          "ancho_min_m": 0.71,
+          "largo_max_m": 1.91,
+          "cumple_geo": false,
+          "cx_rel": 0.554,
+          "cy_rel": 0.77,
+          "bbox": {
+            "x": 1421,
+            "y": 3830,
+            "w": 325,
+            "h": 121
+          }
+        },
+        {
+          "id": "E20",
+          "nombre": "Espacio E20",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 1.22,
+          "ancho_min_m": 0.69,
+          "largo_max_m": 2.49,
+          "cumple_geo": true,
+          "cx_rel": 0.66,
+          "cy_rel": 0.597,
+          "bbox": {
+            "x": 1719,
+            "y": 2947,
+            "w": 425,
+            "h": 119
+          }
+        },
+        {
+          "id": "E23",
+          "nombre": "Rampa Acceso Universal",
+          "tipo": "rampa",
+          "pagina": 2,
+          "area_m2": 1.04,
+          "ancho_min_m": 0.22,
+          "largo_max_m": 4.68,
+          "cumple_geo": false,
+          "cx_rel": 0.076,
+          "cy_rel": 0.817,
+          "bbox": {
+            "x": 198,
+            "y": 3730,
+            "w": 39,
+            "h": 797
+          }
+        },
+        {
+          "id": "E07",
+          "nombre": "Espacio E07",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 0.96,
+          "ancho_min_m": 0.88,
+          "largo_max_m": 2.72,
+          "cumple_geo": true,
+          "cx_rel": 0.381,
+          "cy_rel": 0.139,
+          "bbox": {
+            "x": 822,
+            "y": 628,
+            "w": 464,
+            "h": 151
+          }
+        },
+        {
+          "id": "E25",
+          "nombre": "Espacio E25",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 0.52,
+          "ancho_min_m": 0.83,
+          "largo_max_m": 0.99,
+          "cumple_geo": true,
+          "cx_rel": 0.264,
+          "cy_rel": 0.764,
+          "bbox": {
+            "x": 691,
+            "y": 3763,
+            "w": 143,
+            "h": 170
+          }
+        }
+      ],
+      "incumplimientos_geo": [
+        {
+          "tipo": "area",
+          "pagina": 2,
+          "recinto": "Cocina Barra",
+          "id": "E27",
+          "medido": 1.34,
+          "minimo": 3.0,
+          "deficit": 1.66,
+          "ref": "Art. 4.1.7 OGUC"
+        },
+        {
+          "tipo": "ancho",
+          "pagina": 2,
+          "recinto": "Rampa Acceso Universal",
+          "id": "E23",
+          "medido": 0.22,
+          "minimo": 1.2,
+          "deficit": 0.98,
+          "ref": "Art. 4.1.7 OGUC + DS 50/2015"
+        }
+      ],
+      "total_area_m2": 298.1,
+      "imagen_w_px": 2860,
+      "imagen_h_px": 5052,
+      "mpp": 0.00587962962962963,
+      "elementos_dino": []
+    },
+    {
+      "entry_idx": 1,
+      "fname_tag": "pag2-2",
+      "pagina": 2,
+      "escala": "1:50",
+      "crop": [
+        0.4,
+        0.0,
+        0.79,
+        1.0
+      ],
+      "analisis_semantico": {
+        "tipo_plano": "planta",
+        "uso_del_proyecto": "comercio",
+        "nivel": "Nivel 2 - Situacion Propuesta",
+        "recintos": [
+          {
+            "nombre": "Bodega Norte Poniente",
+            "tipo": "bodega",
+            "etiqueta_en_plano": "Bodega",
+            "area_estimada_m2": 18,
+            "ancho_estimado_m": 4.5,
+            "cx_relativo": 0.32,
+            "cy_relativo": 0.22,
+            "cumple_oguc": true,
+            "observacion": "Recinto de bodega en zona norte poniente, sin requerimientos de ventilacion natural obligatoria segun OGUC Art. 4.5.3 para bodegas no habitables"
+          },
+          {
+            "nombre": "Bodega Norte Oriente",
+            "tipo": "bodega",
+            "etiqueta_en_plano": "Bodega",
+            "area_estimada_m2": 10,
+            "ancho_estimado_m": 3.2,
+            "cx_relativo": 0.68,
+            "cy_relativo": 0.22,
+            "cumple_oguc": true,
+            "observacion": "Bodega sector oriente, acceso por pasillo central. Dimensiones aparentemente suficientes"
+          },
+          {
+            "nombre": "Bano Clientes Mujeres",
+            "tipo": "bano",
+            "etiqueta_en_plano": "Baño Clientes mujeres",
+            "area_estimada_m2": 3.5,
+            "ancho_estimado_m": 1.2,
+            "cx_relativo": 0.22,
+            "cy_relativo": 0.35,
+            "cumple_oguc": false,
+            "observacion": "Ancho interior estimado 1.2m segun cota visible. OGUC Art. 4.1.7 exige ancho minimo libre de 1.1m en recintos de bano accesibles. Se requiere verificar accesibilidad universal segun OGUC Art. 4.1.7 y DS 50. Sin ventilacion natural aparente, requiere ventilacion mecanica certificada"
+          },
+          {
+            "nombre": "Bano Clientes Hombres",
+            "tipo": "bano",
+            "etiqueta_en_plano": "Baño Clientes hombres",
+            "area_estimada_m2": 4.0,
+            "ancho_estimado_m": 1.6,
+            "cx_relativo": 0.22,
+            "cy_relativo": 0.47,
+            "cumple_oguc": false,
+            "observacion": "Ancho de puerta de acceso indicado 0.8m. Para uso publico OGUC Art. 4.1.7 y DS 50 exigen puerta minima 0.9m libre para accesibilidad. Sin ventilacion natural visible, requiere ventilacion mecanica. Verificar dotacion minima de artefactos segun OGUC Art. 4.11.3"
+          },
+          {
+            "nombre": "Pasillo Central",
+            "tipo": "pasillo",
+            "etiqueta_en_plano": "Pasillo",
+            "area_estimada_m2": 12,
+            "ancho_estimado_m": 1.22,
+            "cx_relativo": 0.55,
+            "cy_relativo": 0.48,
+            "cumple_oguc": false,
+            "observacion": "Ancho de pasillo indicado 1.22m. OGUC Art. 4.2.5 exige ancho minimo 1.2m en pasillos de uso publico, valor que se cumple marginalmente. Sin embargo DS 50 accesibilidad universal exige 1.5m minimo en circulaciones de uso publico con afluencia de publico. Se detecta escalera en pasillo con numeros de peldanos visibles (11 a 19), requiere verificacion de huella y contrahuella segun OGUC Art. 4.2.6"
+          },
+          {
+            "nombre": "Oficina Poniente",
+            "tipo": "oficina",
+            "etiqueta_en_plano": "Oficina",
+            "area_estimada_m2": 22,
+            "ancho_estimado_m": 5.0,
+            "cx_relativo": 0.28,
+            "cy_relativo": 0.72,
+            "cumple_oguc": true,
+            "observacion": "Recinto de oficina sector poniente con acceso desde pasillo. Area estimada suficiente. Requiere verificacion de ventilacion e iluminacion natural segun OGUC Art. 4.5.1 y 4.5.2"
+          },
+          {
+            "nombre": "Oficina Oriente",
+            "tipo": "oficina",
+            "etiqueta_en_plano": "Oficina",
+            "area_estimada_m2": 20,
+            "ancho_estimado_m": 4.5,
+            "cx_relativo": 0.68,
+            "cy_relativo": 0.72,
+            "cumple_oguc": true,
+            "observacion": "Recinto de oficina sector oriente. Area estimada suficiente. Requiere verificacion de ventilacion e iluminacion natural segun OGUC Art. 4.5.1 y 4.5.2"
+          }
+        ],
+        "elementos_detectados": {
+          "puertas": 8,
+          "ventanas": 0,
+          "escaleras": 1,
+          "salidas_emergencia": 0
+        },
+        "incumplimientos_oguc": [
+          {
+            "articulo": "OGUC Art. 4.2.6 / DS 594 MINSAL",
+            "descripcion": "Escalera visible en pasillo con peldanos numerados del 11 al 19. No se aprecian cotas de huella y contrahuella. OGUC exige huella minima 0.28m y contrahuella maxima 0.18m para uso publico. Falta indicacion de descansos y barandas",
+            "gravedad": "ALTA",
+            "recinto_afectado": "Pasillo / Escalera",
+            "medida_requerida": "Huella min 0.28m, contrahuella max 0.18m, ancho min 1.2m, barandas a 1.05m, descanso cada 18 peldanos segun OGUC 4.2.6",
+            "medida_detectada": "No se indican cotas de peldanos. Ancho aparente insuficiente para evacuacion de uso publico"
+          },
+          {
+            "articulo": "OGUC Art. 4.2.4 / DS 50 Accesibilidad",
+            "descripcion": "Pasillo de uso publico con ancho 1.22m indicado en plano. DS 50 y OGUC exigen 1.5m minimo en circulaciones horizontales de uso publico para garantizar accesibilidad universal y paso simultaneo de dos personas o silla de ruedas",
+            "gravedad": "ALTA",
+            "recinto_afectado": "Pasillo",
+            "medida_requerida": "Ancho libre minimo 1.5m segun DS 50 Art. 2.2 para circulaciones de uso publico",
+            "medida_detectada": "1.22m indicado en plano"
+          },
+          {
+            "articulo": "OGUC Art. 4.1.7 / DS 50",
+            "descripcion": "Puerta de acceso a banos con ancho 0.8m segun cota en plano. Para recintos de uso publico con accesibilidad universal se requiere ancho libre minimo de 0.9m segun DS 50",
+            "gravedad": "ALTA",
+            "recinto_afectado": "Baño Clientes Hombres / Baño Clientes Mujeres",
+            "medida_requerida": "Ancho libre de puerta minimo 0.9m segun DS 50 y OGUC Art. 4.1.7",
+            "medida_detectada": "0.8m indicado en plano"
+          },
+          {
+            "articulo": "OGUC Art. 4.5.3 / DS 594 Art. 32",
+            "descripcion": "Banos de publico sin ventilacion natural visible en plano. Requieren ventilacion natural directa al exterior o en su defecto sistema de ventilacion mecanica certificado con extraccion minima de 10 volumenes/hora",
+            "gravedad": "MEDIA",
+            "recinto_afectado": "Baño Clientes Mujeres / Baño Clientes Hombres",
+            "medida_requerida": "Ventilacion natural con superficie minima 0.2m2 o ventilacion mecanica con 10 vol/hr segun DS 594",
+            "medida_detectada": "No se aprecia ventana ni shaft de ventilacion en plano"
+          },
+          {
+            "articulo": "OGUC Art. 4.11.3 / DS 594",
+            "descripcion": "No se verifica dotacion minima de artefactos sanitarios para uso publico comercial. Para aforo estimado del local se requiere calculo de dotacion de WC, lavamanos y urinarios segun tabla OGUC Art. 4.11.3",
+            "gravedad": "MEDIA",
+            "recinto_afectado": "Baño Clientes Hombres / Baño Clientes Mujeres",
+            "medida_requerida": "Dotacion minima segun OGUC Art. 4.11.3 tabla de aforo: al menos 1 WC + 1 lavamanos por sexo para aforo hasta 100 personas",
+            "medida_detectada": "No se grafican artefactos sanitarios en el plano presentado"
+          },
+          {
+            "articulo": "OGUC Art. 4.7 / DS 594 Art. 171",
+            "descripcion": "No se identifican salidas de emergencia ni señaletica de evacuacion en el nivel 2. Para uso publico con aforo mayor a 50 personas se requieren vias de evacuacion claramente definidas y salidas de emergencia",
+            "gravedad": "ALTA",
+            "recinto_afectado": "Todo el nivel 2",
+            "medida_requerida": "Definir vias de evacuacion, salidas de emergencia, senaletica y calculo de aforo segun OGUC Art. 4.7 y NCh 1411",
+            "medida_detectada": "No se grafican salidas de emergencia ni señaletica en el plano"
+          },
+          {
+            "articulo": "OGUC Art. 5.1.4 / OGUC Art. 2.6.3",
+            "descripcion": "Se indican dos Puntos de Aplicacion de Rasante en linea A-A con retiros de 2.4m poniente y 1.4m oriente respecto a deslindes. Se deben verificar que las construcciones existentes y propuestas (marcadas en rojo como Se Construye) cumplan con el plano de rasante aplicado desde deslindes laterales segun PRMS o PRC aplicable",
+            "gravedad": "MEDIA",
+            "recinto_afectado": "Fachadas laterales / Construccion propuesta",
+            "medida_requerida": "Verificar cumplimiento de plano de rasante desde deslinde con altura y distancia indicadas en PRC. Los 7.45m indicados deben corresponderse con altura maxima permitida",
+            "medida_detectada": "Retiro poniente 2.4m, retiro oriente 1.4m, altura referencia 7.45m en ambos deslindes"
+          },
+          {
+            "articulo": "OGUC Art. 4.5.1 / 4.5.2",
+            "descripcion": "Las oficinas no muestran ventanas o vanos hacia el exterior en este nivel. OGUC exige iluminacion natural minima equivalente al 10% de la superficie del recinto y ventilacion natural del 8% para recintos habitables de trabajo",
+            "gravedad": "MEDIA",
+            "recinto_afectado": "Oficina Poniente / Oficina Oriente",
+            "medida_requerida": "Vanos de iluminacion minimo 10% superficie de piso y ventilacion 8% segun OGUC Art. 4.5.1 y 4.5.2",
+            "medida_detectada": "No se grafican ventanas en plano de nivel 2 para recintos de oficina"
+          }
+        ],
+        "documentos_que_faltan": [
+          "Plano de corte con cotas de altura de peldanos (huella y contrahuella) de escalera nivel 2",
+          "Plano de evacuacion y emergencia con aforo calculado segun NCh 1411 y OGUC Art. 4.7",
+          "Plano de instalaciones sanitarias indicando artefactos, ventilacion de banos y red de agua potable/alcantarillado",
+          "Plano de instalaciones electricas con tablero, circuitos y luminarias de emergencia",
+          "Cuadro de superficies por recinto con calculo de iluminacion y ventilacion natural requerida",
+          "Memoria de calculo de dotacion sanitaria segun OGUC Art. 4.11.3 y aforo del proyecto",
+          "Plano de accesibilidad universal DS 50 indicando rutas accesibles, rampas y banos adaptados",
+          "Certificado de dotacion de servicios (agua potable, alcantarillado) de empresa sanitaria",
+          "Estudio de impacto de transito si corresponde segun aforo y uso",
+          "Plano de elevaciones con indicacion de rasante aplicada desde deslindes y altura maxima permitida",
+          "Especificaciones tecnicas de materiales de construccion para obras marcadas en rojo",
+          "Plano de estructura o calculo estructural para obras nuevas a construir (Se Construye en rojo)",
+          "Resolucion sanitaria o autorizacion de la SEREMI de Salud si el uso contempla atencion de publico o manipulacion de alimentos",
+          "Formulario MINVU de permiso de edificacion con cuadro normativo (superficie, CUS, CUT, rasante, adosamiento)"
+        ],
+        "resumen_ejecutivo": "El plano corresponde a la Situacion Propuesta Nivel 2 a escala 1:50 de un proyecto de uso comercial/oficinas con atencion de publico, que incluye bodegas, banos de clientes diferenciados por sexo, pasillo de circulacion con escalera y dos oficinas. Se identifican 8 incumplimientos OGUC/DS de diversa gravedad. Los mas criticos son: (1) ausencia de salidas de emergencia y plan de evacuacion para uso publico; (2) ancho de pasillo de 1.22m insuficiente para accesibilidad universal que exige 1.5m segun DS 50; (3) puertas de banos de 0.8m inferiores al minimo de 0.9m para accesibilidad; (4) escalera sin cotas de peldanos verificables segun OGUC Art. 4.2.6; (5) banos sin ventilacion natural aparente. Adicionalmente se detectan elementos constructivos nuevos marcados en rojo (Se Construye) que incluyen muros y tabiques en sectores de banos y bodegas que requieren tramitacion de permiso de edificacion ante la DOM. Los retiros laterales de 2.4m poniente y 1.4m oriente deben verificarse contra el PRC aplicable junto con el plano de rasante desde los deslindes. Se requiere completar la documentacion tecnica con planos de corte, evacuacion, instalaciones sanitarias y electricas, cuadro normativo y resolucion sanitaria antes de presentar ante la Direccion de Obras Municipales."
+      },
+      "mediciones_geometricas": [
+        {
+          "id": "E03",
+          "nombre": "Pasillo Central",
+          "tipo": "pasillo",
+          "pagina": 2,
+          "area_m2": 91.6,
+          "ancho_min_m": 16.4,
+          "largo_max_m": 28.39,
+          "cumple_geo": true,
+          "cx_rel": 0.509,
+          "cy_rel": 0.558,
+          "bbox": {
+            "x": 0,
+            "y": 114,
+            "w": 2790,
+            "h": 4829
+          }
+        },
+        {
+          "id": "E22",
+          "nombre": "Oficina Poniente",
+          "tipo": "oficina",
+          "pagina": 2,
+          "area_m2": 30.74,
+          "ancho_min_m": 4.69,
+          "largo_max_m": 13.9,
+          "cumple_geo": true,
+          "cx_rel": 0.359,
+          "cy_rel": 0.845,
+          "bbox": {
+            "x": 214,
+            "y": 3731,
+            "w": 2365,
+            "h": 798
+          }
+        },
+        {
+          "id": "E04",
+          "nombre": "Bodega Norte Poniente",
+          "tipo": "bodega",
+          "pagina": 2,
+          "area_m2": 29.68,
+          "ancho_min_m": 6.95,
+          "largo_max_m": 7.06,
+          "cumple_geo": true,
+          "cx_rel": 0.486,
+          "cy_rel": 0.211,
+          "bbox": {
+            "x": 669,
+            "y": 354,
+            "w": 1201,
+            "h": 1183
+          }
+        },
+        {
+          "id": "E13",
+          "nombre": "Bano Clientes Hombres",
+          "tipo": "bano",
+          "pagina": 2,
+          "area_m2": 19.3,
+          "ancho_min_m": 1.9,
+          "largo_max_m": 10.13,
+          "cumple_geo": true,
+          "cx_rel": 0.134,
+          "cy_rel": 0.557,
+          "bbox": {
+            "x": 214,
+            "y": 1954,
+            "w": 324,
+            "h": 1724
+          }
+        },
+        {
+          "id": "E16",
+          "nombre": "Oficina Oriente",
+          "tipo": "oficina",
+          "pagina": 2,
+          "area_m2": 16.05,
+          "ancho_min_m": 2.1,
+          "largo_max_m": 10.13,
+          "cumple_geo": true,
+          "cx_rel": 0.869,
+          "cy_rel": 0.582,
+          "bbox": {
+            "x": 2221,
+            "y": 1954,
+            "w": 358,
+            "h": 1724
+          }
+        },
+        {
+          "id": "E08",
+          "nombre": "Bodega Norte Oriente",
+          "tipo": "bodega",
+          "pagina": 2,
+          "area_m2": 15.25,
+          "ancho_min_m": 2.26,
+          "largo_max_m": 6.76,
+          "cumple_geo": true,
+          "cx_rel": 0.768,
+          "cy_rel": 0.19,
+          "bbox": {
+            "x": 1953,
+            "y": 387,
+            "w": 386,
+            "h": 1150
+          }
+        },
+        {
+          "id": "E19",
+          "nombre": "Espacio E19",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 15.16,
+          "ancho_min_m": 4.25,
+          "largo_max_m": 4.29,
+          "cumple_geo": true,
+          "cx_rel": 0.347,
+          "cy_rel": 0.652,
+          "bbox": {
+            "x": 639,
+            "y": 2914,
+            "w": 724,
+            "h": 731
+          }
+        },
+        {
+          "id": "E05",
+          "nombre": "Bano Clientes Mujeres",
+          "tipo": "bano",
+          "pagina": 2,
+          "area_m2": 10.7,
+          "ancho_min_m": 1.81,
+          "largo_max_m": 5.9,
+          "cumple_geo": true,
+          "cx_rel": 0.147,
+          "cy_rel": 0.176,
+          "bbox": {
+            "x": 256,
+            "y": 387,
+            "w": 308,
+            "h": 1005
+          }
+        },
+        {
+          "id": "E20",
+          "nombre": "Espacio E20",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 10.19,
+          "ancho_min_m": 3.0,
+          "largo_max_m": 4.1,
+          "cumple_geo": true,
+          "cx_rel": 0.677,
+          "cy_rel": 0.655,
+          "bbox": {
+            "x": 1608,
+            "y": 2947,
+            "w": 511,
+            "h": 698
+          }
+        },
+        {
+          "id": "E18",
+          "nombre": "Espacio E18",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 9.05,
+          "ancho_min_m": 3.67,
+          "largo_max_m": 5.03,
+          "cumple_geo": true,
+          "cx_rel": 0.504,
+          "cy_rel": 0.507,
+          "bbox": {
+            "x": 1036,
+            "y": 2215,
+            "w": 718,
+            "h": 763
+          }
+        },
+        {
+          "id": "E06",
+          "nombre": "Espacio E06",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 8.8,
+          "ancho_min_m": 3.08,
+          "largo_max_m": 4.0,
+          "cumple_geo": true,
+          "cx_rel": 0.319,
+          "cy_rel": 0.129,
+          "bbox": {
+            "x": 669,
+            "y": 387,
+            "w": 524,
+            "h": 682
+          }
+        },
+        {
+          "id": "E11",
+          "nombre": "Espacio E11",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 6.04,
+          "ancho_min_m": 1.54,
+          "largo_max_m": 4.2,
+          "cumple_geo": true,
+          "cx_rel": 0.449,
+          "cy_rel": 0.349,
+          "bbox": {
+            "x": 894,
+            "y": 1638,
+            "w": 715,
+            "h": 263
+          }
+        },
+        {
+          "id": "E09",
+          "nombre": "Espacio E09",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 5.47,
+          "ancho_min_m": 0.91,
+          "largo_max_m": 6.19,
+          "cumple_geo": true,
+          "cx_rel": 0.885,
+          "cy_rel": 0.179,
+          "bbox": {
+            "x": 2390,
+            "y": 387,
+            "w": 155,
+            "h": 1053
+          }
+        },
+        {
+          "id": "E23",
+          "nombre": "Espacio E23",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 4.85,
+          "ancho_min_m": 1.16,
+          "largo_max_m": 4.35,
+          "cumple_geo": true,
+          "cx_rel": 0.794,
+          "cy_rel": 0.759,
+          "bbox": {
+            "x": 1839,
+            "y": 3731,
+            "w": 740,
+            "h": 198
+          }
+        },
+        {
+          "id": "E14",
+          "nombre": "Espacio E14",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 4.33,
+          "ancho_min_m": 1.18,
+          "largo_max_m": 4.2,
+          "cumple_geo": true,
+          "cx_rel": 0.441,
+          "cy_rel": 0.405,
+          "bbox": {
+            "x": 894,
+            "y": 1954,
+            "w": 715,
+            "h": 202
+          }
+        },
+        {
+          "id": "E25",
+          "nombre": "Espacio E25",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 4.15,
+          "ancho_min_m": 1.01,
+          "largo_max_m": 4.2,
+          "cumple_geo": true,
+          "cx_rel": 0.329,
+          "cy_rel": 0.762,
+          "bbox": {
+            "x": 554,
+            "y": 3763,
+            "w": 716,
+            "h": 172
+          }
+        },
+        {
+          "id": "E17",
+          "nombre": "Espacio E17",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 3.93,
+          "ancho_min_m": 1.8,
+          "largo_max_m": 2.55,
+          "cumple_geo": true,
+          "cx_rel": 0.691,
+          "cy_rel": 0.439,
+          "bbox": {
+            "x": 1702,
+            "y": 2063,
+            "w": 435,
+            "h": 307
+          }
+        },
+        {
+          "id": "E12",
+          "nombre": "Espacio E12",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 3.74,
+          "ancho_min_m": 1.53,
+          "largo_max_m": 3.79,
+          "cumple_geo": true,
+          "cx_rel": 0.713,
+          "cy_rel": 0.352,
+          "bbox": {
+            "x": 1711,
+            "y": 1639,
+            "w": 646,
+            "h": 262
+          }
+        },
+        {
+          "id": "E26",
+          "nombre": "Espacio E26",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 3.56,
+          "ancho_min_m": 2.41,
+          "largo_max_m": 3.99,
+          "cumple_geo": true,
+          "cx_rel": 0.825,
+          "cy_rel": 0.823,
+          "bbox": {
+            "x": 1878,
+            "y": 3980,
+            "w": 679,
+            "h": 411
+          }
+        },
+        {
+          "id": "E02",
+          "nombre": "Espacio E02",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 3.21,
+          "ancho_min_m": 0.35,
+          "largo_max_m": 8.93,
+          "cumple_geo": true,
+          "cx_rel": 0.693,
+          "cy_rel": 0.006,
+          "bbox": {
+            "x": 1174,
+            "y": 0,
+            "w": 1520,
+            "h": 61
+          }
+        },
+        {
+          "id": "E28",
+          "nombre": "Espacio E28",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 3.0,
+          "ancho_min_m": 0.33,
+          "largo_max_m": 8.93,
+          "cumple_geo": true,
+          "cx_rel": 0.693,
+          "cy_rel": 0.994,
+          "bbox": {
+            "x": 1174,
+            "y": 4995,
+            "w": 1520,
+            "h": 57
+          }
+        },
+        {
+          "id": "E15",
+          "nombre": "Espacio E15",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 2.38,
+          "ancho_min_m": 2.43,
+          "largo_max_m": 3.79,
+          "cumple_geo": true,
+          "cx_rel": 0.799,
+          "cy_rel": 0.421,
+          "bbox": {
+            "x": 1711,
+            "y": 1954,
+            "w": 646,
+            "h": 415
+          }
+        },
+        {
+          "id": "E24",
+          "nombre": "Espacio E24",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 2.26,
+          "ancho_min_m": 1.2,
+          "largo_max_m": 1.91,
+          "cumple_geo": true,
+          "cx_rel": 0.532,
+          "cy_rel": 0.762,
+          "bbox": {
+            "x": 1319,
+            "y": 3747,
+            "w": 325,
+            "h": 205
+          }
+        },
+        {
+          "id": "E01",
+          "nombre": "Espacio E01",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 2.23,
+          "ancho_min_m": 0.35,
+          "largo_max_m": 6.21,
+          "cumple_geo": true,
+          "cx_rel": 0.212,
+          "cy_rel": 0.006,
+          "bbox": {
+            "x": 64,
+            "y": 0,
+            "w": 1057,
+            "h": 61
+          }
+        },
+        {
+          "id": "E27",
+          "nombre": "Espacio E27",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 2.08,
+          "ancho_min_m": 0.33,
+          "largo_max_m": 6.21,
+          "cumple_geo": true,
+          "cx_rel": 0.212,
+          "cy_rel": 0.994,
+          "bbox": {
+            "x": 64,
+            "y": 4995,
+            "w": 1057,
+            "h": 57
+          }
+        },
+        {
+          "id": "E07",
+          "nombre": "Espacio E07",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 1.99,
+          "ancho_min_m": 0.93,
+          "largo_max_m": 2.1,
+          "cumple_geo": true,
+          "cx_rel": 0.641,
+          "cy_rel": 0.112,
+          "bbox": {
+            "x": 1710,
+            "y": 387,
+            "w": 160,
+            "h": 359
+          }
+        },
+        {
+          "id": "E10",
+          "nombre": "Espacio E10",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 1.83,
+          "ancho_min_m": 0.89,
+          "largo_max_m": 2.38,
+          "cumple_geo": true,
+          "cx_rel": 0.141,
+          "cy_rel": 0.306,
+          "bbox": {
+            "x": 214,
+            "y": 1476,
+            "w": 405,
+            "h": 153
+          }
+        },
+        {
+          "id": "E21",
+          "nombre": "Espacio E21",
+          "tipo": "otro",
+          "pagina": 2,
+          "area_m2": 1.09,
+          "ancho_min_m": 1.08,
+          "largo_max_m": 1.28,
+          "cumple_geo": true,
+          "cx_rel": 0.551,
+          "cy_rel": 0.649,
+          "bbox": {
+            "x": 1447,
+            "y": 3188,
+            "w": 219,
+            "h": 185
+          }
+        }
+      ],
+      "incumplimientos_geo": [],
+      "total_area_m2": 312.7,
+      "imagen_w_px": 2790,
+      "imagen_h_px": 5052,
+      "mpp": 0.00587962962962963,
+      "elementos_dino": []
+    }
+  ],
+  "resumen_global": {
+    "paginas_analizadas": 2,
+    "total_area_m2": 610.8,
+    "total_recintos": 56,
+    "incumplimientos_geo_total": 2,
+    "puertas_detectadas": 20,
+    "ventanas_detectadas": 0,
+    "escaleras_detectadas": 1,
+    "rampas_detectadas": 0,
+    "fuente_conteo_elementos": "semantico"
+  }
+}

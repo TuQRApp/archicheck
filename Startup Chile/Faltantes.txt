@@ -1,0 +1,14 @@
+- Estimar valor de perdidas financieras de demoras
+ - Para oficinas de arquitectos por imposibilidad de cobrar y hh invertidas. Boletas de garantía, costo financiero. 
+ - Para el cliente, por pérdida productiva. Por ejemplo, No hay ventas, (por ejemplol, estimar cuánto vende una tienda de mall por m2). 
+ - No poder habitar una vivienda. Costos asociados.
+- Identificar maneras distintas de valorar económicamente el producto (proyectos en paralelo, más clientes).
+- Agregar un análisis comparativo (Archicheck, Revi, Revisores). Gráfico araña. Definir cuáles son los parámetros que se van a evaluar y se ponen en el gráfico.
+- Agregar capturas-datos duros de estudios actuales con detalle de demoras y su impacto(prensa, estudios Minvu-CChC), otros de arquitectos.
+- Agregar información del ranking de desempeño de las DOM. Otros estudios.
+- Estrategia de comercializacion.
+- Hacer benchmark con herramientas de industria.
+- Comparar con documentos extraidos de Revi.
+- Desarrollar tema de usabilidad. Revi no te entrega un informe consolidado.
+- Jose: bajar informe de Revi.
+- Hablar de problemas típicos de revisores manuales.

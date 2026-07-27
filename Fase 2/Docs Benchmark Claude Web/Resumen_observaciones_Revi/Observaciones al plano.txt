@@ -1,0 +1,126 @@
+He generado la nueva acta de observaciones con los datos corregidos y el nuevo incumplimiento de la escalera (0,90 m). Art. 4.1.7 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf ¿Quieres que guardemos estas 7 observaciones definitivas en tu panel de revisión para que puedas exportarlas?
+
+Sugerencia de observación
+
+Planos a scale 1:50 de planta general y elevaciones (obra menor)
+
+Observación:
+Corregir distanciamientos laterales de la ampliación en Nivel 2 (actualmente 1,40 m y 2,40 m) para cumplir con el mínimo de 2,50 m (sin vanos) o 3,00 m (con vanos).
+
+Art. o norma transgredida:
+Art. 2.6.3 OGUC
+
+Sugerencia de observación
+
+Planos a scale 1:50 de planta general y elevaciones (obra menor)
+
+Observación:
+Ajustar la pendiente de la rampa de acceso universal al 10,53% máximo, dado su largo de 4,25 m (actualmente proyecta 10,58%).
+
+Art. o norma transgredida:
+Art. 4.1.7 OGUC
+
+Sugerencia de observación
+
+Planos a scale 1:50 de planta general y elevaciones (obra menor)
+
+Observación:
+Aumentar el ancho libre de la escalera a un mínimo de 1,10 m por tratarse de un edificio de uso público (actualmente proyecta 0,90 m).
+
+Art. o norma transgredida:
+Art. 4.1.7 OGUC
+
+Sugerencia de observación
+
+Especificaciones técnicas de arquitectura
+
+Observación:
+Acreditar soluciones constructivas con resistencia al fuego Tipo B (F-90 en muros soportantes y F-30 en escaleras).
+
+Art. o norma transgredida:
+Art. 4.3.3 OGUC
+
+Sugerencia de observación
+
+Planos a scale 1:50 de planta general y elevaciones (obra menor)
+
+Observación:
+Incluir cuadro de iluminación y ventilación para todos los recintos habitables y de servicio.
+
+Art. o norma transgredida:
+Art. 4.1.2 OGUC
+
+Sugerencia de observación
+
+Planos a scale 1:50 de planta general y elevaciones (obra menor)
+
+Observación:
+Graficar dotación mínima de 5 estacionamientos para bicicletas según estándar comunal para equipamiento comercial.
+
+Art. o norma transgredida:
+Art. 8.1.03 PRC Providencia
+
+Sugerencia de observación
+
+Planos a scale 1:50 de planta general y elevaciones (obra menor)
+
+Observación:
+Acreditar cumplimiento de transparencia del 70% en cierro frontal hacia espacio público.
+
+Art. o norma transgredida:
+Art. 4.1.03 PRC Providencia
+
+--- Respuesta detallada ---
+
+A continuación, presento la versión corregida y definitiva del **Acta de Observaciones Técnicas**, incorporando los datos exactos del segundo procesamiento del plano:
+
+---
+
+# ACTA DE OBSERVACIONES TÉCNICAS (REVISADA)
+**Proyecto:** Habilitación y Ampliación Restaurante Plaza Pedro de Valdivia
+**Ubicación:** Plaza Pedro de Valdivia 2025, Providencia
+**Zonificación:** EC2 + A8 (Edificación Continua 2 pisos + Aislada 8 pisos)
+
+## I. INCUMPLIMIENTOS NORMATIVOS (GEOMETRÍA Y ACCESIBILIDAD)
+
+### 1. Distanciamientos Laterales Insuficientes (Ampliación Nivel 2)
+*   **Ubicación en Plano:** Planta Situación Propuesta Nivel 2. 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+*   **Situación Proyectada:** Se acota un distanciamiento lateral de **1,40 m** por el costado este (derecho) y de **2,40 m** por el costado oeste (izquierdo).
+*   **Exigencia Normativa:** Al tratarse de una estructura aislada con una altura total de 7,00 m, la OGUC exige un distanciamiento mínimo de **2,50 m** para fachadas sin vanos y de **3,00 m** para fachadas con vanos. Art. 2.6.3 Ninguno de los dos costados cumple con el mínimo de 2,50 m.
+
+### 2. Pendiente de Rampa de Acceso Universal Excedida
+*   **Ubicación en Plano:** Planta Situación Propuesta Nivel 1. 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+*   **Situación Proyectada:** Rampa de acceso de **4,25 m** de longitud con una pendiente de **10,58%** (calculada como $P = \frac{0,45}{4,25} \times 100$).
+*   **Exigencia Normativa:** Según la fórmula del Art. 4.1.7 de la OGUC ($i\% = 12,8 - 0,5333 \times L$), para una longitud de 4,25 m la pendiente máxima permitida es de **10,53%**. Art. 4.1.7 La rampa proyectada excede el límite por un margen mínimo, pero normativo.
+
+### 3. Ancho de Escalera Insuficiente (Uso Público)
+*   **Ubicación en Plano:** Planta Situación Propuesta Nivel 2. 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+*   **Situación Proyectada:** Escalera de comunicación interna con un ancho libre acotado de **0,90 m**.
+*   **Exigencia Normativa:** Al tratarse de un edificio de uso público (restaurante), toda escalera que forme parte de la ruta accesible o vía de evacuación debe tener un ancho libre mínimo de **1,10 m**. Art. 4.1.7
+
+### 4. Resistencia al Fuego de la Estructura no Especificada
+*   **Ubicación en Documento:** Especificaciones Técnicas y Notas del Plano. 07_Especificaciones_Técnicas_Pedro_de_Valdivia.pdf
+*   **Situación Proyectada:** No se declara la resistencia al fuego de los elementos soportantes verticales ni de la escalera. Las especificaciones solo mencionan tabiquería de yeso-cartón estándar de 15 mm.
+*   **Exigencia Normativa:** Por destino (restaurante) y número de pisos (2), el edificio requiere clasificación **Tipo B**. Art. 4.3.3 Esto exige que los elementos soportantes verticales tengan una resistencia mínima de **F-90** y las escaleras **F-30**. Art. 4.3.3 Deben detallarse soluciones constructivas certificadas.
+
+---
+
+## II. OMISIONES DE INFORMACIÓN (REQUISITOS OBLIGATORIOS)
+
+### 5. Falta Cuadro de Iluminación y Ventilación
+*   **Ubicación en Plano:** Láminas de Arquitectura.
+*   **Descripción:** No se incluye el cuadro técnico que compare la superficie de ventanas con la superficie de cada recinto habitable y de servicio para verificar el cumplimiento de las condiciones de habitabilidad.
+*   **Norma Aplicable:** Art. 4.1.2 de la OGUC. Art. 4.1.2
+
+### 6. Falta Graficar Estacionamientos de Bicicletas
+*   **Ubicación en Plano:** Planta Situación Propuesta Nivel 1.
+*   **Descripción:** No se proyectan ni grafican estacionamientos para bicicletas en el primer nivel.
+*   **Norma Aplicable:** Art. 8.1.03 del PRC de Providencia. Para equipamiento comercial (restaurante), se exige un mínimo de **5 estacionamientos de bicicletas** (o 1 cada 20 personas según carga de ocupación). Art. 8.1.03
+
+### 7. Falta Acreditación de Transparencia de Cierros
+*   **Ubicación en Plano:** Elevaciones y Cierros.
+*   **Descripción:** No se incluye el cálculo del porcentaje de transparencia del cierro exterior hacia el espacio público.
+*   **Norma Aplicable:** Art. 4.1.03 del PRC de Providencia. En propiedades con antejardín, los cierros deben ser transparentes en un **70% como mínimo** de su longitud. Art. 4.1.03
+
+---
+*

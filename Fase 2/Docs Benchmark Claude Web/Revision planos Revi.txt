@@ -1,0 +1,62 @@
+En la Lámina 2 del archivo de planos se identifican los planos de arquitectura proyectados para el Nivel 1 y Nivel 2, el plano de emplazamiento, la simbología de intervención y el cuadro de rotulación 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. En materia de cumplimiento normativo, la simbología gráfica de demolición y obra nueva es adecuada, y se contempla una ruta de accesibilidad universal con baño adaptado en primer piso 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. Sin embargo, se observa una observación crítica en la rampa de acceso: con una longitud de 4,25 m, la pendiente indicada del 10,58% supera la pendiente máxima admisible para ese desarrollo de acuerdo al Art. 4.1.7 N° 2 de la OGUC OGUC. ¿Quieres que revise el informe de accesibilidad o el resto de las láminas para verificar cómo está especificada la rampa en las demás piezas técnicas?
+
+--- Respuesta detallada ---
+
+### Análisis de la Lámina 2 (Planta de Arquitectura y Emplazamiento)
+
+De acuerdo con la revisión del archivo **05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf** (Lámina 2/4), se detallan los siguientes recintos, elementos constructivos, cotas y niveles para el proyecto de restaurante 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf:
+
+---
+
+### 1. Elementos y Espacios Identificados
+
+#### **Situación Propuesta Nivel 1 (Escala 1:50)** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+* **Recintos y espacios:**
+  * **Exteriores y accesos:** Terrazas exteriores en el acceso frontal y lateral, acceso a nivel con pavimento podotáctil y Rampa de Acceso Universal.
+  * **Servicio y trabajo:** Cocina principal, Cocina/Barra (sin atención directa de público), Oficina, Bodega y Pasillo de circulación.
+  * **Servicios higiénicos:** Baño Universal (accesible), Baño Personal Mujeres, Baño Personal Hombres y Baño Personal general.
+* **Elementos arquitectónicos y equipamiento:**
+  * **Muros:** Muros existentes a demoler/retirar (achurado amarillo) y muros proyectados de obra nueva (achurado rojo).
+  * **Circulaciones verticales:** Escalera interior con indicación de primeros peldaños (1 al 10), Rampa de acceso universal con pasamanos/barandas.
+  * **Vanos y pasadas:** Cotas numéricas para anchos de accesos y vanos (1,45 m en acceso principal, 1,3 m, 1,6 m, 1,4 m, 1,2 m, 0,9 m, 0,8 m, 2,9 m, 1,55 m, 1,5 m, 0,4 m y 0,5 m).
+  * **Artefactos sanitarios:** Inodoros, lavamanos y barras de apoyo en el Baño Universal; muebles y lavaderos proyectados en zonas de cocina.
+* **Niveles y líneas normativas:**
+  * **Niveles de piso terminado (NPT):** $\pm0.00$ y $+0.45$.
+  * **Líneas del terreno:** Línea Oficial, Línea de Edificación, Deslindes / Límites de Propiedad y trazado del Corte A-A con Punto de Aplicación de Rasante.
+
+---
+
+#### **Situación Propuesta Nivel 2 (Escala 1:50)** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+* **Recintos y espacios:**
+  * **Servicios higiénicos:** Baño Clientes Mujeres y Baño Clientes Hombres.
+  * **Apoyo y administración:** Dos recintos destinados a Oficina, varias zonas indicadas como Bodega y Pasillo distribuidor.
+* **Elementos arquitectónicos:**
+  * **Circulaciones:** Continuación de la escalera interior (peldaños 11 al 19).
+  * **Muros y vanos:** Cotas de espesores y vanos (2,4 m, 7,45 m, 0,85 m, 1,4 m, 0,8 m, 1,2 m, 1,22 m, 1,4 m), marcando retiro de elementos existentes (amarillo) y tabiquería/muros nuevos (rojo).
+  * **Artefactos sanitarios:** Inodoros y lavamanos en los baños para clientes.
+
+---
+
+#### **Plano de Emplazamiento, Simbología y Viñeta** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+* **Plano de Emplazamiento (1:500):** Ubicación general del volumen edificado en el lote, distancia a la Línea Oficial y Eje de Calzada.
+* **Simbología de Intervención:**
+  * Color **Amarillo**: Elementos a retirar o demoler.
+  * Color **Rojo**: Obras nuevas a construir.
+* **Cuadro de Rotulación:**
+  * **Comuna:** I. Municipalidad de Providencia.
+  * **Dirección:** Plaza Pedro de Valdivia N° 2025 (Rol 03228-012).
+  * **Destino:** Restaurant.
+  * **Propietario:** Asesorías e Inversiones Conchalí Ltda.
+  * **Arquitecto:** Cristian Wrbka M.
+
+---
+
+### 2. Evaluación de Cumplimientos Normativos
+
+1. **Pendiente y Desarrollo de Rampa de Acceso (Observación):**
+   * En la planta del Nivel 1 se indica una rampa de accesibilidad de 4,25 m de largo con una pendiente del **10,58%** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+   * Conforme al **Art. 4.1.7 N° 2 de la OGUC**, cuando una rampa supera los 1,5 m de largo y se extiende hasta 9,0 m, la pendiente máxima debe disminuir progresivamente de 12% a 8% OGUC. Para un desarrollo de 4,25 m, la pendiente exigida se sitúa bajo el **9,5%**. Por consiguiente, la pendiente del 10,58% proyectada no cumple la relación de desarrollo/pendiente del Art. 4.1.7 de la OGUC.
+2. **Ruta Accesible e Ingreso (Cumple):**
+   * La lámina representa un acceso a nivel con pavimento podotáctil de alerta y guía, pasillos con anchos adecuados para la circulación y la inclusión de un Baño Universal accesible en el Nivel 1 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+3. **Simbología Gráfica de Modificación (Cumple):**
+   * La distinción entre elementos a retirar (amarillo) y obra nueva a construir (rojo) se ajuste a la representación requerida para proyectos de remodelación o ampliación menor 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.

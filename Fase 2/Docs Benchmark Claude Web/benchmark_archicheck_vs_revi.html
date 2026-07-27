@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Benchmark ArchiCheck vs Revi — Análisis Comparativo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    color: #1a2535;
+    background: #f4f6fb;
+    line-height: 1.55;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: white; font-size: 11px; }
+    .page { box-shadow: none; margin: 0; border-radius: 0; }
+    .no-print { display: none; }
+    .page-break { page-break-before: always; }
+    .avoid-break { page-break-inside: avoid; }
+  }
+
+  /* ── Layout ── */
+  .page {
+    max-width: 960px;
+    margin: 0 auto 32px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    background: linear-gradient(135deg, #0D2251 0%, #1B3A8A 60%, #2952A3 100%);
+    color: white;
+    padding: 56px 60px 48px;
+  }
+  .cover-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .cover h1 {
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .cover h1 span { color: #7EC8E3; }
+  .cover-sub {
+    font-size: 15px;
+    opacity: 0.75;
+    margin-bottom: 32px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 24px;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item label {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 3px;
+  }
+  .cover-meta-item span { font-size: 13px; font-weight: 600; }
+
+  /* ── Section headers ── */
+  .section {
+    padding: 36px 48px;
+    border-bottom: 1px solid #EEF2FB;
+  }
+  .section:last-child { border-bottom: none; }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #2952A3;
+    margin-bottom: 6px;
+  }
+  .section-h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0D2251;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .section-intro {
+    color: #4B5C7A;
+    font-size: 13px;
+    margin-bottom: 24px;
+    max-width: 720px;
+  }
+
+  /* ── Score cards ── */
+  .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .score-card {
+    border-radius: 10px;
+    padding: 20px 24px;
+    border: 2px solid;
+  }
+  .score-card.archicheck {
+    border-color: #1B3A8A;
+    background: #F0F4FF;
+  }
+  .score-card.revi {
+    border-color: #2E7D32;
+    background: #F1F8E9;
+  }
+  .score-card .brand {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .score-card.archicheck .brand { color: #1B3A8A; }
+  .score-card.revi .brand { color: #2E7D32; }
+  .score-number {
+    font-size: 44px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .score-card.archicheck .score-number { color: #1B3A8A; }
+  .score-card.revi .score-number { color: #2E7D32; }
+  .score-label { font-size: 11px; color: #6B7A99; font-weight: 500; }
+  .score-detail {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .score-detail-item { font-size: 11px; }
+  .score-detail-item strong { font-weight: 700; }
+
+  /* ── Comparison table ── */
+  table.comp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table.comp th {
+    background: #0D2251;
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 11px;
+  }
+  table.comp th:first-child { border-radius: 0; }
+  table.comp td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #EEF2FB;
+    vertical-align: top;
+  }
+  table.comp tr:nth-child(even) td { background: #F8F9FF; }
+  table.comp tr:last-child td { border-bottom: none; }
+  .td-dim { font-weight: 600; color: #1B3A8A; }
+  .td-ac { color: #1B3A8A; }
+  .td-rv { color: #2E7D32; }
+
+  /* ── Win badge ── */
+  .win {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .win-ac { background: #E3ECFF; color: #1B3A8A; }
+  .win-rv { background: #E8F5E9; color: #2E7D32; }
+  .win-tie { background: #FFF3E0; color: #E65100; }
+
+  /* ── Finding tables ── */
+  table.findings {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  table.findings th {
+    background: #EEF2FB;
+    color: #1B3A8A;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  table.findings td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #EEF2FB;
+    vertical-align: top;
+  }
+  table.findings tr:last-child td { border-bottom: none; }
+
+  /* ── Criticality badges ── */
+  .crit {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .crit-alta { background: #FDECEA; color: #C62828; border: 1px solid #EF9A9A; }
+  .crit-media { background: #FFF8E1; color: #F57F17; border: 1px solid #FFE082; }
+  .crit-baja { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+  .crit-ok { background: #E3ECFF; color: #1B3A8A; border: 1px solid #90CAF9; }
+
+  /* ── Status icons ── */
+  .icon-yes { color: #2E7D32; font-weight: 700; }
+  .icon-no { color: #C62828; font-weight: 700; }
+  .icon-partial { color: #E65100; font-weight: 700; }
+
+  /* ── Note boxes ── */
+  .note {
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    margin-top: 12px;
+  }
+  .note-blue { background: #E3ECFF; border-left: 3px solid #1B3A8A; color: #0D2251; }
+  .note-green { background: #E8F5E9; border-left: 3px solid #2E7D32; color: #1B5E20; }
+  .note-orange { background: #FFF3E0; border-left: 3px solid #E65100; color: #BF360C; }
+
+  /* ── Bar chart ── */
+  .bar-chart { margin: 16px 0; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .bar-label { font-size: 11px; font-weight: 600; width: 180px; flex-shrink: 0; color: #3D4A5C; }
+  .bar-track { flex: 1; background: #EEF2FB; border-radius: 99px; height: 16px; position: relative; }
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    min-width: 28px;
+  }
+  .bar-ac { background: #1B3A8A; }
+  .bar-rv { background: #2E7D32; }
+
+  /* ── Verdict ── */
+  .verdict-box {
+    background: linear-gradient(135deg, #0D2251, #1B3A8A);
+    color: white;
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-top: 8px;
+  }
+  .verdict-box h3 { font-size: 16px; font-weight: 800; margin-bottom: 12px; }
+  .verdict-box p { font-size: 13px; opacity: 0.85; line-height: 1.6; margin-bottom: 10px; }
+  .verdict-box p:last-child { margin-bottom: 0; }
+
+  /* ── Print button ── */
+  .print-btn {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 24px;
+    background: #1B3A8A;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .print-btn:hover { background: #0D2251; }
+
+  .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .mb-8 { margin-bottom: 8px; }
+  .text-muted { color: #6B7A99; font-size: 11px; }
+  .fw-700 { font-weight: 700; }
+
+  h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0D2251;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #EEF2FB;
+  }
+  h4.ac { border-color: #1B3A8A; }
+  h4.rv { border-color: #2E7D32; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">⬇ Guardar como PDF (Ctrl+P)</button>
+
+<!-- ══════════ PORTADA ══════════ -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-tag">Análisis Competitivo Confidencial</div>
+    <h1>ArchiCheck <span>vs</span> Revi</h1>
+    <p class="cover-sub">Benchmark comparativo de revisión normativa arquitectónica</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <label>Proyecto analizado</label>
+        <span>Habilitación Restaurante Plaza Pedro de Valdivia</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Comuna</label>
+        <span>Providencia, Santiago</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Tipo de proyecto</label>
+        <span>Remodelación / Obra Menor</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Fecha benchmark</label>
+        <span>30 de junio de 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Resumen Ejecutivo</div>
+    <div class="section-h2">Contexto del benchmark</div>
+    <p class="section-intro">
+      El mismo proyecto fue analizado independientemente por ArchiCheck y por Revi (competidor directo).
+      ArchiCheck procesó el plano PDF + análisis Colab (OpenCV + DINO). Revi procesó el plano solo
+      (7 observaciones) y también el expediente completo de 11 documentos. Este reporte compara cobertura normativa,
+      calidad de hallazgos, metodología y utilidad práctica para el arquitecto.
+    </p>
+
+    <div class="score-grid">
+      <div class="score-card archicheck">
+        <div class="brand">ArchiCheck</div>
+        <div class="score-number">40</div>
+        <div class="score-label">Hallazgos totales (18 incumplimientos + 22 observaciones)</div>
+        <div class="score-detail">
+          <div class="score-detail-item"><strong>9</strong> ALTA críticos</div>
+          <div class="score-detail-item"><strong>2 capas</strong> análisis</div>
+          <div class="score-detail-item"><strong>1 PDF</strong> + JSON Colab</div>
+        </div>
+      </div>
+      <div class="score-card revi">
+        <div class="brand">Revi</div>
+        <div class="score-number">46</div>
+        <div class="score-label">Hallazgos totales (7 en plano solo + ~39 en 11 documentos)</div>
+        <div class="score-detail">
+          <div class="score-detail-item"><strong>6</strong> críticos plano</div>
+          <div class="score-detail-item"><strong>1 capa</strong> análisis</div>
+          <div class="score-detail-item"><strong>11 docs</strong> procesados</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note note-orange">
+      <strong>Nota metodológica:</strong> La comparación directa de totales es asimétrica porque Revi analizó 11 documentos del expediente completo mientras ArchiCheck procesó solo el plano PDF + JSON Colab. La comparación relevante es en el análisis del plano, donde ArchiCheck encontró significativamente más hallazgos técnico-normativos.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DIMENSIÓN 1: TABLA COMPARATIVA GLOBAL ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 1</div>
+    <div class="section-h2">Scorecard comparativo por dimensión</div>
+
+    <table class="comp">
+      <thead>
+        <tr>
+          <th style="width:30%">Dimensión</th>
+          <th style="width:30%">ArchiCheck</th>
+          <th style="width:30%">Revi</th>
+          <th style="width:10%">Ventaja</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-dim">Hallazgos en el plano</td>
+          <td class="td-ac">18 incumplimientos + 22 obs = <strong>40 total</strong></td>
+          <td class="td-rv">7 observaciones en análisis de plano solo</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Aplicación DS 50/2015</td>
+          <td class="td-ac">✅ Completo — rampa, pasillos, baño universal, anchos mínimos</td>
+          <td class="td-rv">⚠ Parcial — solo menciona en algunos hallazgos</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Normativa DS 594 Minsal</td>
+          <td class="td-ac">✅ Dotación SSHH por carga de ocupación</td>
+          <td class="td-rv">❌ No abordada</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Evacuación y emergencia</td>
+          <td class="td-ac">✅ N2 sin salida independiente, sin plano evacuación, NChE 1433</td>
+          <td class="td-rv">⚠ Mencionado tangencialmente</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Análisis geométrico (Capa 1)</td>
+          <td class="td-ac">✅ Separación gráfica, vectorización, modelo estructural</td>
+          <td class="td-rv">❌ No realiza levantamiento geométrico</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">PRC Providencia específico</td>
+          <td class="td-ac">⚠ Parcial — zonificación, altura, uso de suelo</td>
+          <td class="td-rv">✅ Más completo — transparencia cierros, estac. bicicletas, distanciamientos</td>
+          <td><span class="win win-rv">Revi</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Errores aritméticos en documentos</td>
+          <td class="td-ac">❌ No detectados</td>
+          <td class="td-rv">✅ 5 errores de suma en cuadro de superficies</td>
+          <td><span class="win win-rv">Revi</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Análisis administrativo/legal</td>
+          <td class="td-ac">⚠ CIP mencionado, cambio destino</td>
+          <td class="td-rv">✅ Firmas, personería jurídica, Ley 20.958, docs vencidos</td>
+          <td><span class="win win-rv">Revi</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Rasante Nivel 2</td>
+          <td class="td-ac">⚠ "VERIFICAR" — sin confirmación</td>
+          <td class="td-rv">✅ Confirmado incumplimiento con descripción específica</td>
+          <td><span class="win win-rv">Revi</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Adosamiento Nivel 2</td>
+          <td class="td-ac">⚠ Mencionado parcialmente</td>
+          <td class="td-rv">✅ Art. 2.6.2 con descripción de retranqueo requerido</td>
+          <td><span class="win win-rv">Revi</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Estructura del informe</td>
+          <td class="td-ac">✅ Capa 1 + Capa 2, ALTA/MEDIA/BAJA, acciones correctivas</td>
+          <td class="td-rv">⚠ Lista plana por documento, sin criticidad explícita</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Trazabilidad normativa</td>
+          <td class="td-ac">✅ Badges con artículo exacto por observación</td>
+          <td class="td-rv">✅ Artículo citado en cada aclaración</td>
+          <td><span class="win win-tie">Empate</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Acción correctiva específica</td>
+          <td class="td-ac">✅ Cada obs tiene → corrección propuesta</td>
+          <td class="td-rv">⚠ Solo en algunos hallazgos</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Multi-documento</td>
+          <td class="td-ac">⚠ Solo plano PDF + JSON Colab</td>
+          <td class="td-rv">✅ 11 documentos del expediente completo</td>
+          <td><span class="win win-rv">Revi</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Calidad visual del informe</td>
+          <td class="td-ac">✅ PDF profesional con tablas, badges, métricas</td>
+          <td class="td-rv">❌ Texto plano / markdown sin formato visual</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="bar-chart mt-24">
+      <p style="font-size:12px; font-weight:700; color:#0D2251; margin-bottom:12px;">Hallazgos comparados — análisis del plano</p>
+      <div class="bar-row">
+        <div class="bar-label">Incumplimientos ALTA</div>
+        <div class="bar-track">
+          <div class="bar-fill bar-ac" style="width:90%">ArchiCheck: 9</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"></div>
+        <div class="bar-track">
+          <div class="bar-fill bar-rv" style="width:30%">Revi: 3</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Observaciones MEDIA/BAJA</div>
+        <div class="bar-track">
+          <div class="bar-fill bar-ac" style="width:100%">ArchiCheck: 22</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"></div>
+        <div class="bar-track">
+          <div class="bar-fill bar-rv" style="width:18%">Revi: 4</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Artículos PRC citados</div>
+        <div class="bar-track">
+          <div class="bar-fill bar-ac" style="width:30%">ArchiCheck: 3</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"></div>
+        <div class="bar-track">
+          <div class="bar-fill bar-rv" style="width:70%">Revi: 7</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DIMENSIÓN 2: HALLAZGOS ÚNICOS ARCHICHECK ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 2</div>
+    <div class="section-h2">Hallazgos únicos de ArchiCheck — Revi no detectó</div>
+    <p class="section-intro">
+      Observaciones identificadas por ArchiCheck que no aparecen en ninguno de los análisis de Revi. Representan ventajas competitivas reales en profundidad técnica.
+    </p>
+
+    <table class="findings avoid-break">
+      <thead>
+        <tr>
+          <th style="width:4%">#</th>
+          <th style="width:36%">Hallazgo</th>
+          <th style="width:18%">Normativa</th>
+          <th style="width:12%">Criticidad</th>
+          <th style="width:30%">Relevancia competitiva</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><strong>Baño Universal N1: fondo ~1.55m insuficiente para radio de giro libre de 1.50m</strong> descontando aparatos sanitarios. Requiere mínimo libre de 1.70×1.70m.</td>
+          <td>DS 50/2015 Art. 24; OGUC Art. 4.1.7; Ley 20.422</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>Revi menciona baño accesible pero no lo mide con DS 50. ArchiCheck da la dimensión exacta requerida.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><strong>Pasillo N2: 1.22m cumple OGUC (1.20m) pero incumple DS 50/2015 Art. 22</strong> que exige 1.50m en circulaciones de uso público con afluencia masiva.</td>
+          <td>DS 50/2015 Art. 22; OGUC Art. 4.2.3</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>Hallazgo técnico de alta complejidad. Revi no aplica DS 50 en circulaciones horizontales.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><strong>Nivel 2 sin salida de emergencia independiente.</strong> Toda la evacuación depende de una única escalera interior. OGUC Art. 4.3.4 puede exigir segunda vía si carga &gt;50 personas por piso.</td>
+          <td>OGUC Art. 4.2.4; 4.3.4; 4.3.5</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>Revi no aborda el análisis de evacuación del N2. Crítico para la aprobación DOM.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><strong>Pasillo Central N1: 1.60m potencialmente insuficiente</strong> si carga de ocupación supera 50 personas. OGUC Art. 4.2.5 exige ancho calculado por carga.</td>
+          <td>OGUC Art. 4.2.4; 4.2.5 ancho evacuación</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>Revi no relaciona anchos de circulación con carga de ocupación calculada.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><strong>Sin plano de evacuación ni señalética</strong> para establecimiento de uso público. Obligatorio según OGUC Art. 4.2.4 y DS 594 para restaurantes.</td>
+          <td>OGUC Art. 4.2.4; DS 594 Minsal; NChE 1433</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>Revi lo menciona tangencialmente. ArchiCheck lo clasifica como incumplimiento ALTA con normativa específica.</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><strong>Cocinas sin graficación de extractores, campanas ni ductos.</strong> Exigencia sanitaria para establecimiento de expendio de alimentos.</td>
+          <td>DS 977 Minsal Art. 42; NCh 2485</td>
+          <td><span class="crit crit-media">MEDIA</span></td>
+          <td>Revi no cita DS 977 Minsal. ArchiCheck integra normativa sanitaria al análisis arquitectónico.</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><strong>Dotación SSHH de público insuficiente</strong> según DS 594 en función de la carga de ocupación total del restaurante (mín. 1 WC y 1 lavamanos cada 40 personas por sexo).</td>
+          <td>DS 594 Minsal Art. 23; OGUC Art. 4.6.1</td>
+          <td><span class="crit crit-media">MEDIA</span></td>
+          <td>Revi no cruza dotación SSHH con carga de ocupación. Hallazgo técnico diferenciador.</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><strong>Escalera N1-N2: sin pasamanos graficados en planta ni en corte.</strong> OGUC Art. 4.2.7 exige pasamanos a ambos lados en edificios de uso público.</td>
+          <td>OGUC Art. 4.2.2; 4.2.7</td>
+          <td><span class="crit crit-media">MEDIA</span></td>
+          <td>Revi detecta el ancho pero no el pasamanos. Observación complementaria.</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><strong>Análisis Capa 1 completa:</strong> separación gráfica, vectorización con detección de elementos (puertas, ventanas), modelo estructural por nivel, NPT Nivel 2 no declarado.</td>
+          <td>OGUC Art. 5.1.6; DDU 390</td>
+          <td><span class="crit crit-media">MEDIA</span></td>
+          <td>Revi no realiza levantamiento geométrico. ArchiCheck agrega una capa analítica que Revi no tiene.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note note-blue mt-16">
+      <strong>Ventaja estructural ArchiCheck:</strong> La aplicación sistemática de DS 50/2015 (norma de accesibilidad universal) genera hallazgos críticos que OGUC solo no detectaría. Revi aplica OGUC Art. 4.1.7 pero no el DS 50 en circulaciones horizontales ni en dimensiones interiores de baño accesible. Esto es una diferencia de profundidad técnica real.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DIMENSIÓN 3: HALLAZGOS ÚNICOS REVI ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 3</div>
+    <div class="section-h2">Hallazgos únicos de Revi — ArchiCheck no detectó</div>
+    <p class="section-intro">
+      Observaciones identificadas por Revi que ArchiCheck no reportó. Representan brechas reales que ArchiCheck debe cerrar para competir en el análisis integral de expediente.
+    </p>
+
+    <table class="findings avoid-break">
+      <thead>
+        <tr>
+          <th style="width:4%">#</th>
+          <th style="width:36%">Hallazgo</th>
+          <th style="width:18%">Normativa</th>
+          <th style="width:12%">Impacto</th>
+          <th style="width:30%">Brecha para ArchiCheck</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><strong>Distanciamientos laterales insuficientes en Nivel 2:</strong> 1.40m (este) y 2.40m (oeste) vs mínimo 2.50m sin vanos / 3.00m con vanos para estructura aislada de 7m.</td>
+          <td>OGUC Art. 2.6.3</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>ArchiCheck dejó este parámetro urbanístico en "VERIFICAR". Revi lo confirmó con datos del plano. Brecha de lectura de cotas urbanísticas.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><strong>Rasante incumplida en Nivel 2:</strong> volumen proyectado (achurado rojo) sobrepasa la línea de rasante de 70° en elevaciones Norte y Sur y en Corte A-A.</td>
+          <td>OGUC Art. 2.6.1; 2.6.3</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>ArchiCheck puso "VERIFICAR" en rasante. Revi lo confirmó como incumplimiento con referencia a las láminas específicas. Diferencia de certeza.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><strong>Adosamiento irregular Nivel 2:</strong> ampliación adosada al límite de propiedad en N2 (baño clientes + bodega). Adosamiento permitido solo hasta altura de primer piso (máx 3.5m).</td>
+          <td>OGUC Art. 2.6.2; Art. 4.2.11</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>ArchiCheck lo mencionó parcialmente en normativa urbanística. Revi lo desarrolla con el artículo exacto y la corrección requerida.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><strong>5 errores aritméticos en cuadro de superficies:</strong> sumas incorrectas en columna Existente ($298.90 vs $307.90 real), Proyectada ($17.90 vs $17.00), Total general ($316.80 vs $325.80), Nivel 2 ($119.76 vs $118.86), y discrepancia cuadro normativo ($289.90).</td>
+          <td>OGUC Art. 5.1.6; DDU 390</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>ArchiCheck no verifica aritmética del cuadro de superficies. Revi detecta esto al cruzar números entre láminas. Capacidad de auditoría documental.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><strong>Destino declarado como "Vivienda"</strong> en el cuadro normativo del plano. Debe decir "Comercio (Restaurante)". Error crítico de uso de suelo declarado.</td>
+          <td>LGUC Art. 116; OGUC Art. 1.1.2</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>ArchiCheck detecta el cambio de destino como observación general, pero no lee este error específico dentro del cuadro normativo del plano.</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><strong>Transparencia de cierro frontal: 70% mínimo</strong> hacia espacio público no acreditada. PRC Providencia exige verificar porcentaje de transparencia en elevaciones.</td>
+          <td>PRC Providencia Art. 4.1.03</td>
+          <td><span class="crit crit-media">MEDIA</span></td>
+          <td>ArchiCheck no leyó este artículo del PRC Providencia. Brecha en cobertura PRC comunal.</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><strong>Estacionamientos de bicicletas (mín. 5):</strong> no graficados en planta de emplazamiento. Revi especifica el número mínimo (5 unidades o 1 cada 20 personas).</td>
+          <td>PRC Providencia Art. 8.1.03</td>
+          <td><span class="crit crit-media">MEDIA</span></td>
+          <td>ArchiCheck detectó estacionamientos como pendiente pero sin el mínimo exacto del PRC Providencia.</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><strong>Documentos vencidos:</strong> Patente profesional del arquitecto (1° semestre 2021) y Certificado de Avalúo Fiscal (2021). Ambos deben actualizarse al año 2026.</td>
+          <td>DOM requisitos generales; LGUC</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>ArchiCheck no analiza documentos administrativos del expediente. Capacidad exclusiva del análisis multi-documento de Revi.</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><strong>Firmas faltantes en 4+ documentos:</strong> formulario SPOM (propietario + arquitecto), informe accesibilidad, declaración arquitecto, especificaciones técnicas, presupuesto.</td>
+          <td>DOM requisitos generales</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>Causa directa de rechazo en DOM. ArchiCheck no accede a esta capa administrativa por diseño actual.</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><strong>Carga de ocupación incompleta:</strong> el desglose del plano solo considera 182.66m² de 316.80m² totales, omitiendo pasillos, escaleras y baños del cálculo (incumple OGUC Art. 4.2.4).</td>
+          <td>OGUC Art. 4.2.4</td>
+          <td><span class="crit crit-alta">ALTA</span></td>
+          <td>ArchiCheck detecta la ausencia del cuadro pero no cruza los valores declarados con la superficie total real.</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><strong>Sin comedor visible en plantas:</strong> solo se grafican cocina, bodega, baño, pasillo y oficina. No hay zona de mesas ni atención de público dibujada.</td>
+          <td>DOM presentación expediente</td>
+          <td><span class="crit crit-media">MEDIA</span></td>
+          <td>Revi detecta la incoherencia programática. ArchiCheck reporta los recintos existentes sin cuestionar los faltantes.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note note-green mt-16">
+      <strong>Brecha prioritaria a cerrar en ArchiCheck:</strong> Los hallazgos 4 y 5 (errores aritméticos en cuadros + destino "Vivienda") son detectables leyendo el cuadro normativo del plano con atención. Los hallazgos 1–3 (distanciamientos, rasante, adosamiento) requieren leer cotas urbanísticas desde elevaciones y planta de emplazamiento. Estos son alcanzables sin análisis multi-documento.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DIMENSIÓN 4: HALLAZGOS COMUNES ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 4</div>
+    <div class="section-h2">Hallazgos comunes — con diferencias de interpretación</div>
+    <p class="section-intro">
+      Ambas herramientas detectaron estos problemas, pero con niveles de precisión, normativa aplicada o conclusiones distintas.
+    </p>
+
+    <table class="findings avoid-break">
+      <thead>
+        <tr>
+          <th style="width:22%">Hallazgo</th>
+          <th style="width:35%">ArchiCheck</th>
+          <th style="width:35%">Revi</th>
+          <th style="width:8%">Precisión</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Pendiente rampa acceso universal</strong></td>
+          <td class="td-ac">13.58% &gt; 8% máximo (DS 50/2015 Art. 23). Cita DS 50 + OGUC + Ley 20.422. Corrección: rediseñar a ≤8% o evaluar plataforma elevadora.</td>
+          <td class="td-rv"><em>Plano solo:</em> 10.58% &gt; 10.53% máximo (fórmula OGUC para 4.25m). <em>Multi-doc:</em> 10.58% &gt; 8% máximo. <strong>Inconsistencia interna de Revi:</strong> usa dos criterios distintos en dos análisis.</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td><strong>Escalera: ancho insuficiente</strong></td>
+          <td class="td-ac">Ancho ~1.20m cumple OGUC Art. 4.2.2 (mínimo 1.20m). Observación por pasamanos no verificados. Cita mínimo correcto para escaleras de uso común.</td>
+          <td class="td-rv">Ancho 0.90m &lt; 1.10m mínimo uso público (Art. 4.1.7). Criterio diferente — 1.10m vs 1.20m. Puede referirse a otro tramo de la escalera o a diferente interpretación del artículo.</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td><strong>Resistencia al fuego</strong></td>
+          <td class="td-ac">Restaurante 2 pisos → Clase B, F-90 en muros soportantes, F-30 en escaleras. Clasificación correcta por OGUC Art. 4.3.4 Tabla 1.</td>
+          <td class="td-rv">Misma conclusión: Tipo B, F-90 muros, F-30 escaleras. Coincide en la clasificación y los requisitos.</td>
+          <td><span class="win win-tie">Empate</span></td>
+        </tr>
+        <tr>
+          <td><strong>Cuadro iluminación / ventilación</strong></td>
+          <td class="td-ac">Detecta ausencia. Agrega tabla de relación ventana/área por recinto con ratio 1/6. Cita OGUC Art. 4.5.7.</td>
+          <td class="td-rv">Detecta ausencia. Cita OGUC Art. 4.1.2. Corrección propuesta: incorporar cuadro técnico comparativo.</td>
+          <td><span class="win win-ac">ArchiCheck</span></td>
+        </tr>
+        <tr>
+          <td><strong>Baños clientes N2 sin ruta accesible</strong></td>
+          <td class="td-ac">Detectado como incumplimiento ALTA de accesibilidad. Sin ascensor ni rampa al N2, la ruta accesible no llega a los baños de público.</td>
+          <td class="td-rv">Detectado como Aclaración 2.13: se debe reubicar al menos un baño accesible en N1. Propone la solución concreta.</td>
+          <td><span class="win win-tie">Empate</span></td>
+        </tr>
+        <tr>
+          <td><strong>Dotación estacionamientos</strong></td>
+          <td class="td-ac">Mencionado en normativa urbanística como pendiente de verificación.</td>
+          <td class="td-rv">Especifica: autos exentos si superficie &lt;150m², bicicletas mín. 5 según PRC. Más específico en cuantificación.</td>
+          <td><span class="win win-rv">Revi</span></td>
+        </tr>
+        <tr>
+          <td><strong>CIP faltante / uso de suelo</strong></td>
+          <td class="td-ac">CIP no aportado al expediente digital. Clasificación y zonificación sin verificar. Observación ALTA.</td>
+          <td class="td-rv">CIP presente y conforme (Aclaración 11.1). Lo contradice. Revi confirma que SÍ existe el CIP en el expediente.</td>
+          <td><span class="win win-rv">Revi</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note note-orange mt-16">
+      <strong>Inconsistencia crítica en Revi:</strong> En el análisis del plano solo, Revi usa la fórmula OGUC para calcular pendiente máxima de rampa (resultado: 10.53% para 4.25m). En el análisis multi-documento usa el criterio plano de 8%. ArchiCheck aplica consistentemente el 8% de DS 50/2015 en ambos análisis. Esta inconsistencia interna de Revi es una debilidad metodológica significativa.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DIMENSIÓN 5: METODOLOGÍA ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 5</div>
+    <div class="section-h2">Comparación metodológica y de producto</div>
+
+    <div class="col2">
+      <div>
+        <h4 class="ac">ArchiCheck — Metodología</h4>
+        <table class="findings">
+          <tbody>
+            <tr><td style="width:40%"><strong>Estructura análisis</strong></td><td>2 capas secuenciales: Capa 1 Geométrica (4 etapas) → Capa 2 Normativa (5 etapas)</td></tr>
+            <tr><td><strong>Modelos IA</strong></td><td>Claude Sonnet 4.6 + GPT-4o en paralelo, resultados mergeados</td></tr>
+            <tr><td><strong>Pipeline adicional</strong></td><td>OpenCV (áreas, anchos) + Grounding DINO (puertas, ventanas, escaleras) + SAM 2 (segmentación)</td></tr>
+            <tr><td><strong>Normativa</strong></td><td>OGUC + LGUC + DS 50/2015 + DS 594 Minsal + DS 977 + NCh 1433 + PRC (JSON embebido)</td></tr>
+            <tr><td><strong>Output</strong></td><td>PDF estructurado con badges, tablas, métricas, acciones correctivas por observación</td></tr>
+            <tr><td><strong>Criticidad</strong></td><td>ALTA / MEDIA / BAJA explícita por hallazgo</td></tr>
+            <tr><td><strong>Documentos</strong></td><td>1 PDF plano + JSON geométrico Colab</td></tr>
+            <tr><td><strong>Tiempo análisis</strong></td><td>~3-4 min (2 fases paralelas)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 class="rv">Revi — Metodología</h4>
+        <table class="findings">
+          <tbody>
+            <tr><td style="width:40%"><strong>Estructura análisis</strong></td><td>1 capa: revisión documento por documento, aclaraciones por ítem</td></tr>
+            <tr><td><strong>Modelos IA</strong></td><td>No especificado públicamente (interfaz conversacional)</td></tr>
+            <tr><td><strong>Pipeline adicional</strong></td><td>No — solo LLM sobre los documentos</td></tr>
+            <tr><td><strong>Normativa</strong></td><td>OGUC + LGUC + PRC comunal + normativa administrativa DOM</td></tr>
+            <tr><td><strong>Output</strong></td><td>Texto plano / markdown. Sin formato visual estructurado.</td></tr>
+            <tr><td><strong>Criticidad</strong></td><td>No explicita nivel. Solo "Incumplimiento" u "Omisión"</td></tr>
+            <tr><td><strong>Documentos</strong></td><td>Hasta 11 documentos del expediente completo</td></tr>
+            <tr><td><strong>Tiempo análisis</strong></td><td>No medido en este benchmark</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-24">
+      <h4>Comparación de formato de output</h4>
+      <table class="comp">
+        <thead>
+          <tr>
+            <th style="width:35%">Característica del informe</th>
+            <th style="width:30%">ArchiCheck</th>
+            <th style="width:30%">Revi</th>
+            <th style="width:5%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-dim">PDF exportable profesional</td>
+            <td class="td-ac"><span class="icon-yes">✅</span> Con encabezado, badges, tablas</td>
+            <td class="td-rv"><span class="icon-no">❌</span> Solo texto estructurado</td>
+            <td><span class="win win-ac">AC</span></td>
+          </tr>
+          <tr>
+            <td class="td-dim">Separación por etapas / proceso</td>
+            <td class="td-ac"><span class="icon-yes">✅</span> 4 etapas Capa 1 + 5 etapas Capa 2</td>
+            <td class="td-rv"><span class="icon-no">❌</span> Lineal por documento</td>
+            <td><span class="win win-ac">AC</span></td>
+          </tr>
+          <tr>
+            <td class="td-dim">Acciones correctivas por obs.</td>
+            <td class="td-ac"><span class="icon-yes">✅</span> → acción propuesta en cada obs.</td>
+            <td class="td-rv"><span class="icon-partial">⚠</span> Solo en algunos hallazgos</td>
+            <td><span class="win win-ac">AC</span></td>
+          </tr>
+          <tr>
+            <td class="td-dim">Métricas del proyecto</td>
+            <td class="td-ac"><span class="icon-yes">✅</span> Score global, contadores, tabla temática</td>
+            <td class="td-rv"><span class="icon-no">❌</span> No genera métricas</td>
+            <td><span class="win win-ac">AC</span></td>
+          </tr>
+          <tr>
+            <td class="td-dim">Recintos con bbox visualizables</td>
+            <td class="td-ac"><span class="icon-yes">✅</span> Overlay sobre el plano</td>
+            <td class="td-rv"><span class="icon-no">❌</span> No</td>
+            <td><span class="win win-ac">AC</span></td>
+          </tr>
+          <tr>
+            <td class="td-dim">Formato "acta DOM" directamente usable</td>
+            <td class="td-ac"><span class="icon-partial">⚠</span> Requiere adaptar por el arquitecto</td>
+            <td class="td-rv"><span class="icon-yes">✅</span> Formato de acta listo para copiar</td>
+            <td><span class="win win-rv">Revi</span></td>
+          </tr>
+          <tr>
+            <td class="td-dim">Resolución de observaciones por usuario</td>
+            <td class="td-ac"><span class="icon-yes">✅</span> Aceptar / Comentar / Modificar / Descartar</td>
+            <td class="td-rv"><span class="icon-no">❌</span> No gestiona resolución</td>
+            <td><span class="win win-ac">AC</span></td>
+          </tr>
+          <tr>
+            <td class="td-dim">Gestión de múltiples documentos</td>
+            <td class="td-ac"><span class="icon-partial">⚠</span> Hasta 15 páginas PDF</td>
+            <td class="td-rv"><span class="icon-yes">✅</span> 11 documentos tipo expediente</td>
+            <td><span class="win win-rv">Revi</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DIMENSIÓN 6: BRECHAS Y OPORTUNIDADES ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 6</div>
+    <div class="section-h2">Brechas prioritarias y oportunidades de mejora</div>
+
+    <div class="col2">
+      <div class="avoid-break">
+        <h4 class="ac">Brechas ArchiCheck a corto plazo</h4>
+        <table class="findings">
+          <tbody>
+            <tr>
+              <td><span class="crit crit-alta">ALTA</span></td>
+              <td><strong>Cuadro de superficies:</strong> verificar aritmética interna y cruzar con superficies declaradas en formulario. Detectable leyendo el cuadro normativo del plano.</td>
+            </tr>
+            <tr>
+              <td><span class="crit crit-alta">ALTA</span></td>
+              <td><strong>Destino en cuadro normativo:</strong> detectar si el uso declarado en el plano contradice el uso real del proyecto. Lectura directa del cuadro.</td>
+            </tr>
+            <tr>
+              <td><span class="crit crit-alta">ALTA</span></td>
+              <td><strong>Distanciamientos laterales y rasante:</strong> leer cotas de distanciamiento desde planta de emplazamiento y verificar contra PRC/OGUC Art. 2.6.3.</td>
+            </tr>
+            <tr>
+              <td><span class="crit crit-alta">ALTA</span></td>
+              <td><strong>Adosamiento en Nivel 2:</strong> comparar altura del volumen adosado vs límite de 3.5m permitido por OGUC Art. 2.6.2.</td>
+            </tr>
+            <tr>
+              <td><span class="crit crit-media">MEDIA</span></td>
+              <td><strong>PRC Providencia:</strong> ampliar cobertura a transparencia de cierros, estacionamientos bicicletas con número exacto del PRC.</td>
+            </tr>
+            <tr>
+              <td><span class="crit crit-media">MEDIA</span></td>
+              <td><strong>Programa:</strong> verificar que los recintos declarados incluyan el uso principal (comedor en restaurante, sala de espera en clínica, etc.).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="avoid-break">
+        <h4 class="rv">Brechas ArchiCheck a mediano plazo</h4>
+        <table class="findings">
+          <tbody>
+            <tr>
+              <td><span class="crit crit-alta">ALTA</span></td>
+              <td><strong>Análisis multi-documento:</strong> procesar formulario SPOM, CIP, informe accesibilidad, especificaciones técnicas, presupuesto en paralelo. Hoy solo procesa planos.</td>
+            </tr>
+            <tr>
+              <td><span class="crit crit-alta">ALTA</span></td>
+              <td><strong>Documentos vencidos:</strong> detectar fechas de vencimiento en patentes y certificados. Requiere leer cabeceras de documentos administrativos.</td>
+            </tr>
+            <tr>
+              <td><span class="crit crit-alta">ALTA</span></td>
+              <td><strong>Firmas faltantes:</strong> verificar campos de firma en formularios. Causa directa de rechazo en DOM sin relación con el diseño arquitectónico.</td>
+            </tr>
+            <tr>
+              <td><span class="crit crit-alta">ALTA</span></td>
+              <td><strong>Ley de Aportes (20.958):</strong> identificar si el proyecto activa obligación de aporte al espacio público (densificación comercial).</td>
+            </tr>
+            <tr>
+              <td><span class="crit crit-media">MEDIA</span></td>
+              <td><strong>Personería jurídica:</strong> verificar que la acreditación del propietario sea escritura pública, no solo contrato de arriendo.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-24 avoid-break">
+      <h4>Ventajas competitivas ArchiCheck que Revi no tiene y no puede copiar fácilmente</h4>
+      <table class="findings">
+        <thead>
+          <tr>
+            <th>Ventaja</th>
+            <th>Por qué es difícil de replicar</th>
+            <th>Impacto para el usuario</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pipeline geométrico (OpenCV + DINO + SAM 2)</strong></td>
+            <td>Requiere infraestructura ML (Colab T4 GPU, modelos ~1GB). No es solo prompt engineering.</td>
+            <td>Mediciones reales en metros, no solo lectura de texto</td>
+          </tr>
+          <tr>
+            <td><strong>Análisis dual Claude + GPT-4o mergeado</strong></td>
+            <td>Usa dos modelos en paralelo y fusiona hallazgos. Reduce falsos negativos de un solo modelo.</td>
+            <td>Mayor cobertura normativa, menos hallazgos perdidos</td>
+          </tr>
+          <tr>
+            <td><strong>DS 50/2015 aplicado sistemáticamente</strong></td>
+            <td>Está embebido en el prompt y en las reglas de verificación. Revi lo aplica ad hoc.</td>
+            <td>Detecta incumplimientos que OGUC solo no vería</td>
+          </tr>
+          <tr>
+            <td><strong>Gestión de resolución de observaciones</strong></td>
+            <td>Feature de producto (Aceptar/Comentar/Modificar/Descartar). No es solo análisis.</td>
+            <td>El arquitecto puede llevar trazabilidad de su revisión</td>
+          </tr>
+          <tr>
+            <td><strong>Verificador determinista (PRC)</strong></td>
+            <td>JSON de PRC embebido que calcula COS/CC/altura sin varianza de LLM.</td>
+            <td>Resultado 100% reproducible para parámetros urbanísticos</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ CONCLUSIONES ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 7</div>
+    <div class="section-h2">Conclusiones y posicionamiento</div>
+
+    <div class="col2 avoid-break">
+      <div>
+        <h4 class="ac">ArchiCheck — Perfil de fortaleza</h4>
+        <p style="font-size:12px; color:#4B5C7A; margin-bottom:10px;">
+          <strong>Ganador en análisis técnico-normativo del plano.</strong> ArchiCheck supera a Revi en profundidad de análisis cuando el input es el plano arquitectónico. Aplica normativa más exigente (DS 50/2015), detecta más hallazgos ALTA, estructura el informe con criticidad explícita y acciones correctivas, e integra medición geométrica real.
+        </p>
+        <p style="font-size:12px; color:#4B5C7A;">
+          La propuesta de valor diferenciadora es el <strong>pipeline de extracción geométrica</strong> (OpenCV + DINO + SAM 2) que ningún competidor LLM-only puede replicar fácilmente.
+        </p>
+      </div>
+      <div>
+        <h4 class="rv">Revi — Perfil de fortaleza</h4>
+        <p style="font-size:12px; color:#4B5C7A; margin-bottom:10px;">
+          <strong>Ganador en análisis de expediente completo.</strong> Revi supera a ArchiCheck cuando el input es el expediente DOM completo (11 documentos). Detecta errores aritméticos, documentos vencidos, firmas faltantes y errores de programa que son causas directas de rechazo pero no están en el plano.
+        </p>
+        <p style="font-size:12px; color:#4B5C7A;">
+          El output en formato "acta DOM" es más directamente accionable por el arquitecto aunque menos visual y estructurado.
+        </p>
+      </div>
+    </div>
+
+    <div class="verdict-box mt-24">
+      <h3>Veredicto final</h3>
+      <p>
+        <strong>Para el análisis del plano:</strong> ArchiCheck gana claramente. 40 hallazgos vs 7 de Revi. La profundidad en DS 50/2015, evacuación y normativa sanitaria es una ventaja técnica real que el mercado valorará.
+      </p>
+      <p>
+        <strong>Para el expediente completo:</strong> Revi cubre terreno que ArchiCheck no alcanza hoy. Los errores aritméticos, documentos vencidos y firmas faltantes son causas de rechazo DOM que un arquitecto necesita resolver antes de presentar. Esta es la brecha más urgente a cerrar.
+      </p>
+      <p>
+        <strong>Inconsistencia de Revi:</strong> Revi usa dos criterios distintos para la rampa (10.53% por fórmula OGUC vs 8% plano). ArchiCheck es consistente. Esto es una debilidad metodológica de Revi explotable en el posicionamiento.
+      </p>
+      <p>
+        <strong>Recomendación estratégica:</strong> ArchiCheck debe añadir análisis multi-documento (formulario SPOM, especificaciones, informe accesibilidad) como próximo hito de producto. Con eso, combinaría la profundidad técnica actual con la cobertura administrativa que hoy solo tiene Revi — creando un producto sin competidor directo en el mercado chileno.
+      </p>
+    </div>
+
+    <div class="mt-24 text-muted" style="text-align:center; border-top:1px solid #EEF2FB; padding-top:16px;">
+      Reporte generado por ArchiCheck · Benchmark confidencial · 30 de junio de 2026
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

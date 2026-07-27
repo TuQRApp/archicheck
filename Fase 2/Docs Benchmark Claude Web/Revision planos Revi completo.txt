@@ -1,0 +1,552 @@
+Revisa con todas tus herramientas de análisis de planos la lámina 2 de los planos que subí con el nombre 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Necesito que identifiques los elementos como puertas, ventanas, muros, etc. Y los espacios como bodegas, cocina, terrazas. Dame un listado de lo que identificas y sus cumplimientos
+
+Copiar
+
+Ver proceso (5)
+Clara
+
+En la Lámina 2 del archivo de planos se identifican los planos de arquitectura proyectados para el Nivel 1 y Nivel 2, el plano de emplazamiento, la simbología de intervención y el cuadro de rotulación 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. En materia de cumplimiento normativo, la simbología gráfica de demolición y obra nueva es adecuada, y se contempla una ruta de accesibilidad universal con baño adaptado en primer piso 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. Sin embargo, se observa una observación crítica en la rampa de acceso: con una longitud de 4,25 m, la pendiente indicada del 10,58% supera la pendiente máxima admisible para ese desarrollo de acuerdo al Art. 4.1.7 N° 2 de la OGUC 
+OGUC
+. ¿Quieres que revise el informe de accesibilidad o el resto de las láminas para verificar cómo está especificada la rampa en las demás piezas técnicas?
+
+Respuesta detallada
+Análisis de la Lámina 2 (Planta de Arquitectura y Emplazamiento)
+De acuerdo con la revisión del archivo 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf (Lámina 2/4), se detallan los siguientes recintos, elementos constructivos, cotas y niveles para el proyecto de restaurante 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+:
+
+1. Elementos y Espacios Identificados
+Situación Propuesta Nivel 1 (Escala 1:50) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Recintos y espacios:
+Exteriores y accesos: Terrazas exteriores en el acceso frontal y lateral, acceso a nivel con pavimento podotáctil y Rampa de Acceso Universal.
+Servicio y trabajo: Cocina principal, Cocina/Barra (sin atención directa de público), Oficina, Bodega y Pasillo de circulación.
+Servicios higiénicos: Baño Universal (accesible), Baño Personal Mujeres, Baño Personal Hombres y Baño Personal general.
+Elementos arquitectónicos y equipamiento:
+Muros: Muros existentes a demoler/retirar (achurado amarillo) y muros proyectados de obra nueva (achurado rojo).
+Circulaciones verticales: Escalera interior con indicación de primeros peldaños (1 al 10), Rampa de acceso universal con pasamanos/barandas.
+Vanos y pasadas: Cotas numéricas para anchos de accesos y vanos (1,45 m en acceso principal, 1,3 m, 1,6 m, 1,4 m, 1,2 m, 0,9 m, 0,8 m, 2,9 m, 1,55 m, 1,5 m, 0,4 m y 0,5 m).
+Artefactos sanitarios: Inodoros, lavamanos y barras de apoyo en el Baño Universal; muebles y lavaderos proyectados en zonas de cocina.
+Niveles y líneas normativas:
+Niveles de piso terminado (NPT): 
+±
+0.00
+±0.00 y 
++
+0.45
++0.45.
+Líneas del terreno: Línea Oficial, Línea de Edificación, Deslindes / Límites de Propiedad y trazado del Corte A-A con Punto de Aplicación de Rasante.
+Situación Propuesta Nivel 2 (Escala 1:50) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Recintos y espacios:
+Servicios higiénicos: Baño Clientes Mujeres y Baño Clientes Hombres.
+Apoyo y administración: Dos recintos destinados a Oficina, varias zonas indicadas como Bodega y Pasillo distribuidor.
+Elementos arquitectónicos:
+Circulaciones: Continuación de la escalera interior (peldaños 11 al 19).
+Muros y vanos: Cotas de espesores y vanos (2,4 m, 7,45 m, 0,85 m, 1,4 m, 0,8 m, 1,2 m, 1,22 m, 1,4 m), marcando retiro de elementos existentes (amarillo) y tabiquería/muros nuevos (rojo).
+Artefactos sanitarios: Inodoros y lavamanos en los baños para clientes.
+Plano de Emplazamiento, Simbología y Viñeta 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Plano de Emplazamiento (1:500): Ubicación general del volumen edificado en el lote, distancia a la Línea Oficial y Eje de Calzada.
+Simbología de Intervención:
+Color Amarillo: Elementos a retirar o demoler.
+Color Rojo: Obras nuevas a construir.
+Cuadro de Rotulación:
+Comuna: I. Municipalidad de Providencia.
+Dirección: Plaza Pedro de Valdivia N° 2025 (Rol 03228-012).
+Destino: Restaurant.
+Propietario: Asesorías e Inversiones Conchalí Ltda.
+Arquitecto: Cristian Wrbka M.
+2. Evaluación de Cumplimientos Normativos
+Pendiente y Desarrollo de Rampa de Acceso (Observación):
+En la planta del Nivel 1 se indica una rampa de accesibilidad de 4,25 m de largo con una pendiente del 10,58% 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Conforme al Art. 4.1.7 N° 2 de la OGUC, cuando una rampa supera los 1,5 m de largo y se extiende hasta 9,0 m, la pendiente máxima debe disminuir progresivamente de 12% a 8% 
+OGUC
+. Para un desarrollo de 4,25 m, la pendiente exigida se sitúa bajo el 9,5%. Por consiguiente, la pendiente del 10,58% proyectada no cumple la relación de desarrollo/pendiente del Art. 4.1.7 de la OGUC.
+Ruta Accesible e Ingreso (Cumple):
+La lámina representa un acceso a nivel con pavimento podotáctil de alerta y guía, pasillos con anchos adecuados para la circulación y la inclusión de un Baño Universal accesible en el Nivel 1 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Simbología Gráfica de Modificación (Cumple):
+La distinción entre elementos a retirar (amarillo) y obra nueva a construir (rojo) se ajuste a la representación requerida para proyectos de remodelación o ampliación menor 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Vista completa
+
+Ver menos
+
+Copiar
+Puedes darme más detalles de todo? Superficies, anchos de pasillos, etc
+
+Copiar
+
+Ver proceso (3)
+Clara
+
+La Lámina 2 detalla las cotas de la rampa (1,30 m de ancho y 10,58% de pendiente), el acceso principal (1,45 m) y pasillos que varían entre 0,90 m y 1,60 m en el Nivel 1, y entre 1,22 m y 1,40 m en el Nivel 2 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. El Baño Universal mide 2,90 m x 1,55 m con puerta de 0,80 m 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+, y la escalera contempla 19 peldaños con un ancho de tramo de 1,40 m 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. En el cuadro de superficies de la Lámina 1 se declara una superficie de terreno de 388,00 m², una edificación existente de 298,90 m² y una ampliación proyectada en el Nivel 2 de 17,90 m², totalizando 316,80 m² edificados 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. ¿Te gustaría que corrobore estos datos numéricos de superficie contra el Formulario de Solicitud (FUN) o el Certificado de Informaciones Previas?
+
+Respuesta detallada
+Detalle Completo de Cotas, Superficies y Dimensiones
+A partir de la revisión detallada de la Lámina 2 (Plantas de Arquitectura) y los cuadros informativos del plano 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf, se extraen las siguientes dimensiones y mediciones específicas 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+:
+
+1. Cuadro de Superficies y Parámetros Edificatorios (Lámina 1)
+Superficie total de predio: 388,00 m² 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Superficie edificada por nivel:
+Nivel -1 (Subterráneo): 9,00 m² existentes | 0,00 m² proyectados | Total: 9,00 m² 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Nivel 1: 197,04 m² existentes | 0,00 m² proyectados | Total: 197,04 m² 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Nivel 2: 101,86 m² existentes | 17,90 m² proyectados | Total: 119,76 m² 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Superficie Total Edificada: 298,90 m² existentes + 17,90 m² proyectados = 316,80 m² Totales 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Coeficientes urbanísticos:
+Coeficiente de constructibilidad: Permitido: 1,4 | Existente: 0,7 | Proyectado: 0,8 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Ocupación de suelo: Existente: 51% (0,26) | Proyectado: 51% (0,31) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+2. Dimensiones y Cotas en Planta (Lámina 2)
+Acceso y Rampa Universal 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Ancho libre de la rampa: 1,30 m.
+Pendiente especificada: 10,58%.
+Desnivel a salvar: Desde Cota 
+±
+0.00
+±0.00 hasta NPT 
++
+0.45
++0.45.
+Ancho del ingreso principal a nivel: 1,45 m.
+Ancho de Pasillos y Circulaciones 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Nivel 1:
+Pasillo de distribución principal: 1,60 m y 1,40 m de ancho.
+Pasajes de servicio y acceso a recintos: 1,30 m, 1,20 m y 0,90 m.
+Nivel 2:
+Pasillo distribuidor a oficinas y baños: 1,40 m y 1,22 m.
+Recintos, Puertas y Vanos 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Baño Universal (Nivel 1): Recinto de 2,90 m de largo por 1,55 m de ancho, con vano de puerta de 0,80 m / 0,90 m.
+Baños de Personal (Nivel 1): Puertas de acceso de 0,80 m de ancho.
+Baños de Clientes (Nivel 2): Puertas de 0,80 m de ancho para baño de mujeres y baño de hombres.
+Vanos en áreas de Cocina (Nivel 1): Pasadas e influencias de 1,50 m, 1,60 m, 2,90 m, 1,20 m y 0,90 m.
+Escalera Interior 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Peldaños: 19 peldaños en total (1 al 10 en Nivel 1; 11 al 19 en Nivel 2).
+Ancho de tramo de la escalera: 1,40 m (manteniendo un espacio libre contiguo de 1,30 m).
+Distanciamientos y Distancias a Deslindes 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Antejardín (Línea Oficial a Línea de Edificación): 5,00 m.
+Distanciamiento en Nivel 2 a deslindes:
+Deslinde posterior: 7,45 m.
+Deslindes laterales: 2,40 m y 1,40 m.
+(Nota: Las alturas libres interiores no están indicadas numéricamente en las plantas de la Lámina 2; se representan gráficamente en los cortes y elevaciones de la Lámina 3).
+
+Vista completa
+
+Ver menos
+
+Copiar
+Más detalle todavía
+
+Copiar
+
+Ver proceso (3)
+Clara
+
+El inventario de la Lámina 2 demuestra que está desarrollada a escala 1:50 y detalla recintos como Baño Universal, cocinas, bodegas, oficinas y baños de personal y clientes 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. Incluye cotas para todos los vanos, pasillos (0,90 m a 1,60 m), rampa (1,30 m de ancho, 10,58% de pendiente), distanciamientos (5 m a Línea Oficial; 7,45 m, 2,40 m y 1,40 m a deslindes) y trazado del Corte A-A con puntos de aplicación de rasante 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. Se observa además un error formal en la viñeta de la Lámina 2, ya que en el campo 'Contenido' repite el texto de la Lámina 1 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. ¿Te gustaría que revise si este error de rotulación o la divergencia de escalas afecta la concordancia con el Formulario Único de Solicitud (FUN)?
+
+Respuesta detallada
+Inventario Exhaustivo y Microscópico de la Lámina 2 (05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf)
+La Lámina 2/4 corresponde al desarrollo detallado de las plantas de arquitectura proyectadas a escala 1:50 y al plano de emplazamiento a escala 1:500 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. A continuación se desglosa el inventario completo:
+
+1. Inventario por Recinto y Equipamiento Dibujado 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Nivel 1 (Escala 1:50)
+Terraza Frontal y Accesos: Trazado de pavimento podotáctil de alerta/guía ("Pavimento Podotactil") en el acceso principal a nivel y Rampa de Acceso Universal con pasamanos/barrandas laterales.
+Cocina (Barra sin atención de público): Mesón/barra de despacho dibujada hacia el interior.
+Pasillo Central: Tramo 1 de la escalera interior con 10 peldaños dibujados y numerados correlativamente (1 al 10).
+Oficina (Sector frontal derecho): Vano de puerta y ventanas.
+Baño Universal: Inodoro (WC), lavamanos y barras de apoyo abatibles/fijas en 'L' y paralelas a ambos lados del artefacto sanitario.
+Cocina Principal (Sector central-posterior): Mesones de trabajo/muebles y vanos de comunicación hacia bodega y pasillo.
+Bodega (Sector central-posterior derecho): Delimitada con muros y vano de acceso.
+Baño Personal Mujeres: Inodoro (WC) y lavamanos.
+Baño Personal Hombres: Inodoro (WC) y lavamanos.
+Baño Personal (Sector posterior derecho): Inodoro (WC) y lavamanos.
+Bodega (Sector posterior izquierdo): Recinto de almacenamiento delimitado.
+Nivel 2 (Escala 1:50)
+Baño Clientes Mujeres: Inodoro (WC) y lavamanos.
+Baño Clientes Hombres: Inodoro (WC), lavamanos y urinario.
+Pasillo Distribuidor: Tramo 2 de la escalera interior con 9 peldaños dibujados y numerados del 11 al 19.
+Oficina (Sector frontal izquierdo): Recinto de trabajo administrativo.
+Oficina (Sector frontal derecho): Recinto de oficina con puerta de paso intercomunicante.
+Bodegas (Sector central y posterior): Varios recintos delimitados para almacenaje.
+2. Inventario de Cotas y Mediciones Escritas 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Cotas de Nivel de Piso Terminado (NPT):
+±0.00 (Nivel exterior de vereda, terraza y patios).
++0.45 (Nivel interior del Nivel 1 y Oficina).
+Rampa de Acceso Universal:
+Ancho de rampa: 1.30 m.
+Pendiente indicada: 10.58%.
+Fórmula explícita en plano: P = 13.14 - (0,57 x 4.5) / 100.
+Ancho de Ingreso y Pasillos:
+Ingreso principal a nivel: 1.45 m ("ACCESO A NIVEL").
+Pasillos en Nivel 1: 1.60 m, 1.40 m, 1.30 m, 1.20 m y 0.90 m.
+Pasillos en Nivel 2: 1.40 m y 1.22 m.
+Vanos y Puertas:
+Puertas de servicios/oficinas/baños: 0.80 m.
+Vanos de comunicación/pasadas: 0.85 m, 0.90 m, 1.20 m, 1.50 m, 1.55 m, 1.60 m y 2.90 m.
+Distanciamientos y Deslindes:
+Antejardín (Línea Oficial a Línea de Edificación): 5.00 m.
+Distanciamientos a deslindes en Nivel 2: 7.45 m (posterior), 2.40 m y 1.40 m (laterales).
+3. Notas Textuales, Símbolos y Viñeta 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Ejes y Cortes:
+Línea de Corte A-A transversal dibujada en ambas plantas.
+Símbolos de Punto Aplicación Rasante destacados con recuadros punteados en los bordes de la edificación.
+Líneas Oficiales y de Deslinde:
+"Línea Oficial", "Línea Edificacion" y "Deslinde Limite Propiedad" / "Deslinde".
+Simbología de Intervención (Leyenda):
+Se retira: Achurado en líneas diagonales amarillas (muros/elementos a demoler).
+Se construye: Achurado en líneas diagonales rojas (muros proyectados).
+Plano de Emplazamiento (Escala 1:500):
+Representación en esquina superior derecha mostrando "Eje Calzada", "Línea Oficial" y "Línea Edificación".
+Cuadro de Rotulación (Viñeta):
+Municipalidad: I. Municipalidad de Providencia.
+Proyecto: Habilt. Rest. Plaza Pedro de Valdivia (Rol 03228-012).
+Dirección: Plaza Pedro de Valdivia N° 2025.
+Propietario: Asesorías e Inversiones Conchalí Ltda. (RUT 78.796.070-7).
+Destino Solicitado: Restaurant.
+Arquitecto: Cristian Wrbka M. (Rol 3-10885 / cwrbka@eleconsultores.cl).
+Número de Lámina: 2/4.
+4. Diferencias Registradas entre Láminas
+Escalas de Desarrollo:
+La Lámina 1 presenta las plantas generales en escala 1:100 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+La Lámina 2 amplía el nivel de detalle de las plantas propuestas a escala 1:50 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Cuadros Normativos vs. Emplazamiento:
+La Lámina 1 reúne el Cuadro de Superficies, Cuadro Normativo, Carga de Ocupación y Croquis de Ubicación 1:1000 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+La Lámina 2 incluye el Plano de Emplazamiento 1:500 e independiza las plantas cotadas 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Inconsistencia en Texto del Rótulo:
+En la Lámina 2, el campo Contenido de la viñeta repite -Plano Situacion Existente y Propuesta / - Cuadro superficie Exis. y Propuesta 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+, lo cual corresponde a la Lámina 1. En las Láminas 3 y 4 este texto se corrigió para señalar las elevaciones y cortes respectivos 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Vista completa
+
+Ver menos
+
+Copiar
+Más detalle
+
+Copiar
+
+Ver proceso (3)
+Clara
+
+En la Lámina 2, los artefactos por baño comprenden WC y lavamanos (agregando barras de apoyo abatibles/fijas y círculo de giro de 1,50 m en el Baño Universal de Nivel 1) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. La totalidad de los recintos proyecta apertura de puertas hacia el interior, a excepción del Baño Universal cuya puerta de 0,90 m abre hacia el exterior (pasillo) para no invadir el área de giro, conforme al Art. 4.1.7 de la OGUC 
+OGUC
+. La planta indica pavimento podotáctil en el exterior antes de la rampa (1,30 m de ancho) y cotas NPT de ±0.00 en exterior y +0.45 en interior 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. Si lo deseas, puedo revisar si la memoria de accesibilidad u otro antecedente del expediente registra discrepancias sobre el cálculo de esta rampa.
+
+Respuesta detallada
+Desglose Micro-Detallado de la Lámina 2 (05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf)
+A continuación se detalla el análisis de la Lámina 2/4 (Plantas de Arquitectura Proyectadas a escala 1:50 y Emplazamiento 1:500) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+:
+
+1. Inventario de Artefactos Sanitarios por Baño
+Nivel 1 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Baño Universal (Accesible):
+1 Inodoro (WC).
+1 Lavamanos.
+Barras de apoyo para personas con discapacidad (barra lateral abatible/fija en L a un costado del WC y barra fija adyacente).
+Demarcación gráfica del círculo de giro libre de 1,50 m de diámetro.
+Baño Personal Mujeres: 1 Inodoro (WC) + 1 Lavamanos.
+Baño Personal Hombres: 1 Inodoro (WC) + 1 Lavamanos.
+Baño Personal (contiguo a cocina): 1 Inodoro (WC) + 1 Lavamanos.
+Nivel 2 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Baño Clientes Mujeres: 1 Inodoro (WC) + 1 Lavamanos.
+Baño Clientes Hombres: 1 Inodoro (WC) + 1 Lavamanos.
+(Nota: En la gráfica de la Lámina 2 no se contemplan urinarios independientes; los baños de hombres incluyen WC y lavamanos).
+
+2. Sentidos de Apertura de Puertas por Recinto
+Nivel 1 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Baño Universal (Accesible): Abre hacia el exterior (hacia la circulación/pasillo), evitando interferir con el área de giro interior de 1,50 m.
+Baños de Personal (Mujeres, Hombres y de Cocina): Abren hacia el interior de sus respectivos recintos.
+Oficina (Nivel 1): Abre hacia el interior del recinto.
+Cocina / Barra: Abre hacia el interior de la zona de servicio.
+Ingreso Principal: Abre hacia el interior del pasillo de acceso.
+Nivel 2 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Baño Clientes Mujeres y Hombres: Abren hacia el interior del recinto.
+Oficinas y Bodegas (Nivel 2): Abren hacia el interior de cada recinto.
+3. Cotas de Muros, Grosores y Elementos de Intervención
+Muros y Tabiquerías:
+Se retira (Color Amarillo): Muros y divisiones preexistentes marcadas para demolición en ambos niveles.
+Se construye (Color Rojo): Tabiquería de obra nueva proyectada.
+Vanos de Puertas y Pasadas:
+Baño Universal: Puerta con vano de 0,90 m.
+Baños de Personal y Clientes, Oficinas y Bodegas: Puertas con vano de 0,80 m.
+Pasadas en Nivel 2 y comunicación interna: Vanos de 0,85 m y 1,22 m.
+Pasadas en área de Cocina (Nivel 1): Vanos de 1,20 m, 1,50 m, 1,60 m y 2,90 m.
+Dimensiones de Recintos Claves:
+Baño Universal: 2,90 m de largo por 1,55 m de ancho interno.
+Ancho de Circulaciones:
+Nivel 1: Pasillos de 1,60 m, 1,40 m, 1,30 m, 1,20 m y 0,90 m.
+Nivel 2: Pasillos distribuidor de 1,40 m y 1,22 m.
+Deslindes y Distanciamientos:
+Antejardín (Línea Oficial a Línea de Edificación): 5,00 m.
+Distanciamientos de Nivel 2 a deslindes: 7,45 m (posterior), 2,40 m y 1,40 m (laterales).
+4. Pavimentos y Cotas de Nivel (NPT)
+Pavimento Podotáctil: Indicado de forma explícita mediante achurado/textura en la terraza exterior, posicionado frente al acceso a nivel y al pie del inicio de la Rampa de Acceso Universal 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Cotas de Nivel de Piso Terminado:
+Nivel exterior (Terraza/patio): ±0.00.
+Nivel interior (Piso 1 / Oficinas / Baños): +0.45.
+5. Rampa de Acceso y Ruta Accesible (Lámina 2 vs. Exigencia Normativa)
+Parámetros en Plano (Lámina 2):
+Ancho libre de rampa: 1,30 m 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Desnivel a salvar: 0,45 m (desde ±0.00 a +0.45) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Largo de desarrollo: 4,25 m aproximadamente.
+Pendiente declarada en plano: 10,58% (fórmula anotada: P = 13.14 - (0,57 x 4.5) / 100) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Evaluación de Cumplimiento (Art. 4.1.7 OGUC):
+El Art. 4.1.7 N° 2 de la OGUC estipula que una rampa solo puede tener 12% de pendiente para desarrollos de hasta 1,50 m; sobre esa longitud, la pendiente debe disminuir progresivamente hasta llegar al 8% para un desarrollo de 9,00 m 
+OGUC
+.
+Para un largo de 4,25 m, la pendiente máxima reglamentaria es de aproximadamente 9,50%. Por ende, el 10,58% indicado en la Lámina 2 excede el máximo permitido por la OGUC para ese largo de rampa 
+OGUC
+. />.
+Baño Universal:
+La disposición respeta el sentido de apertura de puerta hacia afuera, el diámetro libre de 1,50 m para giro de silla de ruedas y la provisión de barras de apoyo contiguas al inodoro, cumpliendo con las exigencias del Art. 4.1.7 de la OGUC 
+OGUC
+.
+Vista completa
+
+Ver menos
+
+Copiar
+Más detalle
+
+Copiar
+
+Ver proceso (3)
+Clara
+
+La revisión cruzada con el Informe de Accesibilidad revela que la rampa se declara con 10,36% de pendiente en el informe 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+ y con 10,58% en la Lámina 2 del plano 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+. Ambos valores exceden o se encuentran al límite de la pendiente máxima exigida por el Art. 4.1.7 de la OGUC para un desarrollo de 4,50 m 
+OGUC
+.
+
+Sugerencia de advertencia
+Croquis de emplazamiento a escala (obra menor)
+Advertencia
+Aclarar la inconsistencia en la pendiente de la rampa de accesibilidad entre la Lámina 2 (10,58%) y el Informe de Accesibilidad (10,36%), ajustando el desarrollo para no superar la pendiente máxima del Art. 4.1.7 de la OGUC.
+
+Art. o norma transgredida
+
+Art. 4.1.7
+Descartar
+Guardar advertencia
+¿Quieres guardar esta advertencia en tu acta de observaciones para acordarte de corregirla?
+
+Respuesta detallada
+Análisis Exhaustivo Cruzado de la Lámina 2 y el Informe de Accesibilidad
+A continuación se presenta un desglose comparativo de todos los elementos, dimensiones y aspectos normativos contenidos en la Lámina 2/4 del plano de arquitectura (05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf) en cruce directo con el Informe de Accesibilidad (08_Inf_Acces_Rest_Pza_PdV.pdf) y las exigencias de la OGUC 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+
+08_Inf_Acces_Rest_Pza_PdV.pdf
+
+OGUC
+:
+
+1. Cruce Específico: Rampa de Acceso Universal y Accesibilidad
+Parámetros en Lámina 2 (Plano de Arquitectura):
+Ancho libre de rampa: 1,30 m 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Desnivel a salvar: 0,45 m (desde 
+±
+0.00
+±0.00 hasta NPT 
++
+0.45
++0.45) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Pendiente anotada: 10,58% (fórmula expresada: 
+P
+=
+13
+,
+14
+−
+(
+0
+,
+57
+×
+4
+,
+5
+)
+/
+100
+P=13,14−(0,57×4,5)/100) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Parámetros en Informe de Accesibilidad (08_Inf_Acces_Rest_Pza_PdV.pdf):
+Ancho útil de rampa: 1,20 m a 1,30 m 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+.
+Desnivel y largo: Largo de 4,50 m para salvar una altura de 0,45 m 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+.
+Pendiente declarada: 10,36% 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+.
+Evaluación de Cumplimiento (Art. 4.1.7 N° 2 de la OGUC):
+La OGUC establece que la pendiente máxima de 12% aplica sólo para desarrollos de hasta 1,50 m; para desarrollos mayores y hasta 9,00 m, la pendiente disminuye progresivamente hasta alcanzar el 8% 
+OGUC
+.
+Para una rampa con un desarrollo de 4,50 m, la pendiente máxima admisible por la OGUC es del 9,60%.
+Incongruencia e Incumplimiento: Existe una discrepancia entre la pendiente declarada en la Lámina 2 (10,58%) y el Informe (10,36%) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+
+08_Inf_Acces_Rest_Pza_PdV.pdf
+. Además, ambos valores superan el máximo normativo permitido para un largo de 4,50 m de acuerdo al Art. 4.1.7 de la OGUC 
+OGUC
+.
+2. Baño Universal (Accesible)
+Lámina 2:
+Dimensiones internas: 2,90 m de largo 
+×
+× 1,55 m de ancho 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Giro libre interior: Círculo inscrito de 1,50 m de diámetro dibujado 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Puerta: Vano de 0,90 m con apertura hacia el exterior (pasillo) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Equipamiento: 1 Inodoro (WC), 1 lavamanos y barras de apoyo abatibles/fijas a los costados del WC 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+.
+Informe de Accesibilidad:
+Valida las dimensiones de 2,90 m 
+×
+× 1,55 m, el paso libre de puerta de 0,90 m abriendo hacia afuera y la zona de giro de 1,50 m, cumpliendo con las condiciones exigidas por el Art. 4.1.7 de la OGUC 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+
+OGUC
+.
+3. Matriz Completa de Recintos, Cotas y Aperturas (Lámina 2)
+Nivel 1 (Piso 1 - NPT +0.45) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Acceso Principal: Vano de 1,45 m; puerta abre hacia el interior; antecedido por pavimento podotáctil.
+Terraza Exterior: Nivel 
+±
+0.00
+±0.00; pavimento podotáctil de alerta en el inicio de la ruta de acceso.
+Cocina / Barra: Mueble de despacho/atención; vano de 1,60 m / 1,50 m; puerta abre hacia el interior.
+Oficina (Piso 1): Vano de 0,80 m; puerta abre hacia el interior.
+Baño Personal Mujeres: 1 WC + 1 Lavamanos; vano 0,80 m; puerta abre hacia el interior.
+Baño Personal Hombres: 1 WC + 1 Lavamanos; vano 0,80 m; puerta abre hacia el interior.
+Baño Personal (Cocina): 1 WC + 1 Lavamanos; vano 0,80 m; puerta abre hacia el interior.
+Bodegas (Piso 1): Vanos de 0,80 m y 0,90 m; puertas abren hacia el interior.
+Escalera Interior: Peldaños 1 al 10; ancho de tramo de 1,40 m con paso adyacente de 1,30 m.
+Nivel 2 (Piso 2 - Ampliación Proyectada) 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+Escalera Interior: Peldaños 11 al 19; llegada a pasillo distribuidor de 1,40 m y 1,22 m de ancho.
+Baño Clientes Mujeres: 1 WC + 1 Lavamanos; vano 0,80 m; puerta abre hacia el interior.
+Baño Clientes Hombres: 1 WC + 1 Lavamanos; vano 0,80 m; puerta abre hacia el interior.
+Oficinas Nivel 2 (2 recintos): Vanos de 0,80 m y 1,22 m (comunicante); puertas abren hacia el interior.
+Bodegas Nivel 2: Vanos de 0,80 m y 0,85 m; puertas abren hacia el interior.
+Deslindes y Distanciamientos: 5,00 m a Línea Oficial (antejardín); 7,45 m a deslinde posterior; 2,40 m (oeste) y 1,40 m (este) a deslindes laterales.
+4. Cuadro Comparativo de Observaciones en el Expediente
+Aspecto	Lámina 2 (Plano Arquitectura)	Informe Accesibilidad	Conformidad OGUC / Observación
+Pendiente Rampa	10,58% 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+10,36% 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+Incongruente e Incumple Art. 4.1.7 OGUC (máx. ~9,60% para 4,5 m) 
+OGUC
+Ancho Rampa	1,30 m 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+1,20 m – 1,30 m 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+Cumple Mínimo (mín. 0,90 m) 
+OGUC
+Baño Universal	2,90 m 
+×
+× 1,55 m, puerta 0,90 m exterior 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+2,90 m 
+×
+× 1,55 m, puerta 0,90 m exterior 
+08_Inf_Acces_Rest_Pza_PdV.pdf
+Cumple Art. 4.1.7 OGUC 
+OGUC
+Texto de Viñeta	Repite texto de Lámina 1 
+05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf
+N/A	Observación Formal de rotulación

@@ -1,0 +1,103 @@
+Aquí tienes el listado completo y consolidado de todas las aclaraciones técnicas para tu arquitecto, estructurado documento por documento para que puedas copiarlo directamente. Este informe aborda cada una de las inconsistencias detectadas en el expediente CLA.
+
+--- Respuesta detallada ---
+
+# MINUTA DE ACLARACIONES Y CORRECCIONES TÉCNICAS (EXPEDIENTE CLA)
+**Proyecto:** Ampliación Comercial (Restaurante) - Plaza Pedro de Valdivia 2025, Providencia Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf
+**Comuna:** Providencia (Zonas UpR y EC2+A8) 02_CIP_PEDRO_DE_VALDIVIA_2025.pdf
+
+---
+
+## DOCUMENTO 1: Solicitud de Permiso de Obra Menor (`Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf`)
+
+*   **Aclaración 1.1 (Firmas Obligatorias):** El formulario carece por completo de firmas. Se debe estampar la firma manuscrita o digital del propietario (representante legal de *Asesorías en Inversiones Conchalí Ltda.*) en la Sección 3, y la del arquitecto proyectista en la Sección 4 Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf.
+*   **Aclaración 1.2 (Acreditación de Personería Jurídica):** En la Sección 3, se declaró un "Contrato de Arriendo" para acreditar la representación de la sociedad Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf. Esto es un error legal. Se debe individualizar al representante legal (Nombre y R.U.T.) y acompañar la escritura pública de constitución de la sociedad o el mandato de representación vigente, declarándolo en el formulario.
+*   **Aclaración 1.3 (Discrepancia de Superficies):** En la Sección 7, se declara una superficie existente de **$399,00\text{ m}^2$** y una ampliación de **$22,43\text{ m}^2$** Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf. Estos valores deben ser rectificados para que coincidan exactamente con las superficies reales levantadas en el plano de arquitectura ($307,90\text{ m}^2$ existente y $17,00\text{ m}^2$ proyectada).
+*   **Aclaración 1.4 (Omisión de la Ley de Aportes):** Al tratarse de una ampliación comercial que incrementa la intensidad de ocupación del suelo (densificación), se debe incorporar en el formulario la declaración de cumplimiento del artículo 70 de la LGUC (Secciones 6.5, 6.8 y 6.9 del FUN estándar) y adjuntar el Formulario Único de la Ley de Aportes (Ley N° 20.958).
+*   **Aclaración 1.5 (Clasificación de la Construcción):** Se debe declarar formalmente en el formulario la clasificación de la estructura de la ampliación, la cual corresponde a **Clase G** (perfiles metálicos/Metalcon) según las especificaciones técnicas 07_Especificaciones_Técnicas_Pedro_de_Valdivia.pdf.
+
+---
+
+## DOCUMENTO 2: Planos de Arquitectura (`05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf`)
+
+### A. Cuadro de Superficies (Lámina 1)
+*   **Aclaración 2.1 (Error de Suma en Nivel 2):** En el cuadro "Resumen de Superficies", para el Nivel 2 se indica una superficie existente de $101,86\text{ m}^2$ y una proyectada de $17,00\text{ m}^2$, pero el total se calcula erróneamente en **$119,76\text{ m}^2$** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. La suma real es **$118,86\text{ m}^2$**.
+*   **Aclaración 2.2 (Error de Suma en Columna Existente):** La suma vertical de la columna "Existente" ($9,00\text{ m}^2$ en subterráneo + $197,04\text{ m}^2$ en primer piso + $101,86\text{ m}^2$ en segundo piso) da un total real de **$307,90\text{ m}^2$**, pero el cuadro declara un total de **$298,90\text{ m}^2$** (omitiendo los $9,00\text{ m}^2$ del subterráneo) 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+*   **Aclaración 2.3 (Error de Suma en Columna Total General):** La suma vertical de la columna "TOTAL" ($9,00 + 197,04 + 119,76$) da **$325,80\text{ m}^2$**, pero el cuadro declara un total general de **$316,80\text{ m}^2$** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+*   **Aclaración 2.4 (Error de Suma en Columna Proyectada):** La suma vertical de la columna "Proyectada" ($0,00 + 0,00 + 17,00$) da **$17,00\text{ m}^2$**, pero el cuadro declara un total proyectado de **$17,90\text{ m}^2$** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf.
+*   **Aclaración 2.5 (Discrepancia con Cuadro Normativo):** El "Cuadro de Superficies Normativas" declara una "Superficie Total Existente" de **$289,90\text{ m}^2$** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf, lo cual no coincide con los $298,90\text{ m}^2$ (ni con los $307,90\text{ m}^2$ reales) del cuadro de resumen.
+
+### B. Destinos y Distribución de Plantas (Láminas 1 y 2)
+*   **Aclaración 2.6 (Destino Erróneo en Cuadro Normativo):** El "Cuadro de Superficies Normativas" declara que el destino de la edificación es **"Vivienda"** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. Debe corregirse por **"Comercio (Restaurant)"** para ser consistente con el proyecto.
+*   **Aclaración 2.7 (Inexistencia de Comedor):** Las plantas de arquitectura no muestran ninguna zona destinada a mesas o atención de público. Los recintos propuestos se limitan exclusivamente a "Cocina", "Oficina", "Bodega", "Pasillo" y "Baño" 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. Se debe dibujar la distribución del comedor en las plantas.
+*   **Aclaración 2.8 (Omisión de Áreas en Carga de Ocupación):** El "Desglose de Superficies y C. de Ocupación" solo detalla un área total de $182,66\text{ m}^2$ (suma de los polígonos A al K) 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. Esto deja fuera del cálculo de carga de ocupación **$134,14\text{ m}^2$** de la superficie total proyectada, omitiendo pasillos, escaleras y baños, lo cual infringe el artículo 4.2.4 de la OGUC. Se debe recalcular la carga de ocupación incluyendo el área de comedor (factor 1,5 m² por persona).
+
+### C. Normas Urbanísticas (Láminas 1, 2 y 3)
+*   **Aclaración 2.9 (Incumplimiento de Rasantes):** En las elevaciones (Norte y Sur) y en el Corte A-A, se observa que el volumen proyectado en el segundo nivel (achurado en rojo) sobrepasa la línea de la rasante de 70° proyectada desde los deslindes de la propiedad, violando el artículo 2.6.3 de la OGUC 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. Se debe rediseñar el plomo o la techumbre del segundo piso para inscribirse en la rasante.
+*   **Aclaración 2.10 (Adosamiento Irregular en Segundo Piso):** Se proyecta una ampliación adosada al límite de propiedad en el Nivel 2 (destinada a "Baño Clientes" y "Bodega") 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. Conforme al artículo 2.6.2 de la OGUC, los adosamientos están restringidos a la altura del primer piso (máximo 3,5 m o 4 m de altura). Se debe retranquear (distanciar) este volumen respecto al medianero (mínimo 3,00 metros para paramentos con vanos) Art. 4.2.11.
+*   **Aclaración 2.11 (Omisión de Estacionamientos):** Se omitió incorporar y graficar en los planos la dotación mínima de estacionamientos requerida para el destino Comercio (Restaurant) en la Zona B 02_CIP_PEDRO_DE_VALDIVIA_2025.pdf:
+    *   **Automóviles:** 1 cada 50 m² de superficie útil (exento si la superficie útil es menor a 150 m²).
+    *   **Bicicletas:** 1 cada 20 personas según la carga de ocupación, con un mínimo de 5 estacionamientos Art. 6.4.04.
+    *   Se deben graficar en el plano de emplazamiento (sin ocupar la franja de antejardín) Art. 8.1.04.
+
+### D. Accesibilidad Universal (Láminas 1 y 2)
+*   **Aclaración 2.12 (Pendiente de Rampa Fuera de Norma):** La rampa de acceso universal proyectada en el acceso principal tiene una pendiente indicada de **$10,58\%$** 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. El artículo 4.1.7 de la OGUC establece un máximo del **$8\%$** de pendiente. Para salvar el desnivel de **$0,45\text{ m}$**, la rampa debe tener un desarrollo mínimo de **$5,63\text{ m}$** ($0,45 / 0,08$).
+*   **Aclaración 2.13 (Baños de Clientes Inaccesibles):** Los baños principales para clientes se ubican exclusivamente en el Nivel 2 05_06_Planos_Rest_Pza_PdV_(021_06_21).pdf. Al no contar con ascensor ni rampa hacia el segundo piso, se incumple la ruta accesible. Se debe reubicar al menos un baño de clientes con características de accesibilidad universal en el primer piso (Nivel 1).
+
+---
+
+## DOCUMENTO 3: Informe de Accesibilidad Universal (`08_Inf_Acces_Rest_Pza_PdV.pdf`)
+
+*   **Aclaración 3.1 (Falta de Firmas):** El informe carece de las firmas del arquitecto proyectista y del profesional a cargo.
+*   **Aclaración 3.2 (Fórmula de Pendiente Errada):** El informe detalla una fórmula errónea y contradictoria para la rampa: *"P= 13,14=(0,57x4,5)/100"* 08_Inf_Acces_Rest_Pza_PdV.pdf. Debe corregirse indicando la nueva pendiente del **$8\%$** y la longitud de **$5,63\text{ m}$**.
+*   **Aclaración 3.3 (Campos Vacíos en Plantilla):** El pictograma de la rampa muestra una pendiente genérica de **"00%"** 08_Inf_Acces_Rest_Pza_PdV.pdf y el de ruta accesible tiene los campos de texto vacíos ("a: ....cm" y "h: ....cm") 08_Inf_Acces_Rest_Pza_PdV.pdf. Deben rellenarse con los valores reales del proyecto corregido.
+*   **Aclaración 3.4 (Omisión de Conectividad Vertical):** El informe omite justificar la accesibilidad hacia los baños de clientes del segundo piso. Debe actualizarse describiendo la incorporación del baño accesible en el primer piso.
+
+---
+
+## DOCUMENTO 4: Declaración Simple del Arquitecto (`03_Complimiento_normativa.pdf`)
+
+*   **Aclaración 4.1 (Falta de Firma):** El espacio destinado a la firma del arquitecto Cristian Wrbka Moreno al final de la página 3 se encuentra en blanco 03_Complimiento_normativa.pdf.
+*   **Aclaración 4.2 (Inconsistencia en Coeficientes):** Declara un coeficiente de constructibilidad de **0,9** (escrito como "0,,9") y una ocupación de suelo de **0,56** 03_Complimiento_normativa.pdf, contradiciendo los valores declarados en el FUN (1,1 y 0,80) Permiso_Obra_Menor_01_SPOM_Pza_PdV_2025.pdf. Deben ajustarse a los valores reales del plano corregido.
+*   **Aclaración 4.3 (Omisión de Parámetros):** El informe omite declarar la altura máxima del edificio en metros y los distanciamientos mínimos a los medianeros, datos que deben ser incorporados.
+
+---
+
+## DOCUMENTO 5: Especificaciones Técnicas Resumidas (`07_Especificaciones_Técnicas_Pedro_de_Valdivia.pdf`)
+
+*   **Aclaración 5.1 (Falta de Firmas):** El documento debe ser firmado por el arquitecto proyectista y por el representante legal.
+*   **Aclaración 5.2 (Falta de Clasificación Constructiva):** Se debe especificar formalmente en el documento la clasificación de la estructura de la ampliación, la cual corresponde a **Clase G** (perfiles metálicos/Metalcon) según el artículo 5.3.1 de la OGUC, en concordancia con la materialidad descrita 07_Especificaciones_Técnicas_Pedro_de_Valdivia.pdf.
+
+---
+
+## DOCUMENTO 6: Patente del Arquitecto (`04_Patente_2021_1.pdf`)
+
+*   **Aclaración 6.1 (Documento Vencido):** La patente profesional del arquitecto Cristian Wrbka Moreno adjunta corresponde al primer semestre del año 2021 (venció el 30 de junio de 2021) 04_Patente_2021_1.pdf. Se debe presentar la patente profesional al día (año 2026).
+
+---
+
+## DOCUMENTO 7: Certificado de Avalúo Fiscal Detallado (`01_b_Avaluo_FIscal_Detallado.pdf`)
+
+*   **Aclaración 7.1 (Documento Vencido):** El certificado de avalúo fiscal detallado corresponde al primer semestre del año 2021 01_b_Avaluo_FIscal_Detallado.pdf. Al tratarse de un proyecto con crecimiento urbano por densificación (Art. 70 LGUC), se debe presentar un certificado vigente al semestre de la solicitud (año 2026) para el cálculo del aporte al espacio público.
+
+---
+
+## DOCUMENTO 8: Presupuesto Informativo de las Obras (`09_Ppto_Rest_PdV.pdf`)
+
+*   **Aclaración 8.1 (Falta de Firmas):** El presupuesto debe ser firmado por el arquitecto proyectista y por el propietario para ser admisible en la DOM.
+
+---
+
+## DOCUMENTO 9: Listado de Documentos y Planos Numerados (`10_Listado_Docs.pdf`)
+
+*   **Aclaración 9.1 (Actualización de Índice):** El listado de documentos debe ser actualizado una vez que se corrijan las discrepancias de superficies, se incorporen las firmas correspondientes y se actualicen las patentes y certificados vencidos.
+
+---
+
+## DOCUMENTO 10: Certificado de Exención de IMIV (`07_Rpt_Certificado.pdf`)
+*   **Aclaración 10.1 (Incorporación Formal):** El documento es conforme y acredita la exención de IMIV. Debe ser incorporado formalmente como antecedente adjunto en la carpeta de la solicitud.
+
+---
+
+## DOCUMENTO 11: Certificado de Informaciones Previas (`02_CIP_PEDRO_DE_VALDIVIA_2025.pdf`)
+*   **Aclaración 11.1 (Conformidad):** El documento es conforme, está firmado y vigente 02_CIP_PEDRO_DE_VALDIVIA_2025.pdf. No requiere modificaciones, pero sirve como patrón de contraste para todas las correcciones de diseño solicitadas en los planos de arquitectura.

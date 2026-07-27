@@ -1,0 +1,10 @@
+=== ArchiCheck === 
+Fecha: 21-04-2026 13:13:09,25 
+Carpeta: C:\Users\nicolas.estragues\Documents\Claude\archicheck 
+ 
+cd documents/claude/Archicheck
+echo === ArchiCheck === > resumen.txt
+echo Fecha: %date% %time% >> resumen.txt
+echo Carpeta: %cd% >> resumen.txt
+echo. >> resumen.txt
+doskey /history >> resumen.txt

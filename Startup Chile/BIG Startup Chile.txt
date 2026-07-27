@@ -1,0 +1,150 @@
+El programa **BIG** de **[Start-Up Chile](https://startupchile.org?utm_source=chatgpt.com)** es el principal esquema de aceleración de startups de la aceleradora pública de CORFO. El nombre BIG proviene de sus tres líneas de apoyo:
+
+* **Build** (etapa temprana)
+* **Ignite** (validación y product-market fit)
+* **Growth** (escalamiento)
+
+BIG está dirigido a startups tecnológicas con potencial de crecimiento global y entrega financiamiento **equity-free** (sin tomar participación accionaria), además de mentorías, redes de contacto y acceso al ecosistema emprendedor chileno. ([Diario Emprende][1])
+
+# Resumen ejecutivo
+
+| Programa      | Etapa                             | Financiamiento           | Duración                |
+| ------------- | --------------------------------- | ------------------------ | ----------------------- |
+| Build         | Idea validada o prototipo inicial | CLP $15 millones         | 4 meses                 |
+| Ignite        | MVP desarrollado, buscando PMF    | CLP $30 millones         | 4 meses                 |
+| Growth        | Startup con ventas y expansión    | CLP $75 millones         | 6 meses                 |
+| Total posible | Escalamiento progresivo           | Hasta CLP $120 millones* | Distintas postulaciones |
+
+*No es automático. Cada programa requiere una nueva postulación y evaluación. ([nextidea4u.com][2])
+
+# Qué busca Start-Up Chile
+
+Las startups seleccionadas suelen cumplir varias características:
+
+* Base tecnológica o científico-tecnológica.
+* Solución innovadora.
+* Potencial de escalabilidad internacional.
+* Modelo de negocio repetible.
+* Capacidad de generar impacto económico desde Chile.
+* Equipo fundador sólido y comprometido. ([startupchile.org][3])
+
+# BUILD
+
+Pensado para emprendedores que aún están construyendo el producto.
+
+### Perfil típico
+
+* Problema identificado.
+* Solución definida.
+* Prototipo o validación inicial.
+* Pocas o ninguna venta.
+
+### Objetivos
+
+* Construir MVP.
+* Validar hipótesis.
+* Conseguir primeros usuarios.
+* Prepararse para levantar capital o entrar a Ignite.
+
+### Beneficios
+
+* CLP $15 millones de cofinanciamiento.
+* Programa de aceleración de 4 meses.
+* Mentorías.
+* Acceso a red de emprendedores e inversionistas. ([Diario Emprende][1])
+
+# IGNITE
+
+Diseñado para startups que ya tienen un producto funcionando.
+
+### Perfil típico
+
+* MVP desarrollado.
+* Usuarios o clientes iniciales.
+* Necesidad de validar product-market fit.
+
+### Objetivos
+
+* Mejorar métricas de adopción.
+* Aumentar ventas.
+* Refinar modelo de negocio.
+* Prepararse para expansión.
+
+### Beneficios
+
+* CLP $30 millones.
+* 4 meses de aceleración.
+* Mentorías especializadas.
+* Conexión con corporativos y potenciales inversionistas. ([Diario Emprende][1])
+
+# GROWTH
+
+La línea más competitiva.
+
+### Perfil típico
+
+* Startup con tracción demostrable.
+* Ventas recurrentes.
+* Interés en expansión internacional.
+* Preparación para rondas de inversión.
+
+### Objetivos
+
+* Escalar comercialmente.
+* Expandirse a nuevos mercados.
+* Levantar capital.
+* Profesionalizar procesos de crecimiento.
+
+### Beneficios
+
+* CLP $75 millones.
+* Programa de 6 meses.
+* Acceso a inversionistas.
+* Apoyo para internacionalización.
+* Redes corporativas de alto nivel. ([Diario Emprende][1])
+
+# Qué recibe una startup seleccionada
+
+Además del dinero:
+
+* Mentorías con expertos.
+* Cowork gratuito.
+* Acceso a comunidad de founders.
+* Networking con corporativos.
+* Conexiones con inversionistas.
+* Actividades de aceleración intensiva. ([TEKIOS][4])
+
+Para fundadores extranjeros existen beneficios adicionales, incluyendo apoyo para instalarse en Chile y visa de trabajo. ([TEKIOS][4])
+
+# Cómo evalúan las postulaciones
+
+Aunque los criterios específicos cambian entre generaciones, normalmente se evalúa:
+
+1. Innovación de la solución.
+2. Tamaño del mercado.
+3. Escalabilidad.
+4. Capacidad del equipo fundador.
+5. Tracción o validación existente.
+6. Potencial de impacto. ([startupchile.org][3])
+
+# Datos de competitividad
+
+La generación BIG 11 recibió aproximadamente **1.337 postulaciones** y seleccionó alrededor de 70 startups, lo que implica una tasa de aceptación cercana al 5%. ([TEKIOS][4])
+
+# Lo que suelen valorar mucho los evaluadores
+
+A partir de la información pública del programa y comentarios de participantes del ecosistema:
+
+* Un problema real y relevante.
+* Evidencia de validación con clientes.
+* Mercado suficientemente grande.
+* Equipo fundador complementario.
+* Potencial de crecimiento internacional.
+* Claridad en el uso de los fondos solicitados. ([startupchile.org][3])
+
+Si estás pensando postular a BIG con alguna iniciativa específica (por ejemplo un SaaS B2B, IA para empresas o automatización, que sé que son áreas que has explorado), puedo ayudarte a evaluar en qué línea encajaría mejor y qué tan competitiva sería una postulación.
+
+[1]: https://www.diarioemprende.cl/noticia/innovacion-ciencia-y-tecnologia/2025/11/convocatoria-start-up-chile-conoce-los-tres-programas-disponibles?utm_source=chatgpt.com "Convocatoria Start-Up Chile: conoce los tres programas disponibles - Diario Emprende"
+[2]: https://www.nextidea4u.com/news/143-el-caso-de-start-up-chile-programa-de-aceleracion-pionero-y-lider-en-la-region?utm_source=chatgpt.com "El caso de Start-Up Chile: programa de aceleración pionero y líder en la región"
+[3]: https://startupchile.org/en/blog/big-7-big-changes-eng/?utm_source=chatgpt.com "BIG 7, BIG Changes (ENG) – Start-Up Chile"
+[4]: https://tekios.co/2026/03/18/start-up-chile-lanza-su-generacion-big-11-con-70-startups-y-un-record-de-1-337-postulaciones/?utm_source=chatgpt.com "Start-Up Chile lanza su generación BIG 11 con 70 startups y un récord de 1.337 postulaciones"

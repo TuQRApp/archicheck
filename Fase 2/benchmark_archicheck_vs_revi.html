@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>ArchiCheck vs Revi — Comparativo Producto Final</title>
+<style>
+
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    color: #1a2535;
+    background: #f4f6fb;
+    line-height: 1.55;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: white; font-size: 11px; }
+    .page { box-shadow: none; margin: 0; border-radius: 0; }
+    .no-print { display: none; }
+    .page-break { page-break-before: always; }
+    .avoid-break { page-break-inside: avoid; }
+  }
+
+  /* ── Layout ── */
+  .page {
+    max-width: 960px;
+    margin: 0 auto 32px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    background: linear-gradient(135deg, #0D2251 0%, #1B3A8A 60%, #2952A3 100%);
+    color: white;
+    padding: 56px 60px 48px;
+  }
+  .cover-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .cover h1 {
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .cover h1 span { color: #7EC8E3; }
+  .cover-sub {
+    font-size: 15px;
+    opacity: 0.75;
+    margin-bottom: 32px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 24px;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item label {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 3px;
+  }
+  .cover-meta-item span { font-size: 13px; font-weight: 600; }
+
+  /* ── Section headers ── */
+  .section {
+    padding: 36px 48px;
+    border-bottom: 1px solid #EEF2FB;
+  }
+  .section:last-child { border-bottom: none; }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #2952A3;
+    margin-bottom: 6px;
+  }
+  .section-h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0D2251;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .section-intro {
+    color: #4B5C7A;
+    font-size: 13px;
+    margin-bottom: 24px;
+    max-width: 720px;
+  }
+
+  /* ── Score cards ── */
+  .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .score-card {
+    border-radius: 10px;
+    padding: 20px 24px;
+    border: 2px solid;
+  }
+  .score-card.archicheck {
+    border-color: #1B3A8A;
+    background: #F0F4FF;
+  }
+  .score-card.revi {
+    border-color: #2E7D32;
+    background: #F1F8E9;
+  }
+  .score-card .brand {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .score-card.archicheck .brand { color: #1B3A8A; }
+  .score-card.revi .brand { color: #2E7D32; }
+  .score-number {
+    font-size: 44px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .score-card.archicheck .score-number { color: #1B3A8A; }
+  .score-card.revi .score-number { color: #2E7D32; }
+  .score-label { font-size: 11px; color: #6B7A99; font-weight: 500; }
+  .score-detail {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .score-detail-item { font-size: 11px; }
+  .score-detail-item strong { font-weight: 700; }
+
+  /* ── Comparison table ── */
+  table.comp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table.comp th {
+    background: #0D2251;
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 11px;
+  }
+  table.comp th:first-child { border-radius: 0; }
+  table.comp td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #EEF2FB;
+    vertical-align: top;
+  }
+  table.comp tr:nth-child(even) td { background: #F8F9FF; }
+  table.comp tr:last-child td { border-bottom: none; }
+  .td-dim { font-weight: 600; color: #1B3A8A; }
+  .td-ac { color: #1B3A8A; }
+  .td-rv { color: #2E7D32; }
+
+  /* ── Win badge ── */
+  .win {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .win-ac { background: #E3ECFF; color: #1B3A8A; }
+  .win-rv { background: #E8F5E9; color: #2E7D32; }
+  .win-tie { background: #FFF3E0; color: #E65100; }
+
+  /* ── Finding tables ── */
+  table.findings {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  table.findings th {
+    background: #EEF2FB;
+    color: #1B3A8A;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  table.findings td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #EEF2FB;
+    vertical-align: top;
+  }
+  table.findings tr:last-child td { border-bottom: none; }
+
+  /* ── Criticality badges ── */
+  .crit {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .crit-alta { background: #FDECEA; color: #C62828; border: 1px solid #EF9A9A; }
+  .crit-media { background: #FFF8E1; color: #F57F17; border: 1px solid #FFE082; }
+  .crit-baja { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+  .crit-ok { background: #E3ECFF; color: #1B3A8A; border: 1px solid #90CAF9; }
+
+  /* ── Status icons ── */
+  .icon-yes { color: #2E7D32; font-weight: 700; }
+  .icon-no { color: #C62828; font-weight: 700; }
+  .icon-partial { color: #E65100; font-weight: 700; }
+
+  /* ── Note boxes ── */
+  .note {
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    margin-top: 12px;
+  }
+  .note-blue { background: #E3ECFF; border-left: 3px solid #1B3A8A; color: #0D2251; }
+  .note-green { background: #E8F5E9; border-left: 3px solid #2E7D32; color: #1B5E20; }
+  .note-orange { background: #FFF3E0; border-left: 3px solid #E65100; color: #BF360C; }
+
+  /* ── Bar chart ── */
+  .bar-chart { margin: 16px 0; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .bar-label { font-size: 11px; font-weight: 600; width: 180px; flex-shrink: 0; color: #3D4A5C; }
+  .bar-track { flex: 1; background: #EEF2FB; border-radius: 99px; height: 16px; position: relative; }
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    min-width: 28px;
+  }
+  .bar-ac { background: #1B3A8A; }
+  .bar-rv { background: #2E7D32; }
+
+  /* ── Verdict ── */
+  .verdict-box {
+    background: linear-gradient(135deg, #0D2251, #1B3A8A);
+    color: white;
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-top: 8px;
+  }
+  .verdict-box h3 { font-size: 16px; font-weight: 800; margin-bottom: 12px; }
+  .verdict-box p { font-size: 13px; opacity: 0.85; line-height: 1.6; margin-bottom: 10px; }
+  .verdict-box p:last-child { margin-bottom: 0; }
+
+  /* ── Print button ── */
+  .print-btn {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 24px;
+    background: #1B3A8A;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .print-btn:hover { background: #0D2251; }
+
+  .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .mb-8 { margin-bottom: 8px; }
+  .text-muted { color: #6B7A99; font-size: 11px; }
+  .fw-700 { font-weight: 700; }
+
+  h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0D2251;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #EEF2FB;
+  }
+  h4.ac { border-color: #1B3A8A; }
+  h4.rv { border-color: #2E7D32; }
+
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">⬇ Guardar como PDF (Ctrl+P)</button>
+
+<!-- ══════════ PORTADA ══════════ -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-tag">Comparativo Prospectivo — Producto Final</div>
+    <h1>ArchiCheck <span>vs</span> Revi</h1>
+    <p class="cover-sub">Qué hará el sistema una vez completado el roadmap, comparado con el estado actual de Revi</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <label>Alcance comparado</label>
+        <span>Dossier completo — plano + expediente administrativo</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Basado en</label>
+        <span>Roadmap ArchiCheck, Fases 1 a 4</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Estado de Revi</label>
+        <span>Capacidad demostrada, caso CLA real</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Fecha</label>
+        <span>Julio 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Resumen Ejecutivo</div>
+    <div class="section-h2">Naturaleza de este comparativo</div>
+    <p class="section-intro">
+      A diferencia del benchmark anterior (que comparaba resultados reales de análisis ya ejecutados sobre el mismo
+      proyecto), este documento compara la <strong>capacidad ya demostrada de Revi hoy</strong> contra el
+      <strong>diseño objetivo de ArchiCheck</strong> una vez completado su roadmap — Fase 2 (MVP de dossier),
+      Fase 3 (profundización) y Fase 4 (producto SaaS). Es una comparación de destino, no de resultados medidos.
+    </p>
+
+    <div class="note note-orange">
+      <strong>Nota metodológica:</strong> Las columnas de ArchiCheck en este documento describen capacidades
+      <em>planificadas</em>, algunas de ellas no construidas todavía. No deben leerse como resultados verificados —
+      el criterio de éxito real se define en el Gate post-MVP (validación con arquitectos usando expedientes reales).
+      Las columnas de Revi reflejan lo observado directamente en el caso CLA real (11 documentos, reporte de 40 páginas).
+    </div>
+
+    <div class="score-grid mt-24">
+      <div class="score-card archicheck">
+        <div class="brand">ArchiCheck — objetivo de diseño</div>
+        <div class="score-number">4</div>
+        <div class="score-label">Ventajas estructurales que Revi no puede igualar sin rehacer su arquitectura</div>
+        <div class="score-detail">
+          <div class="score-detail-item"><strong>PRC</strong> determinista</div>
+          <div class="score-detail-item"><strong>Matriz</strong> de reglas auditable</div>
+          <div class="score-detail-item"><strong>Dual-model</strong></div>
+        </div>
+      </div>
+      <div class="score-card revi">
+        <div class="brand">Revi — estado actual</div>
+        <div class="score-number">3</div>
+        <div class="score-label">Capacidades ya en producción que ArchiCheck todavía no iguala</div>
+        <div class="score-detail">
+          <div class="score-detail-item"><strong>~51 tipos</strong> de documento</div>
+          <div class="score-detail-item"><strong>31/31</strong> secciones FUN</div>
+          <div class="score-detail-item"><strong>Producto</strong> multi-usuario ya operando</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SCORECARD POR DIMENSIÓN ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 1</div>
+    <div class="section-h2">Scorecard comparativo por dimensión — estado hoy vs objetivo de diseño</div>
+    <p class="section-intro">
+      Cada fila indica en qué fase del roadmap ArchiCheck alcanza o supera lo que Revi ya demuestra hoy.
+    </p>
+
+    <table class="comp">
+      <thead>
+        <tr>
+          <th style="width:26%">Dimensión</th>
+          <th style="width:15%">Revi (hoy)</th>
+          <th style="width:34%">ArchiCheck (objetivo de diseño)</th>
+          <th style="width:25%">Posición</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-dim">Análisis de planos (geometría + normativa)</td>
+          <td class="td-rv">7 hallazgos, sin DS 50 en circulaciones</td>
+          <td class="td-ac">40 hallazgos, DS 50 sistemático, geometría real medida</td>
+          <td><span class="win win-ac">ArchiCheck — ya hoy</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Clasificación / mapeo de documentos del dossier</td>
+          <td class="td-rv">Clasificación autónoma por IA, con confirmación</td>
+          <td class="td-ac">Selector + mapeo manual asistido por el arquitecto (Fase 2)</td>
+          <td><span class="win win-tie">Empate — enfoques distintos</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Firma, timbre y vigencia por documento</td>
+          <td class="td-rv">Detecta firma vía visión; declara "revisión manual" cuando falta un dato externo</td>
+          <td class="td-ac">Mismo enfoque planificado (Fase 2, Módulo 2.4)</td>
+          <td><span class="win win-tie">Empate objetivo</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Consistencia cruzada entre documentos</td>
+          <td class="td-rv">Comparó FUN vs plano vs avalúo fiscal, detectó discrepancias reales</td>
+          <td class="td-ac">Motor determinista (Fase 2), no LLM leyendo cuadros a ojo</td>
+          <td><span class="win win-ac">ArchiCheck — objetivo superior</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Revisión del formulario de solicitud (FUN)</td>
+          <td class="td-rv">31/31 secciones, ya en producción</td>
+          <td class="td-ac">Secciones clave en MVP (Fase 2) → 31 completas en Fase 3</td>
+          <td><span class="win win-rv">Revi — hasta Fase 3</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Determinación de documentos exigibles (triage)</td>
+          <td class="td-rv">~51 tipos, razonamiento LLM conversacional por corrida, sin matriz auditable</td>
+          <td class="td-ac">Matriz de reglas por artículo (Fase 3, Módulo F) + LLM solo en el residuo ambiguo</td>
+          <td><span class="win win-ac">ArchiCheck — objetivo superior</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Normativa comunal (PRC) como fuente de verdad</td>
+          <td class="td-rv">Admite no tener el PRC de Providencia integrado — usa CIP + fragmentos generales</td>
+          <td class="td-ac">JSON estructurado y determinista, 3 comunas hoy, 5 en Fase 3</td>
+          <td><span class="win win-ac">ArchiCheck — ya hoy</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Consistencia y reproducibilidad metodológica</td>
+          <td class="td-rv">Usó dos criterios distintos de pendiente de rampa entre corridas (8% vs 10,53%)</td>
+          <td class="td-ac">Motor de reglas único y compartido entre plano y dossier</td>
+          <td><span class="win win-ac">ArchiCheck — ya hoy</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Cobertura de tipos de trámite</td>
+          <td class="td-rv">Amplia cobertura ya operando (Obra Menor y más, no verificado en detalle)</td>
+          <td class="td-ac">Obra Menor (SOM) + Edificación Vivienda Nueva en MVP; resto en Fase 3</td>
+          <td><span class="win win-rv">Revi — hasta Fase 3</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Consultas normativas libres (chat)</td>
+          <td class="td-rv">Módulo dedicado, "Consultas normativas", ya en producción</td>
+          <td class="td-ac">No contemplado todavía en el roadmap actual</td>
+          <td><span class="win win-rv">Revi — brecha no cubierta</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Multi-usuario, cuentas y equipos</td>
+          <td class="td-rv">Ya operando (usuarios y expedientes por cuenta visibles en producto)</td>
+          <td class="td-ac">Diseñado para Fase 4 (Productización SaaS)</td>
+          <td><span class="win win-rv">Revi — hasta Fase 4</span></td>
+        </tr>
+        <tr>
+          <td class="td-dim">Aprendizaje con resultado real de la DOM</td>
+          <td class="td-rv">No observado — el producto no muestra este mecanismo</td>
+          <td class="td-ac">Diseñado explícitamente (Fase 4): compara cada predicción contra la observación real de la DOM</td>
+          <td><span class="win win-ac">ArchiCheck — diferenciador nuevo</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note note-blue mt-16">
+      <strong>Lectura del cuadro:</strong> de 12 dimensiones, ArchiCheck ya gana 3 hoy y apunta a ganar o empatar 6 más
+      una vez completado el roadmap. Revi mantiene ventaja clara en 3 — dos de ellas (FUN completo, cobertura de
+      trámites) tienen fecha de cierre explícita en Fase 3; la tercera (chat de consultas libres) es una brecha que
+      el roadmap actual no contempla.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ VENTAJAS ESTRUCTURALES ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 2</div>
+    <div class="section-h2">Ventajas estructurales — lo que Revi no puede copiar sin rehacer su arquitectura</div>
+    <p class="section-intro">
+      No son ventajas de ejecución (que se erosionan si Revi mejora su producto) — son ventajas de diseño que
+      exigirían a Revi rehacer partes centrales de su sistema para igualar.
+    </p>
+
+    <table class="findings">
+      <thead>
+        <tr><th style="width:26%">Ventaja</th><th style="width:74%">Por qué Revi no la iguala fácilmente</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-dim">PRC como JSON determinista</td>
+          <td>Revi depende de RAG sobre fragmentos normativos generales cuando no tiene un PRC específico integrado
+            (lo admite explícitamente para Providencia). Migrar a un modelo estructurado por comuna es una
+            reconstrucción de su capa normativa, no un ajuste incremental.</td>
+        </tr>
+        <tr>
+          <td class="td-dim">Matriz de exigibilidad determinista (Módulo F)</td>
+          <td>El triage de documentos de Revi es 100% razonamiento LLM por corrida, sin matriz de reglas auditable.
+            Esto es rápido de construir pero estructuralmente no reproducible. Reemplazarlo por reglas-primero
+            requiere el mismo tipo de levantamiento normativo que ArchiCheck ya tiene planificado — no es gratis
+            para ningún competidor.</td>
+        </tr>
+        <tr>
+          <td class="td-dim">Consistencia metodológica entre corridas</td>
+          <td>La inconsistencia de Revi (dos criterios de pendiente de rampa distintos) es síntoma de una arquitectura
+            sin motor de reglas compartido. Corregirla no es un parche puntual — exige la misma separación
+            cálculo-objetivo/juicio-LLM que ArchiCheck ya construye en su Módulo 2.1.</td>
+        </tr>
+        <tr>
+          <td class="td-dim">Aprendizaje con resultado real de la DOM</td>
+          <td>No es solo una decisión de producto — requiere que el arquitecto reporte de vuelta el resultado real
+            de su ingreso a la DOM, algo que exige confianza y hábito de uso construidos previamente. Es una ventaja
+            que compone con el tiempo de uso, no algo que se replique de una vez.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════ DONDE REVI MANTIENE VENTAJA ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 3</div>
+    <div class="section-h2">Dónde Revi mantiene ventaja real hasta que el roadmap la cierre</div>
+    <p class="section-intro">
+      Ser honesto sobre esto importa tanto como las ventajas de la sección anterior — evita construir una narrativa
+      competitiva que no resiste el primer uso real de un arquitecto que ya conoce Revi.
+    </p>
+
+    <div class="col2">
+      <div>
+        <h4 class="rv">Lo que Revi ya tiene funcionando</h4>
+        <p style="font-size:12px; color:#3D4A5C; line-height:1.7;">
+          31 secciones del FUN completas y en producción · ~51 tipos de documento en su taxonomía de triage ·
+          cobertura de tipos de trámite más amplia que el MVP inicial de ArchiCheck · producto multi-usuario
+          con cuentas reales operando · chat de consultas normativas libres, sin necesidad de tener un
+          expediente cargado.
+        </p>
+      </div>
+      <div>
+        <h4 class="ac">Cuándo ArchiCheck cierra cada brecha</h4>
+        <p style="font-size:12px; color:#3D4A5C; line-height:1.7;">
+          FUN completo y cobertura de trámite amplia: <strong>Fase 3</strong> · Producto multi-usuario:
+          <strong>Fase 4</strong> · Chat de consultas normativas libres: <strong>no está en el roadmap actual</strong>
+          — se debería evaluar si se incorpora, no está descartado, simplemente no ha sido priorizado todavía.
+        </p>
+      </div>
+    </div>
+
+    <div class="note note-orange mt-24">
+      <strong>Riesgo a monitorear:</strong> mientras ArchiCheck construye su roadmap por fases, Revi sigue operando
+      y puede seguir mejorando su propio producto — incluyendo corregir su inconsistencia metodológica o integrar
+      el PRC de Providencia. Las ventajas estructurales de la Dimensión 2 son más difíciles de copiar, pero no son
+      permanentes por definición.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ COMPARACIÓN DE ARQUITECTURA ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Dimensión 4</div>
+    <div class="section-h2">Comparación de enfoque de producto y arquitectura</div>
+
+    <table class="comp">
+      <thead>
+        <tr>
+          <th style="width:30%">Aspecto</th>
+          <th style="width:35%">Revi</th>
+          <th style="width:35%">ArchiCheck (objetivo)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-dim">Determinación de exigibilidad de documentos</td>
+          <td class="td-rv">LLM razona cada caso en la corrida, sin matriz de datos</td>
+          <td class="td-ac">Matriz de reglas ligada a artículo, LLM solo en el residuo ambiguo</td>
+        </tr>
+        <tr>
+          <td class="td-dim">Motor de análisis</td>
+          <td class="td-rv">Un modelo de razonamiento por flujo</td>
+          <td class="td-ac">Dual-model (Claude + GPT-4o) en paralelo, resultados fusionados</td>
+        </tr>
+        <tr>
+          <td class="td-dim">Mapeo de documentos a categorías</td>
+          <td class="td-rv">Clasificación autónoma por IA con confirmación del usuario</td>
+          <td class="td-ac">El arquitecto declara el trámite y mapea manualmente contra un checklist conocido — prioriza completitud sobre automatización en el MVP</td>
+        </tr>
+        <tr>
+          <td class="td-dim">Trazabilidad de cada hallazgo</td>
+          <td class="td-rv">Cita artículo y página del documento fuente en el chat</td>
+          <td class="td-ac">Mismo estándar, además persistido en la estructura del informe, no solo en el texto conversacional</td>
+        </tr>
+        <tr>
+          <td class="td-dim">Mejora del sistema en producción</td>
+          <td class="td-rv">No observado ningún mecanismo explícito</td>
+          <td class="td-ac">Loop de aprendizaje con resultado real DOM (Fase 4), retroalimenta la matriz de reglas</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════ VEREDICTO ══════════ -->
+<div class="page page-break">
+  <div class="section">
+    <div class="section-title">Conclusión</div>
+    <div class="section-h2">Veredicto y posicionamiento</div>
+
+    <div class="verdict-box">
+      <h3>El roadmap cierra la brecha administrativa sin resignar la ventaja técnica ya ganada en planos</h3>
+      <p>
+        Hoy ArchiCheck gana claramente en el análisis del plano y en dos capacidades estructurales que Revi no
+        puede copiar sin rehacer partes centrales de su producto: normativa comunal determinista y consistencia
+        metodológica. El roadmap está diseñado para que, al completarse, ArchiCheck también iguale o supere a Revi
+        en la revisión del resto del dossier — con un diseño (matriz de reglas + LLM en el residuo) que es
+        estructuralmente más reproducible que el enfoque conversacional de Revi.
+      </p>
+      <p>
+        La honestidad de este documento importa: Revi ya tiene hoy un producto multi-usuario funcionando, con
+        cobertura de trámite más amplia y el formulario completo — brechas reales que el roadmap cierra en Fases
+        3 y 4, no de inmediato. El objetivo no es afirmar superioridad total hoy, sino mostrar que el camino de
+        construcción elegido tiene, en el peor caso, paridad con Revi, y en varias dimensiones clave, ventaja
+        estructural genuina.
+      </p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
