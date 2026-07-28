@@ -507,6 +507,8 @@ CIRCULARES DDU VIGENTES (División de Desarrollo Urbano, MINVU):
 - DDU 912: Aplicación art. 5.1.2 N°2 OGUC — tipo y calidad de edificación
 - DDU 1022: Aplicación arts. 1.1.2, 5.1.14 y 5.1.17 OGUC — tipos de construcción
 
+IMPORTANTE — DS 50/2015: este decreto NO está cargado como texto en este sistema (solo se referencia dentro de OGUC Art. 4.1.7, que sí tienes completo). NUNCA cites un número de artículo específico de "DS 50/2015" (ej. "Art. 6", "Art. 7", "Art. 8", "Art. 22") — no tienes ese texto para verificarlo, y aunque "sepas" de tu entrenamiento que existe, no puedes confirmar el número exacto ni su contenido actual. Si el requisito es real (ancho de puerta accesible, círculo de giro, ancho de ruta accesible), cita el artículo real de OGUC Art. 4.1.7 que sí tienes en este prompt, o menciona "DS 50/2015" sin número de artículo. Esta regla aplica también a candidatas de Colab que citen un artículo de DS 50/2015 — corrígelas a OGUC Art. 4.1.7 o elimina el número de artículo.
+
 Usa la normativa anterior como base de tu análisis. Cita el artículo exacto de OGUC, LGUC o la circular DDU correspondiente cuando detectes cumplimiento o incumplimiento.
 ${contextoTexto}Analiza solo los archivos adjuntos. No penalices por documentos no subidos.
 ${(() => {
@@ -883,6 +885,18 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
           </div>
         )}
         <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:20 }}>{result.resumen_general}</p>
+        {(() => {
+          const m = (result.resumen_general || "").match(/(\d+)\s+incumplimientos?\s+de\s+criticidad\s+ALTA/i);
+          const real = altas.length;
+          if (m && parseInt(m[1], 10) !== real) {
+            return (
+              <p style={{ fontSize:10, color:"#7D5A00", background:"#FEF3CD", border:"1px solid #D68910", borderRadius:6, padding:"6px 10px", marginTop:-14, marginBottom:20 }}>
+                ⚠ Conteo verificado: el análisis identifica {real} incumplimiento{real === 1 ? "" : "s"} de criticidad ALTA confirmados (la tabla y la enumeración de esta página son la fuente de verdad, no el número mencionado arriba).
+              </p>
+            );
+          }
+          return null;
+        })()}
       </div>
 
       {/* ── CAPA 1 ── */}
@@ -1161,6 +1175,18 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
           </div>
         </div>
         <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:16 }}>{result.resumen_general}</p>
+        {(() => {
+          const m = (result.resumen_general || "").match(/(\d+)\s+incumplimientos?\s+de\s+criticidad\s+ALTA/i);
+          const real = altas.length;
+          if (m && parseInt(m[1], 10) !== real) {
+            return (
+              <p style={{ fontSize:10, color:"#7D5A00", background:"#FEF3CD", border:"1px solid #D68910", borderRadius:6, padding:"6px 10px", marginTop:-10, marginBottom:16 }}>
+                ⚠ Conteo verificado: el análisis identifica {real} incumplimiento{real === 1 ? "" : "s"} de criticidad ALTA confirmados (la tabla y la enumeración de esta página son la fuente de verdad, no el número mencionado arriba).
+              </p>
+            );
+          }
+          return null;
+        })()}
         {total > 0 && (
           <div style={{ marginBottom:14 }}>
             <div style={{ display:"flex", justifyContent:"space-between", fontSize:8, color:"#6B7A99", marginBottom:4 }}>
@@ -2518,6 +2544,18 @@ ${printRef.current.innerHTML}
                     </div>
                   )}
                   <p style={{ fontSize:13, color:"#6B7A99", lineHeight:1.7, marginBottom:24 }}>{result.resumen_general}</p>
+                  {(() => {
+                    const m = (result.resumen_general || "").match(/(\d+)\s+incumplimientos?\s+de\s+criticidad\s+ALTA/i);
+                    const real = altas.length;
+                    if (m && parseInt(m[1], 10) !== real) {
+                      return (
+                        <p style={{ fontSize:12, color:"#7D5A00", background:"#FEF3CD", border:"1px solid #D68910", borderRadius:8, padding:"8px 12px", marginTop:-18, marginBottom:20 }}>
+                          ⚠ Conteo verificado: el análisis identifica {real} incumplimiento{real === 1 ? "" : "s"} de criticidad ALTA confirmados (la tabla y la enumeración de esta página son la fuente de verdad, no el número mencionado arriba).
+                        </p>
+                      );
+                    }
+                    return null;
+                  })()}
                   <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:12 }}>
                     {[{ n:altas.length, label:"🔴 Incumplimientos", c:"#C0392B" },{ n:tecnicas.length, label:"🟡 Observaciones", c:"#D68910" },{ n:resueltas, label:"✅ Resueltas", c:"#1E8449" }].map(m => (
                       <div key={m.label} style={{ background:"#F4F6FB", border:"1px solid #D1D9EE", borderRadius:10, padding:"14px 10px", textAlign:"center" }}>
