@@ -213,6 +213,15 @@
   </div>
   <p class="phase-desc">Resumen de lo hecho hoy, para retomar mañana sin releer todo el detalle.</p>
 
+  <div class="today-box warn">
+    <h4>🔴 PRIMER PASO AL RETOMAR — verificar despliegue antes de tocar más código</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li><code>sanitizeDS50()</code> (commit <code>7e9d73a</code>, ya en <code>origin/main</code>) reemplaza por regex cualquier "DS 50/2015 Art. N" por "DS 50/2015" — es transformación de texto determinística, <strong>no puede fallar a medias</strong>. En la 4ª corrida de prueba, "DS 50/2015 Art. 8/7/6/22" siguió apareciendo intacto en absolutamente todas las instancias — esa consistencia total apunta a que <strong>el fix no llegó a ejecutarse</strong> (deploy de Vercel no propagado, bundle cacheado en el navegador), no a un bug del regex.</li>
+      <li><strong>Antes de tocar más código:</strong> (1) confirmar en el dashboard de Vercel que el deploy del último commit en <code>main</code> terminó de construir sin errores; (2) refresh forzado del navegador (Ctrl+Shift+R); (3) recién ahí volver a correr el mismo JSON de Colab contra el portal. Si después de confirmar el deploy sigue apareciendo, ahí sí revisar el regex con detalle.</li>
+      <li>Buena noticia de fondo: la fórmula de pendiente de rampa sigue confirmada en 4 corridas seguidas, y esta última corrida agregó sola (sin pedírselo) un cruce aritmético desnivel↔pendiente y una alerta señalando que la fórmula del propio proyectista no es la fórmula real de OGUC — señal de que el motor de reglas sigue mejorando, no estancado.</li>
+    </ul>
+  </div>
+
   <div class="today-box win">
     <h4>✅ Hecho y confirmado</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
