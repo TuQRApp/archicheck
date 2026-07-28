@@ -209,7 +209,7 @@
 
   <!-- ============ SESIÓN RECIENTE ============ -->
   <div class="section-title" id="hoy">
-    <h2>🕓 Sesión más reciente (26–27 julio 2026)</h2>
+    <h2>🕓 Sesión más reciente (26–28 julio 2026)</h2>
   </div>
   <p class="phase-desc">Resumen de lo hecho hoy, para retomar mañana sin releer todo el detalle.</p>
 
@@ -243,16 +243,33 @@
     </ul>
   </div>
 
-  <div class="today-box">
-    <h4>🔲 Pendiente para mañana</h4>
+  <div class="today-box win">
+    <h4>✅ 27 julio, noche — 3 rondas de fix sobre la consolidación Colab→Portal</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
-      <li><strong>Prioridad 1:</strong> agregar el guardia anti-fabricación en <code>buildColabTexto()</code> (App.jsx) y comitear — sin esto, cualquier número que Colab invente puede volver a llegar al informe final como "confirmado".</li>
-      <li>Embeber explícitamente la fórmula real de pendiente de rampa en el prompt de Capa 2, en vez de depender de que el RAG la retorne completa (puede estar cortándose en el resumen de 220 caracteres por artículo).</li>
-      <li>Corregir <code>resumen_general</code> para que cuente sobre la lista ya consolidada de incumplimientos, no sobre candidatas pre-fusión.</li>
-      <li>Investigar qué representan los 3 valores de superficie por nivel en el Cuadro de Superficies real (Lámina 1/4 del PDF — <strong>no</strong> está en las páginas que procesa Colab hoy). Comparación preliminar: Nivel 1 impreso 199,05m² vs. medido 159,7m² (-19,8%); Nivel 2 impreso 119,76m² vs. medido 178,9m² (+49,4%) — discrepancia grande y en direcciones opuestas, sin explicar todavía.</li>
-      <li>Decidir si se amplía <code>PAGINAS_Y_ESCALAS</code> para incluir la Lámina 1/4 (donde vive el cuadro de superficies real).</li>
+      <li>Fórmula real de pendiente de rampa: <strong>confirmada funcionando</strong> en 3 corridas seguidas del portal (margen exacto calculado, no "supera el 8%" fijo).</li>
+      <li>"Ancho mínimo 1,6 m" del Baño Universal (DS 50/2015 "Art. 8" fabricado): <strong>3 intentos de prompt fallaron</strong> (guardia anti-fabricación, guardia reforzado, prohibición mecánica explícita) — el modelo repitió la cita igual las 3 veces. Se pivoteó a sanear el texto por regex (<code>sanitizeDS50()</code>) en vez de seguir pidiéndole al modelo que no lo haga — sin confirmar todavía en una corrida real.</li>
+      <li>Conteo de incumplimientos ALTA en <code>resumen_general</code>: 2 intentos de prompt tampoco lo arreglaron del todo (mismo patrón: el texto narrativo no coincide con la tabla estructurada, por motivos distintos cada vez). Se agregó una corrección determinística en JS (compara contra <code>tabla_observaciones</code> real) — pendiente de confirmar que se vea en el PDF exportado.</li>
+      <li>Nuevo requisito Nivel+página: "Nivel X" se sigue indicando bien en cada hallazgo; "página del PDF" no se logró en 2 intentos — pendiente, prioridad baja.</li>
+    </ul>
+  </div>
+
+  <div class="today-box win">
+    <h4>✅ 27-28 julio — Primera corrida en un plano distinto de PDV (Beauchef)</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li><strong>Emparejamiento nombre↔forma falla con recintos irregulares/pegados</strong>: el texto "Taller" impreso en el plano quedó asignado a un área sin relación (13.66 m²), mientras el rectángulo real (4.88 m²) quedó "SIN NOMBRE". Mismo patrón con "Casino", asignado a una forma de pasillo curvo en vez del rectángulo real — el incumplimiento de área podría estar apuntando al recinto equivocado. No visto tan claro en PDV (recintos más simples/separados) — probable que aparezca en cualquier layout con formas irregulares muy pegadas.</li>
+      <li>Densidad de etiquetas sigue siendo un problema real con muchos recintos chicos en un solo crop (35 elementos en un crop, varias etiquetas ilegibles) — confirma con un caso real la misma observación que ya anotaba el demo de Beauchef (<code>OBS-G01</code>).</li>
+      <li>Riesgo de diseño a vigilar (no confirmado como bug esta vez): si dos crops de <code>PAGINAS_Y_ESCALAS</code> llegaran a solaparse espacialmente, el mismo recinto físico podría contarse dos veces en <code>resumen_global</code>.</li>
+    </ul>
+  </div>
+
+  <div class="today-box">
+    <h4>🔲 Pendiente para la próxima sesión</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li><strong>Prioridad 1:</strong> correr el mismo JSON contra el portal para confirmar que <code>sanitizeDS50()</code> y la corrección de conteo determinística sí funcionan — ninguno de los dos se verificó todavía en una corrida real.</li>
+      <li>Revisar la lógica de emparejamiento nombre-forma en Celda 4 (Colab) antes de confiar en nombres/incumplimientos de recintos con geometría irregular.</li>
+      <li>Investigar qué representan los 3 valores de superficie por nivel en el Cuadro de Superficies real de PDV (Lámina 1/4 — no procesada hoy). Comparación preliminar: Nivel 1 impreso 199,05m² vs. medido 159,7m² (-19,8%); Nivel 2 impreso 119,76m² vs. medido 178,9m² (+49,4%).</li>
       <li>Rediseñar (o descartar) el fix de achurado con un criterio que sí sea local/acotado.</li>
-      <li>Subir el Informe de Accesibilidad como documento del expediente en el próximo benchmark contra Revi — hoy se pierde uno de sus 4 hallazgos solo por no incluir ese archivo en la prueba.</li>
+      <li>Subir el Informe de Accesibilidad como documento del expediente en el próximo benchmark contra Revi.</li>
     </ul>
   </div>
 
