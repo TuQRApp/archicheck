@@ -310,6 +310,20 @@ function mergeResults(r1, r2) {
   };
 }
 
+// ── Sanea citas de artículos de DS 50/2015 que el modelo fabrica pese a la instrucción del prompt ──
+function sanitizeDS50(value) {
+  if (typeof value === "string") {
+    return value.replace(/DS\s*50(?:\/2015)?\s*Art\.?\s*\d+\w*/gi, "DS 50/2015");
+  }
+  if (Array.isArray(value)) return value.map(sanitizeDS50);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const k in value) out[k] = sanitizeDS50(value[k]);
+    return out;
+  }
+  return value;
+}
+
 // ── Colab JSON → texto para el prompt ──────────────────────────────────────
 function buildColabTexto(json) {
   if (!json) return "";
@@ -890,7 +904,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
           const real = altas.length;
           if (m && parseInt(m[1], 10) !== real) {
             return (
-              <p style={{ fontSize:10, color:"#7D5A00", background:"#FEF3CD", border:"1px solid #D68910", borderRadius:6, padding:"6px 10px", marginTop:-14, marginBottom:20 }}>
+              <p style={{ fontSize:10, color:"#7D5A00", background:"#FEF3CD", border:"1px solid #D68910", borderRadius:6, padding:"6px 10px", marginTop:4, marginBottom:20 }}>
                 ⚠ Conteo verificado: el análisis identifica {real} incumplimiento{real === 1 ? "" : "s"} de criticidad ALTA confirmados (la tabla y la enumeración de esta página son la fuente de verdad, no el número mencionado arriba).
               </p>
             );
@@ -1180,7 +1194,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
           const real = altas.length;
           if (m && parseInt(m[1], 10) !== real) {
             return (
-              <p style={{ fontSize:10, color:"#7D5A00", background:"#FEF3CD", border:"1px solid #D68910", borderRadius:6, padding:"6px 10px", marginTop:-10, marginBottom:16 }}>
+              <p style={{ fontSize:10, color:"#7D5A00", background:"#FEF3CD", border:"1px solid #D68910", borderRadius:6, padding:"6px 10px", marginTop:4, marginBottom:16 }}>
                 ⚠ Conteo verificado: el análisis identifica {real} incumplimiento{real === 1 ? "" : "s"} de criticidad ALTA confirmados (la tabla y la enumeración de esta página son la fuente de verdad, no el número mencionado arriba).
               </p>
             );
@@ -1502,7 +1516,7 @@ ${printRef.current.innerHTML}
                  : isComplete(pC2) ? pC2 : pG2;
 
       // ── Resultado final ───────────────────────────────────────────────────
-      const merged = {
+      const merged = sanitizeDS50({
         resumen_general:      cap2.resumen_general       || "",
         estado_global:        cap2.estado_global         || "OBSERVADO",
         tabla_observaciones:  cap2.tabla_observaciones   || [],
@@ -1511,7 +1525,7 @@ ${printRef.current.innerHTML}
         analisis_por_archivo: cap1.analisis_por_archivo  || [],
         pasos_siguientes:     cap2.pasos_siguientes      || [],
         capa1:                cap1.capa1                 || {},
-      };
+      });
 
       const sinDatos = !merged.analisis_por_archivo?.length
         && !Object.keys(merged.capa1).length
@@ -2549,7 +2563,7 @@ ${printRef.current.innerHTML}
                     const real = altas.length;
                     if (m && parseInt(m[1], 10) !== real) {
                       return (
-                        <p style={{ fontSize:12, color:"#7D5A00", background:"#FEF3CD", border:"1px solid #D68910", borderRadius:8, padding:"8px 12px", marginTop:-18, marginBottom:20 }}>
+                        <p style={{ fontSize:12, color:"#7D5A00", background:"#FEF3CD", border:"1px solid #D68910", borderRadius:8, padding:"8px 12px", marginTop:4, marginBottom:20 }}>
                           ⚠ Conteo verificado: el análisis identifica {real} incumplimiento{real === 1 ? "" : "s"} de criticidad ALTA confirmados (la tabla y la enumeración de esta página son la fuente de verdad, no el número mencionado arriba).
                         </p>
                       );

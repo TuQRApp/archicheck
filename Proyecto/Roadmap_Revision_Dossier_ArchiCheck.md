@@ -29,6 +29,8 @@ Objetivo de esta fase: agotar la profundización del análisis de planos con tod
 
 ### P1 — Validar precisión del análisis geométrico (antes "P3", ahora primera prioridad)
 
+> **Nota menor (2026-07-27):** al cargar Grounding DINO + SAM 2 en Colab aparece el warning *"You are sending unauthenticated requests to the HF Hub"* — es solo un aviso de límite de tasa de descarga de Hugging Face, no afecta precisión ni resultados. Se resuelve generando un token en huggingface.co (Settings → Access Tokens) y llamando `login(token=...)` de `huggingface_hub` antes de cargar los modelos (o guardando el token en el gestor de secretos de Colab como `HF_TOKEN`). Opcional, no bloqueante.
+
 > **🔲 Próximo paso inmediato (actualizado 2026-07-22):** el ground truth de validación activo son **2 CSV, ambos de Plaza Pedro de Valdivia — no se mezclan con otros proyectos**:
 > - `archicheck\Startup Chile\ground_truth_pdv_nivel1.csv` — Nivel 1 (16 puertas, 10 ventanas, 1 rampa, 2 escaleras)
 > - `archicheck\Startup Chile\ground_truth_pdv_nivel2.csv` — Nivel 2 (10 puertas, 7 ventanas, 1 escalera, confirmado sin salidas de emergencia)
