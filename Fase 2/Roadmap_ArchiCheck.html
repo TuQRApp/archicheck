@@ -232,14 +232,27 @@
     </ul>
   </div>
 
+  <div class="today-box warn">
+    <h4>🔴 27 julio — Benchmark en vivo del portal: fabricación propia confirmada, llegó al arquitecto</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Implementada consolidación Colab→Portal en <code>App.jsx</code>: las candidatas normativas que Colab ya genera (<code>incumplimientos_oguc</code>) se inyectan al prompt del portal para validar/fusionar en vez de descartarse o duplicarse.</li>
+      <li><strong>Confirmado contra las 770 secciones de <code>oguc_pdf.json</code> + <code>ddu_351.json</code> completo:</strong> el "ancho mínimo 1,6 m" que Colab le atribuyó al Baño Universal no existe en ninguna fuente cargada (Art. 4.1.7 N°6 solo exige círculo de giro 1,50 m y puerta 0,90 m). El portal lo heredó y lo subió a "incumplimiento crítico confirmado" en Alertas Especiales — mismo patrón que los 6 mínimos de área ya marcados <code>SIN VERIFICAR</code>, pero esta vez llegó hasta el informe final, no solo al motor de reglas interno. Revi valida correctamente el mismo baño como CUMPLE.</li>
+      <li>La fórmula real de pendiente de rampa (<code>i% = 12,8 − 0,5333·L</code>, ya verificada antes) sigue sin llegar al prompt de Capa 2 — el portal cita "supera el 8%" fijo, igual que Colab.</li>
+      <li>Bug propio nuevo: <code>resumen_general</code> cuenta 6 incumplimientos ALTA en el texto narrativo, pero la tabla estructurada y la consolidación coinciden en 5 — no relacionado con Colab.</li>
+      <li>Veredicto Mejor/Peor/Empate vs. los 4 hallazgos "solo sobre el plano" de Revi: <strong>0 mejor, 1 empate, 3 peor</strong>. Pero el portal cubre ~15 observaciones (evacuación, ventilación, urbanística, documentación) que la conversación de Revi nunca tocó — incluida la falta de salida de emergencia en Nivel 2.</li>
+    </ul>
+  </div>
+
   <div class="today-box">
     <h4>🔲 Pendiente para mañana</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li><strong>Prioridad 1:</strong> agregar el guardia anti-fabricación en <code>buildColabTexto()</code> (App.jsx) y comitear — sin esto, cualquier número que Colab invente puede volver a llegar al informe final como "confirmado".</li>
+      <li>Embeber explícitamente la fórmula real de pendiente de rampa en el prompt de Capa 2, en vez de depender de que el RAG la retorne completa (puede estar cortándose en el resumen de 220 caracteres por artículo).</li>
+      <li>Corregir <code>resumen_general</code> para que cuente sobre la lista ya consolidada de incumplimientos, no sobre candidatas pre-fusión.</li>
       <li>Investigar qué representan los 3 valores de superficie por nivel en el Cuadro de Superficies real (Lámina 1/4 del PDF — <strong>no</strong> está en las páginas que procesa Colab hoy). Comparación preliminar: Nivel 1 impreso 199,05m² vs. medido 159,7m² (-19,8%); Nivel 2 impreso 119,76m² vs. medido 178,9m² (+49,4%) — discrepancia grande y en direcciones opuestas, sin explicar todavía.</li>
       <li>Decidir si se amplía <code>PAGINAS_Y_ESCALAS</code> para incluir la Lámina 1/4 (donde vive el cuadro de superficies real).</li>
       <li>Rediseñar (o descartar) el fix de achurado con un criterio que sí sea local/acotado.</li>
-      <li>Estimar cuántas observaciones normativas propias podríamos levantar sobre el expediente PDV vs. las 5 de Revi (pedido explícito, dejado para después).</li>
-      <li>Correr de nuevo en Colab para confirmar que el revert del achurado dejó todo como antes del bug.</li>
+      <li>Subir el Informe de Accesibilidad como documento del expediente en el próximo benchmark contra Revi — hoy se pierde uno de sus 4 hallazgos solo por no incluir ese archivo en la prueba.</li>
     </ul>
   </div>
 
@@ -423,9 +436,15 @@
     <tbody>
       <tr>
         <td>Normativa anclada a fuente verificada, no solo citada</td>
-        <td>✅ Ventaja de diseño — pero tuvimos 3 errores de cita/fórmula propios esta sesión, recién corregidos</td>
+        <td>⚠️ Ventaja de diseño — pero confirmamos un requisito propio fabricado (1,6 m baño accesible) que llegó al informe final como "crítico confirmado", además de 3 errores de cita/fórmula ya corregidos</td>
         <td>⚠️ Cita artículos reales de forma consistente, pero comete errores de aritmética al aplicar fórmulas</td>
-        <td>Ventaja de diseño, no de ejecución todavía</td>
+        <td>Ventaja de diseño, ejecución todavía con huecos reales — guardia anti-fabricación pendiente de comitear</td>
+      </tr>
+      <tr>
+        <td>Cobertura temática por corrida (evacuación, ventilación, urbanística, documentación)</td>
+        <td>✅ Gana ArchiCheck — ~15 observaciones que Revi no evaluó en la misma conversación sobre el plano</td>
+        <td>❌ Se quedó en rampa + baño + un error de rotulación</td>
+        <td>Ventaja real confirmada en el benchmark en vivo del 27 julio</td>
       </tr>
       <tr>
         <td>Medición geométrica independiente</td>
