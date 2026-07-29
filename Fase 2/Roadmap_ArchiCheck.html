@@ -221,6 +221,7 @@
       <li>Nivel + página: funciona ("Nivel 1 · página 2 de 4:"). Rampa: 5ª corrida consecutiva correcta.</li>
       <li><strong>Lección de proceso</strong>: ante un fix determinístico que parece fallar sin excepción en todas las instancias, sospechar caché/deploy antes que un bug de lógica — incógnito es la prueba más rápida y confiable para descartarlo.</li>
       <li><strong>🔁 Conteo ALTA — segunda vuelta</strong>: el primer fix (corregir el dígito + prohibir lista "(1)(2)(3)") funcionó a medias — el modelo dejó de usar dígitos pero empezó a escribir el conteo en palabras ("estos tres hallazgos...", cuando eran 4), que el regex no detectaba. <strong>Solución de raíz</strong>: se le prohíbe al modelo declarar el total en cualquier forma (dígito o palabra) — el sistema antepone siempre una frase 100% determinística con el conteo real antes del párrafo del modelo.</li>
+      <li><strong>✅ Confirmado en corrida real (2215)</strong>: "El análisis identifica 7 incumplimientos de criticidad ALTA y 15 observaciones de criticidad MEDIA/BAJA" — coincide exacto con la tabla (Total Alta=7, Media+Baja=15). Residual menor no bloqueante: el modelo sigue usando una lista "(1)...(5)" pero para agrupar por <em>tema</em>, no por incumplimiento individual, así que ya no contradice el número real.</li>
     </ul>
   </div>
 
