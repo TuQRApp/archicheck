@@ -310,11 +310,16 @@ function mergeResults(r1, r2) {
   };
 }
 
-// ── Corrige el conteo de incumplimientos ALTA en el párrafo narrativo contra el conteo real ──
-function fixResumenGeneral(text, realCount) {
-  if (!text) return text;
-  const palabra = realCount === 1 ? "incumplimiento" : "incumplimientos";
-  return text.replace(/\d+\s+incumplimientos?\s+de\s+criticidad\s+ALTA/i, `${realCount} ${palabra} de criticidad ALTA`);
+// ── Antepone el conteo real (determinístico) y limpia cualquier conteo que el modelo haya escrito igual ──
+function fixResumenGeneral(text, altaCount, tecnicasCount) {
+  const palabraAlta = altaCount === 1 ? "incumplimiento" : "incumplimientos";
+  const palabraObs  = tecnicasCount === 1 ? "observación" : "observaciones";
+  const intro = `El análisis identifica ${altaCount} ${palabraAlta} de criticidad ALTA y ${tecnicasCount} ${palabraObs} de criticidad MEDIA/BAJA.`;
+  // Limpieza best-effort: si el modelo igual declaró un total (con dígito), lo saca para no duplicar/contradecir la intro.
+  const limpio = (text || "")
+    .replace(/\d+\s+incumplimientos?\s+de\s+criticidad\s+ALTA\.?/gi, "")
+    .trim();
+  return `${intro} ${limpio}`.trim();
 }
 
 // ── Sanea citas de artículos de DS 50/2015 que el modelo fabrica pese a la instrucción del prompt ──
@@ -587,7 +592,7 @@ VALORES NUMÉRICOS — PRIORIDAD DE FUENTE: Para todo valor numérico (pendiente
 
 tabla_observaciones: ES LA ÚNICA FUENTE DE VERDAD DEL INFORME — consolida aquí TODAS las observaciones (ALTA, MEDIA y BAJA) del análisis completo, agrupadas por tema. OBLIGATORIO: cada "descripcion" debe empezar indicando el nivel del proyecto (ej. "Nivel 1", "Nivel 2", o "Ambos niveles" si aplica a todo el edificio) y la página del PDF de la que se extrae el dato (ej. "página 2 de 4"), antes del detalle del hallazgo — formato: "Nivel X · página Y del PDF: [detalle]". Si el hallazgo es normativa urbanística general sin nivel específico, indica solo la página. Si el mismo hallazgo aplica a varias secciones (por ejemplo aparece tanto en capa1 como en capa2), inclúyelo UNA SOLA VEZ aquí — nunca lo dupliques. Temas disponibles: "Accesibilidad Universal", "Evacuación y Seguridad", "Ventilación e Iluminación", "Normativa Urbanística", "Documentación Faltante", "Geometría y Presentación". Incluye solo temas con observaciones. Cada observación de tabla_observaciones debe incluir "etapas": un array con una o más de estas etiquetas EXACTAS (las secciones donde ese hallazgo es relevante o fue detectado): "Separación", "Reconocimiento", "Vectorización", "Modelo", "Recintos", "Circulaciones", "Iluminación", "Urbanística". Usa varias etiquetas cuando el hallazgo involucre a más de una sección.
 
-resumen_general — PROHIBIDO enumerar "(1) (2) (3)...": no hagas una lista numerada de los incumplimientos ALTA dentro del párrafo — esa enumeración 1-a-1 contra el conteo es la causa de que el número declarado no coincida con la tabla (se termina inflando con un ítem que combina varios ya contados, o se pierde uno). En vez de eso, escribe un resumen narrativo por TEMA (ej. "los incumplimientos ALTA corresponden a accesibilidad universal — rampa, baño universal y puertas de baños de clientes — y a evacuación del Nivel 2"), sin numerarlos entre paréntesis ni intentar que la lista tenga exactamente N elementos. El único número que debes declarar es el total ("N incumplimientos de criticidad ALTA"), calculado contando literalmente los objetos con criticidad ALTA en el array tabla_observaciones que vas a devolver — nunca una estimación, nunca inflado por combinar hallazgos.
+resumen_general — PROHIBIDO declarar el total de incumplimientos ALTA, en dígito o en palabra: el sistema antepone automáticamente la frase con el conteo exacto antes de tu párrafo, así que NUNCA escribas "N incumplimientos", "N incumplimientos de criticidad ALTA", "estos N hallazgos", "estos tres/cuatro/cinco hallazgos son los únicos incumplimientos ALTA" ni ninguna variante que declare cuántos hay en total (ni con dígito, ni con la palabra en español) — cualquier conteo que escribas tú se vuelve redundante con el que ya antepone el sistema, y si difiere, confunde al lector. Tu párrafo empieza directo describiendo los temas (ej. "Los incumplimientos ALTA corresponden a accesibilidad universal — rampa, baño universal y puertas de baños de clientes — y a evacuación del Nivel 2"), sin lista numerada "(1)(2)(3)" ni frase de cierre que intente sumar cuántos son. Puedes nombrar y describir cada hallazgo relevante, solo no declares el total.
 
 Responde SOLO con JSON puro, sin markdown, sin texto previo. Produce ÚNICAMENTE la evaluación normativa — capa2 va PRIMERO en el JSON para protegerla de truncaciones.
 {"capa2":{"recintos_superficies":{"tabla":[{"recinto":"...","uso":"...","sup_real_m2":0,"sup_minima_m2":0,"cumple":"SI|NO|VERIFICAR","articulo":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"circulaciones":{"tabla":[{"elemento":"...","ancho_real_m":0,"ancho_minimo_m":0,"articulo":"...","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"iluminacion_ventilacion":{"tabla":[{"recinto":"...","area_ventana_m2":0,"area_recinto_m2":0,"ratio_requerido":"1/6","cumple":"SI|NO|VERIFICAR"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"normativa_urbanistica":{"tabla":[{"parametro":"...","referencia":"...","valor_proyecto":"...","estado":"OK|OBSERVADO|INCUMPLE"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}},"resumen_general":"...","estado_global":"APROBABLE|OBSERVADO|RECHAZABLE","tabla_observaciones":[{"tema":"Accesibilidad Universal|Evacuación y Seguridad|Ventilación e Iluminación|Normativa Urbanística|Documentación Faltante|Geometría y Presentación","observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"...","etapas":["Separación|Reconocimiento|Vectorización|Modelo|Recintos|Circulaciones|Iluminación|Urbanística"]}]}],"alertas_especiales":["..."],"pasos_siguientes":["..."]}`;
@@ -905,7 +910,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
             </table>
           </div>
         )}
-        <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:20 }}>{fixResumenGeneral(result.resumen_general, altas.length)}</p>
+        <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:20 }}>{fixResumenGeneral(result.resumen_general, altas.length, tecnicas.length)}</p>
       </div>
 
       {/* ── CAPA 1 ── */}
@@ -1183,7 +1188,7 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
             <span style={{ fontSize:8, fontWeight:700, padding:"3px 12px", borderRadius:99, ...ec }}>{result.estado_global}</span>
           </div>
         </div>
-        <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:16 }}>{fixResumenGeneral(result.resumen_general, altas.length)}</p>
+        <p style={{ fontSize:11, color:"#3D4A5C", lineHeight:1.7, marginBottom:16 }}>{fixResumenGeneral(result.resumen_general, altas.length, tecnicas.length)}</p>
         {total > 0 && (
           <div style={{ marginBottom:14 }}>
             <div style={{ display:"flex", justifyContent:"space-between", fontSize:8, color:"#6B7A99", marginBottom:4 }}>
@@ -2540,7 +2545,7 @@ ${printRef.current.innerHTML}
                       </table>
                     </div>
                   )}
-                  <p style={{ fontSize:13, color:"#6B7A99", lineHeight:1.7, marginBottom:24 }}>{fixResumenGeneral(result.resumen_general, altas.length)}</p>
+                  <p style={{ fontSize:13, color:"#6B7A99", lineHeight:1.7, marginBottom:24 }}>{fixResumenGeneral(result.resumen_general, altas.length, tecnicas.length)}</p>
                   <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10, marginBottom:12 }}>
                     {[{ n:altas.length, label:"🔴 Incumplimientos", c:"#C0392B" },{ n:tecnicas.length, label:"🟡 Observaciones", c:"#D68910" },{ n:resueltas, label:"✅ Resueltas", c:"#1E8449" }].map(m => (
                       <div key={m.label} style={{ background:"#F4F6FB", border:"1px solid #D1D9EE", borderRadius:10, padding:"14px 10px", textAlign:"center" }}>
