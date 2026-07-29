@@ -218,10 +218,9 @@
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
       <li>Una corrida mostraba "DS 50/2015 Art. N" intacto pese al fix ya desplegado. Se descartó paso a paso: Vercel "Ready · Latest" en el commit correcto, código fuente correcto, y la prueba definitiva — <strong>ventana de incógnito</strong> (sin caché posible) — confirmó los 3 fixes funcionando al 100%.</li>
       <li><code>sanitizeDS50()</code>: cero instancias de "DS 50/2015 Art. N". El modelo además ahora es transparente sobre candidatas de Colab sin confirmar: <em>"Colab cita 1.20 m (DS 50/2015 sin artículo específico) — no se confirma en OGUC disponible, queda VERIFICAR"</em>.</li>
-      <li>Corrección de conteo ALTA: ya visible — <em>"⚠ Conteo verificado: el análisis identifica 5 incumplimientos... no el número mencionado arriba"</em> aparece correctamente (el <code>marginTop</code> negativo era el problema).</li>
       <li>Nivel + página: funciona ("Nivel 1 · página 2 de 4:"). Rampa: 5ª corrida consecutiva correcta.</li>
       <li><strong>Lección de proceso</strong>: ante un fix determinístico que parece fallar sin excepción en todas las instancias, sospechar caché/deploy antes que un bug de lógica — incógnito es la prueba más rápida y confiable para descartarlo.</li>
-      <li><strong>Pendiente real (baja prioridad)</strong>: el párrafo narrativo de <code>resumen_general</code> sigue sin contar bien solo (infla un ítem que combina 3 hallazgos ya contados) — la corrección JS ya compensa mostrando el número correcto, pero la causa de fondo en el prompt sigue sin resolverse.</li>
+      <li><strong>✅ Conteo ALTA cerrado de raíz</strong>: se reemplazó el banner de advertencia por <code>fixResumenGeneral()</code>, que corrige directamente el número en el párrafo (el arquitecto ya nunca ve un conteo incorrecto), más una prohibición en el prompt de enumerar "(1)(2)(3)..." los ALTA dentro del párrafo — esa enumeración 1-a-1 era la causa del relleno.</li>
     </ul>
   </div>
 
