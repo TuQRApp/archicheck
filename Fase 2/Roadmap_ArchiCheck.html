@@ -220,7 +220,7 @@
       <li><code>sanitizeDS50()</code>: cero instancias de "DS 50/2015 Art. N". El modelo además ahora es transparente sobre candidatas de Colab sin confirmar: <em>"Colab cita 1.20 m (DS 50/2015 sin artículo específico) — no se confirma en OGUC disponible, queda VERIFICAR"</em>.</li>
       <li>Nivel + página: funciona ("Nivel 1 · página 2 de 4:"). Rampa: 5ª corrida consecutiva correcta.</li>
       <li><strong>Lección de proceso</strong>: ante un fix determinístico que parece fallar sin excepción en todas las instancias, sospechar caché/deploy antes que un bug de lógica — incógnito es la prueba más rápida y confiable para descartarlo.</li>
-      <li><strong>✅ Conteo ALTA cerrado de raíz</strong>: se reemplazó el banner de advertencia por <code>fixResumenGeneral()</code>, que corrige directamente el número en el párrafo (el arquitecto ya nunca ve un conteo incorrecto), más una prohibición en el prompt de enumerar "(1)(2)(3)..." los ALTA dentro del párrafo — esa enumeración 1-a-1 era la causa del relleno.</li>
+      <li><strong>🔁 Conteo ALTA — segunda vuelta</strong>: el primer fix (corregir el dígito + prohibir lista "(1)(2)(3)") funcionó a medias — el modelo dejó de usar dígitos pero empezó a escribir el conteo en palabras ("estos tres hallazgos...", cuando eran 4), que el regex no detectaba. <strong>Solución de raíz</strong>: se le prohíbe al modelo declarar el total en cualquier forma (dígito o palabra) — el sistema antepone siempre una frase 100% determinística con el conteo real antes del párrafo del modelo.</li>
     </ul>
   </div>
 
