@@ -229,8 +229,20 @@
     <h4>🆕 28 julio — Redefinición del producto: sistema iterativo con chat de resolución de dudas</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
       <li><strong>Caso disparador</strong>: en Beauchef, una tira angosta se clasificó como "Escalera" (0.97 m) en un edificio de un solo nivel, sin peldaños dibujados. Cruzar contra el Corte A-A (elevaciones/cortes del PDF original) dio evidencia en contra (una sola planta continua, sin cambio de nivel) pero no cerró la duda al 100%. El mismo cruce reveló ventanas altas tipo claraboya en las elevaciones que el análisis de planta nunca detectó.</li>
+      <li><strong>🔲 Sigue abierto</strong>: se afirmó (mal) que la tira NO era escalera solo con esa evidencia parcial. El usuario corrigió: <em>"más bien debes preguntar. No estoy seguro si es una escalera"</em> — ni el usuario tiene certeza todavía. Pendiente: mostrarle el recorte + Corte A-A juntos y preguntar directamente, con opciones, antes de decidir. Lección de proceso guardada en memoria: ante evidencia no concluyente, preguntar en vez de asertar.</li>
       <li><strong>Nueva regla metodológica para P1</strong>: cruzar SIEMPRE planta ↔ elevaciones ↔ cortes (A-A, B-B) ↔ cuadros de superficies/CC/CO antes de dar un hallazgo geométrico por confirmado — no solo cuando hay duda explícita.</li>
       <li><strong>Redefinición de fondo</strong>: ArchiCheck deja de ser un análisis de una sola pasada con informe fijo — pasa a ser un <strong>sistema iterativo</strong> que interactúa con el arquitecto (chat bidireccional: el sistema pregunta con recortes+opciones cuando algo es ambiguo, el arquitecto también puede preguntarle al sistema) hasta acercarse lo más posible a una revisión al 100%, y que aprende de esa interacción para el resto del análisis — el actual y los futuros. Complementa (no reemplaza) la interfaz de validación gráfica y el mecanismo de aprendizaje de convenciones ya planeados. Sin diseñar todavía.</li>
+    </ul>
+  </div>
+
+  <div class="today-box warn">
+    <h4>🔲 28 julio — Pendientes al retomar mañana</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Confirmar qué es la tira "Escalera" en Beauchef — preguntar al usuario con recorte + Corte A-A, no asumir.</li>
+      <li>Punto ciego de ventanas (0% en varias herramientas) sigue sin fix — el hallazgo de ventanas altas/claraboyas de Beauchef es una causa adicional distinta al patrón de "3 líneas paralelas" ya documentado.</li>
+      <li>Diseñar el chat de resolución de dudas bidireccional — sin interfaz ni mecanismo de propagación al pipeline todavía.</li>
+      <li>Re-correr Beauchef a través del portal real (hasta ahora solo se revisó el JSON crudo de Colab) para confirmar que los 3 fixes de esta sesión (DS 50/2015, conteo <code>resumen_general</code>, Nivel+página) también funcionan en un proyecto distinto de PDV.</li>
+      <li>Aplicar sistemáticamente la regla de cruce planta↔elevaciones↔cortes↔cuadros en cualquier hallazgo geométrico nuevo.</li>
     </ul>
   </div>
 
