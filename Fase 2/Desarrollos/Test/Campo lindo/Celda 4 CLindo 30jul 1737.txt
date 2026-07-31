@@ -1,0 +1,75 @@
+✓ Cuadro de superficies: 2799 caracteres extraidos de la pagina 1
+
+========================================================
+  Página 2  —  escala 1:50
+  Recorte: (3%,2%) → (83%,68%)
+========================================================
+  5722x3350 px analizados  |  0.00588 m/px  |  1m = 170 px
+  → Claude Vision...
+  ✓ Claude: 15 recintos, 6 incumplimientos
+  → Extracción vectorial...
+  ✓ EJES/COTAS: 111 segmentos identificados como referencia (Paso 1.5), 111 evitados de proteger como muro pese a superar el span minimo
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 20 grupos protegidos como muro, top 25 por span:
+     span=32.92m  bbox=28.99x15.59m  n_seg=1539  ancho_linea(min/mediana/max)=0.12/0.3/1.44
+     span=6.25m  bbox=6.25x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.3/0.3/0.3
+     span=3.08m  bbox=3.08x0.01m  n_seg=2  ancho_linea(min/mediana/max)=0.3/0.3/0.3
+     span=2.96m  bbox=2.65x1.33m  n_seg=52  ancho_linea(min/mediana/max)=0.12/0.12/0.12
+     span=2.81m  bbox=2.8x0.13m  n_seg=3  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=2.75m  bbox=2.74x0.13m  n_seg=3  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=2.31m  bbox=2.3x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=2.31m  bbox=2.31x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=2.31m  bbox=2.31x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=2.31m  bbox=2.31x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=1.95m  bbox=1.95x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.3/0.3/0.3
+     span=1.92m  bbox=1.92x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=1.92m  bbox=1.92x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=1.92m  bbox=1.92x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=1.87m  bbox=1.86x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=1.87m  bbox=1.86x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=1.77m  bbox=0.54x1.68m  n_seg=4  ancho_linea(min/mediana/max)=1.02/1.02/1.02
+     span=1.75m  bbox=1.73x0.29m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.54/0.54
+     span=1.73m  bbox=1.73x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=1.51m  bbox=0.34x1.47m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/0.3
+  ✓ Vectorial: 59 textos (cotas/nombres), 256 trazos candidatos a símbolo, 1563 tramos protegidos como muro (por conectividad, no por largo), 518 tramos desprotegidos por parecer achurado (rampa/escalera), 111 en 5 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 17, 'span_m': 8.09}, {'n_segmentos': 10, 'span_m': 4.71}, {'n_segmentos': 10, 'span_m': 6.79}, {'n_segmentos': 5, 'span_m': 4.28}, {'n_segmentos': 8, 'span_m': 3.34}]
+  → OpenCV...
+  ✓ Limpieza pre-umbral: 59 textos, 111 líneas discontinuas, 256 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 19 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 412.0m²
+  ✓ Cruce: 14/19 con nombre | 5 incumpl. geo
+  ⚠ 5 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E07, E17, E13, E02, E04
+
+========================================================
+  Página 2  —  escala 1:50
+  Recorte: (4%,5%) → (84%,69%)
+========================================================
+  5693x3233 px analizados  |  0.00588 m/px  |  1m = 170 px
+  → Claude Vision...
+  ✓ Claude: 14 recintos, 6 incumplimientos
+  → Extracción vectorial...
+  ✓ EJES/COTAS: 111 segmentos identificados como referencia (Paso 1.5), 111 evitados de proteger como muro pese a superar el span minimo
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 12 grupos protegidos como muro, top 25 por span:
+     span=32.92m  bbox=28.99x15.59m  n_seg=1539  ancho_linea(min/mediana/max)=0.12/0.3/1.44
+     span=6.25m  bbox=6.25x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.3/0.3/0.3
+     span=3.08m  bbox=3.08x0.01m  n_seg=2  ancho_linea(min/mediana/max)=0.3/0.3/0.3
+     span=2.81m  bbox=2.8x0.13m  n_seg=3  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=2.75m  bbox=2.74x0.13m  n_seg=3  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=2.05m  bbox=1.64x1.23m  n_seg=42  ancho_linea(min/mediana/max)=0.12/0.12/0.12
+     span=1.95m  bbox=1.95x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.3/0.3/0.3
+     span=1.92m  bbox=1.92x0.12m  n_seg=6  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=1.77m  bbox=0.54x1.68m  n_seg=4  ancho_linea(min/mediana/max)=1.02/1.02/1.02
+     span=1.75m  bbox=1.73x0.29m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.54/0.54
+     span=1.73m  bbox=1.73x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54
+     span=1.51m  bbox=0.34x1.47m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/0.3
+  ✓ Vectorial: 50 textos (cotas/nombres), 250 trazos candidatos a símbolo, 1505 tramos protegidos como muro (por conectividad, no por largo), 507 tramos desprotegidos por parecer achurado (rampa/escalera), 111 en 5 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 17, 'span_m': 8.09}, {'n_segmentos': 10, 'span_m': 4.71}, {'n_segmentos': 10, 'span_m': 6.79}, {'n_segmentos': 5, 'span_m': 4.28}, {'n_segmentos': 8, 'span_m': 3.34}]
+  → OpenCV...
+  ✓ Limpieza pre-umbral: 50 textos, 111 líneas discontinuas, 250 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 19 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 391.87m²
+  ✓ Cruce: 14/19 con nombre | 4 incumpl. geo
+  ⚠ 5 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E07, E17, E13, E02, E04
+
+========================================================
+✓ Procesadas 2 / 2 páginas
+  Incumplimientos geométricos totales: 9

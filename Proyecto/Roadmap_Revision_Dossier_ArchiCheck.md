@@ -587,6 +587,16 @@ El usuario corrió el notebook completo (Celdas 1-7) contra PDV, Beauchef e Isla
 
 **Nota aparte, sin relación con lo de arriba**: se confirmó que el motor de reglas propio de Colab (`incumplimientos_geo`) ya cita correctamente Art. 4.2.10 para ancho de escalera (no 4.2.2) en PDV y Beauchef — este fix ya estaba aplicado desde el 26 de julio en Colab, distinto del fix de esta sesión que corrigió la misma cita pero en el portal (`buildPromptCapa2`). Ambos caminos de código citan correctamente ahora.
 
+### ✅ Diagnóstico de COTAS agregado al notebook (2026-07-31) — mismo criterio que se usó para ejes: medir antes de diseñar
+
+A pedido explícito del usuario ("empieza con el diagnóstico de cotas"), se extendió el diagnóstico ya existente (el mismo bloque que mide span/bbox/grosor por grupo protegido como muro) con una nueva métrica: **para cada grupo, qué fracción de sus segmentos tiene un texto de cota (`cotas_texto`, ya extraído con precisión del PDF) cerca** — a 3 umbrales de distancia distintos (30/60/100 px) en vez de comprometerse a uno solo de entrada.
+
+**Hipótesis a verificar**: una línea de COTA corre pegada a su propio número en toda su extensión (el ítem "1.5" del ejemplo de convenciones, con la flecha justo debajo del número), mientras que un muro real puede tener una cota cerca en un punto puntual pero no en cada tramo. Si el blob gigante de fusión tiene un `%cerca_cota` alto en los 3 umbrales, confirma que son cotas las que lo están causando; si es bajo, hay que buscar otra explicación (mobiliario, achurado, algo más).
+
+**Implementación** (notebook `ArchiCheck_Base 31jul_2145.ipynb`, backup del anterior en `Versiones anteriores`): para cada segmento de un grupo, se calcula la distancia mínima del punto medio del segmento al centro de cualquier `cotas_texto` — con muestreo (máx. 300 segmentos por grupo, aleatorio pero reproducible dentro de la corrida) para no volver lenta la corrida en grupos con miles de segmentos (el blob de Isla de Pascua tiene más de 18.000). Solo imprime — no toca `protegido` ni ningún valor que se guarda en el JSON de salida, mismo criterio de riesgo cero que el diagnóstico de ejes.
+
+**🔲 Pendiente del usuario**: correr este notebook en Colab contra los 3 planos de referencia y compartir la salida — con eso se diseña el pre-filtro de cotas con evidencia real, en vez de adivinar.
+
 ### 🆕 Reorganización de archivos (2026-07-31, instrucción explícita del usuario) — el notebook y los datos de prueba ahora viven dentro del repo de `archicheck`
 
 - **El notebook vivo (y su carpeta `Versiones anteriores`) se movió** de `Docs archicheck\Doc prueba\` (fuera de este repo, sin git) a **`archicheck/Fase 2/Desarrollos/Test/`** — misma carpeta de siempre para los JSON/PNG de prueba. **A partir de ahora, el notebook se edita y versiona ahí**, no en la ubicación anterior — y por estar dentro de `archicheck/`, sus cambios (incluida la carpeta de backups) ya quedan versionados en git junto con todo lo demás.
@@ -597,7 +607,7 @@ El usuario corrió el notebook completo (Celdas 1-7) contra PDV, Beauchef e Isla
 
 ~~**PRIORIDAD ANTERIOR (cumplida 2026-07-31)**: correr el notebook `31jul_0345` contra los 3 planos de referencia y verificar visualmente.~~ **✅ Hecho** — ver sección arriba ("Primera corrida real del notebook..."). Resultado: EJES funciona, cuadro de superficies funciona, pero el resultado visible casi no cambió — la causa dominante son las COTAS, no los ejes.
 
-**🎯 NUEVA PRIORIDAD INMEDIATA**: diseñar e implementar el fix de COTAS — mismo patrón que el de ejes (Paso 1.5), pero las cotas son líneas SÓLIDAS, no las detecta el patrón de guiones. Candidato de diseño ya anotado: identificar un segmento recto colineal y pegado a una secuencia regular de `cotas_texto` (los números de la cadena de acotación, ya extraídos con 100% de precisión) como parte de una cota, y excluirlo del Paso 2 igual que se hizo con `es_eje_pre`. Requiere su propio diagnóstico antes de codificarlo (mismo criterio que se usó para ejes: no adivinar el umbral). Es ahora, con evidencia real de 3 proyectos, el fix de mayor impacto esperado de toda esta fase — más que cualquier otro pendiente de esta lista.
+**🎯 NUEVA PRIORIDAD INMEDIATA**: correr el notebook `31jul_2145` (agrega el diagnóstico de distancia a `cotas_texto` por grupo, ver sección arriba) en Colab contra PDV, Beauchef e Isla de Pascua y compartir la salida — con eso se diseña el pre-filtro de cotas con evidencia real (¿el blob gigante tiene `%cerca_cota` alto?) en vez de adivinar el umbral, mismo criterio que ya funcionó para ejes. Es, con evidencia real de 3 proyectos, el fix de mayor impacto esperado de toda esta fase — más que cualquier otro pendiente de esta lista.
 
 1. ~~Confirmar qué es la tira de "Escalera" en Beauchef~~ — **✅ resuelto 2026-07-30**: no es escalera, es Asientos Duchas/Duchas mal segmentado.
 2. **Punto ciego de ventanas** (0% detección sistemática en varias herramientas) sigue sin fix implementado — Isla de Pascua reconfirma el mismo síntoma, tercera corrida seguida.
