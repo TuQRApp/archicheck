@@ -400,7 +400,9 @@
         <li><strong>CRUD completo</strong>: edita, agrega, modifica o elimina cualquier detección — nada se oculta por dudoso, todo lo detectado se muestra siempre.</li>
         <li>También editable ahí mismo: la <strong>superficie (m²) de cada recinto</strong>, no solo elementos puntuales.</li>
         <li>Perímetro es distinto de los demás (límite/deslinde, no un punto) — pendiente evaluar si se marca como polilínea.</li>
-        <li class="note">Piezas para construirla, en orden: (1) exportar detecciones actuales al formato del canvas, (2) componente canvas con zoom + clic-para-marcar, (3) edición de superficie por recinto, (4) reintegrar el resultado corregido al JSON antes del análisis normativo.</li>
+        <li><strong>🆕 Tabla de espacios siempre visible</strong> (31 julio): una fila por recinto detectado (ej. <code>E1 | Baño Universal | corregir/indicar nombre</code>), corrección inline del nombre/tipo. Es el mecanismo concreto para resolver los casos "siempre preguntar" de <code>Convenciones_CAD.md</code> (pasillo sin nombre, mobiliario generando fantasmas) — el arquitecto los ve todos juntos en la tabla, no en ventanas separadas.</li>
+        <li><strong>🆕 Herramienta de división de espacios</strong> (31 julio): si un recinto detectado en realidad son 2+ espacios reales (el patrón exacto de los fantasmas por fusión: blob de Isla de Pascua, baños/bóveda fusionados, "Camarín" absorbiendo Asientos Duchas), el arquitecto dibuja una línea (2 clics: inicio y fin) para partirlo — complementa el CRUD, que hoy solo permite editar/eliminar el recinto completo, no subdividirlo.</li>
+        <li class="note">Piezas para construirla, en orden: (1) exportar detecciones actuales al formato del canvas, (2) componente canvas con zoom + clic-para-marcar, (3) tabla de espacios sincronizada con el canvas, (4) herramienta de línea de corte para dividir un recinto, (5) edición de superficie por recinto, (6) reintegrar el resultado corregido al JSON antes del análisis normativo.</li>
       </ul>
     </div>
   </details>
