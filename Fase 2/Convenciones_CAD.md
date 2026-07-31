@@ -10,6 +10,8 @@ Registro vivo de cómo se dibuja cada elemento/espacio (y cada línea/texto que 
 
 ## A. Elementos/espacios reales (SÍ son geometría del edificio)
 
+**Regla general (confirmada por el usuario, 2026-07-31): SOLO los elementos de esta sección A separan/limitan espacios.** Ningún elemento de la sección B (ejes, cotas, rasantes) lo hace nunca, sin excepción — ver regla dura en cada uno más abajo. Cualquier elemento nuevo que se agregue a esta sección A implica, por definición, que sí puede actuar como límite de recinto; cualquier cosa que se agregue a la sección B implica lo contrario.
+
 ### Muros
 - **Convención general**: líneas continuas, casi siempre 2 trazos paralelos, formando un contorno cerrado — la distancia entre ambos trazos indica el grosor del muro.
 - **Por confirmar con datos**: el dataset MLSTRUCT-FP (Pizarro) trae muros anotados de planos chilenos reales — sirve para validar/afinar esta convención con evidencia, no solo con lo observado a ojo en 3 planos.
@@ -50,6 +52,20 @@ Registro vivo de cómo se dibuja cada elemento/espacio (y cada línea/texto que 
 ### Nombres de recinto (para contraste — si NO son ninguno de los anteriores)
 - Texto simple ubicado dentro o cerca del área de un recinto, que no es cota ni rasante — este SÍ se usa para el emparejamiento nombre↔forma (con los problemas de matching ya documentados en el roadmap, ver Beauchef "Taller"/"Casino" e Isla de Pascua "Recepción").
 - Ya excluido correctamente del raster de detección de muros desde 2026-07-23 (`cotas_texto` pinta de blanco todo el texto, incluidos los nombres, antes de `adaptiveThreshold`) — este mecanismo sigue vigente sin cambios.
+
+---
+
+## C. Casos que siempre requieren preguntar al arquitecto (nunca asumir)
+
+Extensión directa de la lección de proceso "preguntar, no asertar" — casos donde el pipeline/yo no debemos clasificar solos, sino marcar como pregunta para el arquitecto vía la interfaz de chat (ver roadmap, "Redefinición del producto").
+
+### Pasillo sin nombre
+- **Regla (usuario, 2026-07-31)**: cualquier recinto que geométricamente parezca un pasillo/circulación (forma alargada y angosta) pero que NO tenga un nombre/etiqueta en el plano — nunca asumir que es circulación. Preguntar al arquitecto qué es realmente.
+- Por qué importa: un pasillo mal asumido puede ocultar un recinto real mal segmentado (mismo patrón que el caso "Escalera" de Beauchef, que en realidad era Asientos Duchas) o, al revés, un espacio que sí es circulación pero con una forma atípica podría rechazarse por error.
+- Confirmado en: instrucción general del usuario, sin caso puntual de plano todavía.
+
+### Mobiliario de línea repetitiva causando recintos fantasma
+- Ver sección "Pendiente de definir" más abajo (duchas, casilleros, estanterías) — mismo principio: no construir un detector geométrico por cada tipo de mueble, preguntar al arquitecto cuando la segmentación se vea sospechosa.
 
 ---
 
