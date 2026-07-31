@@ -6,6 +6,8 @@ Registro vivo de cómo se dibuja cada elemento/espacio (y cada línea/texto que 
 
 **Regla de fondo**: cada convención puede variar entre oficinas de arquitectura / software de origen — nada de esta lista es universal por decreto. Cada entrada indica en qué proyecto(s) se confirmó. Si aparece un plano nuevo con una variante distinta, se agrega como variante nueva (no se asume que "está mal" el plano, ni se sobreescribe la convención anterior).
 
+**Regla de fondo #2 (usuario, 2026-07-31): dentro de un mismo PDF, una convención confirmada aplica a TODAS sus páginas.** Distinto del punto anterior (que habla de variación ENTRE proyectos/oficinas): una vez que una convención se confirma en una página de un PDF puntual (ej. el significado de un achurado de color según la leyenda/simbología de ese expediente), esa misma definición se aplica automáticamente al resto de las láminas del mismo documento — no hay que re-derivarla página por página. Lo que sí varía entre PDFs distintos es el criterio de la Regla de fondo #1.
+
 ---
 
 ## A. Elementos/espacios reales (SÍ son geometría del edificio)
@@ -16,11 +18,13 @@ Registro vivo de cómo se dibuja cada elemento/espacio (y cada línea/texto que 
 - **Convención general**: líneas continuas, casi siempre 2 trazos paralelos, formando un contorno cerrado — la distancia entre ambos trazos indica el grosor del muro.
 - **Por confirmar con datos**: el dataset MLSTRUCT-FP (Pizarro) trae muros anotados de planos chilenos reales — sirve para validar/afinar esta convención con evidencia, no solo con lo observado a ojo en 3 planos.
 - Confirmado en: PDV, Beauchef, Isla de Pascua (observación general, sin verificación formal todavía).
+- **🆕 Muros nuevos marcados con achurado de color (usuario, 2026-07-31, ejemplo PDV Nivel 1)**: un achurado de color sobre un tramo de muro (ej. rojo = "se construye", amarillo = "se retira", según la simbología propia de ese expediente) SÍ es geometría real — no es ruido a excluir, es un muro nuevo o a demoler. **Regla dura de proceso**: el significado de cada color NUNCA se asume — siempre se confirma contra la leyenda/simbología de ESE plano puntual con el arquitecto (puede no coincidir con otro expediente). Una vez confirmado para un PDF, aplica a todas sus páginas (ver Regla de fondo #2 arriba) — en este caso, la convención roja/amarilla ya confirmada para Nivel 2 de PDV aplica igual en Nivel 1 del mismo expediente, sin volver a preguntar por cada lámina.
 
 ### Puertas
 - **Convención general**: el espacio (vano) entre dos tramos de muro — generalmente se grafica con una línea (la hoja) con su medida de ancho acotada. A veces incluye el arco de giro (radio de apertura), a veces no se dibuja.
 - Confirmado en: PDV, Beauchef, Isla de Pascua.
 - Nota de pipeline: el emparejamiento hoja↔arco (por consistencia geométrica: radio del arco ≈ largo de la hoja) todavía no está implementado — hoy son dos trazos sueltos sin relación (ver roadmap P1, "leer elementos completos").
+- **🆕 IMPORTANTE (usuario, 2026-07-31, ejemplo PDV Nivel 1): el arco de giro/apertura de la puerta, y la cota de ancho asociada, NUNCA deben contaminar el cálculo de área ni actuar como límite de recinto** — aunque el arco sea parte gráfica de un elemento real (la puerta), el trazo del arco en sí se comporta como una línea de referencia para efectos de segmentación, igual que un eje o una cota. No confundir con la existencia de la puerta como vano (que sí es real) — es específicamente el TRAZO del arco el que no debe limitar/dividir un espacio.
 
 ### Ventanas
 - **Convención general**: el espacio entre dos tramos de muro, generalmente dibujado como **3 líneas paralelas** (línea central del vano entre las 2 líneas del muro) con marca de ancho acotada.
@@ -31,11 +35,11 @@ Registro vivo de cómo se dibuja cada elemento/espacio (y cada línea/texto que 
 
 ## B. Líneas/textos que NUNCA son elementos/espacios (jamás dividen ni limitan un recinto)
 
-### Ejes
-- **Convención**: líneas discontinuas (guion-guion o guion-punto-guion), terminadas en un círculo con número (1, 2, 3...) o letra (A, B, C...) — grilla de referencia estructural.
-- **Regla dura**: nunca son geometría real del edificio. Nunca dividen ni limitan un espacio — afecta tanto el conteo de recintos como sus áreas si se tratan como muro.
-- **Uso positivo (no descartar el dato)**: sirven como referencia de ubicación de un elemento dentro de la planta (ej. "Baño Accesible Universal está entre los ejes B2 y C3", como una coordenada de grilla) — se deben extraer y conservar como dato propio, no solo borrarse.
-- Confirmado en: Isla de Pascua (causa raíz de la falla catastrófica de segmentación, 2026-07-31). Fix de detección implementado en Celda 4 ("Paso 1.5", notebook `31jul_0130`) — reusa la detección de patrón de guiones ya existente, corriéndola antes de la protección de muro por conectividad.
+### Líneas discontinuas (ejes, cortes, proyecciones de viga — no un significado único)
+- **Convención**: líneas discontinuas (guion-guion o guion-punto-guion). Pueden representar cosas distintas según el plano: grilla de ejes estructurales (terminada en círculo con número 1,2,3... o letra A,B,C...), líneas de corte (A-A, B-B), o **proyección de una viga en planta** (ejemplo confirmado, PDV Nivel 1, 2026-07-31 — dos líneas discontinuas paralelas cruzando Cocina/Bodega, que en este caso son la proyección de una viga, no un eje numerado).
+- **Regla dura, no depende de cuál sea el significado específico**: NINGUNA línea discontinua es geometría real del edificio. Nunca dividen ni limitan un espacio — afecta tanto el conteo de recintos como sus áreas si se tratan como muro. **No hardcodear un solo significado** (ej. "línea discontinua = eje numerado") — la regla dura aplica igual sea eje, corte, o proyección de viga; lo que importa es que es una línea de referencia, no un muro.
+- **Uso positivo (no descartar el dato, cuando sea una grilla de ejes)**: sirven como referencia de ubicación de un elemento dentro de la planta (ej. "Baño Accesible Universal está entre los ejes B2 y C3", como una coordenada de grilla) — se deben extraer y conservar como dato propio, no solo borrarse.
+- Confirmado en: Isla de Pascua (causa raíz de la falla catastrófica de segmentación, 2026-07-31, grilla de ejes numerados) y PDV Nivel 1 (2026-07-31, proyección de viga). Fix de detección implementado en Celda 4 ("Paso 1.5", notebook `31jul_0130`) — reusa la detección de patrón de guiones ya existente (geométrica, no depende de saber el significado semántico de la línea), corriéndola antes de la protección de muro por conectividad.
 
 ### Cotas
 - **Convención**: líneas delgadas (sólidas, no discontinuas) marcadas con una figura de "testigo" en cada punto de medición — típicamente un tique/trazo diagonal corto cruzando la línea (ver captura de referencia, Screenshot_340).
