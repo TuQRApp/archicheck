@@ -535,6 +535,8 @@ Esto es consistente con y probablemente explica el volumen de "recintos sin nomb
 
 ### 🔲 Pendientes al retomar (actualizado 2026-07-31)
 
+**🎯 PRIORIDAD INMEDIATA — antes que cualquier otro ítem de esta lista**: correr el notebook `31jul_0230` (ya incluye el fix de EJES y el de rasantes) en Colab contra PDV, Beauchef e Isla de Pascua, y verificar **visualmente** (no solo por prints de conteo) que: (a) Isla de Pascua mejora (menos "sin nombre", el baño accesible universal ya no aparece fusionado con los baños vecinos), (b) PDV y Beauchef no regresaron — miden igual que antes. Es el único código de esta sesión que todavía nadie probó, y todo lo demás pendiente (COTAS, interfaz gráfica, chat) depende de que esta base sea sólida. Mismo ítem 6 más abajo, elevado a prioridad explícita.
+
 1. ~~Confirmar qué es la tira de "Escalera" en Beauchef~~ — **✅ resuelto 2026-07-30**: no es escalera, es Asientos Duchas/Duchas mal segmentado (ver arriba).
 2. **Punto ciego de ventanas** (0% detección sistemática en varias herramientas, ver P1 más abajo) sigue sin fix implementado — el hallazgo de Beauchef (ventanas altas/claraboyas visibles solo en elevaciones, no en planta) es una causa adicional distinta al patrón de "3 líneas paralelas" ya documentado; ninguna de las dos tiene solución construida todavía. Isla de Pascua reconfirma el mismo punto ciego (0 ventanas detectadas) — tercera corrida seguida con el mismo síntoma.
 3. **Diseñar el chat de resolución de dudas bidireccional** (sección "Redefinición del producto" arriba) — pieza de producto nueva, sin diseño de interfaz ni de propagación de la corrección hacia el pipeline todavía.
