@@ -243,6 +243,7 @@
       <li>Diseñar el chat de resolución de dudas bidireccional — sin interfaz ni mecanismo de propagación al pipeline todavía.</li>
       <li>Re-correr Beauchef a través del portal real (hasta ahora solo se revisó el JSON crudo de Colab) para confirmar que los 3 fixes de esta sesión (DS 50/2015, conteo <code>resumen_general</code>, Nivel+página) también funcionan en un proyecto distinto de PDV.</li>
       <li>Aplicar sistemáticamente la regla de cruce planta↔elevaciones↔cortes↔cuadros en cualquier hallazgo geométrico nuevo.</li>
+      <li>Construir la interfaz de validación gráfica del arquitecto (gate CRUD + marcado por clic, especificada en P1) — sigue sin construir, cerraría casos como el de la "Escalera" de Beauchef sin depender de una pregunta suelta en el chat.</li>
     </ul>
   </div>
 
@@ -347,8 +348,34 @@
         <li>🔴 Fix de achurado para rampa/escalera — <strong>revertido</strong>, causaba regresión de fusión de recintos. Ver sección "Sesión reciente".</li>
         <li>🔲 DINO+SAM2: 0% recall confirmado en el plano de prueba — descartado invertir más en tuning, brecha de dominio estructural (entrenado en fotos, no en símbolos CAD).</li>
         <li>🔲 Detector determinista de convenciones CAD (biblioteca que crece con el tiempo, no reglas fijas por plano) — pendiente, es el núcleo de "leer elementos completos".</li>
-        <li>🔲 Interfaz de validación gráfica del arquitecto — pieza de confianza/transparencia todavía sin construir.</li>
         <li class="note">Precisión "alta" no se puede prometer de antemano — depende de que el feedback del arquitecto convierta lo no identificado en preguntas resueltas, no en errores silenciosos.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>Interfaz de validación gráfica del arquitecto <span class="badge pending">Especificada, sin construir</span></summary>
+    <div class="item-body">
+      <p><strong>Gate obligatorio antes del análisis normativo</strong> (especificado 2026-07-22). Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio — esta pantalla reemplaza eso por un paso donde el arquitecto valida y corrige TODA la geometría detectada antes de que corra el análisis de cumplimiento.</p>
+      <ul>
+        <li><strong>Por qué importa</strong>: un elemento no detectado nunca pasa por verificación normativa — una puerta angosta que ArchiCheck no vio es una infracción que jamás se va a marcar, en silencio. Es también prerrequisito para que P4 (motor de reglas) entregue valor completo: necesita el inventario completo de elementos, no solo los que el modelo alcanzó a ver.</li>
+        <li><strong>Un solo PNG en alta resolución con zoom</strong> — no pantallas separadas por tipo de elemento.</li>
+        <li><strong>Selector de categoría + marcado por clic</strong>: el arquitecto elige una categoría activa (Puertas, Ventanas, Escaleras, Rampas, Columnas, Salidas de emergencia, Perímetro <code>PE</code>) y cada clic sobre el plano marca un punto de ese tipo mientras esa categoría está seleccionada.</li>
+        <li><strong>CRUD completo</strong>: edita, agrega, modifica o elimina cualquier detección — nada se oculta por dudoso, todo lo detectado se muestra siempre.</li>
+        <li>También editable ahí mismo: la <strong>superficie (m²) de cada recinto</strong>, no solo elementos puntuales.</li>
+        <li>Perímetro es distinto de los demás (límite/deslinde, no un punto) — pendiente evaluar si se marca como polilínea.</li>
+        <li class="note">Piezas para construirla, en orden: (1) exportar detecciones actuales al formato del canvas, (2) componente canvas con zoom + clic-para-marcar, (3) edición de superficie por recinto, (4) reintegrar el resultado corregido al JSON antes del análisis normativo.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="item">
+    <summary>Interfaz de administración — biblioteca de convenciones CAD <span class="badge pending">Especificada, sin construir</span></summary>
+    <div class="item-body">
+      <p>Distinta de la anterior: esa es <strong>por-proyecto</strong> (arquitecto corrige su propio plano). Esta es <strong>nuestra</strong>, interna — para ir enseñándole al sistema cómo se dibujan las cosas, cruzando planos de distintos orígenes/oficinas.</p>
+      <ul>
+        <li>Primera funcionalidad: cargar planos de distintos estilos y, a mano, identificar/categorizar instancias de un mismo tipo de elemento (ej. marcar "estas 3 líneas son una ventana, así se dibuja acá"; en otro plano con patrón distinto, registrarlo como variante nueva, no como error).</li>
+        <li>Alimenta con el tiempo tanto un futuro detector determinista como los prompts de Claude Vision, vía el mismo mecanismo que <code>reglas_aprendidas.js</code>.</li>
       </ul>
     </div>
   </details>

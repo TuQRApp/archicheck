@@ -482,6 +482,7 @@ A raíz del caso de la "escalera" de Beauchef — donde ni el cruce contra el co
 3. **Diseñar el chat de resolución de dudas bidireccional** (sección "Redefinición del producto" arriba) — pieza de producto nueva, sin diseño de interfaz ni de propagación de la corrección hacia el pipeline todavía.
 4. **Re-correr Beauchef a través del portal real** (hasta ahora solo se revisó el JSON crudo de Colab informalmente) — para confirmar si los 3 fixes de esta sesión (DS 50/2015, conteo `resumen_general`, Nivel+página) también se comportan bien en un proyecto distinto de PDV, no solo en el caso ya muy probado.
 5. Aplicar sistemáticamente de ahora en adelante la regla de cruce planta↔elevaciones↔cortes↔cuadros (ítem 3 de la sección Beauchef) en cualquier hallazgo geométrico nuevo, no solo cuando surja una duda explícita.
+6. **Construir la interfaz de validación gráfica del arquitecto** (gate obligatorio CRUD completo + marcado por clic, especificada en detalle más arriba en P1 desde 2026-07-22) — sigue sin construir, y es la pieza que directamente cerraría casos como el de la "Escalera" de Beauchef (ítem 1) sin depender de una pregunta suelta en el chat.
 
 ### P1b — U-Net + MLSTRUCT-FP (misma familia que P1, paralelo, arranca ya)
 Entrenamiento en RunPod/Vast.ai (~$50-150), dataset de 954 planos chilenos, target IoU ≥0.90 (referencia publicada por el propio equipo de Pizarro: IoU promedio 0.77, moda 0.90). **Alcance real: MLSTRUCT-FP/U-Net segmenta solo muros**, no puertas/ventanas/escaleras — es complementario a P1 (DINO+SAM2), no un reemplazo.
