@@ -247,12 +247,24 @@
   </div>
 
   <div class="today-box warn">
-    <h4>🔲 Pendientes al retomar (actualizado 30 julio)</h4>
+    <h4>🔴 31 julio — Isla de Pascua: falla catastrófica de segmentación, causa raíz identificada por el usuario</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
-      <li>Punto ciego de ventanas (0% en varias herramientas) sigue sin fix — el hallazgo de ventanas altas/claraboyas de Beauchef es una causa adicional distinta al patrón de "3 líneas paralelas" ya documentado.</li>
+      <li>Tercer plano distinto de PDV/Beauchef (clínica + sucursal bancaria, 21 recintos reales). <code>recintos_excluidos_por_fusion</code> muestra el PISO COMPLETO fusionado en un blob de 266.49 m² (bbox = tamaño exacto de la imagen) — el filtro de seguridad ya existente lo excluyó bien, pero el resultado residual son <strong>80 "recintos" para 21 reales</strong>: 59 sin nombre (mediana 1.6 m², algunos de 0.5 m²) y los 21 con nombre real muestran posición/área sistemáticamente desalineadas del estimado semántico (ej. "Recepción" 3.66 m² geométrico vs. ~18 m² semántico, a 25% del ancho de página de distancia).</li>
+      <li>Consecuencia: los 3 incumplimientos de "área insuficiente" (Recepción, Consulta Médica 2, Caja) casi seguro son falsos positivos — comparan contra un fragmento roto, no la sala real. Los incumplimientos semánticos (ventanas, ruta accesible) no dependen de esta capa y parecen razonables.</li>
+      <li><strong>🔑 Causa raíz, confirmada por el usuario con captura del plano</strong>: las líneas EXTERIORES son COTAS (cadenas de acotación) y las líneas discontinuas son EJES (grilla estructural 1-9/A-F) — ninguna de las dos es geometría del edificio, pero el pipeline las está leyendo como límites de recinto. Ya existe <code>_es_trazo_discontinuo()</code> para líneas discontinuas de vigas/deslinde, pero no captura los EJES de este plano; no hay ningún filtro equivalente para las líneas de la cadena de COTAS (solo se excluye el texto, <code>cotas_texto</code>).</li>
+      <li><strong>⚠️ Restricción dura del usuario para el fix</strong>: debe ser estrictamente incremental, verificado visualmente contra los 3 casos de referencia (PDV, Beauchef, Isla de Pascua) antes de darse por bueno — no relajar los filtros existentes. Precedente: el fix de achurado de 2026-07-23 causó una regresión real y tuvo que revertirse. <strong>Sin implementar todavía</strong> — se documentó primero a pedido explícito del usuario; el fix en Celda 4 y la corrida por el portal quedan como próximos pasos.</li>
+    </ul>
+  </div>
+
+  <div class="today-box warn">
+    <h4>🔲 Pendientes al retomar (actualizado 31 julio)</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Punto ciego de ventanas (0% en varias herramientas) sigue sin fix — Isla de Pascua reconfirma el mismo síntoma (0 ventanas), tercera corrida seguida.</li>
       <li>Diseñar el chat de resolución de dudas bidireccional — sin interfaz ni mecanismo de propagación al pipeline todavía.</li>
-      <li>Sobre-detección de recintos fantasma por mobiliario de línea repetitiva (duchas, casilleros) — sin fix, necesita el mismo tratamiento que cotas/texto/líneas discontinuas o fusión post-proceso.</li>
+      <li>Sobre-detección de recintos fantasma por mobiliario de línea repetitiva (duchas, casilleros de Beauchef) — sin fix, necesita el mismo tratamiento que cotas/texto/líneas discontinuas o fusión post-proceso.</li>
       <li><s>Propagar al portal (Capa 2) la corrección de cita de escalera</s> — <strong>✅ resuelto 30 julio</strong>: <code>buildPromptCapa2</code> ahora cita siempre Art. 4.2.10 (tabla por carga de ocupación) para escaleras, nunca 4.2.2. Pendiente confirmar en una corrida real con una escalera de verdad.</li>
+      <li><strong>🆕 Excluir EJES y líneas de COTAS del raster antes de <code>adaptiveThreshold</code></strong> (ver caja de arriba) — causa raíz de la falla de Isla de Pascua. Fix debe ser incremental y verificado contra los 3 planos de referencia, sin implementar todavía.</li>
+      <li>Subir Isla de Pascua al portal real (el usuario lo hará en un paso separado) — revisar si el Capa 2 hereda los 3 falsos positivos de área ya identificados.</li>
       <li>Aplicar sistemáticamente la regla de cruce planta↔elevaciones↔cortes↔cuadros en cualquier hallazgo geométrico nuevo.</li>
       <li>Construir la interfaz de validación gráfica del arquitecto (gate CRUD + marcado por clic, especificada en P1) — sigue sin construir; habría evitado que I3/I4 llegaran al informe final con una clasificación errónea.</li>
       <li>Confirmar con el usuario si el bug de metadatos de portada (documento/PRC) del informe 2219 es del portal o de carga de archivos.</li>
