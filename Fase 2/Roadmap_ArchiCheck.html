@@ -276,6 +276,15 @@
     </ul>
   </div>
 
+  <div class="today-box win">
+    <h4>✅ 31 julio — Reorganización de archivos: notebook y datos de PDV ahora dentro del repo</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li><strong>El notebook vivo (y <code>Versiones anteriores</code>) se movió</strong> de <code>Docs archicheck\Doc prueba\</code> (fuera de git) a <strong><code>archicheck/Fase 2/Desarrollos/Test/</code></strong> — a partir de ahora se edita y versiona ahí, quedando trackeado en git junto con todo lo demás.</li>
+      <li><strong>Archivos de PDV organizados en <code>Test/pdv/</code></strong> — mismo patrón que Beauchef e Isla de Pascua: PDF fuente, corridas JSON/PNG, informe de portal, y la carpeta <code>old/</code> completa (66 archivos de historial: ground truth, PNGs marcados, corridas antiguas).</li>
+      <li>Notebook actual: <code>archicheck/Fase 2/Desarrollos/Test/ArchiCheck_Base 31jul_0345.ipynb</code>.</li>
+    </ul>
+  </div>
+
   <div class="today-box warn">
     <h4>🔲 Pendientes al retomar (actualizado 31 julio)</h4>
     <p style="margin:4px 0 10px; font-size:0.86rem;"><strong>🎯 PRIORIDAD INMEDIATA</strong>: correr el notebook <code>31jul_0345</code> (fix de EJES + rasantes + validación de superficies + carga de ocupación) en Colab contra PDV, Beauchef e Isla de Pascua — Celdas 1→2→3→4→5→6→7, saltando 4b/4c (DINO, no relacionado) — con <code>PAGINA_CUADRO_SUPERFICIES</code> = 1 (PDV), 8 (Beauchef), 1 (Isla de Pascua). Verificar visualmente antes de tocar cualquier otro pendiente — nadie probó este código todavía. Ahora que sabemos que PDV/Beauchef también estaban contaminados, el objetivo no es solo "no romper nada" sino que deberían mejorar también.</p>
