@@ -265,21 +265,30 @@
     </ul>
   </div>
 
+  <div class="today-box win">
+    <h4>✅ 31 julio, madrugada — Confirmado: PDV y Beauchef también contaminados + validación de superficies implementada</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li><strong>PDV y Beauchef también estaban contaminados por eje/cota</strong>, no solo Isla de Pascua: <code>recintos_excluidos_por_fusion</code> presente en TODOS los crops de ambos proyectos, con áreas geométricas vs. semánticas igual de desalineadas (ej. "Rampa Acceso Universal" en PDV, "Escalera central" en Beauchef — el mismo fragmento ya identificado como Asientos Duchas). El fix de EJES corrige un problema más extendido de lo pensado.</li>
+      <li><strong>Segundo ejemplo real de convenciones (captura "Superficies pdv.png")</strong>, analizado en varias rondas con el usuario: líneas discontinuas no son solo ejes numerados (acá era proyección de una viga); arcos de puerta/radio de giro también contaminan el área; achurado de color (rojo/amarillo) SÍ es muro real cuando marca "se construye/se retira" pero su significado nunca se asume, siempre se confirma con el arquitecto contra la leyenda de ESE plano — y una vez confirmado aplica a TODAS las páginas del mismo PDF (nueva regla de fondo #2). <strong>Artefactos y mobiliario (lavaplatos, WC, muebles) confirmados como regla dura</strong>: nunca contaminan superficie, generaliza el caso de duchas/casilleros de Beauchef a una categoría completa.</li>
+      <li><strong>✅ Validación de superficies contra el cuadro real — implementada</strong> (notebook <code>31jul_0330</code>): el cruce declarado-vs-medido ya existía desde el 26 de julio pero nunca tuvo datos reales (el cuadro de superficies impreso nunca se le mostraba a Claude Vision). Nueva config opcional <code>PAGINA_CUADRO_SUPERFICIES</code> + extracción de texto vía PyMuPDF (mismo método confiable que <code>cotas_texto</code>) inyectado en el prompt — sin parser rígido de tabla, para no asumir un formato fijo que no generalice. Sin verificar todavía.</li>
+    </ul>
+  </div>
+
   <div class="today-box warn">
     <h4>🔲 Pendientes al retomar (actualizado 31 julio)</h4>
-    <p style="margin:4px 0 10px; font-size:0.86rem;"><strong>🎯 PRIORIDAD INMEDIATA</strong>: correr el notebook <code>31jul_0230</code> (fix de EJES + rasantes) en Colab contra PDV, Beauchef e Isla de Pascua y verificar visualmente antes de tocar cualquier otro pendiente — nadie probó este código todavía, y COTAS/interfaz gráfica/chat dependen de que esta base sea sólida.</p>
+    <p style="margin:4px 0 10px; font-size:0.86rem;"><strong>🎯 PRIORIDAD INMEDIATA</strong>: correr el notebook <code>31jul_0330</code> (fix de EJES + rasantes + validación de superficies) en Colab contra PDV, Beauchef e Isla de Pascua y verificar visualmente antes de tocar cualquier otro pendiente — nadie probó este código todavía. Ahora que sabemos que PDV/Beauchef también estaban contaminados, el objetivo no es solo "no romper nada" sino que deberían mejorar también.</p>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
       <li>Punto ciego de ventanas (0% en varias herramientas) sigue sin fix — Isla de Pascua reconfirma el mismo síntoma (0 ventanas), tercera corrida seguida.</li>
-      <li>Diseñar el chat de resolución de dudas bidireccional — sin interfaz ni mecanismo de propagación al pipeline todavía. Ahora es también la vía elegida para resolver recintos fantasma por mobiliario, no solo dudas de clasificación tipo "escalera".</li>
-      <li><s>Sobre-detección de recintos fantasma por mobiliario de línea repetitiva</s> — redirigido: se resuelve preguntando al arquitecto vía chat, no con un detector geométrico por tipo de mueble.</li>
-      <li><s>Propagar al portal (Capa 2) la corrección de cita de escalera</s> — <strong>✅ resuelto 30 julio</strong>: <code>buildPromptCapa2</code> ahora cita siempre Art. 4.2.10 (tabla por carga de ocupación) para escaleras, nunca 4.2.2. Pendiente confirmar en una corrida real con una escalera de verdad.</li>
-      <li><strong>Excluir EJES y COTAS del raster</strong> — <strong>✅ EJES resuelto</strong> (notebook <code>31jul_0130</code>, Paso 1.5). <strong>🔲 COTAS sigue sin resolver</strong> (necesita señal propia, no detecta patrón de guiones). Pendiente crítico: correr el notebook <code>31jul_0230</code> en Colab contra los 3 planos y verificar visualmente antes de confiar en el fix de ejes.</li>
-      <li><s>Texto de "rasantes"</s> — <strong>✅ resuelto</strong> (notebook <code>31jul_0230</code>).</li>
-      <li><strong>Investigar PDFs en capas (OCG)</strong> — pospuesto a propósito (parte de P1). PDF de prueba ya disponible: <code>Fase 2/Desarrollos/Test/Campo lindo/Casa CampoLindo (14 08 23) con layers.pdf</code>.</li>
+      <li>Diseñar el chat de resolución de dudas bidireccional — sin interfaz ni mecanismo de propagación al pipeline todavía.</li>
+      <li><s>Artefactos/mobiliario y recintos fantasma</s> — regla dura ya confirmada (nunca contaminan superficie), la DETECCIÓN sigue sin resolverse: se pregunta al arquitecto vía chat.</li>
+      <li><s>Propagar al portal (Capa 2) la corrección de cita de escalera</s> — <strong>✅ resuelto 30 julio</strong>.</li>
+      <li><strong>Excluir EJES y COTAS del raster</strong> — <strong>✅ EJES resuelto</strong> (Paso 1.5). <strong>🔲 COTAS sigue sin resolver</strong> (necesita señal propia, no detecta patrón de guiones).</li>
+      <li><s>Texto de "rasantes"</s> — <strong>✅ resuelto</strong>.</li>
+      <li><strong>Investigar PDFs en capas (OCG)</strong> — pospuesto a propósito (parte de P1). PDF de prueba ya disponible: Campo Lindo "con layers".</li>
       <li>Subir Isla de Pascua al portal real (el usuario lo hará en un paso separado) — revisar si el Capa 2 hereda los 3 falsos positivos de área ya identificados.</li>
       <li>Mantener actualizado <code>Convenciones_CAD.md</code> cada vez que el usuario indique una convención nueva.</li>
       <li>Aplicar sistemáticamente la regla de cruce planta↔elevaciones↔cortes↔cuadros en cualquier hallazgo geométrico nuevo.</li>
-      <li>Construir la interfaz de validación gráfica del arquitecto (gate CRUD + marcado por clic, especificada en P1) — sigue sin construir; habría evitado que I3/I4 llegaran al informe final con una clasificación errónea.</li>
+      <li>Construir la interfaz de validación gráfica del arquitecto (gate CRUD + tabla de espacios + herramienta de división, especificada en P1) — sigue sin construir.</li>
       <li>Confirmar con el usuario si el bug de metadatos de portada (documento/PRC) del informe 2219 es del portal o de carga de archivos.</li>
     </ul>
   </div>

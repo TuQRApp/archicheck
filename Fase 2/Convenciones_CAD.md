@@ -33,7 +33,7 @@ Registro vivo de cómo se dibuja cada elemento/espacio (y cada línea/texto que 
 
 ---
 
-## B. Líneas/textos que NUNCA son elementos/espacios (jamás dividen ni limitan un recinto)
+## B. Líneas/textos/símbolos que NUNCA son elementos/espacios (jamás dividen ni limitan un recinto)
 
 ### Líneas discontinuas (ejes, cortes, proyecciones de viga — no un significado único)
 - **Convención**: líneas discontinuas (guion-guion o guion-punto-guion). Pueden representar cosas distintas según el plano: grilla de ejes estructurales (terminada en círculo con número 1,2,3... o letra A,B,C...), líneas de corte (A-A, B-B), o **proyección de una viga en planta** (ejemplo confirmado, PDV Nivel 1, 2026-07-31 — dos líneas discontinuas paralelas cruzando Cocina/Bodega, que en este caso son la proyección de una viga, no un eje numerado).
@@ -53,6 +53,13 @@ Registro vivo de cómo se dibuja cada elemento/espacio (y cada línea/texto que 
 - Confirmado en: mencionado por el usuario 2026-07-31 (sin caso puntual documentado todavía en un plano de prueba).
 - **Estado del fix: ✅ implementado** (2026-07-31, notebook `31jul_0230`) — instrucción agregada al prompt semántico de Claude Vision (Celda 4) para que nunca use texto de rasante como `nombre`/`etiqueta_en_plano` de un recinto.
 
+### Artefactos y mobiliario (lavaplatos, WC, muebles, etc.)
+- **Convención**: íconos de artefactos sanitarios (WC, lavamanos, lavaplatos, tinas, urinarios) y mobiliario (muebles de cocina, repisas, mesones) dibujados dentro de un recinto real.
+- **Regla dura (usuario, 2026-07-31, confirmado con ejemplo PDV Nivel 1 — ícono de lavaplatos en Bodega): TODOS se excluyen del cálculo de superficies.** No importa el tipo específico de artefacto o mueble — ninguno debe limitar, dividir, ni restar/sumar al área de un recinto. Generaliza (y reemplaza como regla dura, ya no como sospecha) el hallazgo de mobiliario de línea repetitiva de Beauchef (duchas, casilleros) — no es solo ese caso puntual, es la categoría completa de artefactos/mobiliario.
+- Distinto de muros/puertas/ventanas (sección A): un artefacto está DENTRO de un recinto, nunca define su límite — aunque geométricamente tenga líneas rectas que OpenCV podría confundir con muro.
+- Confirmado en: PDV Nivel 1 (lavaplatos en Bodega). Mismo principio ya evidenciado (sin nombrarlo como regla general hasta ahora) en Beauchef (duchas, casilleros, 2026-07-30).
+- **Estado del fix: pendiente.** Sigue sin implementarse un mecanismo que excluya estos íconos del raster de detección de muros — mismo pendiente ya anotado para mobiliario de línea repetitiva, ahora con alcance confirmado más amplio (cualquier artefacto/mueble, no solo los de línea repetitiva).
+
 ### Nombres de recinto (para contraste — si NO son ninguno de los anteriores)
 - Texto simple ubicado dentro o cerca del área de un recinto, que no es cota ni rasante — este SÍ se usa para el emparejamiento nombre↔forma (con los problemas de matching ya documentados en el roadmap, ver Beauchef "Taller"/"Casino" e Isla de Pascua "Recepción").
 - Ya excluido correctamente del raster de detección de muros desde 2026-07-23 (`cotas_texto` pinta de blanco todo el texto, incluidos los nombres, antes de `adaptiveThreshold`) — este mecanismo sigue vigente sin cambios.
@@ -69,7 +76,7 @@ Extensión directa de la lección de proceso "preguntar, no asertar" — casos d
 - Confirmado en: instrucción general del usuario, sin caso puntual de plano todavía.
 
 ### Mobiliario de línea repetitiva causando recintos fantasma
-- Ver sección "Pendiente de definir" más abajo (duchas, casilleros, estanterías) — mismo principio: no construir un detector geométrico por cada tipo de mueble, preguntar al arquitecto cuando la segmentación se vea sospechosa.
+- La regla dura ya quedó confirmada en la sección B ("Artefactos y mobiliario") — nunca contaminan superficie. Lo que sigue sin resolver es la DETECCIÓN: mientras no exista el fix técnico, cualquier fragmentación sospechosa de un recinto (duchas, casilleros, estanterías u otro mobiliario de línea repetitiva) se pregunta al arquitecto en vez de intentar adivinar con un detector por tipo de mueble.
 
 ---
 
@@ -77,5 +84,5 @@ Extensión directa de la lección de proceso "preguntar, no asertar" — casos d
 
 - Escaleras: patrón de peldaños + dirección de subida — sin definir todavía como convención formal (hoy solo se mide como un recinto con área, ver roadmap "leer elementos completos").
 - Rampas: sin convención de símbolo documentada todavía (hoy se detecta por texto "Pendiente NN%" cercano, no por símbolo gráfico).
-- Mobiliario de línea repetitiva (duchas, casilleros, estanterías) — causa confirmada de recintos fantasma (Beauchef, 2026-07-30), sin convención de detección definida, sin fix implementado.
+- Mobiliario de línea repetitiva (duchas, casilleros, estanterías) — ya confirmado como categoría "artefactos y mobiliario" (sección B) que nunca contamina superficie; sigue sin convención de DETECCIÓN definida, sin fix implementado.
 - Cortes / elevaciones como figuras completas dentro de una lámina — sin convención de símbolo propia, se identifican hoy por posición/rótulo, no por geometría.
