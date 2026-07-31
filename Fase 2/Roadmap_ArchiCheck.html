@@ -229,21 +229,33 @@
     <h4>🆕 28 julio — Redefinición del producto: sistema iterativo con chat de resolución de dudas</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
       <li><strong>Caso disparador</strong>: en Beauchef, una tira angosta se clasificó como "Escalera" (0.97 m) en un edificio de un solo nivel, sin peldaños dibujados. Cruzar contra el Corte A-A (elevaciones/cortes del PDF original) dio evidencia en contra (una sola planta continua, sin cambio de nivel) pero no cerró la duda al 100%. El mismo cruce reveló ventanas altas tipo claraboya en las elevaciones que el análisis de planta nunca detectó.</li>
-      <li><strong>🔲 Sigue abierto</strong>: se afirmó (mal) que la tira NO era escalera solo con esa evidencia parcial. El usuario corrigió: <em>"más bien debes preguntar. No estoy seguro si es una escalera"</em> — ni el usuario tiene certeza todavía. Pendiente: mostrarle el recorte + Corte A-A juntos y preguntar directamente, con opciones, antes de decidir. Lección de proceso guardada en memoria: ante evidencia no concluyente, preguntar en vez de asertar.</li>
+      <li><strong>✅ Resuelto 30 julio</strong>: el usuario confirmó con captura del plano que la tira NO es escalera — es la franja de "Asientos Duchas"/"Duchas" mal segmentada. Confirma que la corrección del usuario (preguntar en vez de asertar) fue el llamado correcto.</li>
       <li><strong>Nueva regla metodológica para P1</strong>: cruzar SIEMPRE planta ↔ elevaciones ↔ cortes (A-A, B-B) ↔ cuadros de superficies/CC/CO antes de dar un hallazgo geométrico por confirmado — no solo cuando hay duda explícita.</li>
       <li><strong>Redefinición de fondo</strong>: ArchiCheck deja de ser un análisis de una sola pasada con informe fijo — pasa a ser un <strong>sistema iterativo</strong> que interactúa con el arquitecto (chat bidireccional: el sistema pregunta con recortes+opciones cuando algo es ambiguo, el arquitecto también puede preguntarle al sistema) hasta acercarse lo más posible a una revisión al 100%, y que aprende de esa interacción para el resto del análisis — el actual y los futuros. Complementa (no reemplaza) la interfaz de validación gráfica y el mecanismo de aprendizaje de convenciones ya planeados. Sin diseñar todavía.</li>
     </ul>
   </div>
 
-  <div class="today-box warn">
-    <h4>🔲 28 julio — Pendientes al retomar mañana</h4>
+  <div class="today-box win">
+    <h4>✅ 30 julio — Primera corrida de Beauchef por el portal real: fixes confirman, 2 hallazgos nuevos</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
-      <li>Confirmar qué es la tira "Escalera" en Beauchef — preguntar al usuario con recorte + Corte A-A, no asumir.</li>
+      <li>Los 3 fixes de la sesión anterior (conteo <code>resumen_general</code>, Nivel+página, sin "DS 50/2015 Art. N") se sostienen en un proyecto distinto de PDV — confirmado en el PDF <code>2026-07-30 2219</code>.</li>
+      <li><strong>🔴 "Escalera" [E23] confirmada como error</strong> (ver caja de arriba): I3/I4 del informe, ambos ALTA y prioridad #2/#3 del plan de acción, quedan sin sustento — se basan en un elemento que no es una escalera.</li>
+      <li><strong>🆕 Sobre-detección de recintos fantasma por mobiliario de línea repetitiva.</strong> Confirmado con 2 capturas del usuario: duchas/asientos de duchas generaron el fantasma E23; casilleros (lockers) en Guardarropa generaron los fantasmas E11/E15/E16 (los pasillos entre hileras de casilleros, no recintos reales). Mismo mecanismo de fondo que la regresión de achurado ya revertida — mobiliario con trazado denso y repetitivo se lee como límite de recinto. Distinto del punto ciego de ventanas: acá el problema es sobre-detección, no ausencia.</li>
+      <li><strong>🆕 Cita de escalera del portal sin corregir.</strong> El informe citó "OGUC Art. 4.2.2 N°1" (1.20m fijo) para ancho de escalera — la auditoría de <code>OGUC_REGLAS</code> ya había determinado que el artículo real es 4.2.10 (tabla por carga de ocupación, piso 1.10m). El fix se aplicó solo en Colab (Python), nunca en el prompt/RAG de Capa 2 del portal — pendiente propagar, aplica a cualquier escalera futura más allá de este caso puntual.</li>
+      <li>Sin resolver: posible bug de metadatos en la portada del informe (nombre de documento y "PRC Santiago aplicado" no calzan con el proyecto real, ubicado en Pedro Aguirre Cerda) — esperando confirmación del usuario sobre si es bug o error de carga.</li>
+    </ul>
+  </div>
+
+  <div class="today-box warn">
+    <h4>🔲 Pendientes al retomar (actualizado 30 julio)</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
       <li>Punto ciego de ventanas (0% en varias herramientas) sigue sin fix — el hallazgo de ventanas altas/claraboyas de Beauchef es una causa adicional distinta al patrón de "3 líneas paralelas" ya documentado.</li>
       <li>Diseñar el chat de resolución de dudas bidireccional — sin interfaz ni mecanismo de propagación al pipeline todavía.</li>
-      <li>Re-correr Beauchef a través del portal real (hasta ahora solo se revisó el JSON crudo de Colab) para confirmar que los 3 fixes de esta sesión (DS 50/2015, conteo <code>resumen_general</code>, Nivel+página) también funcionan en un proyecto distinto de PDV.</li>
+      <li>Sobre-detección de recintos fantasma por mobiliario de línea repetitiva (duchas, casilleros) — sin fix, necesita el mismo tratamiento que cotas/texto/líneas discontinuas o fusión post-proceso.</li>
+      <li>Propagar al portal (Capa 2) la corrección de cita de escalera (4.2.10, no 4.2.2) — hoy solo está aplicada en el motor de reglas de Colab.</li>
       <li>Aplicar sistemáticamente la regla de cruce planta↔elevaciones↔cortes↔cuadros en cualquier hallazgo geométrico nuevo.</li>
-      <li>Construir la interfaz de validación gráfica del arquitecto (gate CRUD + marcado por clic, especificada en P1) — sigue sin construir, cerraría casos como el de la "Escalera" de Beauchef sin depender de una pregunta suelta en el chat.</li>
+      <li>Construir la interfaz de validación gráfica del arquitecto (gate CRUD + marcado por clic, especificada en P1) — sigue sin construir; habría evitado que I3/I4 llegaran al informe final con una clasificación errónea.</li>
+      <li>Confirmar con el usuario si el bug de metadatos de portada (documento/PRC) del informe 2219 es del portal o de carga de archivos.</li>
     </ul>
   </div>
 
