@@ -1,4 +1,5 @@
 ﻿import { useState, useRef, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import * as pdfjsLib from "pdfjs-dist";
 import SelectorComuna from './components/SelectorComuna.jsx';
 import { verificarProyecto, listarZonas } from './normativa/verificador.js';
@@ -414,6 +415,149 @@ function buildColabTexto(json) {
   return "";
 }
 
+// ── Revisión gráfica de geometría — correcciones del arquitecto ────────────
+const CORRECCIONES_VACIAS = {
+  recintosEditados: {}, recintosEliminados: [], cortes: [], fusiones: [], areasExcluidas: [],
+  elementosPuntualesEditados: {}, elementosPuntualesEliminados: [], elementosPuntualesNuevos: [],
+};
+
+const CATEGORIAS_ELEMENTO = [
+  { id: "puerta",   campo: "puertas_detalle",   label: "Puerta",   prefijo: "P" },
+  { id: "ventana",  campo: "ventanas_detalle",  label: "Ventana",  prefijo: "V" },
+  { id: "escalera", campo: "escaleras_detalle", label: "Escalera", prefijo: "ES" },
+  { id: "rampa",    campo: "rampas_detalle",    label: "Rampa",    prefijo: "R" },
+];
+
+// Recintos de una página con todas las correcciones ya aplicadas (recintos base + ediciones +
+// cortes + fusiones + resta de áreas excluidas). Usado tanto para la vista previa en vivo del
+// canvas como, vía construirColabJsonCorregido, para el JSON final que se manda al análisis.
+// Se identifica por entry_idx (no por el número de "pagina") porque una misma página física del
+// PDF puede tener 2+ entradas en colabJson.paginas[] (crops distintos, ej. "pag2-1"/"pag2-2"),
+// todas compartiendo el mismo número de pagina — entry_idx es el único campo realmente único.
+function getMedicionesPorPagina(colabJson, correcciones, entryIdx) {
+  const pag = (colabJson?.paginas || []).find(p => p.entry_idx === entryIdx);
+  if (!pag) return [];
+  let mg = (pag.mediciones_geometricas || []).filter(r => !correcciones.recintosEliminados.includes(r.id));
+  mg = mg.map(r => correcciones.recintosEditados[r.id] ? { ...r, ...correcciones.recintosEditados[r.id] } : r);
+  for (const fusion of correcciones.fusiones.filter(f => f.entryIdx === entryIdx)) {
+    mg = mg.filter(r => !fusion.ids.slice(1).includes(r.id));
+    mg = mg.map(r => r.id === fusion.resultado.id ? { ...r, ...fusion.resultado, _origen_fusion: fusion.ids } : r);
+  }
+  for (const corte of correcciones.cortes.filter(c => c.entryIdx === entryIdx)) {
+    mg = mg.filter(r => r.id !== corte.origenId);
+    mg.push(...corte.resultado.map(n => ({ ...n, pagina: pag.pagina, cumple_geo: true, sin_nombre_confirmar: false, _origen_corte: corte.origenId })));
+  }
+  const mpp = pag.mpp || 0;
+  mg = mg.map(r => {
+    const excl = correcciones.areasExcluidas.filter(a => a.recintoId === r.id && a.entryIdx === entryIdx);
+    if (!excl.length) return r;
+    const areaExcluidaTotal = excl.reduce((acc, a) => acc + a.bbox.w * a.bbox.h * mpp * mpp, 0);
+    return { ...r, area_m2: Math.max(0, (r.area_m2 || 0) - areaExcluidaTotal), _areas_excluidas: excl };
+  });
+  return mg;
+}
+
+// Elementos puntuales (puertas/ventanas/escaleras/rampas) de una página, con correcciones
+// aplicadas — pre-tagueados por Colab (Parte A) + agregados manualmente por el arquitecto.
+// Identificado por entry_idx, mismo motivo que getMedicionesPorPagina.
+function getElementosPuntualesPorPagina(colabJson, correcciones, entryIdx) {
+  const pag = (colabJson?.paginas || []).find(p => p.entry_idx === entryIdx);
+  const sem = pag?.analisis_semantico || {};
+  const out = [];
+  for (const cat of CATEGORIAS_ELEMENTO) {
+    let arr = (sem[cat.campo] || []).filter(e => !e.id || !correcciones.elementosPuntualesEliminados.includes(e.id));
+    arr = arr.map(e => (e.id && correcciones.elementosPuntualesEditados[e.id]) ? { ...e, ...correcciones.elementosPuntualesEditados[e.id] } : e);
+    out.push(...arr.map(e => ({ ...e, categoria: cat.id })));
+  }
+  out.push(...correcciones.elementosPuntualesNuevos.filter(n => n.entryIdx === entryIdx && !correcciones.elementosPuntualesEliminados.includes(n.id)));
+  return out;
+}
+
+// Subconjunto de getElementosPuntualesPorPagina con posición real (cx_relativo/cy_relativo
+// numéricos) — para dibujar en el canvas y contar "marcadas". JSON generados ANTES del cambio de
+// notebook (Parte A) traen puertas_detalle sin posición; sin este filtro se dibujarían todos
+// apilados en (0,0) y se contarían como "ya marcados" sin estarlo. getElementosPuntualesPorPagina
+// (sin filtrar) se sigue usando para el JSON final exportado, para no perder la descripción en
+// texto de esos elementos aunque no tengan posición.
+function getElementosPuntualesConPosicion(colabJson, correcciones, entryIdx) {
+  return getElementosPuntualesPorPagina(colabJson, correcciones, entryIdx)
+    .filter(e => typeof e.cx_relativo === "number" && typeof e.cy_relativo === "number");
+}
+
+const PLURAL_ELEMENTOS = { puerta: "puertas", ventana: "ventanas", escalera: "escaleras", rampa: "rampas" };
+
+// Resumen "sistema detectó N, van M marcadas" por categoría — apoyo visual en LeyendaHerramientas,
+// útil sobre todo para ventanas (recall históricamente ~0%, ver roadmap P1) donde casi siempre
+// va a faltar marcar a mano incluso después de que el notebook exporte posición.
+function calcularElementosDetectadosResumen(colabJson, correcciones, entryIdx) {
+  const pag = colabJson?.paginas?.find(p => p.entry_idx === entryIdx);
+  const conteos = pag?.analisis_semantico?.elementos_detectados || {};
+  const elementos = getElementosPuntualesConPosicion(colabJson, correcciones, entryIdx);
+  const out = {};
+  for (const cat of CATEGORIAS_ELEMENTO) {
+    out[cat.id] = { total: conteos[PLURAL_ELEMENTOS[cat.id]] ?? 0, marcadas: elementos.filter(e => e.categoria === cat.id).length };
+  }
+  return out;
+}
+
+// Corta un bbox en 2 mitades ortogonales según el eje dominante de la línea p1→p2 (simplificación
+// deliberada v1 — no geometría de polígono real, suficiente para blobs fusionados yuxtapuestos).
+function ejecutarCorte(bboxOrigen, p1, p2) {
+  const dx = Math.abs(p2.x - p1.x), dy = Math.abs(p2.y - p1.y);
+  const { x, y, w, h } = bboxOrigen;
+  if (dx >= dy) {
+    const cutX = Math.min(Math.max((p1.x + p2.x) / 2, x), x + w);
+    return [{ x, y, w: cutX - x, h }, { x: cutX, y, w: x + w - cutX, h }];
+  }
+  const cutY = Math.min(Math.max((p1.y + p2.y) / 2, y), y + h);
+  return [{ x, y, w, h: cutY - y }, { x, y: cutY, w, h: y + h - cutY }];
+}
+
+// Fusiona 2+ recintos en uno: bbox envolvente (simplificación, igual criterio que el corte) +
+// suma de áreas reales (no área del envolvente, para no inflar con espacio vacío entre ambos).
+function ejecutarFusion(recintos) {
+  const x = Math.min(...recintos.map(r => r.bbox.x));
+  const y = Math.min(...recintos.map(r => r.bbox.y));
+  const xMax = Math.max(...recintos.map(r => r.bbox.x + r.bbox.w));
+  const yMax = Math.max(...recintos.map(r => r.bbox.y + r.bbox.h));
+  const area_m2 = recintos.reduce((acc, r) => acc + (r.area_m2 || 0), 0);
+  return { bbox: { x, y, w: xMax - x, h: yMax - y }, area_m2 };
+}
+
+// Área de una zona excluida (mobiliario/WC/cota-eje colada en un recinto), en m² reales vía mpp.
+function calcularAreaExcluida(bbox, mpp) {
+  return bbox.w * bbox.h * mpp * mpp;
+}
+
+// Ancho real (m) y centroide (fracción 0-1) de un elemento puntual nuevo, desde una línea de 2 clics.
+function calcularElementoDesdeLinea(p1, p2, mpp, imagenWPx, imagenHPx) {
+  const ancho_m = Math.hypot(p2.x - p1.x, p2.y - p1.y) * mpp;
+  return {
+    ancho_estimado_m: Math.round(ancho_m * 100) / 100,
+    cx_relativo: ((p1.x + p2.x) / 2) / (imagenWPx || 1),
+    cy_relativo: ((p1.y + p2.y) / 2) / (imagenHPx || 1),
+  };
+}
+
+// Reintegra todas las correcciones del arquitecto en un clon del colabJson original — es lo que
+// realmente se manda a analizar() en vez del JSON crudo de Colab. No toca las imágenes enviadas.
+function construirColabJsonCorregido(colabJson, correcciones) {
+  if (!colabJson) return colabJson;
+  const clon = structuredClone(colabJson);
+  for (const pag of clon.paginas || []) {
+    pag.mediciones_geometricas = getMedicionesPorPagina(colabJson, correcciones, pag.entry_idx);
+    if (!pag.analisis_semantico) pag.analisis_semantico = {};
+    const elementos = getElementosPuntualesPorPagina(colabJson, correcciones, pag.entry_idx);
+    const porCategoria = { puerta: [], ventana: [], escalera: [], rampa: [] };
+    for (const e of elementos) {
+      const { categoria, ...resto } = e;
+      (porCategoria[categoria] ||= []).push(resto);
+    }
+    for (const cat of CATEGORIAS_ELEMENTO) pag.analisis_semantico[cat.campo] = porCategoria[cat.id];
+  }
+  return clon;
+}
+
 // ── Prompt Capa 1: levantamiento geométrico ────────────────────────────────
 function buildPromptCapa1(tipo, comuna, archivos, preguntas = {}, colabData = null) {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
@@ -739,6 +883,522 @@ function CanvasOverlay({ src, recintos, pagina }) {
   return (
     <canvas ref={ref}
       style={{ width: "100%", display: "block", borderRadius: 6, border: "1px solid #D1D9EE" }} />
+  );
+}
+
+// ── Revisión gráfica de geometría — canvas interactivo ──────────────────────
+const COLOR_RECINTO = "#1B3A8A";
+const COLOR_RECINTO_SEL = "#2952A3";
+const COLOR_EXCLUIDA = "#C0392B";
+const COLORES_ELEMENTO_PUNTUAL = { puerta: "#1E8449", ventana: "#2952A3", escalera: "#D68910", rampa: "#8E44AD" };
+
+// Dibuja recintos + elementos puntuales + vista previa de herramienta sobre un canvas ya
+// dimensionado a la imagen real. Compartida entre el canvas interactivo (RevisionGeometricaCanvas)
+// y la generación del PNG final descargable (dibujarPngRevisado) — misma lógica, sin duplicar.
+function dibujarOverlayEnCanvas(ctx, img, {
+  mediciones = [], elementosPuntuales = [], imagenWPx, imagenHPx,
+  selectedId = null, fusionSet = [], preview = null, mpp = 0,
+} = {}) {
+  ctx.clearRect(0, 0, img.width, img.height);
+  ctx.drawImage(img, 0, 0);
+  const lw = Math.max(1.5, img.width * 0.0025);
+  const iw = imagenWPx || img.width, ih = imagenHPx || img.height;
+
+  for (const r of mediciones) {
+    if (!r.bbox) continue;
+    const { x, y, w, h } = r.bbox;
+    const isSel = r.id === selectedId || fusionSet.includes(r.id);
+    ctx.fillStyle = isSel ? COLOR_RECINTO_SEL + "35" : COLOR_RECINTO + "1f";
+    ctx.strokeStyle = isSel ? COLOR_RECINTO_SEL : COLOR_RECINTO;
+    ctx.lineWidth = isSel ? lw * 1.8 : lw;
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeRect(x, y, w, h);
+    const fs = Math.max(11, img.width * 0.014);
+    ctx.font = `bold ${fs}px sans-serif`;
+    ctx.fillStyle = isSel ? COLOR_RECINTO_SEL : COLOR_RECINTO;
+    ctx.fillText(r.nombre || r.id, x + 4, y + fs + 2);
+    ctx.font = `${fs * 0.8}px sans-serif`;
+    ctx.fillText(`${(r.area_m2 ?? 0).toFixed(2)} m²`, x + 4, y + fs * 2 + 2);
+    if (r._areas_excluidas?.length) {
+      ctx.save();
+      ctx.strokeStyle = COLOR_EXCLUIDA;
+      ctx.fillStyle = COLOR_EXCLUIDA + "22";
+      ctx.lineWidth = 1.5;
+      for (const a of r._areas_excluidas) {
+        const { x: ex, y: ey, w: ew, h: eh } = a.bbox;
+        ctx.fillRect(ex, ey, ew, eh);
+        ctx.save();
+        ctx.beginPath(); ctx.rect(ex, ey, ew, eh); ctx.clip();
+        for (let d = -eh; d < ew; d += 8) {
+          ctx.beginPath(); ctx.moveTo(ex + d, ey); ctx.lineTo(ex + d + eh, ey + eh); ctx.stroke();
+        }
+        ctx.restore();
+        ctx.strokeRect(ex, ey, ew, eh);
+      }
+      ctx.restore();
+    }
+  }
+
+  for (const e of elementosPuntuales) {
+    const cx = (e.cx_relativo ?? 0) * iw, cy = (e.cy_relativo ?? 0) * ih;
+    const col = COLORES_ELEMENTO_PUNTUAL[e.categoria] || "#333";
+    const isSel = e.id === selectedId;
+    const rad = isSel ? 9 : 6;
+    ctx.beginPath();
+    ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+    ctx.fillStyle = col;
+    ctx.fill();
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    const fs = Math.max(10, img.width * 0.012);
+    ctx.font = `bold ${fs}px sans-serif`;
+    ctx.fillStyle = col;
+    ctx.fillText((e.categoria || "?")[0].toUpperCase(), cx + rad + 3, cy + fs / 3);
+  }
+
+  if (preview?.p1 && preview?.p2) {
+    const { p1, p2, tipo } = preview;
+    ctx.save();
+    ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = "#D68910";
+    ctx.lineWidth = lw;
+    let label = null;
+    if (tipo === "rect") {
+      const x = Math.min(p1.x, p2.x), y = Math.min(p1.y, p2.y);
+      const w = Math.abs(p2.x - p1.x), h = Math.abs(p2.y - p1.y);
+      ctx.fillStyle = "#D6891028";
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      if (mpp) label = `${(w * h * mpp * mpp).toFixed(2)} m²`;
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.stroke();
+      if (mpp) label = `${(Math.hypot(p2.x - p1.x, p2.y - p1.y) * mpp).toFixed(2)} m`;
+    }
+    ctx.restore();
+    if (label) {
+      const fs = Math.max(12, img.width * 0.016);
+      ctx.font = `bold ${fs}px sans-serif`;
+      ctx.fillStyle = "#D68910";
+      ctx.fillText(label, p2.x + 8, p2.y - 8);
+    }
+  }
+}
+
+// Rasteriza un PNG corregido fuera de pantalla (nunca insertado en el DOM visible) usando la
+// misma dibujarOverlayEnCanvas del canvas interactivo, sin ningún estado de herramienta en curso.
+// Se usa al confirmar la revisión, para generar el archivo descargable junto al informe PDF.
+function dibujarPngRevisado(png, mediciones, elementosPuntuales, imagenWPx, imagenHPx, mpp) {
+  return new Promise((resolve, reject) => {
+    if (!png?.objectUrl) { resolve(null); return; }
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      dibujarOverlayEnCanvas(ctx, img, { mediciones, elementosPuntuales, imagenWPx, imagenHPx, mpp });
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = reject;
+    img.src = png.objectUrl;
+  });
+}
+
+// Descarga cada PNG corregido como archivo separado (no embebido en el PDF, a pedido explícito
+// del usuario) — un <a download> temporal por página, mismo timestamp que el PDF de la misma
+// exportación. Nota: los navegadores pueden pedir confirmación en descargas múltiples automáticas
+// (comportamiento estándar anti-spam, no un bug a resolver acá).
+function descargarPngsRevisados(pngsRevisadosPorPagina, tsFile) {
+  for (const entry of Object.values(pngsRevisadosPorPagina || {})) {
+    if (!entry?.dataUrl) continue;
+    const etiqueta = entry.fnameTag || `pagina${entry.pagina}`;
+    const a = document.createElement("a");
+    a.href = entry.dataUrl;
+    a.download = `ArchiCheck_plano_revisado_${etiqueta}_${tsFile}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+}
+
+function hitTestRecinto(mediciones, x, y) {
+  let best = null, bestArea = Infinity;
+  for (const r of mediciones) {
+    if (!r.bbox) continue;
+    const { x: rx, y: ry, w, h } = r.bbox;
+    if (x >= rx && x <= rx + w && y >= ry && y <= ry + h) {
+      const area = w * h;
+      if (area < bestArea) { bestArea = area; best = r; }
+    }
+  }
+  return best;
+}
+
+function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, radiusPx = 16) {
+  let best = null, bestDist = Infinity;
+  for (const e of elementosPuntuales) {
+    const cx = (e.cx_relativo ?? 0) * imagenWPx, cy = (e.cy_relativo ?? 0) * imagenHPx;
+    const d = Math.hypot(x - cx, y - cy);
+    if (d <= radiusPx && d < bestDist) { bestDist = d; best = e; }
+  }
+  return best;
+}
+
+// Herramientas cuyo click se interpreta como el 1º/2º punto de una línea o caja (2 clics),
+// en vez de una selección directa — mismo mecanismo, distinto significado según la herramienta.
+const HERRAMIENTAS_DOS_CLICS = new Set(["cortar", "excluir_area", "puerta", "ventana", "escalera", "rampa"]);
+
+function RevisionGeometricaCanvas({
+  png, mediciones, elementosPuntuales, imagenWPx, imagenHPx, mpp,
+  tool, selectedId, fusionSet = [], linePoints = [], zoom = 1,
+  onSeleccionar, onLinePoint, onMoverDestino,
+}) {
+  const canvasRef = useRef();
+  const imgRef = useRef();
+  const previewRef = useRef(null);
+
+  const redibujar = useCallback((previewOverride) => {
+    const canvas = canvasRef.current, img = imgRef.current;
+    if (!canvas || !img || !img.complete || !img.naturalWidth) return;
+    const ctx = canvas.getContext("2d");
+    const preview = previewOverride !== undefined ? previewOverride : previewRef.current;
+    dibujarOverlayEnCanvas(ctx, img, { mediciones, elementosPuntuales, imagenWPx, imagenHPx, selectedId, fusionSet, preview, mpp });
+  }, [mediciones, elementosPuntuales, imagenWPx, imagenHPx, selectedId, fusionSet, mpp]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !png?.objectUrl) return;
+    const img = new Image();
+    imgRef.current = img;
+    img.onload = () => {
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      previewRef.current = null;
+      redibujar(null);
+    };
+    img.src = png.objectUrl;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [png?.objectUrl]);
+
+  useEffect(() => { redibujar(); }, [redibujar]);
+  useEffect(() => { previewRef.current = null; redibujar(null); }, [linePoints.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function puntoDesdeEvento(e) {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
+    return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+  }
+
+  function handleClick(e) {
+    const pt = puntoDesdeEvento(e);
+    if (tool === "seleccionar" || tool === "fusionar") {
+      const r = hitTestRecinto(mediciones, pt.x, pt.y);
+      if (r) { onSeleccionar?.(r.id, "recinto"); return; }
+      const el = hitTestElemento(elementosPuntuales, pt.x, pt.y, imagenWPx, imagenHPx);
+      if (el) { onSeleccionar?.(el.id, "elemento"); return; }
+      onSeleccionar?.(null, null);
+      return;
+    }
+    if (tool === "mover") { onMoverDestino?.(pt); return; }
+    if (HERRAMIENTAS_DOS_CLICS.has(tool)) { onLinePoint?.(pt); }
+  }
+
+  function handleMouseMove(e) {
+    if (linePoints.length !== 1) return;
+    const pt = puntoDesdeEvento(e);
+    const tipo = tool === "excluir_area" ? "rect" : "linea";
+    previewRef.current = { p1: linePoints[0], p2: pt, tipo };
+    redibujar(previewRef.current);
+  }
+
+  function handleMouseLeave() {
+    if (previewRef.current) { previewRef.current = null; redibujar(null); }
+  }
+
+  const cursor = (tool === "seleccionar" || tool === "fusionar") ? "pointer" : "crosshair";
+
+  // Tamaño CSS explícito (no "100%") para que el zoom controle el tamaño real de despliegue —
+  // el contenedor que lo envuelve (en RevisionModal) es el que hace scroll/pan nativo del navegador.
+  // canvas.width/height (el buffer de dibujo) siempre queda a resolución nativa (ver arriba), así que
+  // puntoDesdeEvento ya convierte correctamente sin importar el zoom (usa el rect renderizado real).
+  const anchoCss = imagenWPx ? Math.round(imagenWPx * zoom) : undefined;
+  const altoCss = imagenHPx ? Math.round(imagenHPx * zoom) : undefined;
+
+  return (
+    <canvas ref={canvasRef} onClick={handleClick} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
+      style={{ width: anchoCss, height: altoCss, display: "block", borderRadius: 6, border: "1px solid #D1D9EE", cursor }} />
+  );
+}
+
+// ── Panel de edición de un recinto o elemento puntual seleccionado ─────────
+function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onCerrar }) {
+  const [nombre, setNombre] = useState("");
+  const [tipoRecinto, setTipoRecinto] = useState("");
+  const [areaM2, setAreaM2] = useState("");
+  const [anchoM, setAnchoM] = useState("");
+
+  useEffect(() => {
+    setNombre(item?.nombre ?? item?.ubicacion_o_recinto ?? "");
+    setTipoRecinto(item?.tipo ?? "");
+    setAreaM2(item?.area_m2 ?? "");
+    setAnchoM(item?.ancho_estimado_m ?? "");
+  }, [item]);
+
+  if (!item) return null;
+  const esRecinto = tipo === "recinto";
+  const inputStyle = { width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "7px 10px", fontSize: 12, color: "#3D4A5C", fontFamily: "inherit", background: "#FFFFFF", marginBottom: 6 };
+  const btnStyle = (bg) => ({ border: "none", borderRadius: 6, padding: "7px 12px", fontSize: 11, fontFamily: "inherit", cursor: "pointer", background: bg, color: "#fff" });
+
+  return (
+    <div style={{ border: "1px solid #D1D9EE", borderRadius: 8, padding: 12, background: "#F4F6FB", marginTop: 10 }}>
+      <div style={{ fontSize: 11, color: "#6B7A99", marginBottom: 8 }}>
+        {esRecinto ? `Recinto ${item.id}` : `Elemento ${item.id || "(nuevo)"} — ${item.categoria}`}
+      </div>
+      {esRecinto ? (
+        <>
+          <input style={inputStyle} value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Nombre" />
+          <input style={inputStyle} value={tipoRecinto} onChange={e => setTipoRecinto(e.target.value)} placeholder="Tipo (ej. bano, cocina)" />
+          <input style={inputStyle} type="number" step="0.01" value={areaM2} onChange={e => setAreaM2(e.target.value)} placeholder="Área m²" />
+        </>
+      ) : (
+        <>
+          <input style={inputStyle} value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ubicación / descripción" />
+          <input style={inputStyle} type="number" step="0.01" value={anchoM} onChange={e => setAnchoM(e.target.value)} placeholder="Ancho m" />
+        </>
+      )}
+      <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
+        <button style={btnStyle("#2952A3")} onClick={() => onGuardar(esRecinto
+          ? { nombre, tipo: tipoRecinto, area_m2: parseFloat(areaM2) || 0 }
+          : { ubicacion_o_recinto: nombre, ancho_estimado_m: parseFloat(anchoM) || 0 })}>
+          Guardar
+        </button>
+        {!esRecinto && <button style={btnStyle("#D68910")} onClick={onMover}>Mover</button>}
+        <button style={btnStyle("#C0392B")} onClick={onEliminar}>Eliminar</button>
+        <button style={btnStyle("#B8C5E0")} onClick={onCerrar}>Cancelar</button>
+      </div>
+    </div>
+  );
+}
+
+// Solo lo que el sistema NO está seguro — nunca lo que ya considera confirmado (a pedido
+// explícito del usuario). "Duda" = recinto sin nombre confirmado, recinto con incumplimiento
+// geométrico detectado, o una categoría de elemento puntual con detecciones sin ubicar todavía.
+function calcularDudas(mediciones, elementosDetectados) {
+  const dudas = [];
+  for (const r of mediciones) {
+    if (r.sin_nombre_confirmar) {
+      dudas.push({ tipo: "recinto", id: r.id, motivo: `${r.id}: sin nombre confirmado — ¿qué espacio es?`, item: r });
+    } else if (r.cumple_geo === false) {
+      dudas.push({ tipo: "recinto", id: r.id, motivo: `${r.id} (${r.nombre}): incumplimiento geométrico detectado`, item: r });
+    }
+  }
+  for (const cat of CATEGORIAS_ELEMENTO) {
+    const det = elementosDetectados[cat.id];
+    if (det && det.total > det.marcadas) {
+      dudas.push({ tipo: "categoria", id: cat.id, motivo: `Sistema detectó ${det.total} ${cat.label.toLowerCase()}(s), ${det.total - det.marcadas} sin ubicar en el plano — revísalas`, item: null });
+    }
+  }
+  return dudas;
+}
+
+// ── Tabla de dudas — índice de "cosas por mirar", no un listado completo ───
+function TablaDudas({ dudas, onIrADuda }) {
+  if (!dudas.length) return <div style={{ fontSize: 11, color: "#1E8449", padding: "8px 0 14px" }}>✓ Sin dudas pendientes en esta página.</div>;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
+      {dudas.map((d, i) => (
+        <button key={i} onClick={() => onIrADuda(d)}
+          style={{ textAlign: "left", border: "1px solid rgba(214,137,16,0.35)", background: "rgba(214,137,16,0.06)", borderRadius: 6, padding: "8px 10px", fontSize: 11, color: "#D68910", cursor: "pointer", fontFamily: "inherit" }}>
+          ⚠ {d.motivo}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ── Selector de herramienta activa ──────────────────────────────────────────
+function LeyendaHerramientas({ tool, onChangeTool, fusionCount, onConfirmarFusion, elementosDetectados }) {
+  const base = [
+    { id: "seleccionar", label: "Seleccionar" },
+    { id: "cortar",      label: "Cortar" },
+    { id: "fusionar",    label: "Fusionar" },
+    { id: "excluir_area", label: "Excluir área" },
+  ];
+  const btnStyle = (activo, col) => ({
+    border: `1px solid ${activo ? col : "#D1D9EE"}`, borderRadius: 6, padding: "6px 11px", fontSize: 11,
+    fontFamily: "inherit", cursor: "pointer", background: activo ? col : "#fff", color: activo ? "#fff" : col,
+  });
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", marginBottom: 10 }}>
+      {base.map(b => (
+        <button key={b.id} style={btnStyle(tool === b.id, "#2952A3")} onClick={() => onChangeTool(b.id)}>{b.label}</button>
+      ))}
+      {tool === "fusionar" && fusionCount >= 2 && (
+        <button style={{ ...btnStyle(true, "#1E8449") }} onClick={onConfirmarFusion}>Fusionar {fusionCount} espacios</button>
+      )}
+      <span style={{ width: 1, height: 18, background: "#D1D9EE", margin: "0 4px" }} />
+      {CATEGORIAS_ELEMENTO.map(cat => {
+        const col = COLORES_ELEMENTO_PUNTUAL[cat.id];
+        const det = elementosDetectados?.[cat.id];
+        return (
+          <button key={cat.id} style={btnStyle(tool === cat.id, col)} onClick={() => onChangeTool(cat.id)}>
+            {cat.label}{det ? ` (${det.marcadas}/${det.total})` : ""}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── Bloque completo de revisión gráfica (compone canvas + panel + tabla + leyenda) ──
+// ── Tarjeta compacta que dispara el modal de revisión (no muestra el editor inline) ──
+function RevisionGraficaGeometria({ entriesConPng, revisionConfirmada, onAbrirModal }) {
+  if (!entriesConPng.length) return null;
+  return (
+    <div style={{ marginBottom: 18, border: `1px solid ${revisionConfirmada ? "#1E8449" : "#E74C3C"}`, borderRadius: 10, overflow: "hidden" }}>
+      <div style={{ padding: "10px 14px", background: "#F4F6FB", borderBottom: "1px solid #D1D9EE", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <span style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "2px" }}>REVISIÓN GRÁFICA DE GEOMETRÍA</span>
+        <span style={{ fontSize: 10, color: revisionConfirmada ? "#1E8449" : "#E74C3C" }}>
+          {revisionConfirmada ? "✓ confirmada" : "requerido para analizar"}
+        </span>
+      </div>
+      <div style={{ padding: "14px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+        <span style={{ fontSize: 12, color: "#6B7A99" }}>
+          {entriesConPng.length} página{entriesConPng.length > 1 ? "s" : ""} lista{entriesConPng.length > 1 ? "s" : ""} para revisar, una por una, en pantalla completa.
+        </span>
+        <button onClick={onAbrirModal}
+          style={{ border: "none", borderRadius: 8, padding: "10px 18px", fontSize: 12, fontWeight: 600, fontFamily: "inherit", cursor: "pointer", background: "linear-gradient(90deg,#1B3A8A,#2952A3)", color: "#fff" }}>
+          {revisionConfirmada ? "Revisar de nuevo →" : "Revisar geometría →"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const zoomBtnStyle = { background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", borderRadius: 6, padding: "5px 10px", fontSize: 12, fontFamily: "inherit", cursor: "pointer" };
+const navBtnStyle = (primary) => ({ border: primary ? "none" : "1px solid #D1D9EE", borderRadius: 8, padding: "10px 18px", fontSize: 12, fontWeight: 600, fontFamily: "inherit", cursor: "pointer", background: primary ? "linear-gradient(90deg,#1B3A8A,#2952A3)" : "#fff", color: primary ? "#fff" : "#3D4A5C" });
+
+// ── Modal de revisión gráfica — una página a la vez, a pantalla casi completa, con zoom + scroll
+// nativo del navegador para "moverse con el mouse" (wheel/trackpad/scrollbar). El toolbar queda fijo
+// arriba (no se mueve con el scroll del plano). Solo avanza a la página siguiente cuando el
+// arquitecto decide que terminó — no hay avance automático ni por tiempo.
+function RevisionModal({
+  colabJson, colabPngs, correcciones,
+  entriesConPng, stepIndex, setStepIndex,
+  tool, setTool, selectedId, selectedTipo, fusionSet, linePoints,
+  onSeleccionar, onLinePoint, onMoverDestino, onConfirmarFusion,
+  onGuardarRecinto, onEliminarRecinto, onGuardarElemento, onEliminarElemento, onMoverElemento, onCerrarPanel,
+  onFinalizar, onCerrarModal,
+}) {
+  const containerRef = useRef();
+  const [zoom, setZoom] = useState(1);
+  const [focusPoint, setFocusPoint] = useState(null);
+
+  const entryIdx = entriesConPng[stepIndex];
+  const png = colabPngs.find(p => p.entryIdx === entryIdx);
+  const pagJson = colabJson?.paginas?.find(p => p.entry_idx === entryIdx);
+  const mediciones = entryIdx != null ? getMedicionesPorPagina(colabJson, correcciones, entryIdx) : [];
+  const elementosPuntuales = entryIdx != null ? getElementosPuntualesConPosicion(colabJson, correcciones, entryIdx) : [];
+  const elementosDetectados = entryIdx != null ? calcularElementosDetectadosResumen(colabJson, correcciones, entryIdx) : {};
+  const dudas = calcularDudas(mediciones, elementosDetectados);
+
+  const recintoSel = selectedTipo === "recinto" ? mediciones.find(r => r.id === selectedId) : null;
+  const elementoSel = selectedTipo === "elemento" ? elementosPuntuales.find(e => e.id === selectedId) : null;
+
+  // Al cambiar de página: zoom "ajustar a ancho" (página casi completa) y sin selección/foco previos.
+  useEffect(() => {
+    const cw = containerRef.current?.clientWidth || 800;
+    if (pagJson?.imagen_w_px) setZoom(Math.min(1, (cw - 32) / pagJson.imagen_w_px));
+    setFocusPoint(null);
+    onCerrarPanel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entryIdx]);
+
+  // Centrar el scroll sobre el punto de una duda seleccionada desde la tabla.
+  useEffect(() => {
+    if (!focusPoint || !containerRef.current) return;
+    const c = containerRef.current;
+    c.scrollTo({ left: Math.max(0, focusPoint.px * zoom - c.clientWidth / 2), top: Math.max(0, focusPoint.py * zoom - c.clientHeight / 2), behavior: "smooth" });
+  }, [focusPoint, zoom]);
+
+  function irADuda(duda) {
+    if (duda.tipo === "recinto" && duda.item?.bbox) {
+      const { x, y, w, h } = duda.item.bbox;
+      setZoom(z => Math.max(z, 1.2));
+      setFocusPoint({ px: x + w / 2, py: y + h / 2 });
+      onSeleccionar(duda.item.id, "recinto");
+    } else if (duda.tipo === "categoria") {
+      setTool(duda.id);
+    }
+  }
+
+  if (!png || !pagJson) return null;
+  const esUltima = stepIndex >= entriesConPng.length - 1;
+
+  // React Portal a document.body: si se renderizara en el árbol normal, cualquier ancestro con
+  // transform/filter/will-change (común en apps grandes con animaciones) crea un "containing
+  // block" nuevo y position:fixed deja de anclarse al viewport real — se vio pasar exactamente
+  // eso en la primera prueba (el header del sitio seguía encima, la página seguía scrolleando
+  // detrás del modal). El portal evita el problema de raíz en vez de perseguir qué ancestro lo causa.
+  return createPortal(
+    <div style={{ position: "fixed", inset: 0, background: "rgba(20,26,40,0.82)", zIndex: 1000, display: "flex", flexDirection: "column", fontFamily: "inherit" }}>
+      <div style={{ background: "#1B3A8A", color: "#fff", padding: "10px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+        <div style={{ fontSize: 13, fontWeight: 600 }}>
+          Página {pagJson.pagina}{pagJson.fname_tag ? ` — ${pagJson.fname_tag}` : ""} · {stepIndex + 1}/{entriesConPng.length}
+        </div>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <button onClick={() => setZoom(z => Math.max(0.15, +(z - 0.2).toFixed(2)))} style={zoomBtnStyle}>−</button>
+          <span style={{ fontSize: 11, minWidth: 42, textAlign: "center" }}>{Math.round(zoom * 100)}%</span>
+          <button onClick={() => setZoom(z => Math.min(4, +(z + 0.2).toFixed(2)))} style={zoomBtnStyle}>+</button>
+          <button onClick={onCerrarModal} style={{ ...zoomBtnStyle, marginLeft: 10 }}>✕ Cerrar</button>
+        </div>
+      </div>
+
+      <div style={{ background: "#F4F6FB", padding: "8px 18px", borderBottom: "1px solid #D1D9EE" }}>
+        <LeyendaHerramientas tool={tool} onChangeTool={setTool} fusionCount={fusionSet.length}
+          onConfirmarFusion={onConfirmarFusion} elementosDetectados={elementosDetectados} />
+      </div>
+
+      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+        <div ref={containerRef} style={{ flex: 1, overflow: "auto", background: "#20242E", padding: 16 }}>
+          <RevisionGeometricaCanvas
+            png={png} mediciones={mediciones} elementosPuntuales={elementosPuntuales}
+            imagenWPx={pagJson.imagen_w_px} imagenHPx={pagJson.imagen_h_px} mpp={pagJson.mpp}
+            tool={tool} selectedId={selectedId} fusionSet={fusionSet} linePoints={linePoints} zoom={zoom}
+            onSeleccionar={onSeleccionar} onLinePoint={onLinePoint} onMoverDestino={onMoverDestino}
+          />
+        </div>
+        <div style={{ width: 320, background: "#fff", borderLeft: "1px solid #D1D9EE", padding: 14, overflowY: "auto" }}>
+          <div style={{ fontSize: 10, color: "#6B7A99", letterSpacing: "1.5px", marginBottom: 8 }}>DUDAS EN ESTA PÁGINA ({dudas.length})</div>
+          <TablaDudas dudas={dudas} onIrADuda={irADuda} />
+          {(recintoSel || elementoSel) && (
+            <PanelRetag
+              tipo={selectedTipo}
+              item={recintoSel || elementoSel}
+              onGuardar={patch => recintoSel ? onGuardarRecinto(patch) : onGuardarElemento(elementoSel, patch)}
+              onEliminar={() => recintoSel ? onEliminarRecinto() : onEliminarElemento(elementoSel)}
+              onMover={onMoverElemento}
+              onCerrar={onCerrarPanel}
+            />
+          )}
+        </div>
+      </div>
+
+      <div style={{ background: "#F4F6FB", borderTop: "1px solid #D1D9EE", padding: "10px 18px", display: "flex", justifyContent: "flex-end", gap: 10 }}>
+        {stepIndex > 0 && (
+          <button onClick={() => setStepIndex(i => i - 1)} style={navBtnStyle(false)}>← Página anterior</button>
+        )}
+        <button onClick={() => esUltima ? onFinalizar() : setStepIndex(i => i + 1)} style={navBtnStyle(true)}>
+          {esUltima ? "Finalizar y confirmar geometría →" : "Página siguiente →"}
+        </button>
+      </div>
+    </div>,
+    document.body
   );
 }
 
@@ -1253,6 +1913,24 @@ export default function ArchiCheck() {
   const [colabJson, setColabJson] = useState(null);
   const [colabPngs, setColabPngs] = useState([]);
   const [colabExpanded, setColabExpanded] = useState(false);
+  // ── Revisión gráfica de geometría ──────────────────────────────────────
+  const [colabCorrecciones, setColabCorrecciones] = useState(CORRECCIONES_VACIAS);
+  const [revisionConfirmada, setRevisionConfirmada] = useState(false);
+  const [colabJsonCorregido, setColabJsonCorregido] = useState(null);
+  const [pngsRevisadosPorPagina, setPngsRevisadosPorPagina] = useState({});
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [reviewModalStep, setReviewModalStep] = useState(0); // índice dentro de entriesConPng, no entry_idx directo
+  const [reviewTool, setReviewTool] = useState("seleccionar");
+  const [reviewSelectedId, setReviewSelectedId] = useState(null);
+  const [reviewSelectedTipo, setReviewSelectedTipo] = useState(null); // "recinto" | "elemento" | null
+  const [reviewFusionSet, setReviewFusionSet] = useState([]);
+  const [reviewLinePoints, setReviewLinePoints] = useState([]);
+  // entry_idx (no "pagina") identifica cada entrada de colabJson.paginas[] de forma única — una
+  // misma página física puede tener 2+ entradas/crops (ej. "pag2-1"/"pag2-2") con el mismo número
+  // de pagina, por eso no se puede usar pagina como clave. La "página activa" del modal se deriva
+  // del índice de paso (reviewModalStep), no es un estado propio — una sola fuente de verdad.
+  const entriesConPng = colabPngs.filter(p => p.entryIdx != null).map(p => p.entryIdx);
+  const reviewActiveEntry = entriesConPng[reviewModalStep] ?? null;
   const [fichaProyecto, setFichaProyecto] = useState({ zonaId: "", superficieTerreno: "", cosProyectado: "", ccProyectado: "", alturaM: "", pisosProyectados: "", anchoCalleFrentera: "" });
   const [fichaExpanded, setFichaExpanded] = useState(false);
   const [verificadorResult, setVerificadorResult] = useState(null);
@@ -1269,13 +1947,14 @@ export default function ArchiCheck() {
     setResult(null);
     setArchivos([]);
     setColabJson(null);
-    setColabPngs([]);
+    setColabPngs(prev => { for (const p of prev) if (p?.objectUrl) URL.revokeObjectURL(p.objectUrl); return []; });
     setColabExpanded(false);
     setVerificadorResult(null);
     setObsStatus({});
     setError("");
     setExpandido({});
     setActiveEtapa("e1");
+    resetRevisionGeometrica();
   }
 
   function exportPDF() {
@@ -1310,6 +1989,11 @@ ${printRef.current.innerHTML}
     const win  = window.open(url, "_blank");
     if (!win) alert("Permite ventanas emergentes en este sitio para exportar el PDF.");
     setTimeout(() => URL.revokeObjectURL(url), 60000);
+
+    // Descarga los PNG corregidos como archivos separados, mismo timestamp que el PDF — el
+    // informe (arriba) no lleva ningún dibujo nuevo, esto es aparte, no se toca printRef/PrintReport.
+    const tsFile = `${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(ts.getDate())}_${pad(ts.getHours())}${pad(ts.getMinutes())}`;
+    descargarPngsRevisados(pngsRevisadosPorPagina, tsFile);
   }
 
   useEffect(() => {
@@ -1372,6 +2056,20 @@ ${printRef.current.innerHTML}
     setObsStatus(prev => ({ ...prev, [key]: { ...prev[key], comment } }));
   };
 
+  function resetRevisionGeometrica() {
+    setColabCorrecciones(CORRECCIONES_VACIAS);
+    setRevisionConfirmada(false);
+    setColabJsonCorregido(null);
+    setPngsRevisadosPorPagina({});
+    setReviewModalOpen(false);
+    setReviewModalStep(0);
+    setReviewTool("seleccionar");
+    setReviewSelectedId(null);
+    setReviewSelectedTipo(null);
+    setReviewFusionSet([]);
+    setReviewLinePoints([]);
+  }
+
   async function handleColabJson(file) {
     if (!file) return;
     try {
@@ -1384,23 +2082,185 @@ ${printRef.current.innerHTML}
       setColabJson(json);
       setColabExpanded(true);
       setError("");
+      resetRevisionGeometrica();
     } catch (e) {
       setError("No se pudo leer el JSON de Colab: " + e.message);
     }
   }
 
+  // Lee un PNG crudo SIN comprimir (URL.createObjectURL) para el canvas de revisión — sus
+  // píxeles deben calzar 1:1 con el bbox que mide Colab. compressImage() se sigue usando aparte,
+  // solo para la copia que efectivamente viaja a la API (límite de 5MB de Anthropic/OpenAI).
+  function leerPngCrudo(file) {
+    return new Promise((resolve, reject) => {
+      const objectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => resolve({ objectUrl, srcWidth: img.naturalWidth, srcHeight: img.naturalHeight });
+      img.onerror = reject;
+      img.src = objectUrl;
+    });
+  }
+
   async function handleColabPngs(files) {
     if (!files?.length) return;
-    const nuevos = await Promise.all(Array.from(files).map(async (f) => ({
-      name: f.name,
-      base64: await compressImage(f),
-    })));
+    const nuevos = await Promise.all(Array.from(files).map(async (f) => {
+      const { objectUrl, srcWidth, srcHeight } = await leerPngCrudo(f);
+      return { name: f.name, base64: await compressImage(f), objectUrl, srcWidth, srcHeight, entryIdx: null };
+    }));
     setColabPngs(prev => [...prev, ...nuevos]);
     setColabExpanded(true);
+    resetRevisionGeometrica();
   }
 
   function removeColabPng(i) {
-    setColabPngs(prev => prev.filter((_, idx) => idx !== i));
+    setColabPngs(prev => {
+      const png = prev[i];
+      if (png?.objectUrl) URL.revokeObjectURL(png.objectUrl);
+      return prev.filter((_, idx) => idx !== i);
+    });
+    resetRevisionGeometrica();
+  }
+
+  function asignarPaginaColabPng(i, entryIdx) {
+    setColabPngs(prev => prev.map((p, idx) => idx === i ? { ...p, entryIdx } : p));
+    resetRevisionGeometrica();
+  }
+
+  // ── Handlers de la revisión gráfica de geometría ───────────────────────
+  function aplicarCorreccionRecinto(id, patch) {
+    setColabCorrecciones(prev => ({ ...prev, recintosEditados: { ...prev.recintosEditados, [id]: { ...prev.recintosEditados[id], ...patch } } }));
+  }
+
+  function eliminarRecinto(id) {
+    setColabCorrecciones(prev => ({ ...prev, recintosEliminados: [...prev.recintosEliminados, id] }));
+    setReviewSelectedId(null); setReviewSelectedTipo(null);
+  }
+
+  function aplicarCorreccionElemento(item, patch) {
+    setColabCorrecciones(prev => item._nuevo
+      ? { ...prev, elementosPuntualesNuevos: prev.elementosPuntualesNuevos.map(e => e.id === item.id ? { ...e, ...patch } : e) }
+      : { ...prev, elementosPuntualesEditados: { ...prev.elementosPuntualesEditados, [item.id]: { ...prev.elementosPuntualesEditados[item.id], ...patch } } });
+  }
+
+  function eliminarElemento(item) {
+    setColabCorrecciones(prev => item._nuevo
+      ? { ...prev, elementosPuntualesNuevos: prev.elementosPuntualesNuevos.filter(e => e.id !== item.id) }
+      : { ...prev, elementosPuntualesEliminados: [...prev.elementosPuntualesEliminados, item.id] });
+    setReviewSelectedId(null); setReviewSelectedTipo(null);
+  }
+
+  function agregarElementoNuevo(categoria, entryIdx, p1, p2, mpp, imagenWPx, imagenHPx) {
+    const calc = calcularElementoDesdeLinea(p1, p2, mpp, imagenWPx, imagenHPx);
+    setColabCorrecciones(prev => {
+      const n = prev.elementosPuntualesNuevos.filter(e => e.categoria === categoria).length + 1;
+      const id = `${categoria[0].toUpperCase()}-A${n}`;
+      const nuevo = { id, categoria, entryIdx, ubicacion_o_recinto: "", sentido_apertura: "no_determinado", ...calc, _nuevo: true };
+      return { ...prev, elementosPuntualesNuevos: [...prev.elementosPuntualesNuevos, nuevo] };
+    });
+  }
+
+  function moverElemento(item, pt, imagenWPx, imagenHPx) {
+    aplicarCorreccionElemento(item, { cx_relativo: pt.x / (imagenWPx || 1), cy_relativo: pt.y / (imagenHPx || 1) });
+    setReviewTool("seleccionar");
+  }
+
+  function handleSeleccionarEnCanvas(id, tipoSel) {
+    if (reviewTool === "fusionar") {
+      if (tipoSel !== "recinto" || !id) return;
+      setReviewFusionSet(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+      return;
+    }
+    setReviewSelectedId(id);
+    setReviewSelectedTipo(tipoSel);
+  }
+
+  function handleMoverDestino(pt) {
+    const pag = colabJson?.paginas?.find(p => p.entry_idx === reviewActiveEntry);
+    if (!pag || !reviewSelectedId) return;
+    const elementos = getElementosPuntualesConPosicion(colabJson, colabCorrecciones, reviewActiveEntry);
+    const item = elementos.find(e => e.id === reviewSelectedId);
+    if (item) moverElemento(item, pt, pag.imagen_w_px, pag.imagen_h_px);
+  }
+
+  function ejecutarAccionDosClicks(p1, p2) {
+    const pag = colabJson?.paginas?.find(p => p.entry_idx === reviewActiveEntry);
+    if (!pag) return;
+    const mpp = pag.mpp || 0;
+
+    if (reviewTool === "cortar") {
+      if (!reviewSelectedId || reviewSelectedTipo !== "recinto") return;
+      const mediciones = getMedicionesPorPagina(colabJson, colabCorrecciones, reviewActiveEntry);
+      const origen = mediciones.find(r => r.id === reviewSelectedId);
+      if (!origen?.bbox) return;
+      const [b1, b2] = ejecutarCorte(origen.bbox, p1, p2);
+      const idBase = origen.id;
+      const resultado = [
+        { id: `${idBase}a`, nombre: `${origen.nombre || idBase} (parte 1)`, tipo: origen.tipo, bbox: b1, area_m2: Math.round(calcularAreaExcluida(b1, mpp) * 100) / 100 },
+        { id: `${idBase}b`, nombre: `${origen.nombre || idBase} (parte 2)`, tipo: origen.tipo, bbox: b2, area_m2: Math.round(calcularAreaExcluida(b2, mpp) * 100) / 100 },
+      ];
+      setColabCorrecciones(prev => ({ ...prev, cortes: [...prev.cortes, { origenId: idBase, entryIdx: reviewActiveEntry, resultado }] }));
+      setReviewSelectedId(`${idBase}a`); setReviewSelectedTipo("recinto"); setReviewTool("seleccionar");
+      return;
+    }
+
+    if (reviewTool === "excluir_area") {
+      if (!reviewSelectedId || reviewSelectedTipo !== "recinto") return;
+      const x = Math.min(p1.x, p2.x), y = Math.min(p1.y, p2.y);
+      const w = Math.abs(p2.x - p1.x), h = Math.abs(p2.y - p1.y);
+      setColabCorrecciones(prev => ({ ...prev, areasExcluidas: [...prev.areasExcluidas, { id: `EXCL-${prev.areasExcluidas.length + 1}`, recintoId: reviewSelectedId, entryIdx: reviewActiveEntry, bbox: { x, y, w, h }, motivo: "mobiliario" }] }));
+      setReviewTool("seleccionar");
+      return;
+    }
+
+    if (CATEGORIAS_ELEMENTO.some(c => c.id === reviewTool)) {
+      agregarElementoNuevo(reviewTool, reviewActiveEntry, p1, p2, mpp, pag.imagen_w_px, pag.imagen_h_px);
+    }
+  }
+
+  function handleReviewLinePoint(pt) {
+    setReviewLinePoints(prev => {
+      const next = [...prev, pt];
+      if (next.length < 2) return next;
+      ejecutarAccionDosClicks(next[0], next[1]);
+      return [];
+    });
+  }
+
+  function handleConfirmarFusion() {
+    if (reviewFusionSet.length < 2) return;
+    const mediciones = getMedicionesPorPagina(colabJson, colabCorrecciones, reviewActiveEntry);
+    const recintos = mediciones.filter(r => reviewFusionSet.includes(r.id) && r.bbox);
+    if (recintos.length < 2) return;
+    const resultado = ejecutarFusion(recintos);
+    const idSobreviviente = reviewFusionSet[0];
+    setColabCorrecciones(prev => ({ ...prev, fusiones: [...prev.fusiones, { ids: reviewFusionSet, entryIdx: reviewActiveEntry, resultado: { id: idSobreviviente, ...resultado } }] }));
+    setReviewFusionSet([]);
+    setReviewSelectedId(idSobreviviente); setReviewSelectedTipo("recinto"); setReviewTool("seleccionar");
+  }
+
+  async function handleConfirmarRevision() {
+    const corregido = construirColabJsonCorregido(colabJson, colabCorrecciones);
+    setColabJsonCorregido(corregido);
+
+    const entradas = await Promise.all((colabJson?.paginas || []).map(async (pag) => {
+      const png = colabPngs.find(p => p.entryIdx === pag.entry_idx);
+      if (!png) return null;
+      const mediciones = getMedicionesPorPagina(colabJson, colabCorrecciones, pag.entry_idx);
+      const elementos = getElementosPuntualesConPosicion(colabJson, colabCorrecciones, pag.entry_idx);
+      const dataUrl = await dibujarPngRevisado(png, mediciones, elementos, pag.imagen_w_px, pag.imagen_h_px, pag.mpp);
+      // Clave por entry_idx (único) — pag.pagina puede repetirse entre entradas (crops distintos
+      // de una misma página física), usarlo como clave pisaría un PNG con otro.
+      return dataUrl ? [pag.entry_idx, { dataUrl, pagina: pag.pagina, fnameTag: pag.fname_tag }] : null;
+    }));
+    setPngsRevisadosPorPagina(Object.fromEntries(entradas.filter(Boolean)));
+
+    setRevisionConfirmada(true);
+    setToast("Geometría confirmada");
+  }
+
+  async function handleFinalizarModal() {
+    await handleConfirmarRevision();
+    setReviewModalOpen(false);
   }
 
   // ── Análisis ───────────────────────────────────────────────────────────
@@ -1438,6 +2298,10 @@ ${printRef.current.innerHTML}
         imageContent.push({ type: "text", text: `[COLAB PNG: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales]` });
       }
 
+      // Usa el JSON de Colab ya corregido por el arquitecto en la revisión gráfica (si se confirmó)
+      // — las imágenes de arriba no cambian, solo el texto que se deriva de este objeto.
+      const colabJsonEfectivo = colabJsonCorregido || colabJson;
+
       // ── Helpers ───────────────────────────────────────────────────────────
       function fetchWithTimeout(url, opts, ms = 270_000) {
         const ac = new AbortController();
@@ -1461,7 +2325,7 @@ ${printRef.current.innerHTML}
 
       // ── FASE 1: Levantamiento geométrico (Claude + GPT-4o en paralelo) ────
       setProgress("Fase 1/2 — Levantamiento geométrico (Claude + GPT-4o)...");
-      const contentC1 = [...imageContent, { type: "text", text: buildPromptCapa1(tipo, comuna, archivos, preguntas, colabJson) }];
+      const contentC1 = [...imageContent, { type: "text", text: buildPromptCapa1(tipo, comuna, archivos, preguntas, colabJsonEfectivo) }];
 
       const [rC1, rG1] = await Promise.all([
         fetchWithTimeout(WORKER_URL, { method: "POST", headers: H, body: mkBody("claude", contentC1) }),
@@ -1481,7 +2345,7 @@ ${printRef.current.innerHTML}
 
       // ── FASE 2: Evaluación normativa completa con contexto de Fase 1 ──────
       setProgress("Fase 2/2 — Evaluación normativa completa (Claude + GPT-4o)...");
-      const contentC2 = [...imageContent, { type: "text", text: buildPromptCapa2(tipo, comuna, archivos, preguntas, colabJson, cap1) }];
+      const contentC2 = [...imageContent, { type: "text", text: buildPromptCapa2(tipo, comuna, archivos, preguntas, colabJsonEfectivo, cap1) }];
       const tipoLabel2 = TIPOS.find(t => t.id === tipo)?.label || tipo;
       const comunaNombre2 = PRC_COMUNAS[comuna]?.meta?.nombre || comuna || "";
       const ragQ = `${tipoLabel2} ${comunaNombre2} normativa OGUC LGUC accesibilidad circulaciones iluminación superficies evacuación urbanística`;
@@ -1536,10 +2400,10 @@ ${printRef.current.innerHTML}
         setVerificadorResult(verificarProyecto(proj, fichaProyecto.zonaId, comuna));
       }
 
-      // ── Post-procesado: parchar datos desde Colab ────────────────────────
-      if (colabJson) {
+      // ── Post-procesado: parchar datos desde Colab (usa el JSON ya corregido por el arquitecto) ──
+      if (colabJsonEfectivo) {
         // Fix 1: cantidades en vectorización desde resumen DINO/semántico
-        const rg = colabJson.resumen_global || {};
+        const rg = colabJsonEfectivo.resumen_global || {};
         const dinoMap = {
           puerta:   rg.puertas_detectadas   ?? 0,
           ventana:  rg.ventanas_detectadas  ?? 0,
@@ -1555,8 +2419,8 @@ ${printRef.current.innerHTML}
           }
         }
         // Fix 2: superficie_m2 en reconocimiento desde mediciones_geometricas Colab
-        if (colabJson.paginas && merged.capa1?.reconocimiento?.recintos_por_nivel) {
-          const colabRecs = colabJson.paginas.flatMap(p =>
+        if (colabJsonEfectivo.paginas && merged.capa1?.reconocimiento?.recintos_por_nivel) {
+          const colabRecs = colabJsonEfectivo.paginas.flatMap(p =>
             (p.mediciones_geometricas || []).filter(r => r.nombre && !r.nombre.startsWith("Espacio E"))
           );
           const norm = s => s.toLowerCase()
@@ -1576,7 +2440,7 @@ ${printRef.current.innerHTML}
           }
         }
         // Fix 3: inyectar _colab_id en recintos y elementos del informe
-        const colabAllElems = colabJson.paginas.flatMap(p => p.mediciones_geometricas || []);
+        const colabAllElems = colabJsonEfectivo.paginas.flatMap(p => p.mediciones_geometricas || []);
         const normId = s => s.toLowerCase()
           .replace(/[áàä]/g,"a").replace(/[éèë]/g,"e").replace(/[íìï]/g,"i")
           .replace(/[óòö]/g,"o").replace(/[úùü]/g,"u").replace(/[^a-z0-9]/g,"");
@@ -1929,19 +2793,78 @@ ${printRef.current.innerHTML}
                     </label>
                   </div>
                   {colabPngs.length > 0 && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 7 }}>
-                      {colabPngs.map((p, i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 4, background: "rgba(30,132,73,0.06)", border: "1px solid rgba(30,132,73,0.2)", borderRadius: 5, padding: "3px 8px 3px 6px" }}>
-                          <span style={{ fontSize: 10, color: "#1E8449", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
-                          <button onClick={() => removeColabPng(i)}
-                            style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 11, padding: 0, lineHeight: 1 }}>✕</button>
-                        </div>
-                      ))}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: 7 }}>
+                      {colabPngs.map((p, i) => {
+                        const pagJson = colabJson?.paginas?.find(pg => pg.entry_idx === p.entryIdx);
+                        const dimsOk = p.entryIdx == null || !pagJson || (pagJson.imagen_w_px === p.srcWidth && pagJson.imagen_h_px === p.srcHeight);
+                        return (
+                          <div key={i} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(30,132,73,0.06)", border: "1px solid rgba(30,132,73,0.2)", borderRadius: 5, padding: "3px 8px 3px 6px", flexWrap: "wrap" }}>
+                              <span style={{ fontSize: 10, color: "#1E8449", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
+                              {p.srcWidth && <span style={{ fontSize: 9, color: "#6B7A99" }}>{p.srcWidth}×{p.srcHeight}px</span>}
+                              {colabJson?.paginas?.length > 0 && (
+                                <select value={p.entryIdx ?? ""} onChange={e => asignarPaginaColabPng(i, e.target.value !== "" ? Number(e.target.value) : null)}
+                                  style={{ fontSize: 10, border: "1px solid #D1D9EE", borderRadius: 4, padding: "2px 4px", fontFamily: "inherit" }}>
+                                  <option value="">— página —</option>
+                                  {colabJson.paginas.map(pg => (
+                                    <option key={pg.entry_idx} value={pg.entry_idx}>página {pg.pagina}{pg.fname_tag ? ` — ${pg.fname_tag}` : ""}</option>
+                                  ))}
+                                </select>
+                              )}
+                              <button onClick={() => removeColabPng(i)}
+                                style={{ background: "none", border: "none", color: "#B8C5E0", cursor: "pointer", fontSize: 11, padding: 0, lineHeight: 1 }}>✕</button>
+                            </div>
+                            {p.entryIdx != null && !dimsOk && (
+                              <div style={{ fontSize: 10, color: "#C0392B", padding: "2px 6px" }}>
+                                ⚠ Este PNG mide {p.srcWidth}×{p.srcHeight}px, pero Colab midió {pagJson.imagen_w_px}×{pagJson.imagen_h_px}px para esta página — sube el PNG generado por esa misma corrida.
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
               </div>
             </div>
+
+            {/* Revisión gráfica de geometría — gate obligatorio antes de analizar */}
+            {colabJson && entriesConPng.length > 0 && (
+              <RevisionGraficaGeometria
+                entriesConPng={entriesConPng}
+                revisionConfirmada={revisionConfirmada}
+                onAbrirModal={() => { setReviewModalStep(0); setReviewModalOpen(true); }}
+              />
+            )}
+
+            {reviewModalOpen && (
+              <RevisionModal
+                colabJson={colabJson}
+                colabPngs={colabPngs}
+                correcciones={colabCorrecciones}
+                entriesConPng={entriesConPng}
+                stepIndex={reviewModalStep}
+                setStepIndex={setReviewModalStep}
+                tool={reviewTool}
+                setTool={setReviewTool}
+                selectedId={reviewSelectedId}
+                selectedTipo={reviewSelectedTipo}
+                fusionSet={reviewFusionSet}
+                linePoints={reviewLinePoints}
+                onSeleccionar={handleSeleccionarEnCanvas}
+                onLinePoint={handleReviewLinePoint}
+                onMoverDestino={handleMoverDestino}
+                onConfirmarFusion={handleConfirmarFusion}
+                onGuardarRecinto={patch => { aplicarCorreccionRecinto(reviewSelectedId, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
+                onEliminarRecinto={() => eliminarRecinto(reviewSelectedId)}
+                onGuardarElemento={(item, patch) => { aplicarCorreccionElemento(item, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
+                onEliminarElemento={item => eliminarElemento(item)}
+                onMoverElemento={() => setReviewTool("mover")}
+                onCerrarPanel={() => { setReviewSelectedId(null); setReviewSelectedTipo(null); }}
+                onFinalizar={handleFinalizarModal}
+                onCerrarModal={() => setReviewModalOpen(false)}
+              />
+            )}
 
             {/* Parámetros cuantitativos — verificación determinista (opcional) */}
             {(comuna === "nunoa" || comuna === "providencia") && (
@@ -1997,9 +2920,10 @@ ${printRef.current.innerHTML}
             )}
 
             {/* Botón analizar */}
+            {(() => { const bloqueado = loading || !archivos.length || !colabJson || !colabPngs.length || !revisionConfirmada; return (
             <button onClick={analizar}
-              disabled={loading || !archivos.length || !colabJson || !colabPngs.length}
-              style={{ width: "100%", padding: "15px", borderRadius: 10, border: "none", fontFamily: "inherit", fontSize: 14, fontWeight: 600, letterSpacing: ".4px", cursor: loading || !archivos.length || !colabJson || !colabPngs.length ? "not-allowed" : "pointer", transition: "all .2s", background: loading || !archivos.length || !colabJson || !colabPngs.length ? "#B8C5E0" : "linear-gradient(90deg,#1B3A8A,#2952A3)", color: "#FFFFFF" }}>
+              disabled={bloqueado}
+              style={{ width: "100%", padding: "15px", borderRadius: 10, border: "none", fontFamily: "inherit", fontSize: 14, fontWeight: 600, letterSpacing: ".4px", cursor: bloqueado ? "not-allowed" : "pointer", transition: "all .2s", background: bloqueado ? "#B8C5E0" : "linear-gradient(90deg,#1B3A8A,#2952A3)", color: "#FFFFFF" }}>
               {loading ? (
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
                   <span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid #B8C5E0", borderTop: "2px solid #1B3A8A", borderRadius: "50%", animation: "spin .7s linear infinite" }}/>
@@ -2007,6 +2931,13 @@ ${printRef.current.innerHTML}
                 </span>
               ) : `Analizar ${archivos.length ? `${archivos.length} archivo${archivos.length > 1 ? "s" : ""}` : "expediente"} →`}
             </button>
+            ); })()}
+
+            {colabJson && colabPngs.length > 0 && !revisionConfirmada && (
+              <p style={{ fontSize: 11, color: "#C0392B", textAlign: "center", marginTop: 8 }}>
+                Confirma la revisión gráfica de geometría antes de analizar.
+              </p>
+            )}
 
             {!comuna && archivos.length > 0 && (
               <p style={{ fontSize: 11, color: "#6B7A99", textAlign: "center", marginTop: 8 }}>

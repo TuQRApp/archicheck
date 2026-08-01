@@ -353,7 +353,7 @@
       <li>Subir Isla de Pascua al portal real (el usuario lo hará en un paso separado) — revisar si el Capa 2 hereda los 3 falsos positivos de área ya identificados.</li>
       <li>Mantener actualizado <code>Convenciones_CAD.md</code> cada vez que el usuario indique una convención nueva.</li>
       <li>Aplicar sistemáticamente la regla de cruce planta↔elevaciones↔cortes↔cuadros en cualquier hallazgo geométrico nuevo.</li>
-      <li>Construir la interfaz de validación gráfica del arquitecto (gate CRUD + tabla de espacios + herramienta de división, especificada en P1) — sigue sin construir.</li>
+      <li>✅ Construir la interfaz de validación gráfica del arquitecto — hecho 2026-08-02 (modal de página completa, ver detalle en P1). Pendiente: probar en vivo cortar/fusionar/excluir área/marcar nuevo (verificadas por código, no interactivamente).</li>
       <li>Confirmar con el usuario si el bug de metadatos de portada (documento/PRC) del informe 2219 es del portal o de carga de archivos.</li>
     </ul>
   </div>
@@ -607,19 +607,18 @@
   </details>
 
   <details class="item">
-    <summary>Interfaz de validación gráfica del arquitecto <span class="badge pending">Especificada, sin construir</span></summary>
+    <summary>Interfaz de validación gráfica del arquitecto <span class="badge done">Construida 2 agosto (v1)</span></summary>
     <div class="item-body">
-      <p><strong>Gate obligatorio antes del análisis normativo</strong> (especificado 2026-07-22). Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio — esta pantalla reemplaza eso por un paso donde el arquitecto valida y corrige TODA la geometría detectada antes de que corra el análisis de cumplimiento.</p>
+      <p><strong>Gate obligatorio antes del análisis normativo</strong> (especificado 2026-07-22, construido 2026-08-02). La versión final <strong>no es</strong> la pantalla compacta descrita originalmente (canvas chico + tabla de todo) — es un <strong>modal a pantalla completa</strong>, cambio pedido por el usuario tras las primeras pruebas reales (el canvas chico no se podía clickear con precisión).</p>
       <ul>
-        <li><strong>Por qué importa</strong>: un elemento no detectado nunca pasa por verificación normativa — una puerta angosta que ArchiCheck no vio es una infracción que jamás se va a marcar, en silencio. Es también prerrequisito para que P4 (motor de reglas) entregue valor completo: necesita el inventario completo de elementos, no solo los que el modelo alcanzó a ver.</li>
-        <li><strong>Un solo PNG en alta resolución con zoom</strong> — no pantallas separadas por tipo de elemento.</li>
-        <li><strong>Selector de categoría + marcado por clic</strong>: el arquitecto elige una categoría activa (Puertas, Ventanas, Escaleras, Rampas, Columnas, Salidas de emergencia, Perímetro <code>PE</code>) y cada clic sobre el plano marca un punto de ese tipo mientras esa categoría está seleccionada.</li>
-        <li><strong>CRUD completo</strong>: edita, agrega, modifica o elimina cualquier detección — nada se oculta por dudoso, todo lo detectado se muestra siempre.</li>
-        <li>También editable ahí mismo: la <strong>superficie (m²) de cada recinto</strong>, no solo elementos puntuales.</li>
-        <li>Perímetro es distinto de los demás (límite/deslinde, no un punto) — pendiente evaluar si se marca como polilínea.</li>
-        <li><strong>🆕 Tabla de espacios siempre visible</strong> (31 julio): una fila por recinto detectado (ej. <code>E1 | Baño Universal | corregir/indicar nombre</code>), corrección inline del nombre/tipo. Es el mecanismo concreto para resolver los casos "siempre preguntar" de <code>Convenciones_CAD.md</code> (pasillo sin nombre, mobiliario generando fantasmas) — el arquitecto los ve todos juntos en la tabla, no en ventanas separadas.</li>
-        <li><strong>🆕 Herramienta de división de espacios</strong> (31 julio): si un recinto detectado en realidad son 2+ espacios reales (el patrón exacto de los fantasmas por fusión: blob de Isla de Pascua, baños/bóveda fusionados, "Camarín" absorbiendo Asientos Duchas), el arquitecto dibuja una línea (2 clics: inicio y fin) para partirlo — complementa el CRUD, que hoy solo permite editar/eliminar el recinto completo, no subdividirlo.</li>
-        <li class="note">Piezas para construirla, en orden: (1) exportar detecciones actuales al formato del canvas, (2) componente canvas con zoom + clic-para-marcar, (3) tabla de espacios sincronizada con el canvas, (4) herramienta de línea de corte para dividir un recinto, (5) edición de superficie por recinto, (6) reintegrar el resultado corregido al JSON antes del análisis normativo.</li>
+        <li><strong>Modal de página completa</strong> (<code>RevisionModal</code>, vía <code>createPortal</code> a <code>document.body</code>): una página a la vez, alta resolución, zoom por botones + scroll nativo del navegador para moverse por el plano. Toolbar fijo arriba, no se mueve con el scroll.</li>
+        <li><strong>Tabla de dudas, no tabla de todo</strong> (a pedido explícito: "no le muestres lo que crees confirmado") — solo recintos con <code>sin_nombre_confirmar</code>, recintos con <code>cumple_geo:false</code>, y categorías de elemento puntual con detecciones sin ubicar. Clic en una duda centra y hace zoom sobre el punto exacto.</li>
+        <li><strong>Herramientas</strong>: Seleccionar/editar (nombre, tipo, área), Cortar (línea 2 clics, con vista previa de ancho en vivo), Fusionar (multi-clic + confirmar), Excluir área (rectángulo 2 clics, para mobiliario/WC/restos de cota-eje), marcar elemento nuevo (línea 2 clics + preview de ancho real vía <code>mpp</code>), Mover elemento pre-tagueado.</li>
+        <li><strong>Flujo secuencial</strong>: "Página siguiente →" hasta la última, ahí cambia a "Finalizar y confirmar geometría →". "← Página anterior" disponible.</li>
+        <li><strong>Notebook de Colab extendido</strong> (Parte A, fuera de este repo): <code>puertas_detalle</code>/<code>ventanas_detalle</code>/<code>escaleras_detalle</code>/<code>rampas_detalle</code> ahora traen <code>id</code>+posición — antes solo puertas tenían detalle, y sin coordenadas. Nuevo Paso 1.6: filtro de línea de cota por marca diagonal + proximidad a texto, mismo mecanismo que el Paso 1.5 ya validado para ejes.</li>
+        <li><strong>2 bugs reales encontrados y corregidos en pruebas en vivo</strong>: (1) <code>colabJson.paginas[]</code> puede repetir el número de "página" entre 2+ crops de una misma lámina — se usa <code>entry_idx</code> como clave real, no "página"; (2) elementos sin posición (JSON pre-Parte A) se contaban como "ya marcados" — <code>getElementosPuntualesConPosicion</code> los filtra aparte.</li>
+        <li>PNG corregido se descarga como <strong>archivo aparte</strong> (no embebido en el PDF) en el mismo clic que genera el informe.</li>
+        <li class="note"><strong>Probado en vivo</strong> con datos reales (PDV): carga, validación exacta de dimensiones, modal, zoom fit-to-width, clic-en-duda, navegación, finalizar. <strong>No probado en vivo</strong>: cortar/fusionar/excluir área/marcar nuevo — verificadas por código, pendiente probarlas interactivamente (más viable ahora que el canvas es grande). Error de consola transitorio en <code>createPortal</code> al cerrar el modal, no afectó el resultado final — revisar si se repite.</li>
       </ul>
     </div>
   </details>
