@@ -1,0 +1,52 @@
+
+Capa 1 Etapa 3
+Puertas... parece ok
+Ventanas... existen mas ventanas, ver en nivel 2. En nivel 1, algunas dan al interior por ampliacion.
+ademas, algunas ventanas se dibujan en amarillo pq son nuevas. tb quedan debajo de achurado.
+hay que enseñarle que diferentes tipos de dibujo que se superponen...
+Escaleras parace ok
+Rampa ok
+Salida de emergencia ok
+Simbolos de nivel ok
+
+capa 1 etapa 4
+Oraganizacion funcional
+nivel 1 correcto
+nivel 2 solo administrativo y baños... no requiere acceso univ 
+Accesos y Evacuacion
+Observaciones correctas, salvo acc universal
+
+
+Capa  2 Evaluacion Normativa
+Etapa A Superficies... creo que norma no indica sup minima... art.4.1.1 indica altura minima de recintos habitables (comedor, dormitorio, ofic,)
+Art 6.3.1 se refiere a vivienda social... debe aplicarse solo para este tipo de proyecto.
+
+Etapa B Circulaciones... esta si aplica
+Observaciones correctas
+
+Etapa C Iluminacion y Ventilaciones
+Art 4.5.7 aplica solo a colegios y hogares de estudiantes.
+Art 4.1.2, 4.1.3, 4.1.4, son los que corresponden
+
+Etapa D Norm Urbanistica
+Agrupamiento... plano no reconoce adosamiento. Definir y entrenar aislado, adosado y continuo
+
+Etapa E
+Incumplimientos de acc universal correctos. Bien
+
+Plan de accion
+Todo bien
+
+
+
+
+
+
+
+
+
+
+
+
+
+

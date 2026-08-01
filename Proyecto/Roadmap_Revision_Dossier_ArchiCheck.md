@@ -641,7 +641,21 @@ El usuario amplió las pruebas a 4 planos (agregó Campo Lindo, el PDF con capas
 
 ~~**PRIORIDAD ANTERIOR #2 (cumplida 2026-08-01)**: correr `01ago_0010` (diagnóstico de distancia a `cotas_texto`) contra los planos de referencia.~~ **✅ Hecho, ampliado a 4 planos.** Resultado: **hipótesis refutada** — el blob dominante no correlaciona con texto de cota en ningún proyecto (ver sección arriba, "Resultado del diagnóstico de cotas").
 
-**🎯 NUEVA PRIORIDAD INMEDIATA**: diseñar el próximo diagnóstico, ahora enfocado en el problema real — la **fragmentación interna** (60-80 recintos geométricos para ~20 reales), no el blob que toca el borde (ese ya parece manejado por el filtro existente). Candidatos a probar antes de escribir código: (a) correlación entre recintos "sin nombre" de área chica y proximidad a mobiliario/artefactos, (b) medir distancia a la LÍNEA de cota en sí (no al texto) como métrica corregida, ya que el proxy de texto puede haber sido el equivocado. Mismo criterio de siempre: medir antes de diseñar, no adivinar.
+**🎯 NUEVA PRIORIDAD INMEDIATA (2026-08-01), antes que cualquier otra cosa — probar Floor Plan API (floorplanapi.com) como comparación "comprar vs. seguir construyendo".**
+
+Contexto: tras 2 rondas de diagnóstico propio (ejes confirmado sin impacto real, cotas refutado) sobre el problema de fragmentación interna (60-80 recintos geométricos para ~20 reales), se evaluó si probar una herramienta comercial de segmentación de planos daría una señal más rápida que seguir iterando heurísticas propias.
+
+**Hallazgo (2026-08-01)**: Floor Plan API es una sola llamada HTTP (`POST /v1/analyze`) — sube una imagen rasterizada del plano (PNG/JPG/PDF) y devuelve muros, puertas, ventanas, escaleras y recintos (con tipo y área) en JSON/GeoJSON/SVG. **Free tier: 50 llamadas/mes, sin tarjeta de crédito** — solo requiere registrarse en `floorplanapi.com/register` para obtener una API key. No requiere GPU ni Python de nuestro lado — se puede invocar con PowerShell nativo (`Invoke-RestMethod`), sin instalar nada.
+
+**Plan de prueba acordado**:
+1. El usuario se registra gratis en floorplanapi.com y comparte la API key (no es algo que se pueda hacer sin su cuenta).
+2. Generar una imagen limpia (sin nuestro coloreado propio) de la página 2 de Isla de Pascua desde el PDF original — renderizado nativo de Windows (`Windows.Data.Pdf`/WinRT, mismo mecanismo ya usado en `ArchiCheck_Pipeline.ps1` en 2026-07), sin depender de Python/Colab.
+3. Mandar esa imagen a `POST /v1/analyze` con la API key.
+4. Comparar el resultado (¿cuántos recintos detecta? ¿se acerca a los ~20 reales, o también fragmenta?) contra lo que ya sabemos de Isla de Pascua (80 geométricos, 60 sin nombre).
+
+**Por qué Isla de Pascua como primer caso**: es el peor caso conocido (mayor fragmentación, blob más grande) — si Floor Plan API lo resuelve limpio, es una señal fuerte a favor de "comprar" para esta capa del pipeline; si también fragmenta, confirma que el problema es intrínsecamente difícil (no solo nuestra implementación) y vale más seguir invirtiendo en las heurísticas propias con más confianza.
+
+**Sin ejecutar todavía — el usuario lo retoma mañana.**
 
 1. ~~Confirmar qué es la tira de "Escalera" en Beauchef~~ — **✅ resuelto 2026-07-30**: no es escalera, es Asientos Duchas/Duchas mal segmentado.
 2. **Punto ciego de ventanas** (0% detección sistemática en varias herramientas) sigue sin fix implementado — Isla de Pascua reconfirma el mismo síntoma, tercera corrida seguida.
