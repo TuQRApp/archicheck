@@ -192,6 +192,7 @@
       <a href="#orden">Qué sigue</a>
       <a href="#fase1">Fase 1</a>
       <a href="#fase2">Fase 2</a>
+      <a href="#benchmark-herramientas">Benchmark herr.</a>
       <a href="#fase3">Fase 3</a>
       <a href="#fase4">Fase 4</a>
       <a href="#fase5">Fase 5</a>
@@ -204,12 +205,12 @@
 
   <div class="hero">
     <p><strong>Foco actual:</strong> dejar 100% afinada la revisión de planos (Fase 2) antes de arrancar el MVP de dossier (Fase 3). Dentro de Fase 2, orden: <strong>P1</strong> (precisión geométrica) → <strong>P2</strong> (normativa OGUC+RAG) → <strong>P3</strong> (otros PRC) — con <strong>P1b</strong> (U-Net) en paralelo desde el día 1, y <strong>P4</strong>/<strong>P5</strong> después.</p>
-    <div class="updated">Este resumen se actualiza junto con el roadmap base en <code>archicheck/Proyecto/Roadmap_Revision_Dossier_ArchiCheck.md</code> — ese archivo tiene todo el detalle técnico; esta página es solo la vista rápida de estado y orden. Última actualización: 27 julio 2026.</div>
+    <div class="updated">Este resumen se actualiza junto con el roadmap base en <code>archicheck/Proyecto/Roadmap_Revision_Dossier_ArchiCheck.md</code> — ese archivo tiene todo el detalle técnico; esta página es solo la vista rápida de estado y orden. Última actualización: 1 agosto 2026.</div>
   </div>
 
   <!-- ============ SESIÓN RECIENTE ============ -->
   <div class="section-title" id="hoy">
-    <h2>🕓 Sesión más reciente (26–28 julio 2026)</h2>
+    <h2>🕓 Sesión más reciente (26 julio – 1 agosto 2026)</h2>
   </div>
   <p class="phase-desc">Resumen de lo hecho hoy, para retomar mañana sin releer todo el detalle.</p>
 
@@ -284,6 +285,17 @@
       <li><strong>🔴 Pero el resultado visible casi no cambió.</strong> El blob de fusión es IDÉNTICO al centímetro cuadrado en los 3 proyectos (PDV 141.39 m², Beauchef 107.13 m², Isla de Pascua 266.49 m² — mismos valores exactos que antes del fix). El conteo de "sin nombre" apenas se movió (Isla de Pascua incluso subió de 59 a 61). La "Escalera central" de Beauchef sigue midiendo 0.97 m, sin cambios.</li>
       <li><strong>Conclusión — redirección de prioridad</strong>: el mecanismo de ejes funciona como se diseñó, pero no es la causa dominante — todo apunta a que son las <strong>COTAS</strong> (líneas sólidas, "puente" entre muros a lo largo de toda la lámina) el contaminante principal. COTAS pasa a ser la prioridad real siguiente, probablemente el fix de mayor impacto de toda esta fase.</li>
       <li><strong>✅ Diagnóstico de COTAS agregado y corrido</strong> (notebook <code>01ago_0010</code>): % de segmentos con texto de cota cerca, a 3 umbrales de distancia (30/60/100px).</li>
+    </ul>
+  </div>
+
+  <div class="today-box win">
+    <h4>✅ 1 agosto — Benchmark de herramientas externas (extracción geométrica + AI blueprint reading)</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>A pedido del usuario, partiendo de <a href="https://www.mastt.com/software/ai-blueprint-reader" target="_blank" rel="noopener">Mastt — 5 Best AI Blueprint Readers</a>: se visitó cada web mencionada, se buscaron reviews/clientes/casos de uso reales (no solo el artículo de marketing), y se sumó Floor Plan API a la comparación — ver tabla completa más abajo, sección Fase 2 → <strong>Benchmark de herramientas</strong>.</li>
+      <li>Hallazgo central: "benchmark de competencia" y "herramientas a integrar" no son categorías separadas — la misma herramienta (ej. Floor Plan API) puede ser ambas cosas según qué funcionalidad se mire.</li>
+      <li><strong>Togal.AI</strong> es la herramienta con más validación de cliente real (DPR Construction, Clark Construction; estudio de la Universidad de Kansas: 76% más rápido que On-Screen Takeoff) pero su mercado (grandes contratistas EE.UU., ~US$299/usuario/mes) no calza con ArchiCheck.</li>
+      <li><strong>Mastt y Kreo Caddie</strong> ya ofrecen chat en lenguaje natural sobre el plano — valida que el pendiente "chat de resolución de dudas bidireccional" es terreno ya probado por el mercado, no una idea sin validar.</li>
+      <li>No cambia el plan ya acordado: Floor Plan API sigue siendo el primer paso, ahora con un dato adicional (85.31% IoU de muros publicado contra CubiCasa5k) como vara de comparación externa.</li>
     </ul>
   </div>
 
@@ -436,6 +448,84 @@
     <span class="badge progress">Foco actual</span>
   </div>
   <p class="phase-desc">Agotar la profundización del análisis de planos antes de tocar el dossier. Orden: P1 → P2 → P3, con P1b en paralelo desde el inicio; P4 y P5 después.</p>
+
+  <details class="item" id="benchmark-herramientas">
+    <summary>🆕 Benchmark de herramientas — extracción geométrica y lectura de planos <span class="badge done">1 agosto</span></summary>
+    <div class="item-body">
+      <p>Punto de partida a pedido del usuario: <a href="https://www.mastt.com/software/ai-blueprint-reader" target="_blank" rel="noopener">Mastt — 5 Best AI Blueprint Readers</a> — revisado en profundidad, visitadas las webs de cada herramienta, buscadas reviews/clientes/casos de uso reales. Se suma Floor Plan API (ya elegido como próxima prueba) porque cae en la misma categoría funcional.</p>
+      <p class="note"><strong>Criterio explícito del usuario:</strong> el foco de ArchiCheck es 100% extracción de información para análisis de cumplimiento normativo — no cómputos de obra, no BIM, no diseño. Tabla A = candidatas a incorporar como insumo de extracción. Tabla B + Helonic = benchmark de hacia dónde apuntan las suites de compliance/coordinación (no de presupuestación).</p>
+
+      <p><strong>Tabla A — Extracción geométrica / blueprint reading (candidatas P1):</strong></p>
+      <div class="tbl-wrap">
+      <table class="gap">
+        <thead><tr><th>Herramienta</th><th>Qué hace</th><th>Precio</th><th>Reviews / clientes reales</th><th>Relevancia para ArchiCheck</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><a href="https://www.mastt.com/software/ai-blueprint-reader" target="_blank" rel="noopener">Mastt AI Blueprint Reader</a></td>
+            <td>Chat sobre planos (PDF) dentro de una plataforma de gestión de proyectos más amplia — conecta hallazgos con costo/cronograma/riesgo</td>
+            <td>Free starter · Pro US$150/proyecto/mes · Enterprise custom</td>
+            <td>G2: 4.4/5 (10 reviews) — fácil de usar, reporting en tiempo real; UI "compleja a veces". Reviews son de la plataforma PM completa, no del blueprint reader en particular</td>
+            <td>Precedente de <strong>chat bidireccional sobre el plano</strong> (pendiente ya anotado) — ya en producción en otro producto</td>
+          </tr>
+          <tr>
+            <td><a href="https://markovate.com/ai-blueprint-reader/" target="_blank" rel="noopener">Markovate AI Blueprint Reader/Classifier</a></td>
+            <td>Visión por computador + OCR: clasifica tipo de plano, detecta símbolos/dimensiones, exporta a BOM. Soporta PDF, DWG, DXF, STEP, TIFF y <strong>escaneados</strong></td>
+            <td>Custom vía PoC, no publicado</td>
+            <td>Sin reviews independientes. Testimonio propio (MPP Innovation): acelera estimación de costo/plazos. ISO 9001/27001</td>
+            <td>Cubre <strong>DWG/DXF y escaneados</strong> — gap real de ArchiCheck (solo PDF vectorizado). No urgente, pero es un límite conocido</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.kreo.net/features/caddie" target="_blank" rel="noopener">Kreo Caddie</a></td>
+            <td>Asistente tipo ChatGPT sobre planos: preguntas en lenguaje natural, genera tablas, funciona con escaneados/manuscritos/borrosos</td>
+            <td>Pro £95/usuario/mes (~£1.015/año) · Enterprise custom</td>
+            <td>Reviews mixtas: ahorro de tiempo en mediciones elogiado; queja recurrente de "auto measure" desordenado</td>
+            <td>Segundo precedente de <strong>chat sobre planos</strong> — refuerza que el mercado ya lo espera, no es diferenciador</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.togal.ai/" target="_blank" rel="noopener">Togal.AI</a></td>
+            <td>Takeoffs automáticos desde planos, detección de elementos, Togal.CHAT en lenguaje natural, comparación entre sets de planos</td>
+            <td>~US$299/usuario/mes (anual)</td>
+            <td>Clientes: <strong>DPR Construction, Clark Construction, Consigli</strong>. Estudio U. de Kansas: 76% más rápido que On-Screen Takeoff. Crítica: sobreprecio, poca profundidad en concreto/estructura</td>
+            <td>Mejor validación de cliente real de la lista — pero mercado (grandes contratistas EE.UU.) y precio no calzan con ArchiCheck</td>
+          </tr>
+          <tr>
+            <td><a href="https://d8.bild.ai/" target="_blank" rel="noopener">Bild AI</a></td>
+            <td>Especializado en <strong>División 8</strong> (puertas/marcos/herrajes): cuadros de puertas, specs, inconsistencias plano/cuadro</td>
+            <td>No publicado</td>
+            <td>Y Combinator, US$3.1M levantados. 15+ clientes (distribuidores de puertas). 1.5x más propuestas por estimador</td>
+            <td>Alcance angosto pero prueba de que un vertical profundo (ej. solo puertas/ventanas, nuestro punto ciego) levanta capital real</td>
+          </tr>
+          <tr>
+            <td><a href="https://floorplanapi.com/" target="_blank" rel="noopener">Floor Plan API</a></td>
+            <td>API de visión: imagen de plano → JSON/GeoJSON/SVG de muros/puertas/ventanas/escaleras/recintos con áreas</td>
+            <td>Free (50/mes) · Starter US$29 (100) · Pro US$99 (500) · Enterprise custom</td>
+            <td>Sin testimonios publicados (producto joven). <strong>85.31% IoU de muros publicado contra CubiCasa5k</strong></td>
+            <td><strong>Ya es la prioridad inmediata acordada</strong> — con una vara de comparación externa concreta para lo que midamos</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="note">Ya catalogadas antes, sin re-investigar hoy: CubiCasa 2.0 (comercial, distinto del CubiCasa5K abierto ya probado), FloorPlanParser (GitHub, gratis), Archilogic/Swapp.ai/Hypar (BIM/3D, descartados — mercado chileno de referencia trabaja en PDF/2D).</p>
+
+      <p><strong>Hallazgo adicional</strong> (documento paralelo del usuario, <code>Fase 2/Benchmark/Herramientas_lectura_planos_arquitectura.docx</code> — incluye una revisión ya hecha del registro de conectores MCP de Claude: sin resultado, no existe conector para lectura de planos arquitectónicos, dead-end ya explorado):</p>
+      <ul>
+        <li><strong><a href="https://helonic.com/" target="_blank" rel="noopener">Helonic</a></strong> — el hallazgo más relevante de todo el ejercicio. No extrae geometría: <strong>revisa coordinación/errores</strong> sobre el set completo de planos (10 categorías: cotas faltantes, MEP, accesibilidad, estructura, code compliance...) con severidad y ubicación exacta por página — casi exactamente lo que hace ArchiCheck hoy, integrado a Procore/Autodesk. Y Combinator, 100.000+ páginas revisadas, 150.000+ hallazgos, "US$30M+ en rework evitado", clientes reales (Swinerton, Whiting-Turner). <strong>Es el competidor conceptualmente más parecido a ArchiCheck encontrado hasta ahora.</strong> Sin normativa chilena — el moat no cambia — pero su categorización de issues (10 tipos, severidad, ubicación) sirve como referencia de diseño para el motor de reglas (P4).</li>
+        <li><strong><a href="https://focoenobra.com/productos/programa-leer-planos-construccion/" target="_blank" rel="noopener">Foco en Obra</a></strong> — gestión de obra en español, +12 años, 1.000+ usuarios, con "Programa para Lectura de Planos" (PDF/DWG/DXF). No es visión computacional — extracción/gestión tradicional. Referencia de mercado hispanohablante/LatAm, no candidato técnico.</li>
+        <li>Descartados por el mismo documento (generación/visualización de diseño, no análisis de cumplimiento): TestFit, Maket.ai, RoomSketcher, Capterra, Autodesk/ARCHICAD (IA de creación asistida, no revisión independiente).</li>
+      </ul>
+
+      <p><strong>Tabla B — Compliance / plan review (competencia directa, no candidatas a integrar):</strong> ya analizadas el 27 de julio contra <code>ArchiCheck_Benchmark_Internacional.pdf</code> — Archistar AI PreCheck, CodeComply, CivCheck/Clariti, Blitz AI, UpCodes Plan Review, UptoCode (Australia), Solibri, PermitFlow (los 2 últimos como referencia BIM/IFC). Ninguno tiene normativa chilena/latam codificada — la normativa local sigue siendo el moat real. Ver el detalle fuente por fuente en el <code>.md</code> base.</p>
+
+      <p><strong>Síntesis, medida contra el único objetivo real (extracción para cumplimiento normativo, no cómputos/presupuesto/BIM):</strong></p>
+      <ul>
+        <li><strong>Floor Plan API</strong> sigue siendo el primer paso (bloqueado en espera de la API key del usuario) — ahora con 85.31% IoU como vara de comparación.</li>
+        <li>El patrón de <strong>chat/Q&amp;A en lenguaje natural</strong> (Mastt, Kreo) valida el pendiente "chat de resolución de dudas bidireccional" como terreno ya probado por el mercado.</li>
+        <li><strong>Togal.AI</strong> queda como plan B de "comprar" si Floor Plan API no rinde — mejor validación de cliente, pero mal ajuste de mercado/precio, y su objetivo (cómputos) no es el nuestro (cumplimiento).</li>
+        <li><strong>Markovate</strong> (DWG/DXF/escaneado) y <strong>Bild AI</strong> (profundidad en puertas) quedan como referencias de diseño futuro, no acciones inmediatas.</li>
+        <li><strong>Helonic</strong> es el hallazgo estratégico más importante: confirma que ya existe un producto de mercado (YC, clientes grandes) con la misma lógica de fondo que ArchiCheck (severidad + ubicación + trazabilidad) para normativa de EE.UU. — revisar su categorización de issues como insumo de diseño para P4, sin que cambie el foco geográfico ni la prioridad de Floor Plan API.</li>
+      </ul>
+    </div>
+  </details>
 
   <details class="item" open>
     <summary>P1 — Validar precisión del análisis geométrico <span class="badge progress">En curso</span></summary>
