@@ -597,6 +597,30 @@ A pedido explícito del usuario ("empieza con el diagnóstico de cotas"), se ext
 
 **🔲 Pendiente del usuario**: correr este notebook en Colab contra los 3 planos de referencia y compartir la salida — con eso se diseña el pre-filtro de cotas con evidencia real, en vez de adivinar.
 
+### 🔴 Resultado del diagnóstico de cotas (2026-08-01) — hipótesis REFUTADA, corrida contra 4 planos (agregado Campo Lindo)
+
+El usuario amplió la corrida a 4 planos usando Colab Pro (PDV, Beauchef, Isla de Pascua, Campo Lindo) y compartió los 4 resultados. **La hipótesis "cotas cerca de texto explican el blob gigante" no se sostiene** — resultado consistente en los 4 proyectos:
+
+| Proyecto | Blob dominante (span / n_seg) | %cerca_cota a 100px |
+|---|---|---|
+| PDV crop 1 | 19.76m / 612 | 41.7% |
+| PDV crop 2 | 20.72m / 79 | 0.0% |
+| Beauchef (los 4 crops) | hasta 23.9m | 0.0% en casi todos (máx. 4.8%) |
+| Isla de Pascua (blob de 18.328 seg) | 36.47m | 1.0% |
+| Campo Lindo (2 crops) | 32.9m / 35.2m | 11.3% / 26.0% |
+
+El blob que realmente causa la fusión catastrófica en cada corrida tiene correlación baja o nula con texto de cota — no es eso lo que lo genera. Solo un par de grupos MEDIANOS en Isla de Pascua (no el blob dominante) mostraron correlación alta (62-92%), posiblemente cotas reales aisladas, pero no explican el problema principal.
+
+**Por qué probablemente falló la métrica**: se midió distancia al TEXTO de la cota (el número), pero en convención CAD el número suele estar en el margen de la lámina, lejos del muro real que mide — mientras que la LÍNEA de cota en sí (línea principal + líneas testigo perpendiculares) podría correr pegada al muro sin que el número esté cerca. Se midió el proxy equivocado (texto, no línea).
+
+**Dato ya documentado que ahora encaja mejor**: desde el 2026-07-26 (antes de esta sesión) ya se había diagnosticado que este mismo tipo de blob gigante en PDV se debe a una **apertura real del plano** (ej. la puerta de acceso) que conecta topológicamente el exterior con el interior — no es ruido a borrar, es un hueco real en el dibujo que la segmentación por conectividad de píxeles no puede distinguir de un muro faltante. Ese blob ya se excluye correctamente vía el filtro `UMBRAL_AREA_SOSPECHOSA_M2` existente (toca el borde + área >60m²) — es decir, puede que el blob en sí YA esté manejado, y no sea el problema activo.
+
+**Redefinición del problema — son dos cosas distintas, no una:**
+1. **El blob gigante que toca el borde** — probablemente aperturas reales (puertas de acceso conectando exterior/interior), ya excluido correctamente por el filtro existente. No es necesariamente un bug activo.
+2. **La fragmentación interna** (60-80 recintos geométricos para ~20 reales) — esto SÍ sigue dañando el resultado (muchos "sin nombre", áreas mal medidas) y su causa todavía no está identificada: no son ejes (ya resuelto, sin impacto en esto), no parecen ser cotas por esta métrica. Candidatos pendientes de investigar: mobiliario/artefactos (ya confirmado como categoría que contamina, sin fix de detección), o algo relacionado a cómo el `MORPH_OPEN`/dilatación de OpenCV fragmenta el interior cuando hay muchos elementos internos (baños, casilleros, etc.).
+
+**🔲 Próximo paso, sin implementar todavía**: diseñar un diagnóstico nuevo para el problema (2) específicamente — por ejemplo, contar cuántos de los recintos "sin nombre" tienen un área muy chica (candidatos a fragmento, no recinto real) y ver si correlacionan con proximidad a mobiliario/artefactos en vez de a cotas.
+
 ### ✅ Bug encontrado y corregido en Celda 6 — señal positiva escondida: la validación de superficies funcionó de verdad por primera vez (2026-08-01)
 
 El usuario amplió las pruebas a 4 planos (agregó Campo Lindo, el PDF con capas) usando Colab Pro. La corrida de Campo Lindo tiró `KeyError: 'minimo'` en la Celda 6.
@@ -613,9 +637,11 @@ El usuario amplió las pruebas a 4 planos (agregó Campo Lindo, el PDF con capas
 
 ### 🔲 Pendientes al retomar (actualizado 2026-07-31)
 
-~~**PRIORIDAD ANTERIOR (cumplida 2026-07-31)**: correr el notebook `31jul_0345` contra los 3 planos de referencia y verificar visualmente.~~ **✅ Hecho** — ver sección arriba ("Primera corrida real del notebook..."). Resultado: EJES funciona, cuadro de superficies funciona, pero el resultado visible casi no cambió — la causa dominante son las COTAS, no los ejes.
+~~**PRIORIDAD ANTERIOR #1 (cumplida 2026-07-31)**: correr `31jul_0345` contra los 3 planos y verificar visualmente.~~ **✅ Hecho.** Resultado: EJES funciona, cuadro de superficies funciona, pero el resultado visible casi no cambió.
 
-**🎯 NUEVA PRIORIDAD INMEDIATA**: correr el notebook `01ago_0010` (agrega el diagnóstico de distancia a `cotas_texto` por grupo, ver sección arriba) en Colab contra PDV, Beauchef e Isla de Pascua y compartir la salida — con eso se diseña el pre-filtro de cotas con evidencia real (¿el blob gigante tiene `%cerca_cota` alto?) en vez de adivinar el umbral, mismo criterio que ya funcionó para ejes. Es, con evidencia real de 3 proyectos, el fix de mayor impacto esperado de toda esta fase — más que cualquier otro pendiente de esta lista.
+~~**PRIORIDAD ANTERIOR #2 (cumplida 2026-08-01)**: correr `01ago_0010` (diagnóstico de distancia a `cotas_texto`) contra los planos de referencia.~~ **✅ Hecho, ampliado a 4 planos.** Resultado: **hipótesis refutada** — el blob dominante no correlaciona con texto de cota en ningún proyecto (ver sección arriba, "Resultado del diagnóstico de cotas").
+
+**🎯 NUEVA PRIORIDAD INMEDIATA**: diseñar el próximo diagnóstico, ahora enfocado en el problema real — la **fragmentación interna** (60-80 recintos geométricos para ~20 reales), no el blob que toca el borde (ese ya parece manejado por el filtro existente). Candidatos a probar antes de escribir código: (a) correlación entre recintos "sin nombre" de área chica y proximidad a mobiliario/artefactos, (b) medir distancia a la LÍNEA de cota en sí (no al texto) como métrica corregida, ya que el proxy de texto puede haber sido el equivocado. Mismo criterio de siempre: medir antes de diseñar, no adivinar.
 
 1. ~~Confirmar qué es la tira de "Escalera" en Beauchef~~ — **✅ resuelto 2026-07-30**: no es escalera, es Asientos Duchas/Duchas mal segmentado.
 2. **Punto ciego de ventanas** (0% detección sistemática en varias herramientas) sigue sin fix implementado — Isla de Pascua reconfirma el mismo síntoma, tercera corrida seguida.
