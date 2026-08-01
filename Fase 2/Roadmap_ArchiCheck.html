@@ -289,12 +289,12 @@
   </div>
 
   <div class="today-box win">
-    <h4>✅ 1 agosto — Benchmark de herramientas externas (extracción geométrica + AI blueprint reading)</h4>
+    <h4>✅ 1 agosto — Benchmark de herramientas externas (extracción geométrica + AI blueprint reading + cumplimiento normativo)</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
       <li>A pedido del usuario, partiendo de <a href="https://www.mastt.com/software/ai-blueprint-reader" target="_blank" rel="noopener">Mastt — 5 Best AI Blueprint Readers</a>: se visitó cada web mencionada, se buscaron reviews/clientes/casos de uso reales (no solo el artículo de marketing), y se sumó Floor Plan API a la comparación — ver tabla completa más abajo, sección Fase 2 → <strong>Benchmark de herramientas</strong>.</li>
       <li>Hallazgo central: "benchmark de competencia" y "herramientas a integrar" no son categorías separadas — la misma herramienta (ej. Floor Plan API) puede ser ambas cosas según qué funcionalidad se mire.</li>
-      <li><strong>Togal.AI</strong> es la herramienta con más validación de cliente real (DPR Construction, Clark Construction; estudio de la Universidad de Kansas: 76% más rápido que On-Screen Takeoff) pero su mercado (grandes contratistas EE.UU., ~US$299/usuario/mes) no calza con ArchiCheck.</li>
-      <li><strong>Mastt y Kreo Caddie</strong> ya ofrecen chat en lenguaje natural sobre el plano — valida que el pendiente "chat de resolución de dudas bidireccional" es terreno ya probado por el mercado, no una idea sin validar.</li>
+      <li>Criterio explícito del usuario, agregado como marco de toda la sección: el foco de ArchiCheck es 100% extracción para cumplimiento normativo, no cómputos/BIM/diseño.</li>
+      <li><strong>Segunda ronda (misma tarde)</strong>: se buscaron más herramientas de cada tipo ya encontrado. Nuevo hallazgo clave: <strong>InspectMind AI</strong> y <strong>PlanCheckPro</strong> — la categoría "revisión de cumplimiento/coordinación" (Tabla C nueva) resultó ser la más cercana al objetivo real de ArchiCheck, más que la propia extracción geométrica. PlanCheckPro aporta el primer precedente regulatorio real conocido (Florida, HB 683, acepta legalmente revisión por software).</li>
       <li>No cambia el plan ya acordado: Floor Plan API sigue siendo el primer paso, ahora con un dato adicional (85.31% IoU de muros publicado contra CubiCasa5k) como vara de comparación externa.</li>
     </ul>
   </div>
@@ -502,19 +502,69 @@
             <td>Sin testimonios publicados (producto joven). <strong>85.31% IoU de muros publicado contra CubiCasa5k</strong></td>
             <td><strong>Ya es la prioridad inmediata acordada</strong> — con una vara de comparación externa concreta para lo que midamos</td>
           </tr>
+          <tr>
+            <td><a href="https://www.ritn3d.com/" target="_blank" rel="noopener">Ritn3D</a></td>
+            <td>App de consumo: foto/PDF → detecta muros/puertas/ventanas/límites de recinto, <strong>con paso de revisión/corrección antes del modelo 3D</strong></td>
+            <td>Free (3 renders/mes) · Pro US$9.99/mes</td>
+            <td>Sin clientes B2B. Publica precisión por tipo de entrada: 90-95% PDF de CAD, ~80% escaneados limpios</td>
+            <td>Valida en producción real el mismo patrón del gate del arquitecto (nunca confiar 100%, siempre corrección humana) — y confirma que un PDF vectorizado (nuestro único input) es el caso donde más rinde</td>
+          </tr>
         </tbody>
       </table>
       </div>
-      <p class="note">Ya catalogadas antes, sin re-investigar hoy: CubiCasa 2.0 (comercial, distinto del CubiCasa5K abierto ya probado), FloorPlanParser (GitHub, gratis), Archilogic/Swapp.ai/Hypar (BIM/3D, descartados — mercado chileno de referencia trabaja en PDF/2D).</p>
+      <p class="note">Ya catalogadas antes, sin re-investigar hoy: CubiCasa 2.0 (comercial, distinto del CubiCasa5K abierto ya probado — reaparece en esta ronda como "opción líder, API amigable para desarrolladores"), FloorPlanParser (GitHub, gratis), Archilogic/Swapp.ai/Hypar (BIM/3D, descartados — mercado chileno de referencia trabaja en PDF/2D).</p>
 
       <p><strong>Hallazgo adicional</strong> (documento paralelo del usuario, <code>Fase 2/Benchmark/Herramientas_lectura_planos_arquitectura.docx</code> — incluye una revisión ya hecha del registro de conectores MCP de Claude: sin resultado, no existe conector para lectura de planos arquitectónicos, dead-end ya explorado):</p>
       <ul>
-        <li><strong><a href="https://helonic.com/" target="_blank" rel="noopener">Helonic</a></strong> — el hallazgo más relevante de todo el ejercicio. No extrae geometría: <strong>revisa coordinación/errores</strong> sobre el set completo de planos (10 categorías: cotas faltantes, MEP, accesibilidad, estructura, code compliance...) con severidad y ubicación exacta por página — casi exactamente lo que hace ArchiCheck hoy, integrado a Procore/Autodesk. Y Combinator, 100.000+ páginas revisadas, 150.000+ hallazgos, "US$30M+ en rework evitado", clientes reales (Swinerton, Whiting-Turner). <strong>Es el competidor conceptualmente más parecido a ArchiCheck encontrado hasta ahora.</strong> Sin normativa chilena — el moat no cambia — pero su categorización de issues (10 tipos, severidad, ubicación) sirve como referencia de diseño para el motor de reglas (P4).</li>
-        <li><strong><a href="https://focoenobra.com/productos/programa-leer-planos-construccion/" target="_blank" rel="noopener">Foco en Obra</a></strong> — gestión de obra en español, +12 años, 1.000+ usuarios, con "Programa para Lectura de Planos" (PDF/DWG/DXF). No es visión computacional — extracción/gestión tradicional. Referencia de mercado hispanohablante/LatAm, no candidato técnico.</li>
+        <li><strong><a href="https://focoenobra.com/productos/programa-leer-planos-construccion/" target="_blank" rel="noopener">Foco en Obra</a></strong> — gestión de obra en español, +12 años, 1.000+ usuarios, con "Programa para Lectura de Planos" (PDF/DWG/DXF). No es visión computacional — extracción/gestión tradicional. Referencia de mercado hispanohablante/LatAm (MedicionPro y Procore son alternativas del mismo segmento, sin profundizar), no candidato técnico.</li>
         <li>Descartados por el mismo documento (generación/visualización de diseño, no análisis de cumplimiento): TestFit, Maket.ai, RoomSketcher, Capterra, Autodesk/ARCHICAD (IA de creación asistida, no revisión independiente).</li>
       </ul>
 
-      <p><strong>Tabla B — Compliance / plan review (competencia directa, no candidatas a integrar):</strong> ya analizadas el 27 de julio contra <code>ArchiCheck_Benchmark_Internacional.pdf</code> — Archistar AI PreCheck, CodeComply, CivCheck/Clariti, Blitz AI, UpCodes Plan Review, UptoCode (Australia), Solibri, PermitFlow (los 2 últimos como referencia BIM/IFC). Ninguno tiene normativa chilena/latam codificada — la normativa local sigue siendo el moat real. Ver el detalle fuente por fuente en el <code>.md</code> base.</p>
+      <p><strong>Tabla C — Revisión de cumplimiento/coordinación normativa: la categoría MÁS CERCANA al objetivo real de ArchiCheck</strong> (detección de incumplimientos con severidad y trazabilidad, no extracción ni cómputos). Partiendo de Helonic se buscaron sus competidores directos — Helonic mismo los compara en su propio sitio:</p>
+      <div class="tbl-wrap">
+      <table class="gap">
+        <thead><tr><th>Herramienta</th><th>Qué hace</th><th>Precio / tracción</th><th>Reviews / clientes reales</th><th>Relevancia para ArchiCheck</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><a href="https://helonic.com/" target="_blank" rel="noopener">Helonic</a></td>
+            <td>Coordinación/errores en el set completo de planos (10 categorías), severidad + ubicación exacta. Cubre 380+ códigos EE.UU. (IBC, IRC, NEC, IPC, NFPA, ADA)</td>
+            <td>No publicado</td>
+            <td>Y Combinator. 100.000+ páginas, 150.000+ hallazgos, "US$30M+ rework evitado". Swinerton, Whiting-Turner, Lema, LS Black</td>
+            <td>El más amplio en cobertura — referencia de categorización de issues para el motor de reglas (P4)</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.inspectmind.ai/" target="_blank" rel="noopener">InspectMind AI</a></td>
+            <td>Revisa sets de planos PDF para detectar problemas de diseño antes de construir — explícitamente "code-compliance-first", no analizador genérico</td>
+            <td>No publicado</td>
+            <td>SF startup, <strong>100%+ crecimiento mes a mes</strong>, "cientos" de clientes pagando</td>
+            <td><strong>El más alineado conceptualmente con ArchiCheck</strong> — mismo posicionamiento exacto, con tracción reciente real. El más importante a estudiar como modelo de producto</td>
+          </tr>
+          <tr>
+            <td><a href="https://plancheckpro.ai/" target="_blank" rel="noopener">PlanCheckPro</a> (Pacifica Engineering)</td>
+            <td>Cumplimiento normativo completo por jurisdicción de EE.UU. (código local + NEC + NFPA + ADA), <strong>cita exacta del artículo por hallazgo</strong>, informes el mismo día, 50 estados</td>
+            <td>Free tier + planes pagos</td>
+            <td>Empresa de ingeniería con licencia real en Florida como "private provider" de revisión de planos</td>
+            <td><strong>Precedente regulatorio directo</strong>: Florida (HB 683) ya reconoce legalmente la revisión por software como alternativa al permiso municipal — primera evidencia de que un organismo público puede aceptar esto, relevante para la ambición de largo plazo con la DOM</td>
+          </tr>
+          <tr>
+            <td>BuildCheck</td>
+            <td>Errores a nivel de documento: inconsistencias planos/especificaciones, detalles faltantes, cruce de cuadros/schedules</td>
+            <td>US$5.9M seed (dic. 2025)</td>
+            <td>30.000+ planos revisados, "US$3.000M+ en valor de proyecto"</td>
+            <td>Coincide con un gap propio ya documentado (consistencia entre láminas, benchmark contra Revi 27 julio) — confirma que es una categoría de producto validada</td>
+          </tr>
+          <tr>
+            <td><a href="https://firmus.ai/" target="_blank" rel="noopener">Firmus AI</a></td>
+            <td>Riesgo de diseño en preconstrucción para GC: escanea antes de licitar, señala riesgos/vacíos de alcance, compara revisiones</td>
+            <td>No publicado</td>
+            <td>Enfocado en GC, sin cifras encontradas</td>
+            <td>Menos alineado (usuario es el contratista antes de licitar, no el arquitecto antes de la DOM) — menor prioridad, por completitud</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p><strong>Tabla B — Compliance / plan review por normativa nacional (ya catalogada, no candidatas a integrar):</strong> ya analizadas el 27 de julio contra <code>ArchiCheck_Benchmark_Internacional.pdf</code> — Archistar AI PreCheck, CodeComply, CivCheck/Clariti, Blitz AI, UpCodes Plan Review, UptoCode (Australia), Solibri, PermitFlow (los 2 últimos como referencia BIM/IFC). Ninguno tiene normativa chilena/latam codificada — la normativa local sigue siendo el moat real. Ver el detalle fuente por fuente en el <code>.md</code> base.</p>
 
       <p><strong>Síntesis, medida contra el único objetivo real (extracción para cumplimiento normativo, no cómputos/presupuesto/BIM):</strong></p>
       <ul>
@@ -522,7 +572,7 @@
         <li>El patrón de <strong>chat/Q&amp;A en lenguaje natural</strong> (Mastt, Kreo) valida el pendiente "chat de resolución de dudas bidireccional" como terreno ya probado por el mercado.</li>
         <li><strong>Togal.AI</strong> queda como plan B de "comprar" si Floor Plan API no rinde — mejor validación de cliente, pero mal ajuste de mercado/precio, y su objetivo (cómputos) no es el nuestro (cumplimiento).</li>
         <li><strong>Markovate</strong> (DWG/DXF/escaneado) y <strong>Bild AI</strong> (profundidad en puertas) quedan como referencias de diseño futuro, no acciones inmediatas.</li>
-        <li><strong>Helonic</strong> es el hallazgo estratégico más importante: confirma que ya existe un producto de mercado (YC, clientes grandes) con la misma lógica de fondo que ArchiCheck (severidad + ubicación + trazabilidad) para normativa de EE.UU. — revisar su categorización de issues como insumo de diseño para P4, sin que cambie el foco geográfico ni la prioridad de Floor Plan API.</li>
+        <li><strong>InspectMind AI</strong> y <strong>PlanCheckPro</strong> son los hallazgos con más peso estratégico de esta ronda: InspectMind comparte el posicionamiento exacto de ArchiCheck ("code-compliance-first") con tracción real; PlanCheckPro es la primera evidencia de un organismo público (Florida, HB 683) aceptando legalmente la revisión de planos por software — señal de que la ambición de largo plazo con la DOM no es descabellada. <strong>BuildCheck</strong> valida que el chequeo de consistencia entre láminas es una categoría de producto real. Ninguno tiene normativa chilena — el moat no cambia.</li>
       </ul>
     </div>
   </details>
