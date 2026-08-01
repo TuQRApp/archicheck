@@ -593,9 +593,17 @@ A pedido explícito del usuario ("empieza con el diagnóstico de cotas"), se ext
 
 **Hipótesis a verificar**: una línea de COTA corre pegada a su propio número en toda su extensión (el ítem "1.5" del ejemplo de convenciones, con la flecha justo debajo del número), mientras que un muro real puede tener una cota cerca en un punto puntual pero no en cada tramo. Si el blob gigante de fusión tiene un `%cerca_cota` alto en los 3 umbrales, confirma que son cotas las que lo están causando; si es bajo, hay que buscar otra explicación (mobiliario, achurado, algo más).
 
-**Implementación** (notebook `ArchiCheck_Base 31jul_2145.ipynb`, backup del anterior en `Versiones anteriores`): para cada segmento de un grupo, se calcula la distancia mínima del punto medio del segmento al centro de cualquier `cotas_texto` — con muestreo (máx. 300 segmentos por grupo, aleatorio pero reproducible dentro de la corrida) para no volver lenta la corrida en grupos con miles de segmentos (el blob de Isla de Pascua tiene más de 18.000). Solo imprime — no toca `protegido` ni ningún valor que se guarda en el JSON de salida, mismo criterio de riesgo cero que el diagnóstico de ejes.
+**Implementación** (notebook `ArchiCheck_Base 01ago_0010.ipynb`, backup del anterior en `Versiones anteriores`): para cada segmento de un grupo, se calcula la distancia mínima del punto medio del segmento al centro de cualquier `cotas_texto` — con muestreo (máx. 300 segmentos por grupo, aleatorio pero reproducible dentro de la corrida) para no volver lenta la corrida en grupos con miles de segmentos (el blob de Isla de Pascua tiene más de 18.000). Solo imprime — no toca `protegido` ni ningún valor que se guarda en el JSON de salida, mismo criterio de riesgo cero que el diagnóstico de ejes.
 
 **🔲 Pendiente del usuario**: correr este notebook en Colab contra los 3 planos de referencia y compartir la salida — con eso se diseña el pre-filtro de cotas con evidencia real, en vez de adivinar.
+
+### ✅ Bug encontrado y corregido en Celda 6 — señal positiva escondida: la validación de superficies funcionó de verdad por primera vez (2026-08-01)
+
+El usuario amplió las pruebas a 4 planos (agregó Campo Lindo, el PDF con capas) usando Colab Pro. La corrida de Campo Lindo tiró `KeyError: 'minimo'` en la Celda 6.
+
+**Causa raíz**: `discrepancia_area_declarada` (el incumplimiento que cruza `cuadro_superficies_oficial` contra el área medida por OpenCV, agregado el 2026-07-26) usa un esquema de claves distinto al resto de `incumplimientos_geo` — `medido`/`declarado`/`diff_pct`, sin `minimo` ni `deficit`. El código de impresión de la Celda 6 asumía el esquema viejo (`minimo`/`deficit`) para todos los tipos, sin distinguir. **Este bug existía desde el 26 de julio, pero nunca se había disparado** porque `cuadro_superficies_oficial` siempre llegaba vacío antes de la funcionalidad de extracción de texto agregada esta sesión — es la primera vez que el cruce realmente encuentra una discrepancia real y trata de imprimirla. Confirma, de rebote, que la validación de superficies está funcionando de punta a punta, no solo poblando el campo.
+
+**Fix aplicado** (notebook `ArchiCheck_Base 01ago_0010.ipynb`, backup del anterior en `Versiones anteriores`): la Celda 6 ahora distingue `discrepancia_area_declarada` de los demás tipos y imprime sus campos correctos (`Medido / Declarado (cuadro) / Diferencia %`) en vez de asumir `minimo`/`deficit` para todos.
 
 ### 🆕 Reorganización de archivos (2026-07-31, instrucción explícita del usuario) — el notebook y los datos de prueba ahora viven dentro del repo de `archicheck`
 
@@ -607,7 +615,7 @@ A pedido explícito del usuario ("empieza con el diagnóstico de cotas"), se ext
 
 ~~**PRIORIDAD ANTERIOR (cumplida 2026-07-31)**: correr el notebook `31jul_0345` contra los 3 planos de referencia y verificar visualmente.~~ **✅ Hecho** — ver sección arriba ("Primera corrida real del notebook..."). Resultado: EJES funciona, cuadro de superficies funciona, pero el resultado visible casi no cambió — la causa dominante son las COTAS, no los ejes.
 
-**🎯 NUEVA PRIORIDAD INMEDIATA**: correr el notebook `31jul_2145` (agrega el diagnóstico de distancia a `cotas_texto` por grupo, ver sección arriba) en Colab contra PDV, Beauchef e Isla de Pascua y compartir la salida — con eso se diseña el pre-filtro de cotas con evidencia real (¿el blob gigante tiene `%cerca_cota` alto?) en vez de adivinar el umbral, mismo criterio que ya funcionó para ejes. Es, con evidencia real de 3 proyectos, el fix de mayor impacto esperado de toda esta fase — más que cualquier otro pendiente de esta lista.
+**🎯 NUEVA PRIORIDAD INMEDIATA**: correr el notebook `01ago_0010` (agrega el diagnóstico de distancia a `cotas_texto` por grupo, ver sección arriba) en Colab contra PDV, Beauchef e Isla de Pascua y compartir la salida — con eso se diseña el pre-filtro de cotas con evidencia real (¿el blob gigante tiene `%cerca_cota` alto?) en vez de adivinar el umbral, mismo criterio que ya funcionó para ejes. Es, con evidencia real de 3 proyectos, el fix de mayor impacto esperado de toda esta fase — más que cualquier otro pendiente de esta lista.
 
 1. ~~Confirmar qué es la tira de "Escalera" en Beauchef~~ — **✅ resuelto 2026-07-30**: no es escalera, es Asientos Duchas/Duchas mal segmentado.
 2. **Punto ciego de ventanas** (0% detección sistemática en varias herramientas) sigue sin fix implementado — Isla de Pascua reconfirma el mismo síntoma, tercera corrida seguida.

@@ -1,9 +1,9 @@
 ==================================================================
   ARCHICHECK — INFORME CAPA 1 GEOMETRICA
 ==================================================================
-  Proyecto: pdv 30jul1505
+  Proyecto: pdv
   Archivo : 05+06 Planos Rest Pza PdV (021 06 21).pdf
-  Fecha   : 31/07/2026 19:33
+  Fecha   : 01/08/2026 03:23
   Páginas : 2 + 2
 
   ------------------------------------------------------------------
@@ -14,23 +14,23 @@
   --      ------                     ----          -------  -------  ------
   E03     Baño Personal              bano            29.02     7.17  OK
   E01     Bodega                     bodega          22.31    10.35  OK
-  E05     Cocina                     cocina          20.94     3.52  OK
+  E05     Cocina (sector norte)      cocina          20.94     3.52  OK
   E07     Pasillo                    pasillo         16.95     4.76  OK
   E15     Cocina (Barra sin atencio  cocina          14.65     4.29  OK
-  E21     Terraza                    terraza          9.42     7.26  OK
+  E21     Terraza (sur poniente)     terraza          9.42     7.26  OK
   E04     Baño Personal Hombres      bano             8.68     1.69  OK
   E13     Espacio E13 (SIN NOMBRE -  otro             8.26     2.24  OK
   E17     Oficina                    oficina          7.36     2.95  OK
-  E09     Bodega                     bodega           3.57     1.54  OK
-  E10     Terraza                    terraza          2.80     0.39  OK
+  E09     Bodega (sector oriente)    bodega           3.57     1.54  OK
+  E10     Terraza (poniente)         terraza          2.80     0.39  OK
   E02     Espacio E02 (SIN NOMBRE -  otro             2.21     0.35  OK
-  E22     Terraza                    terraza          2.06     0.33  OK
+  E22     Terraza (sur oriente)      terraza          2.06     0.33  OK
   E14     Espacio E14 (SIN NOMBRE -  otro             2.00      0.9  OK
   E11     Baño Universal             bano             1.92     2.64  OK
-  E19     Rampa Acceso Universal     rampa            1.57     1.14  INCUMPLE
+  E19     Espacio E19 (SIN NOMBRE -  otro             1.57     1.14  OK
   E08     Baño Personal Mujeres      bano             1.47      1.0  INCUMPLE
-  E16     Escalera                   escalera         1.37     0.69  INCUMPLE
-  E18     Espacio E18 (SIN NOMBRE -  otro             1.04     0.22  OK
+  E16     Escalera interior          escalera         1.37     0.69  INCUMPLE
+  E18     Rampa Acceso Universal     rampa            1.04     0.22  INCUMPLE
   E06     Espacio E06 (SIN NOMBRE -  otro             1.03     0.88  OK
   E20     Espacio E20 (SIN NOMBRE -  otro             0.52     0.83  OK
   E12     Espacio E12 (SIN NOMBRE -  otro             0.51     0.78  OK
@@ -41,26 +41,26 @@
   [CIRCULO_GIRO]  E11 Baño Universal
     Medido: None m  |  Minimo: 1.5 m  |  Deficit: None m
     Ref: DDU 351 / Art. 4.1.7 OGUC — circulo de giro 1,50 m en recintos accesibles
-  [ANCHO]  E19 Rampa Acceso Universal
-    Medido: 1.14 m  |  Minimo: 1.5 m  |  Deficit: 0.36 m
-    Ref: Art. 4.1.7 N°2 OGUC — ancho min 1,50 m (supone ruta a recinto con atencion de publico; puede ser 0,90-1,50 m segun el caso, ver comentario)
   [AREA]  E08 Baño Personal Mujeres
     Medido: 1.47 m2  |  Minimo: 1.5 m2  |  Deficit: 0.03 m2
     Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
-  [ANCHO]  E16 Escalera
+  [ANCHO]  E16 Escalera interior
     Medido: 0.69 m  |  Minimo: 1.1 m  |  Deficit: 0.41 m
     Ref: Art. 4.2.10 OGUC — tabla por carga de ocupacion, 1,10 m es el piso minimo (hasta 50 personas); puede exigir hasta 1,50 m o 2 escaleras segun ocupacion, no calculado todavia
+  [ANCHO]  E18 Rampa Acceso Universal
+    Medido: 0.22 m  |  Minimo: 1.5 m  |  Deficit: 1.28 m
+    Ref: Art. 4.1.7 N°2 OGUC — ancho min 1,50 m (supone ruta a recinto con atencion de publico; puede ser 0,90-1,50 m segun el caso, ver comentario)
 
   OBSERVACIONES NORMATIVAS CLAUDE (6)
-  [ALTA] Art. 4.1.7 OGUC — Pendiente de rampa de acceso universal declarada en plano como 10.58%, excede el
-  [ALTA] Art. 4.1.7 OGUC / DS 50 — Ancho de rampa de acceso universal de 1.3 m es inferior al mínimo exigido de 1.5
-  [ALTA] Art. 4.1.7 OGUC / DS 50 — El Baño Universal no presenta claramente el círculo de giro de 1.50 m libre en p
-  [MEDIA] Art. 4.2.5 OGUC — La puerta de acceso principal al recinto (terraza/linea edificacion) presenta an
-  [MEDIA] Art. 4.2.10 OGUC — No se observa salida de emergencia alternativa independiente al acceso principal
-  [BAJA] Art. 4.1.7 OGUC — No se grafican pavimentos podotactiles de orientación y advertencia completos en
+  [ALTA] Art. 4.1.7 OGUC — La rampa de acceso universal declara una pendiente de 10.58%, superior al máximo
+  [ALTA] Art. 4.1.7 OGUC / DS 50 (Accesibilidad Universal) — El Baño Universal presenta dimensiones interiores que no permiten verificar el c
+  [MEDIA] Art. 4.2.4 OGUC — Los baños de personal (Baño Personal Mujeres, Baño Personal Hombres, Baño Person
+  [MEDIA] Art. 4.2.10 OGUC — La escalera interior que conecta Nivel 1 con Nivel 2 no presenta acotación de an
+  [MEDIA] Art. 4.2.9 OGUC — No se detecta salida de emergencia alternativa al acceso principal en el Nivel 1
+  [BAJA] Art. 4.5.7 OGUC (DS 977 Reglamento Sanitario Alimentos) — La cocina de barra está a nivel +0.45 m respecto al exterior. El acceso desde pa
 
   ------------------------------------------------------------------
-  PAGINA 2 [pag2-2]  |  1:50  |  planta — otro
+  PAGINA 2 [pag2-2]  |  1:50  |  planta — restaurante
   Nivel: Nivel 2 - Situación Propuesta
   ------------------------------------------------------------------
   ID      Nombre                     Tipo          Area m2  Ancho m  Estado
@@ -88,19 +88,19 @@
           TOTAL                                     178.90
 
   OBSERVACIONES NORMATIVAS CLAUDE (5)
-  [MEDIA] Art. 4.1.7 OGUC — Los baños de clientes (mujeres y hombres) en Nivel 2 no cuentan con ventilación 
-  [ALTA] Art. 4.1.10 OGUC — No se detectan salidas de emergencia propias en el Nivel 2. Según reglas aplicab
-  [ALTA] Art. 4.1.7 / DDU accesibilidad universal — En el Nivel 2 no se detecta baño accesible universal ni círculo de giro de 1.50m
-  [MEDIA] Art. 4.1.7 OGUC - Puerta baño — Las puertas de los baños de clientes presentan ancho de 0.8m. Para baños accesib
-  [MEDIA] Art. 4.2.10 OGUC — La escalera es la única vía de evacuación del Nivel 2. Debe verificarse que su a
+  [ALTA] Art. 4.2.10 OGUC — El Nivel 2 es un piso alto accesible únicamente por escalera interna. No cuenta 
+  [ALTA] Art. 4.1.7 OGUC / DS 47 Art. 4.1.7 — Los baños de clientes (mujeres y hombres) en Nivel 2 no están rotulados como acc
+  [MEDIA] Art. 4.2.10 OGUC — Ancho de escalera interna a verificar según carga de ocupación del Nivel 2. El c
+  [MEDIA] Art. 4.2.4 OGUC — Las puertas de baños de clientes tienen ancho de 0.8 m. Para uso público en rest
+  [BAJA] Art. 4.5.7 OGUC / NCh 2723 — No se detectan ventanas de ventilación natural en baños de clientes del Nivel 2.
 
 ==================================================================
   (conteos desde análisis semántico Claude — DINO no detectó elementos)
-  Puertas semántico: 19  Ventanas: 3  Escaleras: 2
+  Puertas semántico: 19  Ventanas: 1  Escaleras: 2
 
-✓ JSON guardado: archicheck_geometrico_pdv_30jul1505_31jul_1920.json
+✓ JSON guardado: archicheck_geometrico_pdv_01ago_0318.json
   Paginas   : 2
   Area total: 338.6 m2
   Recintos  : 42
   Incumpl.  : 4
-  Elementos (semantico) — Puertas:19  Ventanas:3  Escaleras:2  Rampas:0
+  Elementos (semantico) — Puertas:19  Ventanas:1  Escaleras:2  Rampas:0

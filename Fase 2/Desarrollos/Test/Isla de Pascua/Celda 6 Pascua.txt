@@ -1,0 +1,129 @@
+==================================================================
+  ARCHICHECK — INFORME CAPA 1 GEOMETRICA
+==================================================================
+  Proyecto: Pascua
+  Archivo : SPE Isla de Pascua (09 05 14).pdf
+  Fecha   : 01/08/2026 03:45
+  Páginas : 2
+
+  ------------------------------------------------------------------
+  PAGINA 2 [pag2]  |  1:50  |  planta — equipamiento
+  Nivel: Planta de Arquitectura (nivel único o planta baja)
+  ------------------------------------------------------------------
+  ID      Nombre                     Tipo          Area m2  Ancho m  Estado
+  --      ------                     ----          -------  -------  ------
+  E41     Oficina                    oficina         24.29     3.35  OK
+  E45     Sala de Reuniones          sala            23.60     5.71  OK
+  E30     Consulta Médica 1          sala            23.19     2.46  OK
+  E06     Baño para Personal (2)     bano            22.81      4.6  OK
+  E03     Baño Accesible Universal   bano            22.26     3.33  OK
+  E39     Bóveda / Pre-Bóveda        otro            20.89     2.33  OK
+  E05     Bodega de Uso              bodega          20.58      4.5  OK
+  E12     Grupo Electrógeno          otro            18.12     3.19  OK
+  E44     Sala de Equipos General    sala            15.09     5.24  OK
+  E02     Baño Hombres               bano            14.08      3.1  OK
+  E09     Espacio E09 (SIN NOMBRE -  otro            13.67     3.29  OK
+  E54     Bodega                     bodega           9.17     3.25  OK
+  E04     Baño Mujeres               bano             7.80     1.73  OK
+  E31     Bodega Mat. Limpio         bodega           6.41     2.89  OK
+  E50     Consulta Médica 2          sala             6.37     2.82  INCUMPLE
+  E37     Baño para Personal         bano             6.31     2.38  OK
+  E71     Oficina Agente             oficina          5.84     2.28  OK
+  E13     Espacio E13 (SIN NOMBRE -  otro             5.40     2.13  OK
+  E40     Acceso Servicio 2          pasillo          5.38     0.66  INCUMPLE
+  E48     Espacio E48 (SIN NOMBRE -  otro             4.77     0.85  OK
+  E49     Acceso Servicio            pasillo          4.64      2.3  OK
+  E73     Caja                       sala             4.29     2.05  INCUMPLE
+  E08     Espacio E08 (SIN NOMBRE -  otro             4.11     0.91  OK
+  E10     Espacio E10 (SIN NOMBRE -  otro             3.82     0.83  OK
+  E25     Espacio E25 (SIN NOMBRE -  otro             3.74     0.91  OK
+  E69     Espacio E69 (SIN NOMBRE -  otro             3.66     2.05  OK
+  E64     Recepción                  sala             3.48     1.16  INCUMPLE
+  E26     Espacio E26 (SIN NOMBRE -  otro             3.40     0.89  OK
+  E46     Espacio E46 (SIN NOMBRE -  otro             3.30     1.38  OK
+  E68     Espacio E68 (SIN NOMBRE -  otro             3.23     1.24  OK
+  E53     Espacio E53 (SIN NOMBRE -  otro             3.13     1.15  OK
+  E58     Espacio E58 (SIN NOMBRE -  otro             2.99     0.89  OK
+  E24     Espacio E24 (SIN NOMBRE -  otro             2.72     0.83  OK
+  E34     Espacio E34 (SIN NOMBRE -  otro             2.51     0.45  OK
+  E23     Espacio E23 (SIN NOMBRE -  otro             2.31     0.91  OK
+  E62     Espacio E62 (SIN NOMBRE -  otro             2.28     0.89  OK
+  E47     Espacio E47 (SIN NOMBRE -  otro             2.26     1.21  OK
+  E56     Espacio E56 (SIN NOMBRE -  otro             2.16     0.89  OK
+  E66     Espacio E66 (SIN NOMBRE -  otro             2.11     1.24  OK
+  E27     Espacio E27 (SIN NOMBRE -  otro             2.10     0.83  OK
+  E55     Espacio E55 (SIN NOMBRE -  otro             2.06     0.83  OK
+  E17     Espacio E17 (SIN NOMBRE -  otro             2.04     0.85  OK
+  E07     Espacio E07 (SIN NOMBRE -  otro             1.96     0.43  OK
+  E29     Espacio E29 (SIN NOMBRE -  otro             1.89     0.78  OK
+  E80     Espacio E80 (SIN NOMBRE -  otro             1.89     0.56  OK
+  E70     Espacio E70 (SIN NOMBRE -  otro             1.83     1.19  OK
+  E14     Espacio E14 (SIN NOMBRE -  otro             1.78     0.83  OK
+  E36     Espacio E36 (SIN NOMBRE -  otro             1.75     1.65  OK
+  E52     Espacio E52 (SIN NOMBRE -  otro             1.70     0.52  OK
+  E01     Espacio E01 (SIN NOMBRE -  otro             1.61     0.52  OK
+  E11     Espacio E11 (SIN NOMBRE -  otro             1.60     0.37  OK
+  E59     Espacio E59 (SIN NOMBRE -  otro             1.60     0.89  OK
+  E43     Espacio E43 (SIN NOMBRE -  otro             1.54     0.84  OK
+  E77     Espacio E77 (SIN NOMBRE -  otro             1.50     0.56  OK
+  E65     Espacio E65 (SIN NOMBRE -  otro             1.34     1.03  OK
+  E20     Espacio E20 (SIN NOMBRE -  otro             1.32     1.09  OK
+  E57     Espacio E57 (SIN NOMBRE -  otro             1.26     0.86  OK
+  E16     Espacio E16 (SIN NOMBRE -  otro             1.18     0.78  OK
+  E19     Espacio E19 (SIN NOMBRE -  otro             1.18     1.33  OK
+  E72     Espacio E72 (SIN NOMBRE -  otro             1.09     0.91  OK
+  E35     Espacio E35 (SIN NOMBRE -  otro             1.07     1.16  OK
+  E75     Espacio E75 (SIN NOMBRE -  otro             1.02     0.81  OK
+  E42     Espacio E42 (SIN NOMBRE -  otro             0.99     0.86  OK
+  E78     Espacio E78 (SIN NOMBRE -  otro             0.98     0.56  OK
+  E74     Espacio E74 (SIN NOMBRE -  otro             0.97     0.87  OK
+  E51     Espacio E51 (SIN NOMBRE -  otro             0.91     0.83  OK
+  E15     Espacio E15 (SIN NOMBRE -  otro             0.78     0.37  OK
+  E76     Espacio E76 (SIN NOMBRE -  otro             0.77     0.25  OK
+  E28     Espacio E28 (SIN NOMBRE -  otro             0.72     0.78  OK
+  E18     Espacio E18 (SIN NOMBRE -  otro             0.71     0.83  OK
+  E63     Espacio E63 (SIN NOMBRE -  otro             0.69     0.81  OK
+  E60     Espacio E60 (SIN NOMBRE -  otro             0.61     0.81  OK
+  E33     Espacio E33 (SIN NOMBRE -  otro             0.60     0.78  OK
+  E32     Espacio E32 (SIN NOMBRE -  otro             0.58     1.04  OK
+  E61     Espacio E61 (SIN NOMBRE -  otro             0.55     0.66  OK
+  E38     Espacio E38 (SIN NOMBRE -  otro             0.54     0.83  OK
+  E67     Espacio E67 (SIN NOMBRE -  otro             0.54     0.43  OK
+  E21     Espacio E21 (SIN NOMBRE -  otro             0.52     0.83  OK
+  E79     Espacio E79 (SIN NOMBRE -  otro             0.51     0.56  OK
+  E22     Espacio E22 (SIN NOMBRE -  otro             0.50     0.62  OK
+          TOTAL                                     384.90
+
+  INCUMPLIMIENTOS GEOMETRICOS (4)
+  ------------------------------------------------------------------
+  [AREA]  E50 Consulta Médica 2
+    Medido: 6.37 m2  |  Minimo: 10.0 m2  |  Deficit: 3.63 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [ANCHO]  E40 Acceso Servicio 2
+    Medido: 0.66 m  |  Minimo: 1.2 m  |  Deficit: 0.54 m
+    Ref: Art. 4.2.5 OGUC — ancho min corredores de uso comun 1,20 m (cita y tema confirmados; valor exacto no verificado al 100% -- ver comentario)
+  [AREA]  E73 Caja
+    Medido: 4.29 m2  |  Minimo: 10.0 m2  |  Deficit: 5.71 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [AREA]  E64 Recepción
+    Medido: 3.48 m2  |  Minimo: 10.0 m2  |  Deficit: 6.52 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+
+  OBSERVACIONES NORMATIVAS CLAUDE (6)
+  [ALTA] Art. 4.1.7 / DDU 222 — No se verifica ruta accesible continua desde los accesos exteriores hacia todos 
+  [MEDIA] Art. 4.1.10 — No se verifica dotación mínima de artefactos sanitarios para público en relación
+  [MEDIA] Art. 4.2.4 — El baño accesible universal requiere puerta con ancho libre mínimo de 0.90 m y q
+  [MEDIA] Art. 4.1.6 — Los recintos Consulta Médica 1 y 2 no muestran ventanas hacia el exterior. Si ca
+  [MEDIA] Art. 4.2.1 — No se indica ancho libre de pasillos de circulación interior. Para edificios de 
+  [BAJA] Art. 4.2.10 / Art. 5.7 — No se identifican vías de evacuación señalizadas ni escaleras de emergencia en e
+
+==================================================================
+  (conteos desde análisis semántico Claude — DINO no detectó elementos)
+  Puertas semántico: 22  Ventanas: 0  Escaleras: 0
+
+✓ JSON guardado: archicheck_geometrico_pascua_01ago_0338.json
+  Paginas   : 1
+  Area total: 384.9 m2
+  Recintos  : 80
+  Incumpl.  : 4
+  Elementos (semantico) — Puertas:22  Ventanas:0  Escaleras:0  Rampas:0

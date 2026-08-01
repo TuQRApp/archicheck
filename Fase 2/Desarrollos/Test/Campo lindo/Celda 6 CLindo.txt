@@ -1,0 +1,106 @@
+==================================================================
+  ARCHICHECK — INFORME CAPA 1 GEOMETRICA
+==================================================================
+  Proyecto: CLindo
+  Archivo : Casa CampoLindo (14 08 23) con layers.pdf
+  Fecha   : 01/08/2026 03:55
+  Páginas : 2 + 3
+
+  ------------------------------------------------------------------
+  PAGINA 2 [pag2]  |  1:50  |  planta — vivienda
+  Nivel: Planta Primer Piso
+  ------------------------------------------------------------------
+  ID      Nombre                     Tipo          Area m2  Ancho m  Estado
+  --      ------                     ----          -------  -------  ------
+  E03     Corredor                   pasillo         43.74     3.62  OK
+  E10     Comedor                    sala            23.88     4.12  OK
+  E12     Dormitorio 1               sala            11.79     3.65  OK
+  E09     Cocina                     cocina           8.33     3.43  OK
+  E11     Dormitorio 2               sala             6.24     2.52  INCUMPLE
+  E08     Logia                      otro             5.36     1.76  OK
+  E18     Living                     sala             4.57     2.56  INCUMPLE
+  E06     Canil                      otro             4.05     2.23  OK
+  E05     Baño 4                     bano             3.56     1.83  OK
+  E15     Patio Cubierto             terraza          3.16     1.89  OK
+  E07     Espacio E07 (SIN NOMBRE -  otro             2.84      2.4  OK
+  E16     Baño 1                     bano             2.39     1.38  OK
+  E19     Espacio E19 (SIN NOMBRE -  otro             0.96     1.06  OK
+  E14     Baño 2                     bano             0.93     0.81  INCUMPLE
+  E17     Espacio E17 (SIN NOMBRE -  otro             0.85      1.0  OK
+  E13     Espacio E13 (SIN NOMBRE -  otro             0.80     1.05  OK
+  E01     Terraza                    terraza          0.60      0.9  OK
+  E02     Espacio E02 (SIN NOMBRE -  otro             0.60     0.89  OK
+  E04     Espacio E04 (SIN NOMBRE -  otro             0.51      0.1  OK
+          TOTAL                                     125.20
+
+  INCUMPLIMIENTOS GEOMETRICOS (4)
+  ------------------------------------------------------------------
+  [AREA]  E11 Dormitorio 2
+    Medido: 6.24 m2  |  Minimo: 10.0 m2  |  Deficit: 3.76 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [AREA]  E18 Living
+    Medido: 4.57 m2  |  Minimo: 10.0 m2  |  Deficit: 5.43 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [AREA]  E14 Baño 2
+    Medido: 0.93 m2  |  Minimo: 1.5 m2  |  Deficit: 0.57 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [DISCREPANCIA_AREA_DECLARADA]  E01 Terraza
+    Medido: 0.6 m2  |  Declarado en cuadro: 13.0 m2  |  Diferencia: 2066.7 %
+    Ref: Cuadro de superficies del plano vs. area medida por geometria (OpenCV)
+
+  OBSERVACIONES NORMATIVAS CLAUDE (5)
+  [MEDIA] Art. 4.1.10 OGUC — Los dormitorios deben tener iluminación natural mínima equivalente al 10% de la 
+  [MEDIA] Art. 4.5.3 OGUC — Los baños deben tener ventilación natural directa al exterior o sistema de extra
+  [BAJA] Art. 2.2.1 / 4.2.1 OGUC – Accesibilidad Universal — Vivienda unifamiliar con más de 2 pisos y superficie construida superior a 140 m
+  [MEDIA] Art. 4.2.10 OGUC – Escalera interior — La escalera visible en el Living (13 peldaños identificados) comunica con segund
+  [BAJA] Art. 4.1.2 OGUC – Altura libre mínima recintos habitables — No se cuenta con corte que certifique altura libre mínima de 2.30 m en recintos 
+
+  ------------------------------------------------------------------
+  PAGINA 3 [pag3]  |  1:50  |  planta — vivienda
+  Nivel: Segundo Piso
+  ------------------------------------------------------------------
+  ID      Nombre                     Tipo          Area m2  Ancho m  Estado
+  --      ------                     ----          -------  -------  ------
+  E05     Espacio E05 (SIN NOMBRE -  otro            33.44     3.22  OK
+  E14     Espacio E14 (SIN NOMBRE -  otro            33.01     3.18  OK
+  E02     Baño 3                     bano            16.03     3.23  OK
+  E13     Estar                      sala            15.80     3.18  OK
+  E07     Dormitorio 3               sala            14.45     4.18  OK
+  E16     Espacio E16 (SIN NOMBRE -  otro            13.35     2.36  OK
+  E10     Espacio E10 (SIN NOMBRE -  otro            13.31     2.36  OK
+  E01     Espacio E01 (SIN NOMBRE -  otro             9.90     1.75  OK
+  E17     Espacio E17 (SIN NOMBRE -  otro             8.86     1.66  OK
+  E21     Espacio E21 (SIN NOMBRE -  otro             8.29     4.14  OK
+  E06     Espacio E06 (SIN NOMBRE -  otro             7.31     1.66  OK
+  E19     Espacio E19 (SIN NOMBRE -  otro             2.98     0.47  OK
+  E18     Espacio E18 (SIN NOMBRE -  otro             2.94     0.46  OK
+  E12     Espacio E12 (SIN NOMBRE -  otro             2.86     1.56  OK
+  E20     Espacio E20 (SIN NOMBRE -  otro             2.86     1.56  OK
+  E23     Espacio E23 (SIN NOMBRE -  otro             2.41     1.76  OK
+  E09     Espacio E09 (SIN NOMBRE -  otro             2.33     1.35  OK
+  E25     Espacio E25 (SIN NOMBRE -  otro             2.33     1.31  OK
+  E22     Espacio E22 (SIN NOMBRE -  otro             1.90     1.32  OK
+  E11     Espacio E11 (SIN NOMBRE -  otro             1.33     0.72  OK
+  E24     Espacio E24 (SIN NOMBRE -  otro             0.89     1.04  OK
+  E15     Espacio E15 (SIN NOMBRE -  otro             0.86     0.28  OK
+  E04     Espacio E04 (SIN NOMBRE -  otro             0.77     0.46  OK
+  E03     Espacio E03 (SIN NOMBRE -  otro             0.76     0.46  OK
+  E08     Espacio E08 (SIN NOMBRE -  otro             0.52     0.41  OK
+          TOTAL                                     199.50
+
+  OBSERVACIONES NORMATIVAS CLAUDE (4)
+  [MEDIA] Art. 4.2.10 — La escalera interior visible en el Estar (13 peldaños numerados) no permite veri
+  [MEDIA] Art. 6.3.3 — No se puede verificar la superficie mínima del Dormitorio 3 (8 m²) ni su ancho m
+  [BAJA] Art. 6.3.3 — El Baño 3 no presenta cotas que permitan verificar dimensiones mínimas reglament
+  [BAJA] Art. 5.8.3 — El segundo piso es accesible únicamente por escalera interior; no existe salida 
+
+==================================================================
+  (conteos desde análisis semántico Claude — DINO no detectó elementos)
+  Puertas semántico: 15  Ventanas: 13  Escaleras: 2
+
+✓ JSON guardado: archicheck_geometrico_clindo_01ago_0348.json
+  Paginas   : 2
+  Area total: 324.7 m2
+  Recintos  : 44
+  Incumpl.  : 4
+  Elementos (semantico) — Puertas:15  Ventanas:13  Escaleras:2  Rampas:0
