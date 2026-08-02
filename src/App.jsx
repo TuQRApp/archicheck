@@ -928,10 +928,13 @@ function dibujarOverlayEnCanvas(ctx, img, {
   const lw = Math.max(1.5, img.width * 0.0025);
   const iw = imagenWPx || img.width, ih = imagenHPx || img.height;
 
+  // Recintos: ya no se dibujan todos siempre (generaba demasiado clutter visual, tapando las
+  // marcas de elementos puntuales) — solo el seleccionado, a pedido explícito del usuario
+  // (2026-08-02). El resto sigue disponible para hit-test/selección, simplemente no se pinta.
   for (const r of mediciones) {
-    if (!r.bbox) continue;
+    if (!r.bbox || r.id !== selectedId) continue;
     const { x, y, w, h } = r.bbox;
-    const isSel = r.id === selectedId;
+    const isSel = true;
     ctx.fillStyle = isSel ? COLOR_RECINTO_SEL + "35" : COLOR_RECINTO + "1f";
     ctx.strokeStyle = isSel ? COLOR_RECINTO_SEL : COLOR_RECINTO;
     ctx.lineWidth = isSel ? lw * 1.8 : lw;
@@ -985,6 +988,28 @@ function dibujarOverlayEnCanvas(ctx, img, {
       ctx.font = `bold ${fs}px sans-serif`;
       ctx.fillStyle = col;
       ctx.fillText(label, e.puntos[0].x + 4, e.puntos[0].y - 4);
+      continue;
+    }
+
+    // Puerta/ventana/escalera/rampa detectadas por Colab: la geometría p1_relativo/p2_relativo
+    // que devuelve Claude Vision resultó poco confiable en la primera corrida real (posiciones y
+    // orientación alejadas de la real, ver roadmap 2026-08-02) — para estas se vuelve al punto
+    // simple (centroide), igual que antes de este cambio. Solo lo que el arquitecto marca a mano
+    // (e._nuevo) usa la línea/rectángulo real, porque ahí la geometría sí es exacta (viene de sus
+    // propios clics).
+    if (!e._nuevo) {
+      const cx = (e.cx_relativo ?? 0) * iw, cy = (e.cy_relativo ?? 0) * ih;
+      const rad = isSel ? 9 : 6;
+      ctx.beginPath();
+      ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+      ctx.fillStyle = col;
+      ctx.fill();
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.font = `bold ${fs}px sans-serif`;
+      ctx.fillStyle = col;
+      ctx.fillText(label, cx + rad + 3, cy + fs / 3);
       continue;
     }
 
@@ -1143,6 +1168,10 @@ function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, mpp, ra
     let d;
     if (forma === "polilinea" && Array.isArray(e.puntos) && e.puntos.length >= 2) {
       d = distanciaMinimaAPolilinea(x, y, e.puntos);
+    } else if (!e._nuevo) {
+      // Detectado por Colab: se dibuja (y se selecciona) como punto — ver dibujarOverlayEnCanvas.
+      const cx = (e.cx_relativo ?? 0) * imagenWPx, cy = (e.cy_relativo ?? 0) * imagenHPx;
+      d = Math.hypot(x - cx, y - cy);
     } else if (forma === "rectangulo") {
       const { p1, p2 } = resolverPuntosElemento(e, imagenWPx, imagenHPx, mpp);
       const rx = Math.min(p1.x, p2.x), ry = Math.min(p1.y, p2.y);
