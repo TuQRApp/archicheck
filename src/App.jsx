@@ -426,6 +426,7 @@ const CATEGORIAS_ELEMENTO = [
   { id: "ventana",  campo: "ventanas_detalle",  label: "Ventana",  prefijo: "V" },
   { id: "escalera", campo: "escaleras_detalle", label: "Escalera", prefijo: "ES" },
   { id: "rampa",    campo: "rampas_detalle",    label: "Rampa",    prefijo: "R" },
+  { id: "muro",     campo: "muros_detalle",     label: "Muro",     prefijo: "MU" },
 ];
 
 // Recintos de una página con todas las correcciones ya aplicadas (recintos base + ediciones +
@@ -484,7 +485,7 @@ function getElementosPuntualesConPosicion(colabJson, correcciones, entryIdx) {
     .filter(e => typeof e.cx_relativo === "number" && typeof e.cy_relativo === "number");
 }
 
-const PLURAL_ELEMENTOS = { puerta: "puertas", ventana: "ventanas", escalera: "escaleras", rampa: "rampas" };
+const PLURAL_ELEMENTOS = { puerta: "puertas", ventana: "ventanas", escalera: "escaleras", rampa: "rampas", muro: "muros" };
 
 // Resumen "sistema detectó N, van M marcadas" por categoría — apoyo visual en LeyendaHerramientas,
 // útil sobre todo para ventanas (recall históricamente ~0%, ver roadmap P1) donde casi siempre
@@ -890,7 +891,7 @@ function CanvasOverlay({ src, recintos, pagina }) {
 const COLOR_RECINTO = "#1B3A8A";
 const COLOR_RECINTO_SEL = "#2952A3";
 const COLOR_EXCLUIDA = "#C0392B";
-const COLORES_ELEMENTO_PUNTUAL = { puerta: "#1E8449", ventana: "#2952A3", escalera: "#D68910", rampa: "#8E44AD" };
+const COLORES_ELEMENTO_PUNTUAL = { puerta: "#1E8449", ventana: "#2952A3", escalera: "#D68910", rampa: "#8E44AD", muro: "#5D4037" };
 
 // Dibuja recintos + elementos puntuales + vista previa de herramienta sobre un canvas ya
 // dimensionado a la imagen real. Compartida entre el canvas interactivo (RevisionGeometricaCanvas)
@@ -940,9 +941,26 @@ function dibujarOverlayEnCanvas(ctx, img, {
   }
 
   for (const e of elementosPuntuales) {
-    const cx = (e.cx_relativo ?? 0) * iw, cy = (e.cy_relativo ?? 0) * ih;
     const col = COLORES_ELEMENTO_PUNTUAL[e.categoria] || "#333";
     const isSel = e.id === selectedId;
+    // Muro: polilínea (2+ trazos conectados), no un punto — el resto de las categorías siguen
+    // siendo un único punto con ancho, un muro puede tener largo y quiebres.
+    if (e.categoria === "muro" && Array.isArray(e.puntos) && e.puntos.length >= 2) {
+      ctx.save();
+      ctx.strokeStyle = col;
+      ctx.lineWidth = isSel ? lw * 2.5 : lw * 1.5;
+      ctx.beginPath();
+      ctx.moveTo(e.puntos[0].x, e.puntos[0].y);
+      for (let i = 1; i < e.puntos.length; i++) ctx.lineTo(e.puntos[i].x, e.puntos[i].y);
+      ctx.stroke();
+      ctx.restore();
+      const fs = Math.max(10, img.width * 0.012);
+      ctx.font = `bold ${fs}px sans-serif`;
+      ctx.fillStyle = col;
+      ctx.fillText("M", e.puntos[0].x + 4, e.puntos[0].y - 4);
+      continue;
+    }
+    const cx = (e.cx_relativo ?? 0) * iw, cy = (e.cy_relativo ?? 0) * ih;
     const rad = isSel ? 9 : 6;
     ctx.beginPath();
     ctx.arc(cx, cy, rad, 0, Math.PI * 2);
@@ -955,6 +973,29 @@ function dibujarOverlayEnCanvas(ctx, img, {
     ctx.font = `bold ${fs}px sans-serif`;
     ctx.fillStyle = col;
     ctx.fillText((e.categoria || "?")[0].toUpperCase(), cx + rad + 3, cy + fs / 3);
+  }
+
+  if (preview?.tipo === "polilinea" && preview.puntos?.length) {
+    const { puntos, cursor } = preview;
+    ctx.save();
+    ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = "#D68910";
+    ctx.lineWidth = lw;
+    ctx.beginPath();
+    ctx.moveTo(puntos[0].x, puntos[0].y);
+    for (let i = 1; i < puntos.length; i++) ctx.lineTo(puntos[i].x, puntos[i].y);
+    if (cursor) ctx.lineTo(cursor.x, cursor.y);
+    ctx.stroke();
+    ctx.restore();
+    if (mpp && cursor) {
+      let largo = 0;
+      for (let i = 1; i < puntos.length; i++) largo += Math.hypot(puntos[i].x - puntos[i - 1].x, puntos[i].y - puntos[i - 1].y);
+      largo += Math.hypot(cursor.x - puntos[puntos.length - 1].x, cursor.y - puntos[puntos.length - 1].y);
+      const fs = Math.max(12, img.width * 0.016);
+      ctx.font = `bold ${fs}px sans-serif`;
+      ctx.fillStyle = "#D68910";
+      ctx.fillText(`${(largo * mpp).toFixed(2)} m`, cursor.x + 8, cursor.y - 8);
+    }
   }
 
   if (preview?.p1 && preview?.p2) {
@@ -1038,11 +1079,31 @@ function hitTestRecinto(mediciones, x, y) {
   return best;
 }
 
+function distanciaPuntoASegmento(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1, dy = y2 - y1;
+  if (dx === 0 && dy === 0) return Math.hypot(px - x1, py - y1);
+  const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)));
+  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+}
+
+function distanciaMinimaAPolilinea(px, py, puntos) {
+  let min = Infinity;
+  for (let i = 1; i < puntos.length; i++) {
+    min = Math.min(min, distanciaPuntoASegmento(px, py, puntos[i - 1].x, puntos[i - 1].y, puntos[i].x, puntos[i].y));
+  }
+  return min;
+}
+
 function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, radiusPx = 16) {
   let best = null, bestDist = Infinity;
   for (const e of elementosPuntuales) {
-    const cx = (e.cx_relativo ?? 0) * imagenWPx, cy = (e.cy_relativo ?? 0) * imagenHPx;
-    const d = Math.hypot(x - cx, y - cy);
+    let d;
+    if (e.categoria === "muro" && Array.isArray(e.puntos) && e.puntos.length >= 2) {
+      d = distanciaMinimaAPolilinea(x, y, e.puntos);
+    } else {
+      const cx = (e.cx_relativo ?? 0) * imagenWPx, cy = (e.cy_relativo ?? 0) * imagenHPx;
+      d = Math.hypot(x - cx, y - cy);
+    }
     if (d <= radiusPx && d < bestDist) { bestDist = d; best = e; }
   }
   return best;
@@ -1050,7 +1111,7 @@ function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, radiusP
 
 // Herramientas cuyo click se interpreta como el 1º/2º punto de una línea o caja (2 clics),
 // en vez de una selección directa — mismo mecanismo, distinto significado según la herramienta.
-const HERRAMIENTAS_DOS_CLICS = new Set(["cortar", "excluir_area", "puerta", "ventana", "escalera", "rampa"]);
+const HERRAMIENTAS_DOS_CLICS = new Set(["cortar", "excluir_area", "puerta", "ventana", "escalera", "rampa", "muro"]);
 
 function RevisionGeometricaCanvas({
   png, mediciones, elementosPuntuales, imagenWPx, imagenHPx, mpp,
@@ -1097,10 +1158,12 @@ function RevisionGeometricaCanvas({
   function handleClick(e) {
     const pt = puntoDesdeEvento(e);
     if (tool === "seleccionar" || tool === "fusionar") {
-      const r = hitTestRecinto(mediciones, pt.x, pt.y);
-      if (r) { onSeleccionar?.(r.id, "recinto"); return; }
+      // Elementos puntuales primero: casi siempre están DENTRO del bbox de un recinto,
+      // así que si el recinto se revisara primero jamás se podría seleccionar el punto.
       const el = hitTestElemento(elementosPuntuales, pt.x, pt.y, imagenWPx, imagenHPx);
       if (el) { onSeleccionar?.(el.id, "elemento"); return; }
+      const r = hitTestRecinto(mediciones, pt.x, pt.y);
+      if (r) { onSeleccionar?.(r.id, "recinto"); return; }
       onSeleccionar?.(null, null);
       return;
     }
@@ -1109,6 +1172,14 @@ function RevisionGeometricaCanvas({
   }
 
   function handleMouseMove(e) {
+    // Muro: sigue acumulando trazos hasta que el arquitecto confirme (botón aparte), no se
+    // dispara solo al segundo clic como el resto de las herramientas de 2 clics.
+    if (tool === "muro" && linePoints.length >= 1) {
+      const pt = puntoDesdeEvento(e);
+      previewRef.current = { tipo: "polilinea", puntos: linePoints, cursor: pt };
+      redibujar(previewRef.current);
+      return;
+    }
     if (linePoints.length !== 1) return;
     const pt = puntoDesdeEvento(e);
     const tipo = tool === "excluir_area" ? "rect" : "linea";
@@ -1146,11 +1217,12 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onCerrar }) {
     setNombre(item?.nombre ?? item?.ubicacion_o_recinto ?? "");
     setTipoRecinto(item?.tipo ?? "");
     setAreaM2(item?.area_m2 ?? "");
-    setAnchoM(item?.ancho_estimado_m ?? "");
+    setAnchoM(item?.categoria === "muro" ? (item?.largo_m ?? "") : (item?.ancho_estimado_m ?? ""));
   }, [item]);
 
   if (!item) return null;
   const esRecinto = tipo === "recinto";
+  const esMuro = item?.categoria === "muro";
   const inputStyle = { width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "7px 10px", fontSize: 12, color: "#3D4A5C", fontFamily: "inherit", background: "#FFFFFF", marginBottom: 6 };
   const btnStyle = (bg) => ({ border: "none", borderRadius: 6, padding: "7px 12px", fontSize: 11, fontFamily: "inherit", cursor: "pointer", background: bg, color: "#fff" });
 
@@ -1168,16 +1240,19 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onCerrar }) {
       ) : (
         <>
           <input style={inputStyle} value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ubicación / descripción" />
-          <input style={inputStyle} type="number" step="0.01" value={anchoM} onChange={e => setAnchoM(e.target.value)} placeholder="Ancho m" />
+          <input style={inputStyle} type="number" step="0.01" value={anchoM} onChange={e => setAnchoM(e.target.value)} placeholder={esMuro ? "Largo m" : "Ancho m"} />
         </>
       )}
       <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
         <button style={btnStyle("#2952A3")} onClick={() => onGuardar(esRecinto
           ? { nombre, tipo: tipoRecinto, area_m2: parseFloat(areaM2) || 0 }
+          : esMuro ? { ubicacion_o_recinto: nombre, largo_m: parseFloat(anchoM) || 0 }
           : { ubicacion_o_recinto: nombre, ancho_estimado_m: parseFloat(anchoM) || 0 })}>
           Guardar
         </button>
-        {!esRecinto && <button style={btnStyle("#D68910")} onClick={onMover}>Mover</button>}
+        {/* Mover no soportado para muro en v1 — es una polilínea completa, no un único punto;
+            para reubicarlo hoy se elimina y se vuelve a marcar (mismo patrón que cambiar de categoría). */}
+        {!esRecinto && !esMuro && <button style={btnStyle("#D68910")} onClick={onMover}>Mover</button>}
         <button style={btnStyle("#C0392B")} onClick={onEliminar}>Eliminar</button>
         <button style={btnStyle("#B8C5E0")} onClick={onCerrar}>Cancelar</button>
       </div>
@@ -1222,7 +1297,7 @@ function TablaDudas({ dudas, onIrADuda }) {
 }
 
 // ── Selector de herramienta activa ──────────────────────────────────────────
-function LeyendaHerramientas({ tool, onChangeTool, fusionCount, onConfirmarFusion, elementosDetectados }) {
+function LeyendaHerramientas({ tool, onChangeTool, fusionCount, onConfirmarFusion, elementosDetectados, muroPuntosCount, onConfirmarMuro }) {
   const base = [
     { id: "seleccionar", label: "Seleccionar" },
     { id: "cortar",      label: "Cortar" },
@@ -1251,6 +1326,12 @@ function LeyendaHerramientas({ tool, onChangeTool, fusionCount, onConfirmarFusio
           </button>
         );
       })}
+      {tool === "muro" && muroPuntosCount >= 2 && (
+        <button style={{ ...btnStyle(true, "#1E8449") }} onClick={onConfirmarMuro}>Confirmar muro ({muroPuntosCount} puntos)</button>
+      )}
+      {tool === "muro" && muroPuntosCount > 0 && muroPuntosCount < 2 && (
+        <span style={{ fontSize: 10, color: "#6B7A99" }}>Marca al menos 2 puntos para confirmar el muro</span>
+      )}
     </div>
   );
 }
@@ -1291,7 +1372,7 @@ function RevisionModal({
   colabJson, colabPngs, correcciones,
   entriesConPng, stepIndex, setStepIndex,
   tool, setTool, selectedId, selectedTipo, fusionSet, linePoints,
-  onSeleccionar, onLinePoint, onMoverDestino, onConfirmarFusion,
+  onSeleccionar, onLinePoint, onMoverDestino, onConfirmarFusion, onConfirmarMuro,
   onGuardarRecinto, onEliminarRecinto, onGuardarElemento, onEliminarElemento, onMoverElemento, onCerrarPanel,
   onFinalizar, onCerrarModal,
 }) {
@@ -1361,7 +1442,8 @@ function RevisionModal({
 
       <div style={{ background: "#F4F6FB", padding: "8px 18px", borderBottom: "1px solid #D1D9EE" }}>
         <LeyendaHerramientas tool={tool} onChangeTool={setTool} fusionCount={fusionSet.length}
-          onConfirmarFusion={onConfirmarFusion} elementosDetectados={elementosDetectados} />
+          onConfirmarFusion={onConfirmarFusion} elementosDetectados={elementosDetectados}
+          muroPuntosCount={linePoints.length} onConfirmarMuro={onConfirmarMuro} />
       </div>
 
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
@@ -2164,6 +2246,13 @@ ${printRef.current.innerHTML}
     setReviewTool("seleccionar");
   }
 
+  // Limpia cualquier trazo de muro (u otro punto de línea) a medio marcar al cambiar de
+  // herramienta — evita que puntos de un intento abandonado se mezclen con el siguiente.
+  function handleCambiarHerramienta(t) {
+    setReviewTool(t);
+    setReviewLinePoints([]);
+  }
+
   function handleSeleccionarEnCanvas(id, tipoSel) {
     if (reviewTool === "fusionar") {
       if (tipoSel !== "recinto" || !id) return;
@@ -2217,13 +2306,50 @@ ${printRef.current.innerHTML}
     }
   }
 
+  // IMPORTANTE: ejecutarAccionDosClicks (y todo lo que dispara: agregar/cortar/excluir) es un
+  // efecto secundario real (llama a setColabCorrecciones). React StrictMode invoca el cuerpo de
+  // los actualizadores funcionales de setState DOS VECES en desarrollo para detectar impurezas —
+  // si ejecutarAccionDosClicks se llamaba desde ADENTRO de un `setReviewLinePoints(prev => ...)`,
+  // se ejecutaba dos veces por cada segundo clic real (bug real encontrado en pruebas: una puerta
+  // marcada con un solo par de clics quedaba duplicada). Por eso acá NO se anida el efecto
+  // secundario dentro del actualizador — se lee reviewLinePoints del closure normal (ya
+  // actualizado al momento del clic, cada clic es un evento discreto) y se llama aparte.
   function handleReviewLinePoint(pt) {
-    setReviewLinePoints(prev => {
-      const next = [...prev, pt];
-      if (next.length < 2) return next;
-      ejecutarAccionDosClicks(next[0], next[1]);
-      return [];
+    // Muro: sigue acumulando trazos indefinidamente — se confirma con un botón aparte
+    // (handleConfirmarMuro), no se dispara solo al segundo clic como el resto. Acumular en el
+    // updater acá es seguro porque no tiene efectos secundarios (solo agrega al array).
+    if (reviewTool === "muro") {
+      setReviewLinePoints(prev => [...prev, pt]);
+      return;
+    }
+    if (reviewLinePoints.length === 0) {
+      setReviewLinePoints([pt]);
+      return;
+    }
+    const p1 = reviewLinePoints[0];
+    setReviewLinePoints([]);
+    ejecutarAccionDosClicks(p1, pt);
+  }
+
+  function handleConfirmarMuro() {
+    if (reviewLinePoints.length < 2) return;
+    const pag = colabJson?.paginas?.find(p => p.entry_idx === reviewActiveEntry);
+    const iw = pag?.imagen_w_px || 1, ih = pag?.imagen_h_px || 1, mpp = pag?.mpp || 0;
+    let largo = 0;
+    for (let i = 1; i < reviewLinePoints.length; i++) {
+      largo += Math.hypot(reviewLinePoints[i].x - reviewLinePoints[i - 1].x, reviewLinePoints[i].y - reviewLinePoints[i - 1].y);
+    }
+    const xs = reviewLinePoints.map(p => p.x), ys = reviewLinePoints.map(p => p.y);
+    const cx_relativo = ((Math.min(...xs) + Math.max(...xs)) / 2) / iw;
+    const cy_relativo = ((Math.min(...ys) + Math.max(...ys)) / 2) / ih;
+    setColabCorrecciones(prev => {
+      const n = prev.elementosPuntualesNuevos.filter(e => e.categoria === "muro").length + 1;
+      const id = `MU-A${n}`;
+      const nuevo = { id, categoria: "muro", entryIdx: reviewActiveEntry, puntos: reviewLinePoints, largo_m: Math.round(largo * mpp * 100) / 100, cx_relativo, cy_relativo, ubicacion_o_recinto: "", _nuevo: true };
+      return { ...prev, elementosPuntualesNuevos: [...prev.elementosPuntualesNuevos, nuevo] };
     });
+    setReviewLinePoints([]);
+    setReviewTool("seleccionar");
   }
 
   function handleConfirmarFusion() {
@@ -2846,7 +2972,7 @@ ${printRef.current.innerHTML}
                 stepIndex={reviewModalStep}
                 setStepIndex={setReviewModalStep}
                 tool={reviewTool}
-                setTool={setReviewTool}
+                setTool={handleCambiarHerramienta}
                 selectedId={reviewSelectedId}
                 selectedTipo={reviewSelectedTipo}
                 fusionSet={reviewFusionSet}
@@ -2855,6 +2981,7 @@ ${printRef.current.innerHTML}
                 onLinePoint={handleReviewLinePoint}
                 onMoverDestino={handleMoverDestino}
                 onConfirmarFusion={handleConfirmarFusion}
+                onConfirmarMuro={handleConfirmarMuro}
                 onGuardarRecinto={patch => { aplicarCorreccionRecinto(reviewSelectedId, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
                 onEliminarRecinto={() => eliminarRecinto(reviewSelectedId)}
                 onGuardarElemento={(item, patch) => { aplicarCorreccionElemento(item, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
