@@ -422,11 +422,11 @@ const CORRECCIONES_VACIAS = {
 };
 
 const CATEGORIAS_ELEMENTO = [
-  { id: "puerta",   campo: "puertas_detalle",   label: "Puerta",   prefijo: "P" },
-  { id: "ventana",  campo: "ventanas_detalle",  label: "Ventana",  prefijo: "V" },
-  { id: "escalera", campo: "escaleras_detalle", label: "Escalera", prefijo: "ES" },
-  { id: "rampa",    campo: "rampas_detalle",    label: "Rampa",    prefijo: "R" },
-  { id: "muro",     campo: "muros_detalle",     label: "Muro",     prefijo: "MU" },
+  { id: "puerta",   campo: "puertas_detalle",   label: "Puerta",   prefijo: "P",  forma: "linea" },
+  { id: "ventana",  campo: "ventanas_detalle",  label: "Ventana",  prefijo: "V",  forma: "linea" },
+  { id: "escalera", campo: "escaleras_detalle", label: "Escalera", prefijo: "ES", forma: "rectangulo" },
+  { id: "rampa",    campo: "rampas_detalle",    label: "Rampa",    prefijo: "R",  forma: "rectangulo" },
+  { id: "muro",     campo: "muros_detalle",     label: "Muro",     prefijo: "MU", forma: "polilinea" },
 ];
 
 // Recintos de una página con todas las correcciones ya aplicadas (recintos base + ediciones +
@@ -533,11 +533,34 @@ function calcularAreaExcluida(bbox, mpp) {
 // Ancho real (m) y centroide (fracción 0-1) de un elemento puntual nuevo, desde una línea de 2 clics.
 function calcularElementoDesdeLinea(p1, p2, mpp, imagenWPx, imagenHPx) {
   const ancho_m = Math.hypot(p2.x - p1.x, p2.y - p1.y) * mpp;
+  const iw = imagenWPx || 1, ih = imagenHPx || 1;
   return {
     ancho_estimado_m: Math.round(ancho_m * 100) / 100,
-    cx_relativo: ((p1.x + p2.x) / 2) / (imagenWPx || 1),
-    cy_relativo: ((p1.y + p2.y) / 2) / (imagenHPx || 1),
+    cx_relativo: ((p1.x + p2.x) / 2) / iw,
+    cy_relativo: ((p1.y + p2.y) / 2) / ih,
+    p1_relativo: { x: p1.x / iw, y: p1.y / ih },
+    p2_relativo: { x: p2.x / iw, y: p2.y / ih },
   };
+}
+
+// Resuelve el segmento p1->p2 real de un elemento línea/rectángulo, en píxeles de imagen. Si el
+// elemento trae p1_relativo/p2_relativo (geometría real, del notebook extendido o de un marcado
+// a mano) los usa tal cual. Si no (JSON generado antes de este cambio, o elementos con solo
+// centroide), sintetiza un segmento horizontal centrado en cx_relativo/cy_relativo usando
+// ancho_estimado_m (0.9m por defecto) y marca sintetico:true — se dibuja punteado en vez de sólido,
+// mismo principio de "incertidumbre transparente" que ya rige sin_nombre_confirmar.
+function resolverPuntosElemento(e, imagenWPx, imagenHPx, mpp) {
+  const iw = imagenWPx || 1, ih = imagenHPx || 1;
+  if (e.p1_relativo && e.p2_relativo) {
+    return {
+      p1: { x: e.p1_relativo.x * iw, y: e.p1_relativo.y * ih },
+      p2: { x: e.p2_relativo.x * iw, y: e.p2_relativo.y * ih },
+      sintetico: false,
+    };
+  }
+  const cx = (e.cx_relativo ?? 0) * iw, cy = (e.cy_relativo ?? 0) * ih;
+  const anchoPx = mpp ? (e.ancho_estimado_m || 0.9) / mpp : 40;
+  return { p1: { x: cx - anchoPx / 2, y: cy }, p2: { x: cx + anchoPx / 2, y: cy }, sintetico: true };
 }
 
 // Reintegra todas las correcciones del arquitecto en un clon del colabJson original — es lo que
@@ -898,7 +921,7 @@ const COLORES_ELEMENTO_PUNTUAL = { puerta: "#1E8449", ventana: "#2952A3", escale
 // y la generación del PNG final descargable (dibujarPngRevisado) — misma lógica, sin duplicar.
 function dibujarOverlayEnCanvas(ctx, img, {
   mediciones = [], elementosPuntuales = [], imagenWPx, imagenHPx,
-  selectedId = null, fusionSet = [], preview = null, mpp = 0,
+  selectedId = null, preview = null, mpp = 0,
 } = {}) {
   ctx.clearRect(0, 0, img.width, img.height);
   ctx.drawImage(img, 0, 0);
@@ -908,7 +931,7 @@ function dibujarOverlayEnCanvas(ctx, img, {
   for (const r of mediciones) {
     if (!r.bbox) continue;
     const { x, y, w, h } = r.bbox;
-    const isSel = r.id === selectedId || fusionSet.includes(r.id);
+    const isSel = r.id === selectedId;
     ctx.fillStyle = isSel ? COLOR_RECINTO_SEL + "35" : COLOR_RECINTO + "1f";
     ctx.strokeStyle = isSel ? COLOR_RECINTO_SEL : COLOR_RECINTO;
     ctx.lineWidth = isSel ? lw * 1.8 : lw;
@@ -943,9 +966,14 @@ function dibujarOverlayEnCanvas(ctx, img, {
   for (const e of elementosPuntuales) {
     const col = COLORES_ELEMENTO_PUNTUAL[e.categoria] || "#333";
     const isSel = e.id === selectedId;
-    // Muro: polilínea (2+ trazos conectados), no un punto — el resto de las categorías siguen
-    // siendo un único punto con ancho, un muro puede tener largo y quiebres.
-    if (e.categoria === "muro" && Array.isArray(e.puntos) && e.puntos.length >= 2) {
+    const cat = CATEGORIAS_ELEMENTO.find(c => c.id === e.categoria);
+    const forma = cat?.forma;
+    const fs = Math.max(10, img.width * 0.012);
+    const label = cat?.prefijo === "MU" ? "M" : (cat?.prefijo || "?");
+
+    // Muro: polilínea (2+ trazos conectados) — única categoría con forma propia (N segmentos,
+    // no 2 puntos), las otras 3 formas se resuelven todas vía resolverPuntosElemento.
+    if (forma === "polilinea" && Array.isArray(e.puntos) && e.puntos.length >= 2) {
       ctx.save();
       ctx.strokeStyle = col;
       ctx.lineWidth = isSel ? lw * 2.5 : lw * 1.5;
@@ -954,25 +982,39 @@ function dibujarOverlayEnCanvas(ctx, img, {
       for (let i = 1; i < e.puntos.length; i++) ctx.lineTo(e.puntos[i].x, e.puntos[i].y);
       ctx.stroke();
       ctx.restore();
-      const fs = Math.max(10, img.width * 0.012);
       ctx.font = `bold ${fs}px sans-serif`;
       ctx.fillStyle = col;
-      ctx.fillText("M", e.puntos[0].x + 4, e.puntos[0].y - 4);
+      ctx.fillText(label, e.puntos[0].x + 4, e.puntos[0].y - 4);
       continue;
     }
-    const cx = (e.cx_relativo ?? 0) * iw, cy = (e.cy_relativo ?? 0) * ih;
-    const rad = isSel ? 9 : 6;
-    ctx.beginPath();
-    ctx.arc(cx, cy, rad, 0, Math.PI * 2);
-    ctx.fillStyle = col;
-    ctx.fill();
-    ctx.strokeStyle = "#fff";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    const fs = Math.max(10, img.width * 0.012);
+
+    const { p1, p2, sintetico } = resolverPuntosElemento(e, iw, ih, mpp);
+    ctx.save();
+    if (sintetico) ctx.setLineDash([5, 3]);
     ctx.font = `bold ${fs}px sans-serif`;
     ctx.fillStyle = col;
-    ctx.fillText((e.categoria || "?")[0].toUpperCase(), cx + rad + 3, cy + fs / 3);
+
+    if (forma === "rectangulo") {
+      const x = Math.min(p1.x, p2.x), y = Math.min(p1.y, p2.y);
+      const w = Math.abs(p2.x - p1.x) || 20, h = Math.abs(p2.y - p1.y) || 20;
+      ctx.strokeStyle = col;
+      ctx.lineWidth = isSel ? lw * 2 : lw;
+      ctx.fillStyle = col + "22";
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      ctx.fillStyle = col;
+      ctx.fillText(label, x + 4, y + fs + 2);
+    } else {
+      // "linea" (puerta/ventana) — segmento real p1->p2, punteado si es una aproximación sintética.
+      ctx.strokeStyle = col;
+      ctx.lineWidth = isSel ? lw * 2.5 : lw * 1.5;
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.stroke();
+      ctx.fillText(label, (p1.x + p2.x) / 2 + 4, (p1.y + p2.y) / 2 - 4);
+    }
+    ctx.restore();
   }
 
   if (preview?.tipo === "polilinea" && preview.puntos?.length) {
@@ -1094,15 +1136,21 @@ function distanciaMinimaAPolilinea(px, py, puntos) {
   return min;
 }
 
-function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, radiusPx = 16) {
+function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, mpp, radiusPx = 16) {
   let best = null, bestDist = Infinity;
   for (const e of elementosPuntuales) {
+    const forma = CATEGORIAS_ELEMENTO.find(c => c.id === e.categoria)?.forma;
     let d;
-    if (e.categoria === "muro" && Array.isArray(e.puntos) && e.puntos.length >= 2) {
+    if (forma === "polilinea" && Array.isArray(e.puntos) && e.puntos.length >= 2) {
       d = distanciaMinimaAPolilinea(x, y, e.puntos);
+    } else if (forma === "rectangulo") {
+      const { p1, p2 } = resolverPuntosElemento(e, imagenWPx, imagenHPx, mpp);
+      const rx = Math.min(p1.x, p2.x), ry = Math.min(p1.y, p2.y);
+      const rw = Math.abs(p2.x - p1.x), rh = Math.abs(p2.y - p1.y);
+      d = (x >= rx && x <= rx + rw && y >= ry && y <= ry + rh) ? 0 : Infinity;
     } else {
-      const cx = (e.cx_relativo ?? 0) * imagenWPx, cy = (e.cy_relativo ?? 0) * imagenHPx;
-      d = Math.hypot(x - cx, y - cy);
+      const { p1, p2 } = resolverPuntosElemento(e, imagenWPx, imagenHPx, mpp);
+      d = distanciaPuntoASegmento(x, y, p1.x, p1.y, p2.x, p2.y);
     }
     if (d <= radiusPx && d < bestDist) { bestDist = d; best = e; }
   }
@@ -1111,11 +1159,11 @@ function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, radiusP
 
 // Herramientas cuyo click se interpreta como el 1º/2º punto de una línea o caja (2 clics),
 // en vez de una selección directa — mismo mecanismo, distinto significado según la herramienta.
-const HERRAMIENTAS_DOS_CLICS = new Set(["cortar", "excluir_area", "puerta", "ventana", "escalera", "rampa", "muro"]);
+const HERRAMIENTAS_DOS_CLICS = new Set(["puerta", "ventana", "escalera", "rampa", "muro"]);
 
 function RevisionGeometricaCanvas({
   png, mediciones, elementosPuntuales, imagenWPx, imagenHPx, mpp,
-  tool, selectedId, fusionSet = [], linePoints = [], zoom = 1,
+  tool, selectedId, linePoints = [], zoom = 1,
   onSeleccionar, onLinePoint, onMoverDestino,
 }) {
   const canvasRef = useRef();
@@ -1127,8 +1175,8 @@ function RevisionGeometricaCanvas({
     if (!canvas || !img || !img.complete || !img.naturalWidth) return;
     const ctx = canvas.getContext("2d");
     const preview = previewOverride !== undefined ? previewOverride : previewRef.current;
-    dibujarOverlayEnCanvas(ctx, img, { mediciones, elementosPuntuales, imagenWPx, imagenHPx, selectedId, fusionSet, preview, mpp });
-  }, [mediciones, elementosPuntuales, imagenWPx, imagenHPx, selectedId, fusionSet, mpp]);
+    dibujarOverlayEnCanvas(ctx, img, { mediciones, elementosPuntuales, imagenWPx, imagenHPx, selectedId, preview, mpp });
+  }, [mediciones, elementosPuntuales, imagenWPx, imagenHPx, selectedId, mpp]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1157,10 +1205,10 @@ function RevisionGeometricaCanvas({
 
   function handleClick(e) {
     const pt = puntoDesdeEvento(e);
-    if (tool === "seleccionar" || tool === "fusionar") {
+    if (tool === "seleccionar") {
       // Elementos puntuales primero: casi siempre están DENTRO del bbox de un recinto,
       // así que si el recinto se revisara primero jamás se podría seleccionar el punto.
-      const el = hitTestElemento(elementosPuntuales, pt.x, pt.y, imagenWPx, imagenHPx);
+      const el = hitTestElemento(elementosPuntuales, pt.x, pt.y, imagenWPx, imagenHPx, mpp);
       if (el) { onSeleccionar?.(el.id, "elemento"); return; }
       const r = hitTestRecinto(mediciones, pt.x, pt.y);
       if (r) { onSeleccionar?.(r.id, "recinto"); return; }
@@ -1182,7 +1230,8 @@ function RevisionGeometricaCanvas({
     }
     if (linePoints.length !== 1) return;
     const pt = puntoDesdeEvento(e);
-    const tipo = tool === "excluir_area" ? "rect" : "linea";
+    const esRectangulo = CATEGORIAS_ELEMENTO.find(c => c.id === tool)?.forma === "rectangulo";
+    const tipo = esRectangulo ? "rect" : "linea";
     previewRef.current = { p1: linePoints[0], p2: pt, tipo };
     redibujar(previewRef.current);
   }
@@ -1191,7 +1240,7 @@ function RevisionGeometricaCanvas({
     if (previewRef.current) { previewRef.current = null; redibujar(null); }
   }
 
-  const cursor = (tool === "seleccionar" || tool === "fusionar") ? "pointer" : "crosshair";
+  const cursor = tool === "seleccionar" ? "pointer" : "crosshair";
 
   // Tamaño CSS explícito (no "100%") para que el zoom controle el tamaño real de despliegue —
   // el contenedor que lo envuelve (en RevisionModal) es el que hace scroll/pan nativo del navegador.
@@ -1297,12 +1346,14 @@ function TablaDudas({ dudas, onIrADuda }) {
 }
 
 // ── Selector de herramienta activa ──────────────────────────────────────────
-function LeyendaHerramientas({ tool, onChangeTool, fusionCount, onConfirmarFusion, elementosDetectados, muroPuntosCount, onConfirmarMuro }) {
+// Herramientas de recintos (Cortar/Fusionar/Excluir área) deshabilitadas por ahora, a pedido
+// explícito del usuario (2026-08-02) — ver roadmap. La lógica de datos (ejecutarCorte/
+// ejecutarFusion/calcularAreaExcluida, y su reintegración en getMedicionesPorPagina/
+// construirColabJsonCorregido) queda intacta sin tocar, solo no hay forma de dispararla desde
+// la UI; los arrays correspondientes en colabCorrecciones simplemente quedan siempre vacíos.
+function LeyendaHerramientas({ tool, onChangeTool, elementosDetectados, muroPuntosCount, onConfirmarMuro }) {
   const base = [
     { id: "seleccionar", label: "Seleccionar" },
-    { id: "cortar",      label: "Cortar" },
-    { id: "fusionar",    label: "Fusionar" },
-    { id: "excluir_area", label: "Excluir área" },
   ];
   const btnStyle = (activo, col) => ({
     border: `1px solid ${activo ? col : "#D1D9EE"}`, borderRadius: 6, padding: "6px 11px", fontSize: 11,
@@ -1313,9 +1364,6 @@ function LeyendaHerramientas({ tool, onChangeTool, fusionCount, onConfirmarFusio
       {base.map(b => (
         <button key={b.id} style={btnStyle(tool === b.id, "#2952A3")} onClick={() => onChangeTool(b.id)}>{b.label}</button>
       ))}
-      {tool === "fusionar" && fusionCount >= 2 && (
-        <button style={{ ...btnStyle(true, "#1E8449") }} onClick={onConfirmarFusion}>Fusionar {fusionCount} espacios</button>
-      )}
       <span style={{ width: 1, height: 18, background: "#D1D9EE", margin: "0 4px" }} />
       {CATEGORIAS_ELEMENTO.map(cat => {
         const col = COLORES_ELEMENTO_PUNTUAL[cat.id];
@@ -1371,8 +1419,8 @@ const navBtnStyle = (primary) => ({ border: primary ? "none" : "1px solid #D1D9E
 function RevisionModal({
   colabJson, colabPngs, correcciones,
   entriesConPng, stepIndex, setStepIndex,
-  tool, setTool, selectedId, selectedTipo, fusionSet, linePoints,
-  onSeleccionar, onLinePoint, onMoverDestino, onConfirmarFusion, onConfirmarMuro,
+  tool, setTool, selectedId, selectedTipo, linePoints,
+  onSeleccionar, onLinePoint, onMoverDestino, onConfirmarMuro,
   onGuardarRecinto, onEliminarRecinto, onGuardarElemento, onEliminarElemento, onMoverElemento, onCerrarPanel,
   onFinalizar, onCerrarModal,
 }) {
@@ -1441,8 +1489,7 @@ function RevisionModal({
       </div>
 
       <div style={{ background: "#F4F6FB", padding: "8px 18px", borderBottom: "1px solid #D1D9EE" }}>
-        <LeyendaHerramientas tool={tool} onChangeTool={setTool} fusionCount={fusionSet.length}
-          onConfirmarFusion={onConfirmarFusion} elementosDetectados={elementosDetectados}
+        <LeyendaHerramientas tool={tool} onChangeTool={setTool} elementosDetectados={elementosDetectados}
           muroPuntosCount={linePoints.length} onConfirmarMuro={onConfirmarMuro} />
       </div>
 
@@ -1451,7 +1498,7 @@ function RevisionModal({
           <RevisionGeometricaCanvas
             png={png} mediciones={mediciones} elementosPuntuales={elementosPuntuales}
             imagenWPx={pagJson.imagen_w_px} imagenHPx={pagJson.imagen_h_px} mpp={pagJson.mpp}
-            tool={tool} selectedId={selectedId} fusionSet={fusionSet} linePoints={linePoints} zoom={zoom}
+            tool={tool} selectedId={selectedId} linePoints={linePoints} zoom={zoom}
             onSeleccionar={onSeleccionar} onLinePoint={onLinePoint} onMoverDestino={onMoverDestino}
           />
         </div>
@@ -2005,7 +2052,6 @@ export default function ArchiCheck() {
   const [reviewTool, setReviewTool] = useState("seleccionar");
   const [reviewSelectedId, setReviewSelectedId] = useState(null);
   const [reviewSelectedTipo, setReviewSelectedTipo] = useState(null); // "recinto" | "elemento" | null
-  const [reviewFusionSet, setReviewFusionSet] = useState([]);
   const [reviewLinePoints, setReviewLinePoints] = useState([]);
   // entry_idx (no "pagina") identifica cada entrada de colabJson.paginas[] de forma única — una
   // misma página física puede tener 2+ entradas/crops (ej. "pag2-1"/"pag2-2") con el mismo número
@@ -2148,7 +2194,6 @@ ${printRef.current.innerHTML}
     setReviewTool("seleccionar");
     setReviewSelectedId(null);
     setReviewSelectedTipo(null);
-    setReviewFusionSet([]);
     setReviewLinePoints([]);
   }
 
@@ -2242,7 +2287,18 @@ ${printRef.current.innerHTML}
   }
 
   function moverElemento(item, pt, imagenWPx, imagenHPx) {
-    aplicarCorreccionElemento(item, { cx_relativo: pt.x / (imagenWPx || 1), cy_relativo: pt.y / (imagenHPx || 1) });
+    const iw = imagenWPx || 1, ih = imagenHPx || 1;
+    const cx_relativo = pt.x / iw, cy_relativo = pt.y / ih;
+    const patch = { cx_relativo, cy_relativo };
+    // Si el elemento ya tiene geometría real (línea/rectángulo), trasladar ambos puntos por el
+    // mismo delta en vez de solo mover el centroide — preserva forma/tamaño/orientación.
+    if (item.p1_relativo && item.p2_relativo) {
+      const dx = cx_relativo - (item.cx_relativo ?? cx_relativo);
+      const dy = cy_relativo - (item.cy_relativo ?? cy_relativo);
+      patch.p1_relativo = { x: item.p1_relativo.x + dx, y: item.p1_relativo.y + dy };
+      patch.p2_relativo = { x: item.p2_relativo.x + dx, y: item.p2_relativo.y + dy };
+    }
+    aplicarCorreccionElemento(item, patch);
     setReviewTool("seleccionar");
   }
 
@@ -2254,11 +2310,6 @@ ${printRef.current.innerHTML}
   }
 
   function handleSeleccionarEnCanvas(id, tipoSel) {
-    if (reviewTool === "fusionar") {
-      if (tipoSel !== "recinto" || !id) return;
-      setReviewFusionSet(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-      return;
-    }
     setReviewSelectedId(id);
     setReviewSelectedTipo(tipoSel);
   }
@@ -2271,35 +2322,12 @@ ${printRef.current.innerHTML}
     if (item) moverElemento(item, pt, pag.imagen_w_px, pag.imagen_h_px);
   }
 
+  // Cortar/Excluir área (recintos) deshabilitados por ahora — ver LeyendaHerramientas. Esta
+  // función quedó reducida al único caso vivo (marcar elemento puntual nuevo).
   function ejecutarAccionDosClicks(p1, p2) {
     const pag = colabJson?.paginas?.find(p => p.entry_idx === reviewActiveEntry);
     if (!pag) return;
     const mpp = pag.mpp || 0;
-
-    if (reviewTool === "cortar") {
-      if (!reviewSelectedId || reviewSelectedTipo !== "recinto") return;
-      const mediciones = getMedicionesPorPagina(colabJson, colabCorrecciones, reviewActiveEntry);
-      const origen = mediciones.find(r => r.id === reviewSelectedId);
-      if (!origen?.bbox) return;
-      const [b1, b2] = ejecutarCorte(origen.bbox, p1, p2);
-      const idBase = origen.id;
-      const resultado = [
-        { id: `${idBase}a`, nombre: `${origen.nombre || idBase} (parte 1)`, tipo: origen.tipo, bbox: b1, area_m2: Math.round(calcularAreaExcluida(b1, mpp) * 100) / 100 },
-        { id: `${idBase}b`, nombre: `${origen.nombre || idBase} (parte 2)`, tipo: origen.tipo, bbox: b2, area_m2: Math.round(calcularAreaExcluida(b2, mpp) * 100) / 100 },
-      ];
-      setColabCorrecciones(prev => ({ ...prev, cortes: [...prev.cortes, { origenId: idBase, entryIdx: reviewActiveEntry, resultado }] }));
-      setReviewSelectedId(`${idBase}a`); setReviewSelectedTipo("recinto"); setReviewTool("seleccionar");
-      return;
-    }
-
-    if (reviewTool === "excluir_area") {
-      if (!reviewSelectedId || reviewSelectedTipo !== "recinto") return;
-      const x = Math.min(p1.x, p2.x), y = Math.min(p1.y, p2.y);
-      const w = Math.abs(p2.x - p1.x), h = Math.abs(p2.y - p1.y);
-      setColabCorrecciones(prev => ({ ...prev, areasExcluidas: [...prev.areasExcluidas, { id: `EXCL-${prev.areasExcluidas.length + 1}`, recintoId: reviewSelectedId, entryIdx: reviewActiveEntry, bbox: { x, y, w, h }, motivo: "mobiliario" }] }));
-      setReviewTool("seleccionar");
-      return;
-    }
 
     if (CATEGORIAS_ELEMENTO.some(c => c.id === reviewTool)) {
       agregarElementoNuevo(reviewTool, reviewActiveEntry, p1, p2, mpp, pag.imagen_w_px, pag.imagen_h_px);
@@ -2350,18 +2378,6 @@ ${printRef.current.innerHTML}
     });
     setReviewLinePoints([]);
     setReviewTool("seleccionar");
-  }
-
-  function handleConfirmarFusion() {
-    if (reviewFusionSet.length < 2) return;
-    const mediciones = getMedicionesPorPagina(colabJson, colabCorrecciones, reviewActiveEntry);
-    const recintos = mediciones.filter(r => reviewFusionSet.includes(r.id) && r.bbox);
-    if (recintos.length < 2) return;
-    const resultado = ejecutarFusion(recintos);
-    const idSobreviviente = reviewFusionSet[0];
-    setColabCorrecciones(prev => ({ ...prev, fusiones: [...prev.fusiones, { ids: reviewFusionSet, entryIdx: reviewActiveEntry, resultado: { id: idSobreviviente, ...resultado } }] }));
-    setReviewFusionSet([]);
-    setReviewSelectedId(idSobreviviente); setReviewSelectedTipo("recinto"); setReviewTool("seleccionar");
   }
 
   async function handleConfirmarRevision() {
@@ -2975,12 +2991,10 @@ ${printRef.current.innerHTML}
                 setTool={handleCambiarHerramienta}
                 selectedId={reviewSelectedId}
                 selectedTipo={reviewSelectedTipo}
-                fusionSet={reviewFusionSet}
                 linePoints={reviewLinePoints}
                 onSeleccionar={handleSeleccionarEnCanvas}
                 onLinePoint={handleReviewLinePoint}
                 onMoverDestino={handleMoverDestino}
-                onConfirmarFusion={handleConfirmarFusion}
                 onConfirmarMuro={handleConfirmarMuro}
                 onGuardarRecinto={patch => { aplicarCorreccionRecinto(reviewSelectedId, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
                 onEliminarRecinto={() => eliminarRecinto(reviewSelectedId)}
