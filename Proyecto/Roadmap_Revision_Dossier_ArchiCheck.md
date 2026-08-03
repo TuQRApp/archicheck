@@ -445,6 +445,14 @@ print(f'DIAGNOSTICO ROTACION: rotation={pdf_page_actual.rotation}  rect={pdf_pag
 ```
 Verificado: solo cambió Celda 4, balance de paréntesis correcto. **Pendiente que el usuario lo corra en Colab y reporte el valor de `rotation`** — si da 90 o 270 confirma la hipótesis de rotación de página sin corregir (fix acotado: aplicar `page.rotation_matrix` dentro de `to_px()`); si da 0 hay que seguir buscando otra causa del giro de 90° observado. **La contaminación por transitividad de Union-Find (punto 1 de arriba) sigue explícitamente pendiente y sin tocar** — se aborda después de resolver la rotación, no en paralelo.
 
+**✅ CONFIRMADO 2026-08-03 (misma sesión) — `rotation=270`. Hipótesis correcta, fix aplicado.** El usuario corrió el diagnóstico: `rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)`. Confirma exactamente la hipótesis — `rect` (el rectángulo visual/rotado, el mismo que usa `get_pixmap()` para el PNG de fondo) tiene ancho/alto invertidos respecto a `mediabox` (la caja cruda de la página, sin rotar) — la firma matemática de una rotación de 270°.
+
+**Fix aplicado** (nuevo notebook vigente `ArchiCheck_Base 03ago_2245.ipynb`, reemplaza `03ago_2200`, backup en `Versiones anteriores/`):
+- `to_px()` (Celda 4, ~línea 223): ahora aplica `pt * pdf_page.rotation_matrix` antes de escalar por `zoom` — corrige todo lo que sale de `get_drawings()` (`segmentos_l`→`muros_geo`, `trazos`, arcos/rectángulos/curvas).
+- `cotas_texto` (Celda 4, ~línea 253): mismo problema (escalaba el bbox de `get_text('dict')` directo, sin pasar por `to_px()`) — mismo fix, transformando ambas esquinas del bbox por `rotation_matrix` y recalculando min/max (necesario porque una rotación de 270° puede invertir cuál esquina queda arriba-izquierda).
+
+Verificado: solo cambió Celda 4, balance de paréntesis/llaves/corchetes correcto. **Sin probar en Colab todavía** — es la primera vez que se usa `page.rotation_matrix` en este proyecto, no se puede confirmar sin correrlo. Pendiente que el usuario lo corra y se repita la verificación visual (`node Fase 2/Herramientas_CubiCasa5k/visualizar_muros.mjs <json>`) para confirmar que las formas ahora quedan alineadas con el plano real, antes de dar este hallazgo por cerrado. La contaminación por transitividad de Union-Find sigue sin tocar, tal como se acordó explícitamente con el usuario.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
