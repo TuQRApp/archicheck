@@ -457,6 +457,29 @@ Verificado: solo cambió Celda 4, balance de paréntesis/llaves/corchetes correc
 
 **Sigue pendiente, sin cambios, tal como se acordó**: la contaminación por transitividad de Union-Find. El mismo grupo grande (MU01) sigue fundiendo muros reales con el achurado "Se retira/Se construye", arcos de puerta y la escalera numerada en un solo objeto — visible en la misma verificación, ahora que ya no hay rotación de por medio para confundir el análisis. **Este es el único problema que queda para que `muros_geo` sea utilizable en producción** — no se aborda en esta sesión, evaluar con cuidado en la próxima (no repetir el enfoque de "desproteger achurado" que ya causó una regresión el 27-jul).
 
+**🔧 EN CURSO 2026-08-04 (sesión siguiente) — fix de contaminación aplicado (sin probar en Colab). Enfoque nuevo, distinto del que causó la regresión del 27-jul.**
+
+**Reencuadre del problema**: que un grupo de conectividad (MU01) cubra TODA la red de muros de un piso no es en sí un error — arquitectónicamente, todos los muros de un edificio se tocan entre sí en esquinas/cruces, así que un solo componente conexo gigante es lo esperable. El problema real y específico es que **arcos de puerta y achurado se fusionan al mismo grupo** porque geométricamente tocan un muro real en un punto (el gozne de la puerta, o el borde del achurado) — Union-Find los funde ahí sin que haya nada malo en el agrupamiento en sí.
+
+**Fix aplicado** (nuevo notebook vigente `ArchiCheck_Base 04ago_1000.ipynb`, reemplaza `03ago_2245`, backup en `Versiones anteriores/`): un filtro por ángulo, a nivel de **segmento individual**, no de grupo completo — aplicado únicamente al armar `muros_geo` (Celda 4), reutilizando `_angulo_segmento()` (función que ya existía en el notebook, del intento de achurado anterior):
+```python
+TOL_EJE_MURO_DEG = 8
+segs_reales = []
+for i in segs_protegidos:
+    ang = _angulo_segmento(segmentos_l[i]) % 90
+    if min(ang, 90 - ang) <= TOL_EJE_MURO_DEG:
+        segs_reales.append(i)
+```
+Solo se exportan como parte del polígono de un muro los segmentos cuyo ángulo cae dentro de ±8° de 0°/90° — en este plano (rectilíneo) los muros reales corren en esos ejes; un arco de giro de puerta barre ángulos intermedios de forma continua (0°→90°) y el achurado corre en diagonal constante — ninguno de los dos pasa el filtro.
+
+**Por qué es distinto y más seguro que el intento del 27-jul** (que agrupaba por ángulo+cercanía espacial a nivel de GRUPO completo y terminó desprotegiendo muros reales por la transitividad de Union-Find): (1) **no toca `protegido[]`** — la máscara que usa OpenCV para separar recintos sigue exactamente igual, sin ningún riesgo de repetir la fusión catastrófica de recintos; (2) es una decisión **por segmento individual**, no por grupo completo — no hay ninguna cascada/transitividad que pueda arrastrar una decisión equivocada a una zona no relacionada del plano; (3) el criterio (alineación a eje) es mucho más simple y verificable que el anterior (clustering de ángulo + extensión perpendicular).
+
+**Supuesto explícito a vigilar**: este filtro asume que el plano es **rectilíneo** (todos los muros reales en 0°/90°) — cierto para PDV, pero un plano con muros en ángulo (fachada curva, quiebre no ortogonal) perdería esos tramos reales con este filtro. Documentado en el propio código como advertencia, no como limitación oculta.
+
+Se agregó un contador de diagnóstico (`n_muro_desalineado`) al print de "Muros exportados" para poder verificar cuántos segmentos se descartaron por ángulo, sin tener que inspeccionar el JSON a mano.
+
+Verificado con el mismo proceso de siempre: backup antes de tocar, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto, y confirmado que `_angulo_segmento` y `math` (ya importado en Celda 4: `import base64, json, requests, re, math`) existen y tienen la firma esperada antes de reutilizarlos. **Sin probar en Colab todavía** — pendiente que el usuario lo corra y se repita la verificación visual (`visualizar_muros.mjs`) para confirmar que ahora los grupos quedan limpios de arcos/achurado, antes de dar este hallazgo por cerrado.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
