@@ -525,6 +525,14 @@ Dos correcciones del usuario a la v1:
 
 Verificado con el mismo proceso: backup, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto, confirmado que `TOL_DASH_GAP_PX` ya está definido antes en la misma función (línea ~321, antes de `muros_geo = []` en línea ~488) por lo que está en scope cuando se usa. **Sin probar en Colab todavía** — `TOL_ARCO_RESIDUAL_REL = 0.15` (qué tan circular debe ser el ajuste) es la única constante que queda sin verificar contra datos reales.
 
+## ✅ 2026-08-04 (misma sesión, v3) — `punto_union` pasa a `puntos_union` (hasta 2), sin forzar que existan ambos
+
+El usuario confirmó la topología con otro diagrama: *"una puerta entre dos muros es ===========--------------========, ilustrativamente"* — una puerta típicamente está ENTRE dos tramos de muro, uno a cada lado del vano, no solo pegada a uno. Pidió guardar los dos lados, "para no perder el otro lado". Agregó una advertencia importante: **"también considera que hay muros que no terminan en nada, como los que hay una salida sin puerta"** — no todo extremo de muro se explica por una puerta (una salida abierta sin puerta es un caso real), así que el diseño no debe forzar que siempre existan 2 puntos.
+
+**Fix aplicado** (nuevo notebook vigente `ArchiCheck_Base 04ago_1630.ipynb`, reemplaza `04ago_1500`, backup en `Versiones anteriores/`): `punto_union` (un solo punto) pasa a `puntos_union` (una lista). Se ordenan todos los puntos candidatos del muro por distancia al arco, y se van agregando a la lista los que no estén ya representados por uno más cercano (usando `TOL_MURO_PX` para descartar duplicados del mismo lado) — hasta un máximo de 2. **No se fuerza un segundo punto** — si el otro lado del vano no tiene un muro real cerca (ej. una salida sin puerta), la lista queda con 1 solo elemento, sin inventar nada.
+
+Verificado con el mismo proceso: backup, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto. **Sin probar en Colab todavía.**
+
 ## ✅ 2026-08-04 (misma sesión) — Achurado excluido de `muros_geo` por color, no solo por ángulo. Amarillo ("Se retira") se excluye, rojo ("Se construye") se mantiene.
 
 Aclaración del usuario sobre el punto anterior de achurado por color: en PDV, **el rojo marca muro NUEVO que se va a construir** (parte real del diseño propuesto, no ruido a descartar) — solo el **amarillo** ("Se retira", demolición) debe excluirse, porque no es parte de la geometría final construida.
