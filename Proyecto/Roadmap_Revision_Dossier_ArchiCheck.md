@@ -439,6 +439,12 @@ El usuario corrió el notebook contra PDV (`archicheck_geometrico_pdv_3ago_03ago
 
 **Pendiente explícito para la próxima sesión**: (1) correr el diagnóstico de rotación en Colab y confirmar/descartar la hipótesis; (2) si se confirma, aplicar el fix acotado (`page.rotation_matrix` dentro de `to_px()`); (3) el problema de contaminación (punto 1) es independiente de la rotación y sigue sin resolver — no intentar parchear con el mismo enfoque de "desproteger achurado" que ya causó una regresión, evaluar alternativas con cuidado. El refactor del portal a `segmentos` (ya comiteado y desplegado) sigue siendo válido independientemente de estos 2 hallazgos — el diseño de datos no cambia, solo la calidad de lo que Colab exporta hoy.
 
+**✅ Diagnóstico de rotación agregado al notebook (2026-08-03, sesión siguiente)** — nuevo vigente `ArchiCheck_Base 03ago_2200.ipynb` (reemplaza `03ago_0030`, backup en `Versiones anteriores/`). Una sola línea nueva justo después de `pdf_page_actual = doc[PAGINA_PLANTA - 1]` (Celda 4):
+```python
+print(f'DIAGNOSTICO ROTACION: rotation={pdf_page_actual.rotation}  rect={pdf_page_actual.rect}  mediabox={pdf_page_actual.mediabox}')
+```
+Verificado: solo cambió Celda 4, balance de paréntesis correcto. **Pendiente que el usuario lo corra en Colab y reporte el valor de `rotation`** — si da 90 o 270 confirma la hipótesis de rotación de página sin corregir (fix acotado: aplicar `page.rotation_matrix` dentro de `to_px()`); si da 0 hay que seguir buscando otra causa del giro de 90° observado. **La contaminación por transitividad de Union-Find (punto 1 de arriba) sigue explícitamente pendiente y sin tocar** — se aborda después de resolver la rotación, no en paralelo.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
