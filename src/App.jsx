@@ -928,43 +928,10 @@ function dibujarOverlayEnCanvas(ctx, img, {
   const lw = Math.max(1.5, img.width * 0.0025);
   const iw = imagenWPx || img.width, ih = imagenHPx || img.height;
 
-  // Recintos: ya no se dibujan todos siempre (generaba demasiado clutter visual, tapando las
-  // marcas de elementos puntuales) — solo el seleccionado, a pedido explícito del usuario
-  // (2026-08-02). El resto sigue disponible para hit-test/selección, simplemente no se pinta.
-  for (const r of mediciones) {
-    if (!r.bbox || r.id !== selectedId) continue;
-    const { x, y, w, h } = r.bbox;
-    const isSel = true;
-    ctx.fillStyle = isSel ? COLOR_RECINTO_SEL + "35" : COLOR_RECINTO + "1f";
-    ctx.strokeStyle = isSel ? COLOR_RECINTO_SEL : COLOR_RECINTO;
-    ctx.lineWidth = isSel ? lw * 1.8 : lw;
-    ctx.fillRect(x, y, w, h);
-    ctx.strokeRect(x, y, w, h);
-    const fs = Math.max(11, img.width * 0.014);
-    ctx.font = `bold ${fs}px sans-serif`;
-    ctx.fillStyle = isSel ? COLOR_RECINTO_SEL : COLOR_RECINTO;
-    ctx.fillText(r.nombre || r.id, x + 4, y + fs + 2);
-    ctx.font = `${fs * 0.8}px sans-serif`;
-    ctx.fillText(`${(r.area_m2 ?? 0).toFixed(2)} m²`, x + 4, y + fs * 2 + 2);
-    if (r._areas_excluidas?.length) {
-      ctx.save();
-      ctx.strokeStyle = COLOR_EXCLUIDA;
-      ctx.fillStyle = COLOR_EXCLUIDA + "22";
-      ctx.lineWidth = 1.5;
-      for (const a of r._areas_excluidas) {
-        const { x: ex, y: ey, w: ew, h: eh } = a.bbox;
-        ctx.fillRect(ex, ey, ew, eh);
-        ctx.save();
-        ctx.beginPath(); ctx.rect(ex, ey, ew, eh); ctx.clip();
-        for (let d = -eh; d < ew; d += 8) {
-          ctx.beginPath(); ctx.moveTo(ex + d, ey); ctx.lineTo(ex + d + eh, ey + eh); ctx.stroke();
-        }
-        ctx.restore();
-        ctx.strokeRect(ex, ey, ew, eh);
-      }
-      ctx.restore();
-    }
-  }
+  // Recintos: no se dibujan (ni rectángulo ni relleno ni nombre/área), a pedido explícito del
+  // usuario (2026-08-02) — "necesito ver solamente las marcas de los elementos". `mediciones`
+  // se sigue recibiendo y usando para hit-test (seleccionar/editar nombre-tipo-área al hacer
+  // clic sigue funcionando, ver hitTestRecinto), simplemente no hay feedback visual en el canvas.
 
   for (const e of elementosPuntuales) {
     const col = COLORES_ELEMENTO_PUNTUAL[e.categoria] || "#333";
@@ -972,7 +939,10 @@ function dibujarOverlayEnCanvas(ctx, img, {
     const cat = CATEGORIAS_ELEMENTO.find(c => c.id === e.categoria);
     const forma = cat?.forma;
     const fs = Math.max(10, img.width * 0.012);
-    const label = cat?.prefijo === "MU" ? "M" : (cat?.prefijo || "?");
+    // Etiqueta = id real del elemento (ej. "P01", "MU-A1"), no solo la letra de categoría — a
+    // pedido explícito del usuario (2026-08-02), para poder distinguir cada elemento individual
+    // al revisar el plano (antes todas las puertas mostraban la misma "P", indistinguibles).
+    const label = e.id || cat?.prefijo || "?";
 
     // Muro: polilínea (2+ trazos conectados) — única categoría con forma propia (N segmentos,
     // no 2 puntos), las otras 3 formas se resuelven todas vía resolverPuntosElemento.
