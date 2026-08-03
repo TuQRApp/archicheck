@@ -480,6 +480,39 @@ Se agregó un contador de diagnóstico (`n_muro_desalineado`) al print de "Muros
 
 Verificado con el mismo proceso de siempre: backup antes de tocar, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto, y confirmado que `_angulo_segmento` y `math` (ya importado en Celda 4: `import base64, json, requests, re, math`) existen y tienen la firma esperada antes de reutilizarlos. **Sin probar en Colab todavía** — pendiente que el usuario lo corra y se repita la verificación visual (`visualizar_muros.mjs`) para confirmar que ahora los grupos quedan limpios de arcos/achurado, antes de dar este hallazgo por cerrado.
 
+## 🎯 Decisión de diseño mayor 2026-08-04 — puerta/ventana dejan de depender de Claude Vision para su geometría; la traza vectorial determinística (ya probada exacta) pasa a ser la fuente única para TODOS los elementos
+
+Tras el fix de rotación, el usuario hizo una ronda de preguntas puntuales sobre cómo se detectan hoy puertas/ventanas, y terminó en una decisión de arquitectura importante:
+
+**Confirmado, investigando el código real (no supuesto)**: hoy `puertas_detalle`/`ventanas_detalle` salen 100% de Claude Vision (centroide + `p1_relativo`/`p2_relativo` + `ancho_estimado_m`) — no hay ninguna regla geométrica dura en el prompt ni en el código (ni "3 líneas paralelas" para ventana, ni "requiere arco" para puerta). `Convenciones_CAD.md` es documentación de referencia para un **futuro** detector determinista que todavía no existe — no es que el documento no sirva, es que no hay código que lo use todavía.
+
+**Confirmado con una captura del usuario del 27-jul (`Reporte de Revisión`, tabla "Etapa B — Circulaciones")**: las puertas siempre se detectaron y sus anchos (`ancho_estimado_m` de Claude Vision) siempre se usaron para los chequeos normativos de OGUC — esto es anterior a todo el trabajo de esta sesión y **no depende** del problema de centroide mal ubicado (P04/V02) — ese problema era solo de posición visual en el canvas, nunca de si la puerta se detectaba o su ancho se estimaba.
+
+**La decisión del usuario, textual**: *"el trazo real de ventanas y puertas ya lo tienes, de lo que vimos de la planta toda marcada con la línea café gruesa... no usemos más centroide, siempre trazos, líneas, para todos los elementos, ya que eso lo estás haciendo bien. Lo que falta ahí es identificar las puertas y ventanas."* — o sea: la extracción vectorial determinística (`segmentos_l`, ya confirmada exacta tras el fix de rotación) **ya contiene** la geometría real de puertas y ventanas (son parte del mismo dibujo vectorial que muros/achurado/cotas) — lo único que falta es **clasificar** cuáles de esos trazos ya extraídos corresponden a cada categoría (muro/puerta/ventana), en vez de pedirle a Claude Vision que adivine una posición.
+
+**Implicancia concreta**: el "detector determinista" de puerta/ventana mencionado en P1 del roadmap no sería un sistema nuevo que procesa la imagen desde cero — sería un **clasificador** que corre sobre los mismos `segmentos_l`/`grupos_conectividad` que ya usa `muros_geo`, reconociendo patrones geométricos específicos: un arco de puerta (segmentos que giran alrededor de un punto pivote fijo, a radio ≈ ancho de hoja) y una ventana (3 líneas paralelas cruzando el hueco de un muro). **No implementado todavía** — queda como el próximo paso lógico de esta línea de trabajo, después de terminar de limpiar `muros_geo`.
+
+## ✅ 2026-08-04 (misma sesión) — Achurado excluido de `muros_geo` por color, no solo por ángulo. Amarillo ("Se retira") se excluye, rojo ("Se construye") se mantiene.
+
+Aclaración del usuario sobre el punto anterior de achurado por color: en PDV, **el rojo marca muro NUEVO que se va a construir** (parte real del diseño propuesto, no ruido a descartar) — solo el **amarillo** ("Se retira", demolición) debe excluirse, porque no es parte de la geometría final construida.
+
+**Fix aplicado** (nuevo notebook vigente `ArchiCheck_Base 04ago_1130.ipynb`, reemplaza `04ago_1000`, backup en `Versiones anteriores/`):
+- Cada segmento (`segmentos_l`) ahora guarda también `'color'` y `'fill'` — leídos de `path.get('color')`/`path.get('fill')` en `get_drawings()` (nunca se leían antes, confirmado por grep: cero referencias a `path['color']` en todo el notebook antes de este fix).
+- Nuevo helper `_es_amarillo(seg)`: revisa `color` y `fill`, considera "amarillo" cualquier RGB con R y G altos (>0.6) y B bajo (<0.4).
+- En el loop que arma `muros_geo`, un segmento se descarta por color amarillo **antes** de aplicar el filtro de ángulo (orden: color primero, ángulo después) — el rojo no se toca, solo pasa por el filtro de ángulo como cualquier otro segmento.
+- Nuevo contador `n_muro_excluido_amarillo`, sumado al print de "Muros exportados".
+- **Nuevo print de diagnóstico** (`DIAGNOSTICO COLOR`) que lista los colores reales más frecuentes vistos en el plano — necesario porque **no se conocen los valores RGB exactos** del rojo/amarillo de este PDF específico, nunca se habían inspeccionado. El rango `>0.6/>0.6/<0.4` es una primera aproximación a ajustar con el dato real.
+
+Verificado con el mismo proceso: backup, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto. **Sin probar en Colab todavía** — pendiente que el usuario lo corra, reporte los colores reales que imprime el diagnóstico (para ajustar el rango si hace falta), y se repita la verificación visual.
+
+## 🔲 Muros curvos — dirección confirmada, explícitamente diferido hasta tener un plano de prueba real
+
+El usuario confirmó la dirección propuesta (reusar una idea similar al reconocimiento de arco de puerta — radio grande + doble línea al espesor de muro, para distinguir un muro curvo real de un arco de puerta) con una precisión importante: **la hoja de una puerta nunca es curva** — así que si aparece una curva que no es un arco de giro (radio chico, sin espesor de muro), no hay riesgo de confundirla con una hoja. **Explícitamente diferido** — "esperemos a tener un plano con muro curvo... dejemos eso para más adelante" — no hay ningún plano de prueba en el proyecto con un muro curvo real para diseñar/validar contra él, y el propio Pizarro (ver más abajo, sección Pizarro) documenta esto como un caso genuinamente no resuelto incluso en el estado del arte académico.
+
+**Contexto técnico confirmado, para cuando se retome**: hoy los trazos tipo curva (`'c'`, bezier) de `get_drawings()` van a `otros_items`, un balde completamente aparte del agrupamiento de conectividad — nunca entran a `muros_geo`. Si apareciera un muro curvo real, hoy no se detectaría en absoluto.
+
+**Pizarro (`IA_Analisis_Planos_Arquitectonicos.txt`) no ofrece una técnica lista para tomar prestada**: el documento dice textualmente que el pipeline U-Net+MLSTRUCT-FP (el estado del arte que sirve de referencia a todo este proyecto) tiene como "limitación que persiste... dificultad con muros curvos o no ortogonales", y lista "muros no ortogonales (diagonales/curvos)" como uno de sus **principales errores**. Ni el paper académico base tiene esto resuelto — confirma que es un caso genuinamente difícil, no algo que se nos esté escapando por descuido.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
