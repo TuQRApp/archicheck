@@ -426,6 +426,12 @@ const CORRECCIONES_VACIAS = {
 // trazos vectoriales, determinística, no adivinada por un LLM), en pag.muros_geo, un árbol
 // totalmente distinto de analisis_semantico. Por eso "campo" no se usa para muro — ver el caso
 // especial en getElementosPuntualesPorPagina/construirColabJsonCorregido.
+// Puerta (2026-08-04): además de "puertas_detalle" (Claude Vision, campo de abajo), puede venir de
+// pag.puertas_geo — un clasificador geométrico nuevo que reconoce el arco de giro directamente en
+// los datos vectoriales (mismo origen que muros_geo), con la misma forma de datos que Muro
+// (segmentos, no p1_relativo/p2_relativo) porque un arco puede venir en varios trazos. Cuando
+// puertas_geo existe reemplaza a puertas_detalle para esa página — ver el caso especial en
+// getElementosPuntualesPorPagina/construirColabJsonCorregido, mismo patrón que Muro.
 const CATEGORIAS_ELEMENTO = [
   { id: "puerta",   campo: "puertas_detalle",   label: "Puerta",   prefijo: "P",  forma: "linea" },
   { id: "ventana",  campo: "ventanas_detalle",  label: "Ventana",  prefijo: "V",  forma: "linea" },
@@ -434,10 +440,11 @@ const CATEGORIAS_ELEMENTO = [
   { id: "muro",     campo: null,                label: "Muro",     prefijo: "MU", forma: "polilinea" },
 ];
 
-// Centroide sintético (centro del bounding-box de todos los extremos) para un muro representado
-// como lista de segmentos — necesario porque un muro no tiene un único punto propio, pero el resto
-// del pipeline (filtro "tiene posición", tabla de dudas) sigue asumiendo cx_relativo/cy_relativo.
-// Espera segmentos ya normalizados a {p1:{x,y}, p2:{x,y}} (ver normalizarSegmentosMuro).
+// Centroide sintético (centro del bounding-box de todos los extremos) para un elemento
+// representado como lista de segmentos (Muro, Puerta-geo) — necesario porque no tienen un único
+// punto propio, pero el resto del pipeline (filtro "tiene posición", tabla de dudas) sigue
+// asumiendo cx_relativo/cy_relativo. Espera segmentos ya normalizados a {p1:{x,y}, p2:{x,y}}
+// (ver normalizarSegmentos).
 function centroideDeSegmentos(segmentos, imagenWPx, imagenHPx) {
   const xs = segmentos.flatMap(s => [s.p1.x, s.p2.x]);
   const ys = segmentos.flatMap(s => [s.p1.y, s.p2.y]);
@@ -447,10 +454,11 @@ function centroideDeSegmentos(segmentos, imagenWPx, imagenHPx) {
   };
 }
 
-// pag.muros_geo (JSON de Colab) trae p1/p2 como [x,y] (par de números, JSON no tiene tuplas) — el
-// resto del portal (dibujo, hit-test, muros marcados a mano) trabaja con {x,y}. Normaliza una vez
-// acá, al leer, para que downstream nunca tenga que soportar las 2 formas.
-function normalizarSegmentosMuro(segmentos) {
+// pag.muros_geo / pag.puertas_geo (JSON de Colab) traen p1/p2 como [x,y] (par de números, JSON no
+// tiene tuplas) — el resto del portal (dibujo, hit-test, muros marcados a mano) trabaja con {x,y}.
+// Normaliza una vez acá, al leer, para que downstream nunca tenga que soportar las 2 formas.
+// Compartida entre Muro y Puerta-geo (2026-08-04) — mismo shape de datos para ambos.
+function normalizarSegmentos(segmentos) {
   return (segmentos || []).map(s => ({
     p1: Array.isArray(s.p1) ? { x: s.p1[0], y: s.p1[1] } : s.p1,
     p2: Array.isArray(s.p2) ? { x: s.p2[0], y: s.p2[1] } : s.p2,
@@ -501,8 +509,21 @@ function getElementosPuntualesPorPagina(colabJson, correcciones, entryIdx) {
       arr = (pag?.muros_geo || []).filter(m => !correcciones.elementosPuntualesEliminados.includes(m.id));
       arr = arr.map(m => correcciones.elementosPuntualesEditados[m.id] ? { ...m, ...correcciones.elementosPuntualesEditados[m.id] } : m);
       arr = arr.map(m => {
-        const segmentos = normalizarSegmentosMuro(m.segmentos);
+        const segmentos = normalizarSegmentos(m.segmentos);
         return { ...m, segmentos, ...centroideDeSegmentos(segmentos, pag?.imagen_w_px, pag?.imagen_h_px) };
+      });
+    } else if (cat.id === "puerta" && (pag?.puertas_geo || []).length) {
+      // Puerta con geometría determinística (clasificador geométrico de arco, 2026-08-04) —
+      // reemplaza a puertas_detalle (Claude Vision) cuando está disponible, mismo motivo que Muro:
+      // la posición viene de los datos vectoriales del PDF, no de una estimación visual de un
+      // modelo de visión (que resultó poco confiable, ver P04/V02 en el roadmap). _origenGeo marca
+      // estos elementos para que construirColabJsonCorregido sepa reintegrarlos a pag.puertas_geo
+      // y no a analisis_semantico.puertas_detalle.
+      arr = (pag.puertas_geo || []).filter(p => !correcciones.elementosPuntualesEliminados.includes(p.id));
+      arr = arr.map(p => correcciones.elementosPuntualesEditados[p.id] ? { ...p, ...correcciones.elementosPuntualesEditados[p.id] } : p);
+      arr = arr.map(p => {
+        const segmentos = normalizarSegmentos(p.segmentos);
+        return { ...p, segmentos, _origenGeo: true, ...centroideDeSegmentos(segmentos, pag?.imagen_w_px, pag?.imagen_h_px) };
       });
     } else {
       arr = (sem[cat.campo] || []).filter(e => !e.id || !correcciones.elementosPuntualesEliminados.includes(e.id));
@@ -618,10 +639,18 @@ function construirColabJsonCorregido(colabJson, correcciones) {
       (porCategoria[categoria] ||= []).push(resto);
     }
     // Muro es geométrico (pag.muros_geo), no semántico — mismo motivo que en
-    // getElementosPuntualesPorPagina, ver nota en CATEGORIAS_ELEMENTO.
+    // getElementosPuntualesPorPagina, ver nota en CATEGORIAS_ELEMENTO. Puerta se separa en 2:
+    // las de origen geométrico (_origenGeo, del clasificador de arco) van a pag.puertas_geo; las
+    // de Claude Vision o agregadas a mano por el arquitecto (2 clics) siguen en puertas_detalle.
     for (const cat of CATEGORIAS_ELEMENTO) {
-      if (cat.id === "muro") pag.muros_geo = porCategoria.muro;
-      else pag.analisis_semantico[cat.campo] = porCategoria[cat.id];
+      if (cat.id === "muro") {
+        pag.muros_geo = porCategoria.muro;
+      } else if (cat.id === "puerta") {
+        pag.puertas_geo = porCategoria.puerta.filter(p => p._origenGeo).map(({ _origenGeo, ...p }) => p);
+        pag.analisis_semantico.puertas_detalle = porCategoria.puerta.filter(p => !p._origenGeo);
+      } else {
+        pag.analisis_semantico[cat.campo] = porCategoria[cat.id];
+      }
     }
   }
   return clon;
@@ -989,9 +1018,12 @@ function dibujarOverlayEnCanvas(ctx, img, {
     // al revisar el plano (antes todas las puertas mostraban la misma "P", indistinguibles).
     const label = e.id || cat?.prefijo || "?";
 
-    // Muro: polilínea (2+ trazos conectados) — única categoría con forma propia (N segmentos,
-    // no 2 puntos), las otras 3 formas se resuelven todas vía resolverPuntosElemento.
-    if (forma === "polilinea" && Array.isArray(e.segmentos) && e.segmentos.length >= 1) {
+    // Polilínea (N segmentos, no 2 puntos): Muro siempre, y Puerta cuando viene del clasificador
+    // geométrico de arco (2026-08-04, e._origenGeo) — se despacha por la FORMA del dato
+    // (Array.isArray(e.segmentos)), no por categoría, porque ambas comparten el mismo shape. Las
+    // otras 3 formas (y puerta/ventana cuando NO es de origen geométrico) se resuelven vía
+    // resolverPuntosElemento.
+    if (Array.isArray(e.segmentos) && e.segmentos.length >= 1) {
       ctx.save();
       ctx.strokeStyle = col;
       ctx.lineWidth = isSel ? lw * 2.5 : lw * 1.5;
@@ -1185,7 +1217,9 @@ function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, mpp, ra
   for (const e of elementosPuntuales) {
     const forma = CATEGORIAS_ELEMENTO.find(c => c.id === e.categoria)?.forma;
     let d;
-    if (forma === "polilinea" && Array.isArray(e.segmentos) && e.segmentos.length >= 1) {
+    // Mismo criterio que dibujarOverlayEnCanvas: despacha por forma del dato (segmentos), no por
+    // categoría — Muro y Puerta-geo comparten shape.
+    if (Array.isArray(e.segmentos) && e.segmentos.length >= 1) {
       d = distanciaMinimaASegmentos(x, y, e.segmentos);
     } else if (!e._nuevo) {
       // Detectado por Colab: se dibuja (y se selecciona) como punto — ver dibujarOverlayEnCanvas.
@@ -1320,6 +1354,9 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onCerrar }) {
   if (!item) return null;
   const esRecinto = tipo === "recinto";
   const esMuro = item?.categoria === "muro";
+  // Muro y Puerta-geo (2026-08-04) comparten la misma limitación v1: son una polilínea de N
+  // segmentos, no un único punto/línea — "Mover" no tiene un destino único con sentido.
+  const esPoligono = Array.isArray(item?.segmentos) && item.segmentos.length > 0;
   const inputStyle = { width: "100%", border: "1px solid #D1D9EE", borderRadius: 6, padding: "7px 10px", fontSize: 12, color: "#3D4A5C", fontFamily: "inherit", background: "#FFFFFF", marginBottom: 6 };
   const btnStyle = (bg) => ({ border: "none", borderRadius: 6, padding: "7px 12px", fontSize: 11, fontFamily: "inherit", cursor: "pointer", background: bg, color: "#fff" });
 
@@ -1347,9 +1384,10 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onCerrar }) {
           : { ubicacion_o_recinto: nombre, ancho_estimado_m: parseFloat(anchoM) || 0 })}>
           Guardar
         </button>
-        {/* Mover no soportado para muro en v1 — es una polilínea completa, no un único punto;
-            para reubicarlo hoy se elimina y se vuelve a marcar (mismo patrón que cambiar de categoría). */}
-        {!esRecinto && !esMuro && <button style={btnStyle("#D68910")} onClick={onMover}>Mover</button>}
+        {/* Mover no soportado para elementos de polilínea (Muro, Puerta-geo) en v1 — es una
+            geometría de N segmentos, no un único punto; para reubicarlo hoy se elimina y se vuelve
+            a marcar (mismo patrón que cambiar de categoría). */}
+        {!esRecinto && !esPoligono && <button style={btnStyle("#D68910")} onClick={onMover}>Mover</button>}
         <button style={btnStyle("#C0392B")} onClick={onEliminar}>Eliminar</button>
         <button style={btnStyle("#B8C5E0")} onClick={onCerrar}>Cancelar</button>
       </div>

@@ -34,7 +34,35 @@ for (const pagina of data.paginas) {
     ctx.fillText(m.id, p0[0] + 4, Math.max(20, p0[1] - 6));
   });
 
+  // Puertas (puertas_geo, clasificador geometrico): siempre en negro grueso para
+  // que resalten sobre los muros de colores, + circulos en los puntos de union.
+  (pagina.puertas_geo || []).forEach(p => {
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 6;
+    p.segmentos.forEach(s => {
+      ctx.beginPath();
+      ctx.moveTo(s.p1[0], s.p1[1]);
+      ctx.lineTo(s.p2[0], s.p2[1]);
+      ctx.stroke();
+    });
+    (p.puntos_union || []).forEach(pu => {
+      ctx.beginPath();
+      ctx.arc(pu[0], pu[1], 10, 0, Math.PI * 2);
+      ctx.fillStyle = "#00ff00";
+      ctx.fill();
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+    const p0 = p.segmentos[0].p1;
+    ctx.font = "bold 26px sans-serif";
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(p0[0], Math.max(0, p0[1] - 28), 130, 28);
+    ctx.fillStyle = "white";
+    ctx.fillText(`${p.id} ${p.ancho_estimado_m}m`, p0[0] + 4, Math.max(20, p0[1] - 6));
+  });
+
   const outPath = `${dir}/verif_muros_${pagina.fname_tag}.png`;
   fs.writeFileSync(outPath, canvas.toBuffer("image/png"));
-  console.log(`Guardado: ${outPath} (${(pagina.muros_geo || []).length} muros, un color distinto por grupo)`);
+  console.log(`Guardado: ${outPath} (${(pagina.muros_geo || []).length} muros, ${(pagina.puertas_geo || []).length} puertas)`);
 }
