@@ -421,13 +421,41 @@ const CORRECCIONES_VACIAS = {
   elementosPuntualesEditados: {}, elementosPuntualesEliminados: [], elementosPuntualesNuevos: [],
 };
 
+// "campo" apunta a analisis_semantico[campo] (detección vía Claude Vision) para las categorías
+// "linea"/"rectangulo" — Muro es la excepción: su geometría real viene de OpenCV (conectividad de
+// trazos vectoriales, determinística, no adivinada por un LLM), en pag.muros_geo, un árbol
+// totalmente distinto de analisis_semantico. Por eso "campo" no se usa para muro — ver el caso
+// especial en getElementosPuntualesPorPagina/construirColabJsonCorregido.
 const CATEGORIAS_ELEMENTO = [
   { id: "puerta",   campo: "puertas_detalle",   label: "Puerta",   prefijo: "P",  forma: "linea" },
   { id: "ventana",  campo: "ventanas_detalle",  label: "Ventana",  prefijo: "V",  forma: "linea" },
   { id: "escalera", campo: "escaleras_detalle", label: "Escalera", prefijo: "ES", forma: "rectangulo" },
   { id: "rampa",    campo: "rampas_detalle",    label: "Rampa",    prefijo: "R",  forma: "rectangulo" },
-  { id: "muro",     campo: "muros_detalle",     label: "Muro",     prefijo: "MU", forma: "polilinea" },
+  { id: "muro",     campo: null,                label: "Muro",     prefijo: "MU", forma: "polilinea" },
 ];
+
+// Centroide sintético (centro del bounding-box de todos los extremos) para un muro representado
+// como lista de segmentos — necesario porque un muro no tiene un único punto propio, pero el resto
+// del pipeline (filtro "tiene posición", tabla de dudas) sigue asumiendo cx_relativo/cy_relativo.
+// Espera segmentos ya normalizados a {p1:{x,y}, p2:{x,y}} (ver normalizarSegmentosMuro).
+function centroideDeSegmentos(segmentos, imagenWPx, imagenHPx) {
+  const xs = segmentos.flatMap(s => [s.p1.x, s.p2.x]);
+  const ys = segmentos.flatMap(s => [s.p1.y, s.p2.y]);
+  return {
+    cx_relativo: ((Math.min(...xs) + Math.max(...xs)) / 2) / (imagenWPx || 1),
+    cy_relativo: ((Math.min(...ys) + Math.max(...ys)) / 2) / (imagenHPx || 1),
+  };
+}
+
+// pag.muros_geo (JSON de Colab) trae p1/p2 como [x,y] (par de números, JSON no tiene tuplas) — el
+// resto del portal (dibujo, hit-test, muros marcados a mano) trabaja con {x,y}. Normaliza una vez
+// acá, al leer, para que downstream nunca tenga que soportar las 2 formas.
+function normalizarSegmentosMuro(segmentos) {
+  return (segmentos || []).map(s => ({
+    p1: Array.isArray(s.p1) ? { x: s.p1[0], y: s.p1[1] } : s.p1,
+    p2: Array.isArray(s.p2) ? { x: s.p2[0], y: s.p2[1] } : s.p2,
+  }));
+}
 
 // Recintos de una página con todas las correcciones ya aplicadas (recintos base + ediciones +
 // cortes + fusiones + resta de áreas excluidas). Usado tanto para la vista previa en vivo del
@@ -466,8 +494,20 @@ function getElementosPuntualesPorPagina(colabJson, correcciones, entryIdx) {
   const sem = pag?.analisis_semantico || {};
   const out = [];
   for (const cat of CATEGORIAS_ELEMENTO) {
-    let arr = (sem[cat.campo] || []).filter(e => !e.id || !correcciones.elementosPuntualesEliminados.includes(e.id));
-    arr = arr.map(e => (e.id && correcciones.elementosPuntualesEditados[e.id]) ? { ...e, ...correcciones.elementosPuntualesEditados[e.id] } : e);
+    // Muro: geométrico (OpenCV, pag.muros_geo), no semántico (Claude Vision) — origen distinto,
+    // ver nota en CATEGORIAS_ELEMENTO. Se normalizan segmentos y se sintetiza un centroide.
+    let arr;
+    if (cat.id === "muro") {
+      arr = (pag?.muros_geo || []).filter(m => !correcciones.elementosPuntualesEliminados.includes(m.id));
+      arr = arr.map(m => correcciones.elementosPuntualesEditados[m.id] ? { ...m, ...correcciones.elementosPuntualesEditados[m.id] } : m);
+      arr = arr.map(m => {
+        const segmentos = normalizarSegmentosMuro(m.segmentos);
+        return { ...m, segmentos, ...centroideDeSegmentos(segmentos, pag?.imagen_w_px, pag?.imagen_h_px) };
+      });
+    } else {
+      arr = (sem[cat.campo] || []).filter(e => !e.id || !correcciones.elementosPuntualesEliminados.includes(e.id));
+      arr = arr.map(e => (e.id && correcciones.elementosPuntualesEditados[e.id]) ? { ...e, ...correcciones.elementosPuntualesEditados[e.id] } : e);
+    }
     out.push(...arr.map(e => ({ ...e, categoria: cat.id })));
   }
   out.push(...correcciones.elementosPuntualesNuevos.filter(n => n.entryIdx === entryIdx && !correcciones.elementosPuntualesEliminados.includes(n.id)));
@@ -572,12 +612,17 @@ function construirColabJsonCorregido(colabJson, correcciones) {
     pag.mediciones_geometricas = getMedicionesPorPagina(colabJson, correcciones, pag.entry_idx);
     if (!pag.analisis_semantico) pag.analisis_semantico = {};
     const elementos = getElementosPuntualesPorPagina(colabJson, correcciones, pag.entry_idx);
-    const porCategoria = { puerta: [], ventana: [], escalera: [], rampa: [] };
+    const porCategoria = { puerta: [], ventana: [], escalera: [], rampa: [], muro: [] };
     for (const e of elementos) {
       const { categoria, ...resto } = e;
       (porCategoria[categoria] ||= []).push(resto);
     }
-    for (const cat of CATEGORIAS_ELEMENTO) pag.analisis_semantico[cat.campo] = porCategoria[cat.id];
+    // Muro es geométrico (pag.muros_geo), no semántico — mismo motivo que en
+    // getElementosPuntualesPorPagina, ver nota en CATEGORIAS_ELEMENTO.
+    for (const cat of CATEGORIAS_ELEMENTO) {
+      if (cat.id === "muro") pag.muros_geo = porCategoria.muro;
+      else pag.analisis_semantico[cat.campo] = porCategoria[cat.id];
+    }
   }
   return clon;
 }
@@ -946,18 +991,20 @@ function dibujarOverlayEnCanvas(ctx, img, {
 
     // Muro: polilínea (2+ trazos conectados) — única categoría con forma propia (N segmentos,
     // no 2 puntos), las otras 3 formas se resuelven todas vía resolverPuntosElemento.
-    if (forma === "polilinea" && Array.isArray(e.puntos) && e.puntos.length >= 2) {
+    if (forma === "polilinea" && Array.isArray(e.segmentos) && e.segmentos.length >= 1) {
       ctx.save();
       ctx.strokeStyle = col;
       ctx.lineWidth = isSel ? lw * 2.5 : lw * 1.5;
       ctx.beginPath();
-      ctx.moveTo(e.puntos[0].x, e.puntos[0].y);
-      for (let i = 1; i < e.puntos.length; i++) ctx.lineTo(e.puntos[i].x, e.puntos[i].y);
+      // Cada segmento se traza de forma independiente (no se asume que encadenan en un solo
+      // camino — un muro real de Colab puede ramificarse en una esquina en T o un cruce).
+      for (const s of e.segmentos) { ctx.moveTo(s.p1.x, s.p1.y); ctx.lineTo(s.p2.x, s.p2.y); }
       ctx.stroke();
       ctx.restore();
       ctx.font = `bold ${fs}px sans-serif`;
       ctx.fillStyle = col;
-      ctx.fillText(label, e.puntos[0].x + 4, e.puntos[0].y - 4);
+      const p0 = e.segmentos[0].p1;
+      ctx.fillText(label, p0.x + 4, p0.y - 4);
       continue;
     }
 
@@ -1123,10 +1170,12 @@ function distanciaPuntoASegmento(px, py, x1, y1, x2, y2) {
   return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
 }
 
-function distanciaMinimaAPolilinea(px, py, puntos) {
+// segmentos: [{p1:{x,y}, p2:{x,y}}, ...] — sin asumir que encadenan en un solo camino (un muro
+// real puede ramificarse), cada segmento se mide de forma independiente.
+function distanciaMinimaASegmentos(px, py, segmentos) {
   let min = Infinity;
-  for (let i = 1; i < puntos.length; i++) {
-    min = Math.min(min, distanciaPuntoASegmento(px, py, puntos[i - 1].x, puntos[i - 1].y, puntos[i].x, puntos[i].y));
+  for (const s of segmentos) {
+    min = Math.min(min, distanciaPuntoASegmento(px, py, s.p1.x, s.p1.y, s.p2.x, s.p2.y));
   }
   return min;
 }
@@ -1136,8 +1185,8 @@ function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, mpp, ra
   for (const e of elementosPuntuales) {
     const forma = CATEGORIAS_ELEMENTO.find(c => c.id === e.categoria)?.forma;
     let d;
-    if (forma === "polilinea" && Array.isArray(e.puntos) && e.puntos.length >= 2) {
-      d = distanciaMinimaAPolilinea(x, y, e.puntos);
+    if (forma === "polilinea" && Array.isArray(e.segmentos) && e.segmentos.length >= 1) {
+      d = distanciaMinimaASegmentos(x, y, e.segmentos);
     } else if (!e._nuevo) {
       // Detectado por Colab: se dibuja (y se selecciona) como punto — ver dibujarOverlayEnCanvas.
       const cx = (e.cx_relativo ?? 0) * imagenWPx, cy = (e.cy_relativo ?? 0) * imagenHPx;
@@ -2369,10 +2418,17 @@ ${printRef.current.innerHTML}
     const xs = reviewLinePoints.map(p => p.x), ys = reviewLinePoints.map(p => p.y);
     const cx_relativo = ((Math.min(...xs) + Math.max(...xs)) / 2) / iw;
     const cy_relativo = ((Math.min(...ys) + Math.max(...ys)) / 2) / ih;
+    // Segmentos consecutivos, no una cadena de puntos — mismo shape que usan los muros que
+    // exporta Colab (pag.muros_geo), para que dibujo/hit-test tengan un solo camino de código
+    // sin importar el origen (ver CATEGORIAS_ELEMENTO).
+    const segmentos = [];
+    for (let i = 1; i < reviewLinePoints.length; i++) {
+      segmentos.push({ p1: reviewLinePoints[i - 1], p2: reviewLinePoints[i] });
+    }
     setColabCorrecciones(prev => {
       const n = prev.elementosPuntualesNuevos.filter(e => e.categoria === "muro").length + 1;
       const id = `MU-A${n}`;
-      const nuevo = { id, categoria: "muro", entryIdx: reviewActiveEntry, puntos: reviewLinePoints, largo_m: Math.round(largo * mpp * 100) / 100, cx_relativo, cy_relativo, ubicacion_o_recinto: "", _nuevo: true };
+      const nuevo = { id, categoria: "muro", entryIdx: reviewActiveEntry, segmentos, largo_m: Math.round(largo * mpp * 100) / 100, cx_relativo, cy_relativo, ubicacion_o_recinto: "", _nuevo: true };
       return { ...prev, elementosPuntualesNuevos: [...prev.elementosPuntualesNuevos, nuevo] };
     });
     setReviewLinePoints([]);
