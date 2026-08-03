@@ -1,9 +1,9 @@
 ==================================================================
   ARCHICHECK — INFORME CAPA 1 GEOMETRICA
 ==================================================================
-  Proyecto: pdv 31jul 1738
+  Proyecto: pdv 3ago
   Archivo : 05+06 Planos Rest Pza PdV (021 06 21).pdf
-  Fecha   : 02/08/2026 21:49
+  Fecha   : 03/08/2026 04:44
   Páginas : 2 + 2
 
   ------------------------------------------------------------------
@@ -12,7 +12,7 @@
   ------------------------------------------------------------------
   ID      Nombre                     Tipo          Area m2  Ancho m  Estado
   --      ------                     ----          -------  -------  ------
-  E03     Baño Personal Mujeres      bano            29.02     7.17  OK
+  E03     Baño Personal              bano            29.02     7.17  OK
   E01     Bodega                     bodega          22.31    10.35  OK
   E05     Cocina                     cocina          20.94     3.52  OK
   E07     Pasillo                    pasillo         16.95     4.76  OK
@@ -23,31 +23,37 @@
   E17     Oficina                    oficina          7.36     2.95  OK
   E09     Bodega                     bodega           3.57     1.54  OK
   E10     Terraza                    terraza          2.80     0.39  OK
-  E02     Baño Personal              bano             2.21     0.35  OK
+  E02     Espacio E02 (SIN NOMBRE -  otro             2.21     0.35  OK
   E22     Terraza                    terraza          2.06     0.33  OK
   E14     Espacio E14 (SIN NOMBRE -  otro             2.00      0.9  OK
   E11     Baño Universal             bano             1.92     2.64  OK
   E19     Espacio E19 (SIN NOMBRE -  otro             1.57     1.14  OK
-  E08     Espacio E08 (SIN NOMBRE -  otro             1.47      1.0  OK
-  E16     Escalera                   escalera         1.37     0.69  INCUMPLE
+  E08     Baño Personal Mujeres      bano             1.47      1.0  INCUMPLE
+  E16     Espacio E16 (SIN NOMBRE -  otro             1.37     0.69  OK
   E18     Espacio E18 (SIN NOMBRE -  otro             1.04     0.22  OK
   E06     Espacio E06 (SIN NOMBRE -  otro             1.03     0.88  OK
   E20     Espacio E20 (SIN NOMBRE -  otro             0.52     0.83  OK
   E12     Espacio E12 (SIN NOMBRE -  otro             0.51     0.78  OK
           TOTAL                                     159.70
 
-  INCUMPLIMIENTOS GEOMETRICOS (1)
+  INCUMPLIMIENTOS GEOMETRICOS (3)
   ------------------------------------------------------------------
-  [ANCHO]  E16 Escalera
-    Medido: 0.69 m  |  Minimo: 1.1 m  |  Deficit: 0.41 m
-    Ref: Art. 4.2.10 OGUC — tabla por carga de ocupacion, 1,10 m es el piso minimo (hasta 50 personas); puede exigir hasta 1,50 m o 2 escaleras segun ocupacion, no calculado todavia
+  [CIRCULO_GIRO]  E11 Baño Universal
+    Medido: None m  |  Minimo: 1.5 m  |  Deficit: None m
+    Ref: DDU 351 / Art. 4.1.7 OGUC — circulo de giro 1,50 m en recintos accesibles
+  [DISCREPANCIA_AREA_DECLARADA]  E11 Baño Universal
+    Medido: 1.92 m2  |  Declarado (cuadro): 4.94 m2  |  Diferencia: 157.3%
+    Ref: Cuadro de superficies del plano vs. area medida por geometria (OpenCV)
+  [AREA]  E08 Baño Personal Mujeres
+    Medido: 1.47 m2  |  Minimo: 1.5 m2  |  Deficit: 0.03 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
 
   OBSERVACIONES NORMATIVAS CLAUDE (5)
-  [ALTA] Art. 4.1.7 OGUC — Rampa de acceso universal con pendiente de 10.58% supera el máximo de 8% permiti
-  [MEDIA] Art. 4.2.10 OGUC — La escalera hacia Nivel 2 no presenta dimensiones de ancho claramente acotadas e
-  [MEDIA] Art. 4.1.10 OGUC / DDU 279 — Baño Universal: debe verificarse que el círculo de giro de 1.50m de diámetro est
-  [MEDIA] Art. 4.2.4 OGUC — La salida de emergencia del local es el acceso principal (+0.45) con rampa, únic
-  [ALTA] Art. 6.3.3 OGUC — Los baños de clientes no son identificables en este plano de Nivel 1. Para resta
+  [ALTA] Art. 4.1.7 / DS 50 MINVU - Accesibilidad Universal — La pendiente de la Rampa de Acceso Universal es 10.58%, superior al maximo permi
+  [ALTA] Art. 4.1.7 OGUC / DS 50 - Accesibilidad Baño Universal — No se aprecia claramente el circulo de giro libre de 1.5 m de diametro dentro de
+  [MEDIA] Art. 4.2.2 OGUC — La puerta de acceso principal al publico (P10) tiene ancho de 0.8 m en un proyec
+  [MEDIA] Art. 4.2.10 OGUC - Escalera — La escalera interior (ES01) no tiene ancho claramente dimensionado en este nivel
+  [BAJA] Art. 4.5.7 OGUC - Ventilacion cocina — La Cocina (Barra sin atencion de publico) no muestra ventilacion mecanica o natu
 
   ------------------------------------------------------------------
   PAGINA 2 [pag2-2]  |  1:50  |  planta — otro
@@ -78,19 +84,19 @@
           TOTAL                                     178.90
 
   OBSERVACIONES NORMATIVAS CLAUDE (5)
-  [ALTA] Art. 4.1.7 / OGUC — Nivel 2 (piso alto) accesible únicamente por escalera interna. No se observa asc
-  [MEDIA] Art. 4.2.10 OGUC — La escalera que conecta niveles muestra peldaños numerados 11-19 (9 peldaños vis
-  [ALTA] Art. 4.1.7 OGUC — No se detectan salidas de emergencia propias en Nivel 2. Al ser un piso alto acc
-  [ALTA] Art. 6.3.2 OGUC — Los baños de clientes (hombres y mujeres) en Nivel 2 no presentan dimensionamien
-  [BAJA] Art. 2.2.3 OGUC — La puerta P08 en la parte inferior del plano (ancho 1.4 m) parece dar hacia la L
+  [ALTA] Art. 4.1.7 OGUC — El Nivel 2 es un piso alto accesible únicamente por escalera interna. No se dete
+  [ALTA] Art. 4.1.6 OGUC — No se detecta baño universal (accesible para PMR) en el Nivel 2. El texto extraí
+  [MEDIA] Art. 4.1.6 OGUC / DS 50 — Las puertas de acceso a los baños de clientes (mujeres y hombres) tienen ancho e
+  [MEDIA] Art. 4.2.10 OGUC — No es posible verificar el ancho mínimo de la escalera ES01 sin el cuadro de car
+  [BAJA] Art. 4.5.3 OGUC — No se detectan ventanas en el Nivel 2. Los recintos de baños y bodegas no muestr
 
 ==================================================================
   (conteos desde análisis semántico Claude — DINO no detectó elementos)
-  Puertas semántico: 22  Ventanas: 2  Escaleras: 2
+  Puertas semántico: 21  Ventanas: 2  Escaleras: 2
 
-✓ JSON guardado: archicheck_geometrico_pdv_31jul_1738_02ago_2138.json
+✓ JSON guardado: archicheck_geometrico_pdv_3ago_03ago_0436.json
   Paginas   : 2
   Area total: 338.6 m2
   Recintos  : 42
-  Incumpl.  : 1
-  Elementos (semantico) — Puertas:22  Ventanas:2  Escaleras:2  Rampas:0
+  Incumpl.  : 3
+  Elementos (semantico) — Puertas:21  Ventanas:2  Escaleras:2  Rampas:0
