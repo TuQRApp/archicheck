@@ -633,17 +633,21 @@ El usuario probó el portal en vivo y mandó capturas (`PG02 P1.jpg`, `PG03 P2.j
 
 **Sin probar en Colab todavía.**
 
-## 🔍 EN INVESTIGACIÓN 2026-08-04 (misma sesión) — 7 puertas de página 1 sin detectar: podrían ser imágenes incrustadas, no geometría vectorial
+## 🔍 EN INVESTIGACIÓN 2026-08-04 (misma sesión) — 7 puertas de página 1 sin detectar: hipótesis de imagen incrustada DESCARTADA, pivote a hipótesis de Form XObject
 
 El usuario marcó 7 puertas reales visibles en el plano original de la página 1 que el portal no detecta (`Original P1.jpg` vs `Con puertas P1.jpg`). Confirmó también que `PG05` y `PG06` (los 2 casos dudosos por tamaño de la ronda anterior) quedan correctamente descartados.
 
 **Investigado con datos reales, siguiendo la regla explícita del usuario ("si tienes dudas, déjalo como algo a validar con el arquitecto")**: hice zoom sobre el plano original en una de las 7 ubicaciones (el vano de 1.6m entre "Cocina" y "Pasillo") y encontré que el arco de la puerta está dibujado en un **rosa/salmón extremadamente tenue**, mucho más débil que el resto del dibujo. Busqué en `datos_vectoriales.trazos` (que incluye TODOS los trazos `'l'` y `'c'`, clasificados o no) en esa zona y en otra de las 7 ubicaciones (cerca de "Oficina"): **cero trazos en ambas** — no es que mis filtros los rechacen, es que `get_drawings()` no extrae absolutamente ningún dato vectorial ahí.
 
-**Hipótesis sin confirmar**: esos símbolos podrían ser **imágenes incrustadas** (un ícono raster) en vez de geometría vectorial real, a diferencia de las otras puertas del plano que sí están dibujadas como líneas/curvas normales.
+**Hipótesis 1 (imagen incrustada) — DESCARTADA con datos reales**: el diagnóstico `pdf_page.get_images(full=True)` corrió en Colab sobre las 2 páginas del plano de prueba y devolvió `DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s)` en ambas. No hay ningún raster embebido en el PDF en esta zona — descarta por completo que los símbolos tenues sean íconos raster.
 
-**Diagnóstico agregado al notebook, siguiendo la regla del usuario — solo investiga, no asume ni agrega nada automáticamente**: nuevo bloque en `extraer_datos_vectoriales` que llama a `pdf_page.get_images(full=True)` y, para cada imagen encontrada, `pdf_page.get_image_rects(xref)` para ubicarla en el mismo sistema de coordenadas píxel que `muros_geo`/`puertas_geo` (reusando `to_px()`+`ajustar()`, ya corregidos por rotación esta sesión). Solo imprime lo que encuentra — **no crea ninguna puerta nueva ni modifica ningún resultado**, para poder comparar a mano contra las 7 ubicaciones reales antes de decidir cualquier cosa. Si se confirma la hipótesis, cualquier siguiente paso debe quedar marcado explícitamente como pendiente de validación del arquitecto, no como una puerta confirmada — instrucción explícita del usuario.
+**Bug propio encontrado y corregido en el camino**: al primer intento de agregar este diagnóstico, el bloque quedó insertado **dentro del diccionario del `return`** de la función — inválido en Python. Detectado revisando la indentación antes de dar el archivo por bueno (no corriendo el notebook, no se puede localmente), corregido moviendo el bloque a su lugar correcto antes de `return {`.
 
-**Sin probar en Colab todavía** — este es el paso pendiente inmediato: correr el notebook y ver qué imprime `DIAGNOSTICO IMAGENES`.
+**Hipótesis 2 (Form XObject) — agregada, sin confirmar todavía**: si no es imagen ni geometría directa en el contenido de la página, el símbolo podría estar definido como un **bloque vectorial reutilizable (Form XObject)** — un ícono de puerta definido una sola vez en el PDF e insertado/referenciado en cada ubicación donde aparece, en vez de dibujado como trazos directos. `get_drawings()` podría no descomponer el contenido de un XObject de esta forma (sin documentación a mano para asegurarlo de antemano).
+
+**Diagnóstico agregado al notebook** (vigente `ArchiCheck_Base 04ago_1345.ipynb`, backup de `04ago_1220.ipynb` en `Versiones anteriores/`), siguiendo la misma regla — solo investiga, no asume ni agrega nada automáticamente: nuevo bloque justo antes de `return {` que llama a `pdf_page.get_xobjects()` e imprime el resultado crudo (`len(...)` + cada objeto) **sin asumir su estructura**, para decidir el siguiente paso con el dato real. No crea ninguna puerta ni modifica ningún resultado. Si se confirma esta hipótesis (o cualquier otra), cualquier siguiente paso debe quedar marcado explícitamente como pendiente de validación del arquitecto, no como una puerta confirmada — instrucción explícita del usuario.
+
+**Sin probar en Colab todavía** — este es el paso pendiente inmediato: correr el notebook y ver qué imprime `DIAGNOSTICO XOBJECTS`.
 
 ## ✅ CONSTRUIDO 2026-08-04 (misma sesión) — Portal alineado: puertas ahora se dibujan como línea/arco real, no como centroide
 

@@ -1,4 +1,4 @@
-✓ Cuadro de superficies: 2156 caracteres extraidos de la pagina 1
+ ✓ Cuadro de superficies: 2156 caracteres extraidos de la pagina 1
 
 ========================================================
   Página 2  —  escala 1:50
@@ -6,7 +6,7 @@
 ========================================================
   2860x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 14 recintos, 5 incumplimientos
+  ✓ Claude: 13 recintos, 5 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
   ✓ COTAS (linea): 19 segmentos identificados como linea/marca de cota (Paso 1.6)
@@ -17,7 +17,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Puertas exportadas (clasificador geometrico): 11
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 1561), ((0.87, 0.43, 0.43), 1044), ((1.0, 0.75, 0.0), 416)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 9 grupos protegidos como muro, top 25 por span (73 textos de cota disponibles para el chequeo de distancia):
-     span=26.77m  bbox=14.8x22.31m  n_seg=1153  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=2.7/13.7/44.7
+     span=26.77m  bbox=14.8x22.31m  n_seg=1153  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=2.3/13.3/45.0
      span=15.01m  bbox=14.81x2.41m  n_seg=106  ancho_linea(min/mediana/max)=0.12/0.54/1.44  %cerca_cota(30/60/100px, n=106)=8.5/20.8/33.0
      span=9.21m  bbox=6.35x6.67m  n_seg=64  ancho_linea(min/mediana/max)=0.12/0.72/0.72  %cerca_cota(30/60/100px, n=64)=0.0/10.9/39.1
      span=3.63m  bbox=3.45x1.14m  n_seg=53  ancho_linea(min/mediana/max)=0.3/0.3/0.72  %cerca_cota(30/60/100px, n=53)=0.0/1.9/7.5
@@ -26,14 +26,15 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
      span=2.5m  bbox=0.0x2.5m  n_seg=7  ancho_linea(min/mediana/max)=0.12/0.12/0.12  %cerca_cota(30/60/100px, n=7)=0.0/0.0/0.0
      span=2.31m  bbox=1.9x1.31m  n_seg=58  ancho_linea(min/mediana/max)=0.12/0.12/0.12  %cerca_cota(30/60/100px, n=58)=0.0/0.0/0.0
      span=1.74m  bbox=1.48x0.9m  n_seg=20  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=20)=5.0/5.0/20.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
   ✓ Vectorial: 73 textos (cotas/nombres), 1984 trazos candidatos a símbolo, 1355 tramos protegidos como muro (por conectividad, no por largo), 480 tramos desprotegidos por parecer achurado (rampa/escalera), 103 en 5 cadena(s) de línea discontinua
      muestra de cadenas discontinuas detectadas: [{'n_segmentos': 7, 'span_m': 2.5}, {'n_segmentos': 9, 'span_m': 3.25}, {'n_segmentos': 4, 'span_m': 1.2}, {'n_segmentos': 5, 'span_m': 1.35}, {'n_segmentos': 52, 'span_m': 2.5}]
   → OpenCV...
   ✓ Limpieza pre-umbral: 73 textos, 103 líneas discontinuas, 1984 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
   ✓ OpenCV: 24 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 76.15m²
-  ✓ Cruce: 14/24 con nombre | 1 incumpl. geo
-  ⚠ 10 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E16, E10, E08, E12, E17, E04, E23, E21, E15, E14
+  ✓ Cruce: 13/24 con nombre | 0 incumpl. geo
+  ⚠ 11 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E16, E10, E07, E08, E19, E12, E17, E23, E21, E15, E14
 
 ========================================================
   Página 2  —  escala 1:50
@@ -41,7 +42,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 ========================================================
   2790x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 7 recintos, 5 incumplimientos
+  ✓ Claude: 7 recintos, 4 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
   ✓ COTAS (linea): 0 segmentos identificados como linea/marca de cota (Paso 1.6)
@@ -61,6 +62,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
      span=3.33m  bbox=3.29x0.53m  n_seg=128  ancho_linea(min/mediana/max)=0.3/0.3/0.54  %cerca_cota(30/60/100px, n=128)=0.0/0.0/0.0
      span=2.57m  bbox=2.57x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.72/0.72/0.72  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
      span=2.02m  bbox=1.5x1.35m  n_seg=31  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=31)=0.0/0.0/0.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
   ✓ Vectorial: 46 textos (cotas/nombres), 1380 trazos candidatos a símbolo, 1506 tramos protegidos como muro (por conectividad, no por largo), 865 tramos desprotegidos por parecer achurado (rampa/escalera), 22 en 4 cadena(s) de línea discontinua
      muestra de cadenas discontinuas detectadas: [{'n_segmentos': 5, 'span_m': 1.31}, {'n_segmentos': 6, 'span_m': 1.61}, {'n_segmentos': 5, 'span_m': 1.31}, {'n_segmentos': 6, 'span_m': 1.61}]
   → OpenCV...
@@ -72,4 +74,4 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 
 ========================================================
 ✓ Procesadas 2 / 2 páginas
-  Incumplimientos geométricos totales: 1
+  Incumplimientos geométricos totales: 0
