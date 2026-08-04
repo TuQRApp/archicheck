@@ -606,6 +606,19 @@ La gran mayoría eran círculos de **menos de 5cm de radio** — tornillos, marc
 
 Verificado con el mismo proceso de siempre: backup, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto. **Sin probar en Colab todavía.**
 
+## ✅✅ CONFIRMADO 2026-08-04 (corrida real, `ArchiCheck_Base 04ago_1015.ipynb`) — la ronda completa de fixes funciona. Cierre de esta pieza.
+
+El usuario corrió el notebook con el piso mínimo de radio Bézier agregado. **Resultado**: página 1 — 10 puertas de tipo `'l'` + 1 de curva Bézier = 11 total; página 2 — 2 de tipo `'l'` + 6 de curva Bézier = 8 total. Números razonables (contra los 199/90 de la corrida anterior).
+
+**Verificación visual** (`visualizar_muros.mjs` sobre el JSON real) confirmó los 3 hallazgos cerrados en esta ronda:
+1. **PG05 (flecha de pendiente de la rampa)**: ya no aparece ningún marcador cerca de "Rampa Acceso Universal" — el filtro de salto de dirección lo eliminó sin afectar ninguna puerta real.
+2. **PG01/PG02 (achurado "Se construye", página 2)**: ya no aparecen sobre los bordes de muro — en su lugar, puertas reales bien ubicadas en "Baño Clientes mujeres/hombres" y "Oficina".
+3. **La puerta que faltaba** (el falso negativo original que motivó todo el trabajo de curvas Bézier, cerca de "Baño Clientes mujeres") **ahora aparece**, entre las nuevas detecciones por curva Bézier de esa zona.
+
+**Quedan 2 casos dudosos, sin confirmar, ya anotados antes de esta ronda y sin tocar**: en página 1, `PG05` (0.27m, cerca de "Baño Universal", sospechosamente chico) y `PG06` (1.59m, cerca de la escalera, sospechosamente grande). No se investigaron en esta ronda — quedan como pendiente de verificación visual puntual si se retoma este trabajo.
+
+**Pieza cerrada por ahora**: el clasificador geométrico de puertas (línea recta + curva Bézier) queda funcional, con 4 filtros de falso-positivo verificados con datos reales (residual de ajuste, barrido angular, fracción de segmentos paralelos, salto de dirección) más el piso de plausibilidad de radio para curvas Bézier. El portal ya está alineado (sesión anterior) y no necesita cambios adicionales — toda esta mejora de datos se refleja automáticamente.
+
 ## ✅ CONSTRUIDO 2026-08-04 (misma sesión) — Portal alineado: puertas ahora se dibujan como línea/arco real, no como centroide
 
 Tras confirmar visualmente que el clasificador geométrico funciona (salvo el falso positivo recién corregido), el usuario pidió explícitamente "dejar el portal 100% alineado con nuestros avances". Aclaración importante que motivó el pedido: una captura que el usuario mandó mostrando puertas como centroides (`•P01`...`•P13`) **no era mi trabajo nuevo** — era el portal mostrando `puertas_detalle` (Claude Vision, el problema viejo P04/V02) porque el portal **todavía no leía `puertas_geo` en absoluto**.
