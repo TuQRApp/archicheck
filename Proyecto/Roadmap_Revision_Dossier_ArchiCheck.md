@@ -589,6 +589,23 @@ El usuario confirmó que el símbolo de flecha de pendiente (2 líneas convergie
 
 Verificado con el mismo proceso: backup, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto. **Sin probar en Colab todavía.**
 
+## 🔴→✅ CONFIRMADO 2026-08-04 (corrida real) — el filtro de curva Bézier (solo forma ~90°) sobre-detectó masivamente: piso mínimo de radio agregado
+
+El usuario corrió `ArchiCheck_Base 04ago_2430.ipynb` (con los 4 fixes acumulados: achurado, rango 75-105°, curva Bézier, PG05). **Resultado alarmante: 199 puertas exportadas por curva Bézier en página 1, 90 en página 2** (de 249 curvas `'c'` totales en esa página) — muchísimo más que lo esperado.
+
+**Investigado con datos reales antes de tocar nada**: el radio de las "puertas" encontradas iba de 0.01m a 0.8m. Desglose por página:
+
+| Página | Escala puerta (0.4-1.3m) | Chico (0.05-0.4m) | Ruido diminuto (<0.05m) |
+|---|---|---|---|
+| 1 | 9 | 53 | **146** |
+| 2 | 8 | 20 | **64** |
+
+La gran mayoría eran círculos de **menos de 5cm de radio** — tornillos, marcas de detalle, círculos decorativos chicos (el mismo tipo de curva del flush button del inodoro ya visto en `trazos`). Cualquier círculo chico puede tener barrido ~90° por pura casualidad geométrica — el criterio de forma (90°) sigue siendo correcto para distinguir puerta de mobiliario A ESCALA COMPARABLE, pero no filtra ruido sub-arquitectónico que ni siquiera es un símbolo real. Los valores en escala de puerta real (9 y 8) coincidían casi exactamente con lo esperado.
+
+**Fix aplicado, con el número que pidió el usuario ("déjalo sobre 0,5 m")** — nuevo notebook vigente `ArchiCheck_Base 04ago_1015.ipynb` (reemplaza `04ago_2430`, backup en `Versiones anteriores/`): nueva constante `UMBRAL_RADIO_BEZIER_MIN_M = 0.5` — se rechaza la curva si su radio ajustado es menor a eso, además de los chequeos de residual y barrido ya existentes. **No es un intento de "confirmar que es puerta"** (eso lo sigue haciendo el barrido ~90°) — es un piso de plausibilidad para descartar ruido que no es ningún símbolo arquitectónico.
+
+Verificado con el mismo proceso de siempre: backup, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto. **Sin probar en Colab todavía.**
+
 ## ✅ CONSTRUIDO 2026-08-04 (misma sesión) — Portal alineado: puertas ahora se dibujan como línea/arco real, no como centroide
 
 Tras confirmar visualmente que el clasificador geométrico funciona (salvo el falso positivo recién corregido), el usuario pidió explícitamente "dejar el portal 100% alineado con nuestros avances". Aclaración importante que motivó el pedido: una captura que el usuario mandó mostrando puertas como centroides (`•P01`...`•P13`) **no era mi trabajo nuevo** — era el portal mostrando `puertas_detalle` (Claude Vision, el problema viejo P04/V02) porque el portal **todavía no leía `puertas_geo` en absoluto**.
