@@ -579,6 +579,16 @@ El usuario señaló (con capturas comparativas, `Screenshot_370/371.jpg`) una pu
 
 Verificado con el mismo proceso de siempre: backup, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto. **Sin probar en Colab todavía** — pendiente confirmar que esto efectivamente encuentra la puerta señalada por el usuario (y no arrastra curvas de mobiliario que por casualidad tengan barrido cercano a 90°, ej. una esquina redondeada).
 
+## ✅ IMPLEMENTADO 2026-08-04 (misma sesión) — PG05 (flecha de pendiente de rampa) resuelto con criterio geométrico dedicado
+
+El usuario confirmó que el símbolo de flecha de pendiente (2 líneas convergiendo a un punto) **se repite en otras rampas del plano** — justifica invertir en un filtro dedicado en vez de dejarlo como corrección manual.
+
+**Señal verificada con datos reales antes de implementar**: el "salto de dirección" entre segmentos consecutivos, relativo al barrido total de direcciones que cubre el grupo. Un arco real gira progresivo (saltos chicos y parejos entre segmentos vecinos); una flecha en V tiene 2 direcciones dominantes con un salto brusco entre ellas. Medido: **PG05 da `salto_max/barrido = 2.30`, contra un máximo de `0.51` en las 12 puertas reales confirmadas** — separación limpia, sin solapamiento (incluso mejor que la del filtro de achurado).
+
+**Fix aplicado** (nuevo notebook vigente `ArchiCheck_Base 04ago_2430.ipynb`, reemplaza `04ago_2405`, backup en `Versiones anteriores/`): nuevo helper `_salto_maximo_relativo(segmentos)` — ordena las direcciones de los segmentos del grupo, calcula el barrido total (igual método que `_ajustar_circulo`, adaptado a direcciones de segmento en vez de ángulos-desde-centro) y el salto máximo entre direcciones consecutivas (excluyendo el hueco de wraparound); si `salto_max/barrido > UMBRAL_SALTO_MAX_RELATIVO (0.8)`, se rechaza el grupo. Se suma como un tercer chequeo, después del filtro de achurado (paralelos) y antes de construir la puerta.
+
+Verificado con el mismo proceso: backup, archivo nuevo con timestamp, diff cell-by-cell (solo cambió cell-4), balance de paréntesis/llaves/corchetes correcto. **Sin probar en Colab todavía.**
+
 ## ✅ CONSTRUIDO 2026-08-04 (misma sesión) — Portal alineado: puertas ahora se dibujan como línea/arco real, no como centroide
 
 Tras confirmar visualmente que el clasificador geométrico funciona (salvo el falso positivo recién corregido), el usuario pidió explícitamente "dejar el portal 100% alineado con nuestros avances". Aclaración importante que motivó el pedido: una captura que el usuario mandó mostrando puertas como centroides (`•P01`...`•P13`) **no era mi trabajo nuevo** — era el portal mostrando `puertas_detalle` (Claude Vision, el problema viejo P04/V02) porque el portal **todavía no leía `puertas_geo` en absoluto**.
