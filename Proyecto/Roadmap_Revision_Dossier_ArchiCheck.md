@@ -619,6 +619,32 @@ El usuario corrió el notebook con el piso mínimo de radio Bézier agregado. **
 
 **Pieza cerrada por ahora**: el clasificador geométrico de puertas (línea recta + curva Bézier) queda funcional, con 4 filtros de falso-positivo verificados con datos reales (residual de ajuste, barrido angular, fracción de segmentos paralelos, salto de dirección) más el piso de plausibilidad de radio para curvas Bézier. El portal ya está alineado (sesión anterior) y no necesita cambios adicionales — toda esta mejora de datos se refleja automáticamente.
 
+## ✅ 2026-08-04 (misma sesión) — Fix de `puntos_union`: buscar desde los 2 extremos reales del arco, no desde cualquier punto muestreado
+
+El usuario probó el portal en vivo y mandó capturas (`PG02 P1.jpg`, `PG03 P2.jpg`, `PG 04-05-06-07 P2.jpg`) señalando que los círculos verdes de `puntos_union` "no están necesariamente en las hojas o en los arcos" — en algunos casos el punto aparecía sobre la mitad de la curva, no en su punta.
+
+**Causa confirmada revisando el código**: la búsqueda de `puntos_union` tomaba el punto de muro más cercano a **cualquier** punto muestreado del arco (todos los `p1`/`p2` de los segmentos, sin distinguir si eran del extremo o del medio de la curva) — si un tramo intermedio del arco pasaba geométricamente cerca de un muro no relacionado, ese punto ganaba la búsqueda en vez del verdadero punto de contacto en la punta del arco.
+
+**Fix aplicado** (nuevo notebook vigente `ArchiCheck_Base 04ago_1220.ipynb`, backup de cada paso intermedio en `Versiones anteriores/`):
+- **Clasificador de línea recta**: ahora primero encuentra los **2 extremos reales** del arco (el par de puntos con la distancia máxima entre sí, dentro de la nube de puntos del grupo) y busca el muro más cercano a **cada extremo por separado** — no a un punto cualquiera.
+- **Clasificador de curva Bézier**: ya tenía sus 2 extremos exactos disponibles (`muestras[0]`/`muestras[-1]`, los puntos P0/P3 de la curva) — se cambió `_puntos_union_y_muro` para recibir esos 2 puntos directamente en vez de toda la lista de muestras.
+
+**Bug propio encontrado y corregido en el camino**: al escribir el diagnóstico de imágenes incrustadas (ver entrada siguiente), el primer intento insertó el bloque de código **dentro del diccionario del `return`** de la función — inválido en Python. Se detectó revisando la indentación antes de dar el archivo por bueno, y se corrigió moviendo el bloque a su lugar correcto (antes de `return {`). Mencionado explícitamente para que quede registro del error, no se descubrió corriendo el notebook (no se puede localmente) sino revisando el propio código insertado.
+
+**Sin probar en Colab todavía.**
+
+## 🔍 EN INVESTIGACIÓN 2026-08-04 (misma sesión) — 7 puertas de página 1 sin detectar: podrían ser imágenes incrustadas, no geometría vectorial
+
+El usuario marcó 7 puertas reales visibles en el plano original de la página 1 que el portal no detecta (`Original P1.jpg` vs `Con puertas P1.jpg`). Confirmó también que `PG05` y `PG06` (los 2 casos dudosos por tamaño de la ronda anterior) quedan correctamente descartados.
+
+**Investigado con datos reales, siguiendo la regla explícita del usuario ("si tienes dudas, déjalo como algo a validar con el arquitecto")**: hice zoom sobre el plano original en una de las 7 ubicaciones (el vano de 1.6m entre "Cocina" y "Pasillo") y encontré que el arco de la puerta está dibujado en un **rosa/salmón extremadamente tenue**, mucho más débil que el resto del dibujo. Busqué en `datos_vectoriales.trazos` (que incluye TODOS los trazos `'l'` y `'c'`, clasificados o no) en esa zona y en otra de las 7 ubicaciones (cerca de "Oficina"): **cero trazos en ambas** — no es que mis filtros los rechacen, es que `get_drawings()` no extrae absolutamente ningún dato vectorial ahí.
+
+**Hipótesis sin confirmar**: esos símbolos podrían ser **imágenes incrustadas** (un ícono raster) en vez de geometría vectorial real, a diferencia de las otras puertas del plano que sí están dibujadas como líneas/curvas normales.
+
+**Diagnóstico agregado al notebook, siguiendo la regla del usuario — solo investiga, no asume ni agrega nada automáticamente**: nuevo bloque en `extraer_datos_vectoriales` que llama a `pdf_page.get_images(full=True)` y, para cada imagen encontrada, `pdf_page.get_image_rects(xref)` para ubicarla en el mismo sistema de coordenadas píxel que `muros_geo`/`puertas_geo` (reusando `to_px()`+`ajustar()`, ya corregidos por rotación esta sesión). Solo imprime lo que encuentra — **no crea ninguna puerta nueva ni modifica ningún resultado**, para poder comparar a mano contra las 7 ubicaciones reales antes de decidir cualquier cosa. Si se confirma la hipótesis, cualquier siguiente paso debe quedar marcado explícitamente como pendiente de validación del arquitecto, no como una puerta confirmada — instrucción explícita del usuario.
+
+**Sin probar en Colab todavía** — este es el paso pendiente inmediato: correr el notebook y ver qué imprime `DIAGNOSTICO IMAGENES`.
+
 ## ✅ CONSTRUIDO 2026-08-04 (misma sesión) — Portal alineado: puertas ahora se dibujan como línea/arco real, no como centroide
 
 Tras confirmar visualmente que el clasificador geométrico funciona (salvo el falso positivo recién corregido), el usuario pidió explícitamente "dejar el portal 100% alineado con nuestros avances". Aclaración importante que motivó el pedido: una captura que el usuario mandó mostrando puertas como centroides (`•P01`...`•P13`) **no era mi trabajo nuevo** — era el portal mostrando `puertas_detalle` (Claude Vision, el problema viejo P04/V02) porque el portal **todavía no leía `puertas_geo` en absoluto**.
