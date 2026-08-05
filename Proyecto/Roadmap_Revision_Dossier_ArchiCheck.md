@@ -647,11 +647,13 @@ El usuario marcó 7 puertas reales visibles en el plano original de la página 1
 
 **Hipótesis 3 (anotación de PDF) — agregada, sin confirmar todavía**: con imagen y XObject descartados, el símbolo podría ser una **anotación PDF** (ej. un sello/stamp) — las anotaciones no son parte del content stream de la página, por lo que ni `get_drawings()` ni `get_images()` las verían en absoluto, consistente con el resultado de ambos diagnósticos previos. Diagnóstico agregado al notebook (vigente `ArchiCheck_Base 04ago_2230.ipynb`, backup de `04ago_1345.ipynb` en `Versiones anteriores/`), mismo criterio — solo investiga: nuevo bloque justo antes de `return {` que llama a `pdf_page.annots()` e imprime tipo + bbox en píxeles (mismo sistema de coordenadas que `muros_geo`/`puertas_geo`) + info de cada anotación encontrada. No crea ninguna puerta ni modifica ningún resultado.
 
-**Nota técnica para la siguiente ronda si esta hipótesis también se descarta**: `get_drawings()`/`get_images()` no capturan imágenes **inline** (operador `BI...ID...EI` embebido directo en el content stream, sin ser un XObject con nombre) — sería la cuarta hipótesis a probar, requiere parsear el content stream crudo (`doc.xref_stream(pdf_page.xref)`), más laborioso que las anteriores.
+**Hipótesis 3 (anotación PDF) — corrida real, también DESCARTADA**: `DIAGNOSTICO ANOTACIONES: 0 anotacion(es)` en ambas páginas. Van 3 de 3 hipótesis descartadas (imagen incrustada, Form XObject, anotación) — ninguna explica los símbolos.
+
+**Hipótesis 4 (imagen inline, `BI...ID...EI`) — agregada por una vía más simple que parsear el content stream a mano**: `get_drawings()`/`get_images()` no capturan imágenes inline porque leen el diccionario de recursos de la página, no lo que realmente se dibuja. En vez de parsear el content stream crudo (`doc.xref_stream(...)`, laborioso), se usa `pdf_page.get_image_info()` — este método de PyMuPDF sí refleja lo que el intérprete de MuPDF dibuja al renderizar (vía el device de imagen), por lo que debería detectar una imagen inline aunque no esté en el diccionario de recursos. Diagnóstico agregado al notebook (vigente `ArchiCheck_Base 05ago_0130.ipynb`, backup de `04ago_2230.ipynb` en `Versiones anteriores/`): mismo criterio, solo imprime bbox en píxeles + xref/tipo de cada imagen detectada, no modifica ningún resultado.
 
 Si se confirma cualquier hipótesis, cualquier siguiente paso debe quedar marcado explícitamente como pendiente de validación del arquitecto, no como una puerta confirmada — instrucción explícita del usuario.
 
-**Sin probar en Colab todavía** — este es el paso pendiente inmediato: correr el notebook y ver qué imprime `DIAGNOSTICO ANOTACIONES`.
+**Sin probar en Colab todavía** — este es el paso pendiente inmediato: correr el notebook y ver qué imprime `DIAGNOSTICO IMAGE_INFO`.
 
 ## ✅ CONSTRUIDO 2026-08-04 (misma sesión) — Portal alineado: puertas ahora se dibujan como línea/arco real, no como centroide
 
