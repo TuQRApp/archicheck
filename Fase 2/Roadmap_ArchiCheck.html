@@ -709,6 +709,14 @@
         <li><strong>Soporte/parsing alternativo</strong>: Aspose.PDF (segunda vía comercial de parsing vectorial, control experimental).</li>
       </ul>
 
+      <p><strong>Roboflow Universe — modelos comunitarios (investigado 2026-08-05 tras un link puntual del usuario, no cubierto en el benchmark de IA):</strong></p>
+      <ul>
+        <li><strong>`testing-daidy/floor-plan-walls`</strong> — clases exactas door/window/wall, dataset 3.395-7.372 imágenes (más grande que CubiCasa5K), <strong>CC BY 4.0</strong> (más limpia que Raster2Seq). Sin cifra de precisión publicada — el más prometedor del grupo pese a eso, prueba barata vía API directa.</li>
+        <li><strong>`bytetrooper/window-detection-in-floor-plans`</strong> — solo window, 7.705 imágenes, <strong>único con métricas reales: mAP@50 75.6%, precisión 79.8%, recall 73.5%</strong> — por debajo de Raster2Seq/MitUNet, alcance angosto.</li>
+        <li>`university-y9nbi/floor-plans-500` (door/window/zone, 402 img, sin métricas), `cctech-hvuu9/floor-plan-layout-detection` (solo dataset, sin modelo), `code-craft-lab/floorplan-9fxye-cjdhi` (el link compartido: mAP@50 32.4%/precisión 27.7%, la más débil del grupo).</li>
+      </ul>
+      <p class="note">Ninguno supera a Raster2Seq/MitUNet en evidencia verificada, pero <code>floor-plan-walls</code> merece una prueba empírica rápida (solo llamada API) por cubrir exactamente nuestras 3 clases con dataset grande y licencia limpia.</p>
+
       <p><strong>Confirmados NO aplicables</strong> (dominio/tarea equivocada, no precio): PolyRoom/RoomFormer (nube de puntos 3D), CubiCasa API/2.0 (foto→plano), Bricsys BIMIFY/Autodesk Forma/BatchPlan (BIM/3D, no PDF 2D), GSDiff (genera, no interpreta).</p>
 
       <p><strong>Excluidos por interfaz única</strong> (no por precio): Mastt, Kreo Caddie — chat que el arquitecto usaría en vez de ArchiCheck, quedan como referencia UX.</p>

@@ -200,6 +200,16 @@ A pedido explícito del usuario: revisión completa de los 10 documentos de IA +
 **Herramientas de soporte / parsing vectorial alternativo (no reemplazan la extracción geométrica, la complementan)**:
 - **Aspose.PDF for Python** — segunda vía comercial de parsing vectorial (paths/polylines/polygons, `GraphicsAbsorber`), útil como control experimental para aislar si un fallo es de parsing PDF o de interpretación posterior — no un "modelo inteligente".
 
+**Roboflow Universe — modelos comunitarios (2026-08-05, investigado a pedido del usuario tras compartir un link puntual, no cubierto en ninguna de las 2 rondas de benchmark con IA)**: plataforma con miles de datasets/modelos subidos por la comunidad, con APIs reales y funcionales para todos. Verificados 6 proyectos:
+- **`testing-daidy/floor-plan-walls`** — clases exactas `door`/`window`/`wall`, dataset de **3.395-7.372 imágenes (más grande que CubiCasa5K)**, licencia **CC BY 4.0** (más limpia que Raster2Seq, sin la zona gris de CC BY-NC heredada de CubiCasa5K). **Sin ninguna cifra de precisión publicada** — habría que probarlo contra el ground truth propio (barato: es solo una llamada API). El más prometedor del grupo por cobertura de clases + tamaño de dataset + licencia, pese a no tener evidencia numérica todavía.
+- **`bytetrooper/window-detection-in-floor-plans`** — solo clase `window`, 7.705 imágenes, **único con métricas reales verificadas: mAP@50 75.6%, precisión 79.8%, recall 73.5%** — evidencia real pero por debajo de Raster2Seq/MitUNet, y de alcance angosto (solo ventanas).
+- **`university-y9nbi/floor-plans-500`** — clases `door`/`window`/`zone`, 402 imágenes, sin métricas publicadas.
+- **`cctech-hvuu9/floor-plan-layout-detection`** — solo clase "Room Segmentation", 2.944 imágenes, sin modelo entrenado ni métricas — dataset puro, no modelo usable directo. Licencia MIT.
+- **`code-craft-lab/floorplan-9fxye-cjdhi`** (el link puntual que compartió el usuario) — clases de tipo de recinto de oficina (Conference/Reception/Waiting/etc.), solo 141 imágenes, **mAP@50 32.4%, precisión 27.7%** — la evidencia más débil de todo el grupo, no compite por un lugar en el ranking.
+- `iiitbangalore/wall-window` — mencionado en búsquedas como modelo pre-entrenado real, pero la página no cargó para verificación directa (404) — sin confirmar.
+
+**Ninguno supera a Raster2Seq o MitUNet en evidencia verificada** (la mejor cifra confirmada acá es 75.6% mAP, solo ventanas). Pero `floor-plan-walls` merece una prueba empírica rápida y barata (llamada API directa, sin self-host) dado que cubre exactamente las 3 clases que necesitamos con un dataset grande y licencia limpia — no sube de posición en el ranking sin evidencia propia, pero es el candidato de menor esfuerzo para generar un primer dato real.
+
 ### Confirmados NO aplicables — excluidos por dominio/tarea equivocada, no por precio ni complejidad
 
 - **PolyRoom** (ECCV 2024) y **RoomFormer** (CVPR 2023) — ambos reales, ambos con pesos públicos, pero **toman nube de puntos 3D como entrada**, no imagen 2D — reconstruyen plantas desde escaneo 3D de un espacio construido, tarea distinta a vectorizar el PDF de un plano.
