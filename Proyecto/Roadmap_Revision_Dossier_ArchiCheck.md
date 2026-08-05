@@ -286,6 +286,10 @@ A pedido del usuario, tras confirmar que `floor-plan-walls` (Roboflow) da 0% rec
 
 **Pendiente**: revisar `datasets/transforms.py::ResizeAndPad` para construir la transformación de coordenadas correcta, y recién ahí calcular un recall/precisión verdaderamente comparable (por posición, no por conteo) contra CubiCasa5K/DINO/floor-plan-walls ya medidos.
 
+**✅ `ResizeAndPad` verificado directamente (código fuente real, no supuesto)**: preserva relación de aspecto (`scale = min(256/alto, 256/ancho)`), padding **centrado** (no pegado a una esquina) repartido en ambos lados. Dado que nuestros planos son mucho más altos que anchos, el alto determina la escala y el padding cae solo en el ancho. Se agregó la **Celda 11** al notebook — convierte cada predicción puerta/ventana del espacio 256×256 de vuelta al espacio relativo original con esta transformación exacta, y calcula recall (¿cada punto GT tiene una predicción cerca?) y precisión (¿cada predicción tiene un punto GT cerca?) contra `GT_NIVEL1`/`GT_NIVEL2`, con tolerancia de 0.04 (~1.2m real) dada la baja resolución del espacio 256×256. Mismo patrón de verificación posicional ya usado para MitUNet y en su momento para CubiCasa5K/DINO — no confiar en el conteo crudo de la ronda anterior hasta tener este número real.
+
+**Sin ejecutar todavía** — pendiente que el usuario corra la Celda 11 y reporte el recall/precisión real por posición.
+
 ### P1 — Validar precisión del análisis geométrico (antes "P3", ahora primera prioridad)
 
 > **✅ RESUELTO (2026-07-28) — era caché del navegador, no un bug de código.** La corrida de prueba `2026-07-27 2352` mostraba "DS 50/2015 Art. N" intacto pese al fix ya desplegado — se sospechó bug real. Se descartó paso a paso: (1) Vercel dashboard confirmó deploy "Ready · Latest" del commit correcto; (2) revisar el código fuente confirmó `sanitizeDS50()` bien definido y aplicado envolviendo `merged` antes de `setResult`; (3) **la prueba definitiva fue abrir una ventana de incógnito** (sin ningún caché posible) y repetir la corrida con el mismo JSON de PDV — ahí los 3 fixes de la sesión anterior se confirmaron funcionando al 100% (PDF `2026-07-28 2138`):

@@ -753,7 +753,8 @@
         </tbody>
       </table>
       </div>
-      <p class="note">⚠️ Esto es solo conteo, NO verificado por posición — un "8 de 17" no confirma que esas predicciones estén en el lugar correcto. Falta la misma verificación posicional ya hecha con MitUNet, pero las coordenadas están en el espacio 256×256 de <code>ResizeAndPad</code> y no está confirmado si el padding queda centrado o en una esquina — pendiente revisar ese código antes de calcular un recall/precisión real y comparable.</p>
+      <p class="note">⚠️ Esto es solo conteo, NO verificado por posición — un "8 de 17" no confirma que esas predicciones estén en el lugar correcto.</p>
+      <p><strong>✅ <code>ResizeAndPad</code> verificado directamente</strong>: preserva relación de aspecto (<code>scale = min(256/alto, 256/ancho)</code>), padding <strong>centrado</strong>. Se agregó la Celda 11 al notebook — convierte cada predicción de vuelta al espacio relativo original con esta transformación exacta y calcula recall/precisión reales contra el ground truth, con tolerancia de 0.04 (~1.2m). <strong>Pendiente que el usuario la corra y reporte el número real.</strong></p>
     </div>
   </details>
 
