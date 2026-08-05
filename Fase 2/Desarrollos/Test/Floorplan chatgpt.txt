@@ -1,0 +1,356 @@
+Eso cambia bastante la recomendación. Si el objetivo final es **hacer análisis automático de cumplimiento normativo (OGUC, LGUC, planes reguladores, accesibilidad, normas contra incendios, etc.)**, entonces ya no estás buscando un "lector de planos", sino un sistema que construya un **modelo semántico suficientemente rico como para razonar sobre reglas**.
+
+En mi opinión, **Floorplan.ai deja de ser el referente**. El referente pasa a ser una arquitectura de procesamiento similar a la que usan Autodesk, empresas de Digital Twin y algunos proyectos de investigación.
+
+Yo dividiría el problema en cuatro capas:
+
+```
+Plano PDF / DWG / Imagen
+            │
+            ▼
+1. Extracción geométrica
+            │
+            ▼
+2. Modelo semántico
+            │
+            ▼
+3. Motor de reglas
+            │
+            ▼
+4. Informe normativo
+```
+
+La capa 2 es la verdaderamente importante.
+
+---
+
+# ¿Qué necesita esa capa semántica?
+
+No basta con detectar:
+
+* puerta
+* ventana
+* muro
+
+Necesitas conocer además las relaciones.
+
+Por ejemplo:
+
+```
+Puerta 15
+
+ancho = 82 cm
+
+conecta:
+    Cocina
+    Pasillo
+
+sentido de apertura
+
+tipo = cortafuego
+```
+
+O
+
+```
+Baño
+
+superficie = 3.9 m2
+
+ventilación = natural
+
+ventana = sí
+
+extractor = no
+
+altura = 2.40
+
+accesible = no
+```
+
+O
+
+```
+Dormitorio 2
+
+superficie = 8.7
+
+ocupación = 2 personas
+
+ventana = 1.42 m²
+
+porcentaje iluminación = 17%
+```
+
+Eso ya permite evaluar decenas de normas automáticamente.
+
+---
+
+# En este escenario, CubiCasa deja de ser suficiente
+
+CubiCasa es excelente para:
+
+* inmobiliarias
+* tasaciones
+* marketing
+
+Pero no guarda suficiente semántica para hacer cumplimiento normativo complejo.
+
+---
+
+# Tampoco basta FloorPlanCAD
+
+Extrae muchos objetos.
+
+Pero el análisis normativo requiere algo más parecido a un grafo.
+
+No basta saber que existen 15 puertas.
+
+Necesitas saber:
+
+* qué recinto conectan
+* cuál es el recorrido
+* cuál es la ruta de evacuación
+* qué muro atraviesan
+* si pertenece a un muro cortafuego
+* orientación
+* iluminación
+* ventilación
+* accesibilidad
+
+---
+
+# Lo que yo investigaría seriamente
+
+## 1. Autodesk Platform Services (APS)
+
+Creo que es probablemente la plataforma más potente.
+
+Permite consultar un modelo BIM como una base de datos.
+
+Ejemplo:
+
+```
+SELECT *
+
+WHERE
+
+Room.Name="Baño"
+
+Area>3.5
+
+Door.Width<0.9
+
+Window.Area<0.8
+```
+
+Para cumplimiento normativo es extraordinario.
+
+---
+
+## 2. IFC + IfcOpenShell
+
+Aquí está probablemente la mejor alternativa open source.
+
+El IFC ya contiene:
+
+* habitaciones
+* puertas
+* ventanas
+* materiales
+* niveles
+* orientación
+* relaciones
+* propiedades
+
+Con IfcOpenShell puedes hacer consultas como:
+
+```python
+for room in model.by_type("IfcSpace"):
+
+    room.Area
+
+    room.BoundedBy
+
+    room.ContainsElements
+```
+
+Muchísimas empresas europeas hacen compliance directamente sobre IFC.
+
+---
+
+## 3. Hypar
+
+Muy interesante.
+
+No sólo representa elementos.
+
+Representa relaciones.
+
+Y permite correr reglas.
+
+Está orientado a diseño computacional.
+
+---
+
+## 4. Speckle
+
+Creo que deberías estudiarlo.
+
+No es un lector de planos.
+
+Es una plataforma para representar modelos AEC mediante grafos.
+
+Todo queda como objetos conectados.
+
+Ideal para IA.
+
+---
+
+## 5. Bentley iTwin
+
+Muy utilizado en infraestructura.
+
+Tiene un enfoque muy parecido.
+
+Modelo semántico completo.
+
+Digital Twin.
+
+---
+
+# Si tu plano es un PDF
+
+Aquí está el verdadero desafío.
+
+Necesitas reconstruir algo equivalente a un IFC.
+
+Eso implica:
+
+```
+PDF
+
+↓
+
+Detección de líneas
+
+↓
+
+Detección de símbolos
+
+↓
+
+Segmentación de habitaciones
+
+↓
+
+Clasificación
+
+↓
+
+Reconstrucción topológica
+
+↓
+
+Grafo
+
+↓
+
+Motor normativo
+```
+
+Esa parte prácticamente ningún producto la hace completa.
+
+---
+
+# Lo que yo construiría hoy (si fuera un producto comercial)
+
+```
+PDF
+
+↓
+
+Modelo especializado de visión
+
+↓
+
+Vectorización
+
+↓
+
+Segmentación
+
+↓
+
+Detección de símbolos
+
+↓
+
+Graph Builder
+
+↓
+
+JSON muy rico
+
+↓
+
+Rule Engine
+
+↓
+
+LLM para explicar incumplimientos
+```
+
+El JSON sería algo parecido a esto:
+
+```json
+{
+  "spaces":[
+      {
+          "id":"Kitchen",
+
+          "polygon":[...],
+
+          "area":14.2,
+
+          "perimeter":16.8,
+
+          "doors":["D12"],
+
+          "windows":["W7"],
+
+          "adjacent":["Living"],
+
+          "lighting_ratio":0.18,
+
+          "ventilation":"Natural",
+
+          "floor":"1"
+      }
+  ],
+
+  "doors":[...],
+
+  "walls":[...],
+
+  "windows":[...]
+
+}
+```
+
+A partir de ahí puedes evaluar cientos de reglas.
+
+---
+
+# Mi conclusión
+
+Si tu objetivo es construir un sistema que **evalúe automáticamente el cumplimiento normativo de planos**, no elegiría una herramienta únicamente por la calidad con que detecta puertas y ventanas. La ventaja competitiva estará en la **riqueza del modelo semántico** y en la capacidad de representar relaciones espaciales y topológicas.
+
+Mi recomendación sería diseñar una arquitectura donde:
+
+* **Un motor de visión especializado** (como FloorPlanCAD o un modelo propio basado en investigación) reconstruya el plano y extraiga geometría y objetos.
+* Esa información se transforme en un **grafo semántico**, inspirado en IFC, donde cada espacio, muro, puerta o ventana tenga propiedades y relaciones (`conecta_con`, `contenido_en`, `adyacente_a`, `pertenece_a`, etc.).
+* Un **motor de reglas declarativas** (por ejemplo, basado en JSON Logic, Drools o un DSL propio) evalúe la normativa sin depender del modelo de IA.
+* Un **LLM** se utilice solo para interpretar la norma, generar explicaciones en lenguaje natural y asistir cuando una regla no pueda codificarse de forma determinista.
+
+Creo que ese enfoque es mucho más sólido que depender de una única plataforma como Floorplan.ai. De hecho, es la arquitectura que siguen muchas soluciones modernas de BIM, Digital Twins y *code compliance*, y te permitirá extender el sistema a nuevas normativas sin tener que volver a entrenar el modelo de reconocimiento. Dado el tipo de proyecto que has descrito en conversaciones anteriores, esta arquitectura es la que tendría más potencial para convertirse en una plataforma de análisis normativo escalable.
