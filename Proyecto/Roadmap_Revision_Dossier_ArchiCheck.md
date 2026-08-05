@@ -270,7 +270,21 @@ A pedido del usuario, tras confirmar que `floor-plan-walls` (Roboflow) da 0% rec
 
 **✅ Gran avance 2026-08-06 (séptima corrida) — compilación, construcción del modelo y descarga del checkpoint, todo exitoso. Séptimo bug, ya en la etapa final.** `diff_ras` compiló sin problema, el modelo se construyó (16.77M parámetros), y el checkpoint `hf:cubicasa5k` se descargó completo desde HuggingFace (1.45GB). El único fallo fue al cargar el checkpoint: `_pickle.UnpicklingError` — PyTorch 2.6 cambió el default de `weights_only` en `torch.load()` a `True` por seguridad, y este checkpoint viejo guarda un objeto `argparse.Namespace` junto a los pesos (común en checkpoints de investigación de la época), tipo no permitido por defecto en la nueva política. **No es un problema del checkpoint en sí** (viene del repo oficial de HuggingFace de los autores, ya verificado) — es la misma familia de fricción "código/checkpoint viejo vs. librerías nuevas de Colab" que ya se vino resolviendo. **Corregido**: parche `sed` en la Celda 9 que fuerza `weights_only=False` en la llamada a `torch.load`, justificado porque la fuente del checkpoint ya está verificada como oficial.
 
-**Sin ejecutar todavía el resultado final** — pendiente que el usuario corra la invocación con este último parche. Si esto funciona, sería la primera corrida completa de Raster2Seq contra nuestro ground truth.
+**✅✅ PRIMER RESULTADO REAL 2026-08-06 (octava corrida) — Raster2Seq corrió de punta a punta contra el ground truth propio. Primer modelo externo de todo el benchmark que detecta puertas/ventanas reales (no cero).** Tras 7 rondas de bugs (fvcore, descartes, invocación real de `predict.py`, parche CUDA demasiado amplio, parche CUDA corregido, chequeo sin `import torch`, `weights_only`), la inferencia terminó exitosamente sobre las 2 imágenes de PDV: 29 items detectados en Nivel 1, 23 en Nivel 2, exportados como JSON (`{'image_id', 'segmentation': [[x,y],...], 'category_id', 'id'}`, coordenadas en el espacio 256×256 al que `ResizeAndPad` reduce el plano) + visualizaciones PNG.
+
+**Confirmado visualmente** (imágenes `nivel1_pred_floorplan.png`/`nivel2_pred_floorplan.png`, convención roja=puerta/azul punteado=ventana del propio plotter): el modelo reconstruye una planta simplificada con recintos, puertas y ventanas ubicados en posiciones plausibles — muy distinto del resultado de `floor-plan-walls` (cero candidatos).
+
+**Conteo por categoría** (`door_window_index=[10,9]` para `dataset_name=cubicasa` → `category_id=10` puerta, `category_id=9` ventana, inferido cruzando con el conteo visual de las imágenes):
+
+| | Nivel 1 (GT: 17 puertas / 11 ventanas) | Nivel 2 (GT: 10 puertas / 9 ventanas) |
+|---|---|---|
+| Puertas predichas | 8 (47% del GT por conteo) | 8 (80% del GT por conteo) |
+| Ventanas predichas | 5 (45% del GT por conteo) | 3 (33% del GT por conteo) |
+| Recintos predichos (resto de categorías) | 16 | 12 |
+
+**🔴 Advertencia explícita, no confundir con un veredicto final**: esto es solo conteo, NO verificado por posición — un "8 de 17" no confirma que esas 8 predicciones estén en el lugar correcto (podría haber falsos positivos compensando falsos negativos, mismo riesgo ya identificado con CubiCasa5K en sesiones anteriores). Falta repetir el mismo tipo de verificación posicional ya hecha con MitUNet (muestrear cada punto GT contra la predicción más cercana), pero acá es más delicado: las coordenadas del JSON están en el espacio 256×256 de `ResizeAndPad`, y no está confirmado si el padding queda centrado o pegado a una esquina — hace falta revisar ese código antes de mapear coordenadas de vuelta al espacio original, para no repetir el mismo error de "asumir en vez de verificar" que ya costó varias rondas con los argumentos de `predict.py`.
+
+**Pendiente**: revisar `datasets/transforms.py::ResizeAndPad` para construir la transformación de coordenadas correcta, y recién ahí calcular un recall/precisión verdaderamente comparable (por posición, no por conteo) contra CubiCasa5K/DINO/floor-plan-walls ya medidos.
 
 ### P1 — Validar precisión del análisis geométrico (antes "P3", ahora primera prioridad)
 
