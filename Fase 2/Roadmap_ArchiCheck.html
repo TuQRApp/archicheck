@@ -455,6 +455,7 @@
       <p>Punto de partida a pedido del usuario: <a href="https://www.mastt.com/software/ai-blueprint-reader" target="_blank" rel="noopener">Mastt — 5 Best AI Blueprint Readers</a> — revisado en profundidad, visitadas las webs de cada herramienta, buscadas reviews/clientes/casos de uso reales. Se suma Floor Plan API (ya elegido como próxima prueba) porque cae en la misma categoría funcional.</p>
       <p class="note"><strong>Criterio explícito del usuario:</strong> el foco de ArchiCheck es 100% extracción de información para análisis de cumplimiento normativo — no cómputos de obra, no BIM, no diseño. Tabla A = candidatas a incorporar como insumo de extracción. Tabla B + Helonic = benchmark de hacia dónde apuntan las suites de compliance/coordinación (no de presupuestación).</p>
 
+      <p class="note">⚠️ <strong>SUPERADA 2026-08-05</strong> — ver la sección "Tabla única consolidada de extracción geométrica" más abajo, que reemplaza esta tabla como referencia vigente para P1. Se deja por trazabilidad histórica, no usar para decidir.</p>
       <p><strong>Tabla A — Extracción geométrica / blueprint reading (candidatas P1):</strong></p>
       <div class="tbl-wrap">
       <table class="gap">
@@ -618,6 +619,58 @@
       <p><strong>🔴 Error de fondo corregido</strong>: un documento (Copilot) propuso Raster-to-Graph, PolyRoom y RoomFormer como prioridad 1/2/3. Verificados los 3 repos reales: <strong>Raster-to-Graph</strong> (<code>github.com/SizheHu/Raster-to-Graph</code>, no <code>HSZVIS</code> como decía el doc) sí toma imagen raster como entrada — aplica, aunque su dataset de entrenamiento requiere solicitud. <strong>PolyRoom</strong> y <strong>RoomFormer</strong> — ambos reales, ambos con repos/pesos públicos, pero **toman nube de puntos 3D como entrada, no imagen 2D** — reconstruyen plantas desde escaneo 3D de un espacio construido, tarea distinta a vectorizar un PDF de plano. No aplican a nuestro problema, contrario a como se presentaron.</p>
       <p><strong>Patrón de diseño útil, independiente del modelo</strong>: usar estos modelos como <strong>detector de discrepancias en paralelo</strong> al pipeline determinístico — si dicen "7 puertas" donde el parser dice "0", se genera un conflicto para revisión del arquitecto, nunca se acepta automáticamente. Encaja con la interfaz de validación gráfica ya construida.</p>
       <p><strong>Lección de proceso</strong>: Gemini repitió la afirmación ya refutada de un "repo oficial liberado 2026"; un documento de ChatGPT fue al extremo opuesto y dijo que no existe ningún peso público (tampoco preciso). Ninguna IA individual es confiable sin verificación cruzada, en cualquier dirección (sobre-confianza o sub-confianza). Sin ejecutar nada todavía.</p>
+    </div>
+  </details>
+
+  <details class="item" open id="tabla-consolidada">
+    <summary>✅ Tabla única consolidada de extracción geométrica <span class="badge done">2026-08-05, reemplaza Tabla A</span></summary>
+    <div class="item-body">
+      <p>A pedido explícito del usuario, tras las 2 rondas de benchmark con 10 documentos de IA: <strong>una sola tabla, priorizada estrictamente por evidencia de calidad verificada, filtrada a solo lo que se puede integrar como backend de ArchiCheck</strong> — el arquitecto sigue viendo únicamente la interfaz de validación gráfica ya construida, nunca un portal/chat de terceros.</p>
+      <div class="tbl-wrap">
+      <table class="gap">
+        <thead><tr><th>#</th><th>Herramienta</th><th>Evidencia de calidad (verificada)</th><th>Cómo se integra (arquitecto solo ve ArchiCheck)</th><th>Riesgo/fricción</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><strong>MitUNet</strong></td>
+            <td>mIoU 88.75%, precisión 93.60%, recall 94.48% — tabla de resultados de paper real (arXiv:2512.02413), comparado contra UNet++/DeepLabV3+/SegFormer/UPerNet</td>
+            <td>Self-host: nueva celda de inferencia en el mismo Colab, corre sobre el PNG que ya genera el pipeline, exporta <code>muros_geo_mitunet</code> como segunda fuente cruzada contra <code>muros_geo</code> propio (patrón "detector de discrepancias") antes de la interfaz de validación existente</td>
+            <td>Solo muros (no puertas/ventanas/recintos); licencia de los pesos de MitUNet en sí sin verificar</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><strong>Raster-to-Graph</strong></td>
+            <td>Repo oficial confirmado (<code>github.com/SizheHu/Raster-to-Graph</code>), pesos publicados, entrada = imagen raster de plano (modalidad correcta, a diferencia de PolyRoom/RoomFormer, descartados por usar nube de puntos 3D)</td>
+            <td>Self-host: requiere compilar el módulo CUDA de deformable attention en Colab, corre sobre crops del plano, convierte su grafo (nodos=uniones, aristas=muros) al mismo formato <code>segmentos</code> que ya usa <code>muros_geo</code>/<code>puertas_geo</code></td>
+            <td>Sin cifra de precisión verificada de forma independiente; dataset de entrenamiento propio no es de descarga libre (solo relevante para fine-tuning)</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><strong>Archilogic Space API</strong></td>
+            <td>MCP Server real confirmado (beta); API GraphQL documentada que sí ingiere planos 2D (no solo BIM — corrige un descarte previo de esta misma tabla)</td>
+            <td>Llamada HTTP desde el backend/notebook — sube el PDF/imagen, recibe JSON con polígonos/muros/puertas/vanos, se mapea al esquema propio antes del portal</td>
+            <td>Posible paso humano interno de Archilogic para el "2D→modelo" completo; precio de volumen vía ventas</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><strong>Floor Plan API</strong></td>
+            <td>Único con métrica propia publicada (85.31% IoU muros vs. CubiCasa5K) — sin verificación independiente</td>
+            <td>Llamada HTTP <code>POST /v1/analyze</code>, mapeo de su JSON/GeoJSON al esquema propio</td>
+            <td>Sigue bloqueado — nadie confirmó que el registro entregue una key funcional</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><strong>Kamai</strong></td>
+            <td>Sin ninguna cifra de precisión publicada (confirmado, solo marketing)</td>
+            <td>Llamada HTTP a su Takeoff API, mismo patrón de mapeo</td>
+            <td>Esfuerzo bajo para probar, pero cualquier resultado hay que validarlo contra el ground truth propio</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <p><strong>FloorplanVLM queda fuera del ranking activo</strong>: el más alineado conceptualmente (JSON topológico, incluye curvas/arcos), pero el único checkpoint usable hereda licencia CC BY-NC 4.0 de CubiCasa5K — bloqueo legal real, no cuestión de calidad. Si se reentrena desde cero con datos propios, vuelve a ser candidato de primera línea.</p>
+      <p><strong>Excluidos explícitamente</strong>: por no ser backend-integrables — Mastt, Kreo Caddie (chat que el arquitecto usaría en vez de ArchiCheck). Por dominio equivocado — CubiCasa API/2.0 (foto→plano), PolyRoom/RoomFormer (nube de puntos 3D), MSD (generación, no extracción). Por evidencia insuficiente o sin acceso confirmado — Togal.AI, Markovate, DeepFloorplan/TF2DeepFloorplan, SymPointV2, ArchCAD-400K, DoorDet, CADSpotting, ResPlan, FloorScan.ai, Bild AI, Bricsys BIMIFY, Autodesk Forma. CubiCasa5K (dataset abierto) sigue como baseline ya conocido, no compite por un lugar en esta tabla.</p>
+      <p><strong>Patrón de integración común a las 5 entradas</strong>: ninguna reemplaza el pipeline determinístico propio — todas entran como fuente adicional en paralelo, cruzada contra <code>muros_geo</code>/<code>puertas_geo</code> ya calculados. Las discrepancias se muestran como conflicto en la interfaz de validación gráfica, nunca se aceptan automáticamente. <strong>Sin ejecutar nada todavía</strong> — MitUNet tiene la evidencia más sólida y el menor riesgo legal/de acceso de los 5.</p>
     </div>
   </details>
 
