@@ -591,6 +591,24 @@
     </div>
   </details>
 
+  <details class="item">
+    <summary>🆕 Benchmark multi-IA de extracción geométrica <span class="badge progress">2026-08-05, verificado</span></summary>
+    <div class="item-body">
+      <p>Se preparó un prompt (guardado en <code>Fase 2/Benchmark/Prompt_Benchmark_Herramientas_Geometricas_2026-08-05.md</code>) para consultar a 4 IAs distintas sobre herramientas complementarias de extracción geométrica, dado el bloqueo de Floor Plan API y el desafío central de generalización. Las 4 respuestas (guardadas en <code>Fase 2/Desarrollos/Test/Bench/</code>) se cruzaron y <strong>se verificaron las afirmaciones más específicas contra fuente primaria (arXiv, docs oficiales)</strong> — mismo criterio de rigor ya aplicado toda la sesión al auditar citas de Revi.</p>
+      <p><strong>Resultado — sorpresa positiva</strong>: a diferencia de las fabricaciones encontradas antes en citas normativas de Revi, la mayoría de las afirmaciones específicas de estas 4 IAs se confirmaron reales:</p>
+      <ul>
+        <li><strong>FloorplanVLM</strong> (arXiv:2602.06507, feb. 2026) — ✅ confirmado leyendo el abstract directo: 92.52% IoU en muros exteriores, benchmark FPBench-2K open-source, sí prueba arquitecturas "no-Manhattan" (muros diagonales/curvos). Reformula la vectorización como secuencia JSON topológica (muros→vanos→recintos), no segmentación píxel a píxel — encajaría directo con el motor de reglas. <strong>Sin confirmar</strong>: si el código/pesos ya están publicados en un repo oficial (el abstract no lo especifica; hay 2 repos en HuggingFace sin confirmar si son la versión oficial o reproducciones de terceros).</li>
+        <li><strong>FloorPlanFormer</strong> (AAAI 2026, presentado 25-ene-2026) — ✅ confirmado real: Swin Transformer + prompt/mask decoder, multi-tarea (muros/ventanas/puertas/recintos), dataset propio FloorPlan8K. La fuente ya advirtió honestamente: sin pesos ni repo público encontrado — confirmado, coincide.</li>
+        <li><strong>MitUNet</strong> (arXiv:2512.02413) — ✅ confirmado con repo GitHub (<code>github.com/aliasstudio/mitunet</code>) + dataset en Zenodo. Única evidencia publicada de que la receta "pre-entrenar en dataset grande no-chileno + fine-tune con dataset regional chico" funciona (mIoU 88.5% en su caso ruso/CIS, detalle no verificado directamente por mí pero no contradicho).</li>
+        <li><strong>Archilogic MCP Server</strong> — ✅ confirmado real vía documentación oficial, actualmente en <strong>beta</strong>.</li>
+        <li><strong>MSD (Modified Swiss Dwellings, ECCV 2024)</strong> — ✅ confirmado, mismo repo citado independientemente por 2 de las 4 IAs — buena señal de convergencia real.</li>
+      </ul>
+      <p><strong>Descartado por consenso de las propias fuentes</strong>: CubiCasa API (Conversion/Integrate, confirmado "foto de casa real → plano", mismo dominio equivocado que CubiCasa5K/CubiCasa 2.0); Markovate (consultoría a medida, no self-serve); Bild AI (alcance insuficiente, solo puertas); Bricsys BIMIFY y Autodesk Forma (problema distinto).</p>
+      <p><strong>Sin verificar, tratar con cautela</strong> (fuente menos rigurosa de las 4): "Few-shot + SAM + GPT" (2025, adaptación de SAM con 5 ejemplos etiquetados — interesante porque no es zero-shot como el DINO+SAM2 ya descartado, pero sin repo confirmado), WiseBIM, "floorplan-parser" de HuggingFace.</p>
+      <p><strong>Síntesis priorizada</strong>: (1) <strong>FloorplanVLM</strong> — el más alineado con el problema real, pendiente confirmar disponibilidad de pesos; (2) <strong>MitUNet</strong> — apuesta de menor esfuerzo, usar pesos de CubiCasa5K + fine-tuning con los 954 planos chilenos de MLSTRUCT-FP (P1b) que siguen sin usarse; (3) <strong>MSD</strong> como set de estrés de generalización cross-dominio; (4) <strong>Kamai</strong> (kamai.io) vale una tarde de prueba — único comercial nuevo con ingesta PDF/CAD y portal self-serve. <strong>Sin ejecutar nada todavía</strong> — pendiente que el usuario decida por cuál empezar.</p>
+    </div>
+  </details>
+
   <details class="item" open>
     <summary>P1 — Validar precisión del análisis geométrico <span class="badge progress">En curso</span></summary>
     <div class="item-body">
