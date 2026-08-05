@@ -622,9 +622,10 @@
     </div>
   </details>
 
-  <details class="item" open id="tabla-consolidada">
-    <summary>✅ Tabla única consolidada de extracción geométrica <span class="badge done">2026-08-05, reemplaza Tabla A</span></summary>
+  <details class="item" id="tabla-consolidada">
+    <summary>⚠️ Tabla de 5 filas — SUPERADA <span class="badge progress">2026-08-05, ver inventario completo abajo</span></summary>
     <div class="item-body">
+      <p class="note">⚠️ <strong>SUPERADA la misma noche del 2026-08-05</strong> — esta tabla filtraba implícitamente por costo/complejidad de acceso y por eso dejó afuera candidatos con evidencia fuerte (MLSTRUCT-FP/Pizarro, Raster2Seq). Reemplazada por el "Inventario completo sin filtro de precio/complejidad" más abajo, a pedido explícito del usuario. Se deja por trazabilidad.</p>
       <p>A pedido explícito del usuario, tras las 2 rondas de benchmark con 10 documentos de IA: <strong>una sola tabla, priorizada estrictamente por evidencia de calidad verificada, filtrada a solo lo que se puede integrar como backend de ArchiCheck</strong> — el arquitecto sigue viendo únicamente la interfaz de validación gráfica ya construida, nunca un portal/chat de terceros.</p>
       <div class="tbl-wrap">
       <table class="gap">
@@ -671,6 +672,52 @@
       <p><strong>FloorplanVLM queda fuera del ranking activo</strong>: el más alineado conceptualmente (JSON topológico, incluye curvas/arcos), pero el único checkpoint usable hereda licencia CC BY-NC 4.0 de CubiCasa5K — bloqueo legal real, no cuestión de calidad. Si se reentrena desde cero con datos propios, vuelve a ser candidato de primera línea.</p>
       <p><strong>Excluidos explícitamente</strong>: por no ser backend-integrables — Mastt, Kreo Caddie (chat que el arquitecto usaría en vez de ArchiCheck). Por dominio equivocado — CubiCasa API/2.0 (foto→plano), PolyRoom/RoomFormer (nube de puntos 3D), MSD (generación, no extracción). Por evidencia insuficiente o sin acceso confirmado — Togal.AI, Markovate, DeepFloorplan/TF2DeepFloorplan, SymPointV2, ArchCAD-400K, DoorDet, CADSpotting, ResPlan, FloorScan.ai, Bild AI, Bricsys BIMIFY, Autodesk Forma. CubiCasa5K (dataset abierto) sigue como baseline ya conocido, no compite por un lugar en esta tabla.</p>
       <p><strong>Patrón de integración común a las 5 entradas</strong>: ninguna reemplaza el pipeline determinístico propio — todas entran como fuente adicional en paralelo, cruzada contra <code>muros_geo</code>/<code>puertas_geo</code> ya calculados. Las discrepancias se muestran como conflicto en la interfaz de validación gráfica, nunca se aceptan automáticamente. <strong>Sin ejecutar nada todavía</strong> — MitUNet tiene la evidencia más sólida y el menor riesgo legal/de acceso de los 5.</p>
+    </div>
+  </details>
+
+  <details class="item" open id="inventario-completo">
+    <summary>✅ Inventario completo de extracción geométrica, SIN filtro de precio/complejidad <span class="badge done">2026-08-05, ronda final — vigente</span></summary>
+    <div class="item-body">
+      <p>A pedido explícito del usuario: revisión completa de los 10 documentos de IA + el prompt propio, sin descartar nada por costo o dificultad de implementación — <strong>el único criterio es calidad de evidencia</strong>. Se mantienen 2 filtros que NO son de precio: (a) la modalidad/tarea tiene que coincidir con el problema real (PDF/raster 2D, extracción, no generación/BIM/nube de puntos 3D); (b) tiene que existir algún camino técnico real de acceso (repo/pesos/API confirmados). El requisito de "interfaz única para el arquitecto" sigue vigente por separado.</p>
+      <p><strong>Hallazgo nuevo de esta ronda, verificado directamente — el más fuerte de todo el benchmark</strong>: <strong>Raster2Seq</strong> (arXiv:2602.09016, SIGGRAPH 2026, Cornell) — investigado de oficio al revisar todo de nuevo, ninguno de los 10 documentos lo trajo con este detalle. Confirmado: pesos oficiales reales en HuggingFace (<code>huggingface.co/haopt/Raster2Seq</code>), <strong>licencia MIT</strong> (sin el problema legal de FloorplanVLM), produce el <strong>pipeline completo</strong> (recintos con semántica + puertas + ventanas, no solo muros). Cifras reales: CubiCasa5K Room F1 88.7, Corner F1 59.4; Structured3D-B Room F1 99.6, Corner F1 98.3. Generalización cross-dominio ya demostrada por los propios autores (dataset WAFFLE, zero-shot). Caveats: sin confirmar geometría no-Manhattan; entrenado en parte sobre CubiCasa5K (CC BY-NC) — zona gris legal entre licencia de datos y licencia del modelo, recomendable consulta legal puntual antes de producción.</p>
+
+      <p><strong>Ranking final por calidad (sin restricción de precio/complejidad):</strong></p>
+      <div class="tbl-wrap">
+      <table class="gap">
+        <thead><tr><th>#</th><th>Candidato</th><th>Evidencia de calidad</th><th>Alcance</th><th>Camino técnico</th><th>Riesgo/fricción (no descalifica)</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Raster2Seq</strong></td><td>F1 real en 2 datasets, generalización cross-dominio demostrada (WAFFLE zero-shot)</td><td>Muros+puertas+ventanas+recintos+semántica — pipeline completo</td><td>Self-host, pesos MIT descargables ya</td><td>Sin confirmar no-Manhattan; zona gris legal por datos de entrenamiento</td></tr>
+          <tr><td>2</td><td><strong>FloorplanVLM (reentrenado desde cero)</strong></td><td>Paper original: 92.52% IoU, no-Manhattan confirmado — con datos propietarios no reproducibles tal cual</td><td>Muros+vanos+recintos vía JSON topológico nativo, el diseño más alineado al motor de reglas</td><td>Reentrenar desde cero (CubiCasa5K→planos chilenos propios→casos problemáticos), GPU+semanas</td><td>Caro y lento, pero evita el bloqueo legal del adapter comunitario — sigue siendo "lo más parecido a floorplan.ai" en espíritu</td></tr>
+          <tr><td>3</td><td><strong>MitUNet</strong></td><td>mIoU 88.75%, precisión 93.60%, recall 94.48% — verificado</td><td>Solo muros</td><td>Self-host, pesos ya descargables</td><td>Sin evaluar contra nuestro ground truth</td></tr>
+          <tr><td>4</td><td><strong>MLSTRUCT-FP / U-Net (Pizarro)</strong></td><td>IoU 0.77/0.90 reportado por el autor, "prueba de concepto" — nunca lo corrimos</td><td>Solo muros</td><td>Self-host, checkpoint gratis disponible hace semanas sin usar</td><td>Cifra más baja que MitUNet, pero dominio chileno real — el más barato de probar de toda la lista</td></tr>
+          <tr><td>5</td><td><strong>Archilogic Space API</strong></td><td>MCP Server real (beta), GraphQL que ingiere 2D</td><td>Muros+puertas+ventanas+recintos, schema comercial completo</td><td>Llamada HTTP, backend puro</td><td>Posible paso humano interno; precio por ventas</td></tr>
+          <tr><td>6</td><td><strong>DeepFloorplan/TF2DeepFloorplan</strong></td><td>Repo+pesos reales (2019), red multi-tarea clásica</td><td>Muros+puertas+ventanas+recintos en una arquitectura</td><td>Self-host, pesos descargables</td><td>Entrenado en CubiCasa5K, mismo sesgo finlandés conocido</td></tr>
+          <tr><td>7</td><td><strong>Floor Plan API</strong></td><td>Única con métrica externa (85.31% IoU), sin verificación independiente</td><td>Pipeline comercial más parecido al ideal original</td><td>Llamada HTTP <code>POST /v1/analyze</code></td><td>Sigue bloqueada, se mantiene como "el floorplan.ai" a conservar en el radar</td></tr>
+          <tr><td>8</td><td><strong>Kreo FPR</strong></td><td>Sin cifras verificadas — la afirmación de Gemini sobre "fuentes Type3" NO tiene respaldo, verificado contra la fuente real</td><td>PDF y DWG, I-OCR+visión</td><td>Comercial, validación corporativa</td><td>No self-serve, evidencia débil</td></tr>
+          <tr><td>9</td><td><strong>Kamai</strong></td><td>Sin ninguna cifra publicada (confirmado)</td><td>Pipeline completo declarado</td><td>Llamada HTTP, portal self-serve</td><td>Resultado exige validación propia desde cero</td></tr>
+          <tr><td>10</td><td><strong>FloorScan.ai</strong></td><td>"+90% accuracy" — marketing sin metodología</td><td>Puertas+ventanas+muros+superficies</td><td>Trial web; API "coming soon", no operativa</td><td>No integrable como backend hoy</td></tr>
+          <tr><td>11</td><td><strong>WiseBIM</strong></td><td>Sin evidencia cuantitativa</td><td>Acepta PDF, rasteriza antes de modelar</td><td>Sin API/JSON programático confirmado</td><td>Más útil como benchmark visual manual</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p><strong>Grupos complementarios (documentados por completitud, no compiten por el primer puesto):</strong></p>
+      <ul>
+        <li><strong>Símbolos CAD vectorial</strong>: SymPoint/SymPointV2 (Panoptic Quality 83.3%→90.1%, cifra propia), ArchCAD-400K+DPSS (27 categorías, dataset parcial público), DoorDet (dataset reciente), CADSpotting (sin repo público).</li>
+        <li><strong>Segmentación de recintos vía SAM</strong>: SAM prompteado sin fine-tuning (ICIAP 2025), Few-shot+SAM+GPT (adaptación con 5 ejemplos, no zero-shot), FRI-Net (ECCV 2024, código+pesos), Raster-to-Graph (grafo de muros, pesos reales, dataset propio con solicitud).</li>
+        <li><strong>Datasets de referencia</strong>: MSD (generación, no extracción), CVC-FP (122 planos, 4 estilos), ResPlan (17.000 planos), WAFFLE (el set de estrés que usa Raster2Seq).</li>
+        <li><strong>Soporte/parsing alternativo</strong>: Aspose.PDF (segunda vía comercial de parsing vectorial, control experimental).</li>
+      </ul>
+
+      <p><strong>Confirmados NO aplicables</strong> (dominio/tarea equivocada, no precio): PolyRoom/RoomFormer (nube de puntos 3D), CubiCasa API/2.0 (foto→plano), Bricsys BIMIFY/Autodesk Forma/BatchPlan (BIM/3D, no PDF 2D), GSDiff (genera, no interpreta).</p>
+
+      <p><strong>Excluidos por interfaz única</strong> (no por precio): Mastt, Kreo Caddie — chat que el arquitecto usaría en vez de ArchiCheck, quedan como referencia UX.</p>
+
+      <p><strong>Mantenidos por completitud pese a evidencia débil/alcance angosto</strong>: Togal.AI (precio alto pero validación real de U. Kansas, 76% más rápido), Bild AI (angosto pero tracción YC real), Markovate (no self-serve pero cubre DWG/DXF/escaneados, gap real).</p>
+
+      <p><strong>Respondiendo al pedido de conservar "algo como floorplan.ai"</strong>: dos caminos, ninguno descartado — (1) comprar/integrar un pipeline comercial completo (Floor Plan API, Archilogic, Kamai, Kreo FPR, FloorScan.ai cuando salga de beta); (2) construir el equivalente propio (Raster2Seq, casi listo para correr, o FloorplanVLM reentrenado desde cero) — este segundo camino da más control y menos dependencia de terceros, coherente con el moat normativo del resto de ArchiCheck.</p>
+
+      <p><strong>Sin ejecutar nada todavía</strong> — con esta ronda, <strong>Raster2Seq pasa a ser la recomendación de mayor calidad para probar primero</strong> (pesos ya descargables, licencia limpia, pipeline completo, generalización ya demostrada), seguido de <strong>MLSTRUCT-FP/Pizarro</strong> por ser el más barato/rápido de probar como segundo punto de comparación inmediato.</p>
     </div>
   </details>
 
