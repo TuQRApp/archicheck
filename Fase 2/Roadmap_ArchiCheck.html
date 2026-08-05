@@ -730,6 +730,15 @@
   </details>
 
   <details class="item" open>
+    <summary>🔲 Notebook de benchmark MitUNet + Raster2Seq <span class="badge progress">2026-08-06, pendiente de correr en Colab</span></summary>
+    <div class="item-body">
+      <p>Tras confirmar que <code>floor-plan-walls</code> (Roboflow) da 0% recall real en puertas/ventanas, se construyó <code>Fase 2/Benchmark/Test_MitUNet_Raster2Seq_2026-08-06.ipynb</code> — notebook dedicado que corre MitUNet y Raster2Seq (los 2 candidatos con mejor evidencia verificada) contra el mismo ground truth v13 (PDV Nivel 1: 17 puertas/11 ventanas/21 puntos de muro; Nivel 2: 10 puertas/9 ventanas/27 puntos de muro).</p>
+      <p><strong>Estructura</strong>: Parte A (MitUNet) — clona el repo, carga el checkpoint, corre inferencia, calcula recall aproximado muestreando la máscara predicha en cada punto GT de muro. Parte B (Raster2Seq) — clona el repo, compila 2 módulos CUDA propios (punto más frágil del notebook), descarga el checkpoint CubiCasa5K, corre <code>predict.py</code>, exporta JSON.</p>
+      <p class="note">Construido con información real de cada repo (README + <code>predict.py --help</code> leídos directamente), pero <strong>sin poder probarse localmente</strong> (sin GPU/Python en este entorno) — es la primera pasada, no un notebook maduro como el principal. Puntos de fricción conocidos y señalados dentro del notebook: ruta del checkpoint de MitUNet podría haber cambiado, arquitectura exacta inferida por el nombre del archivo (no confirmada), compilación CUDA de Raster2Seq es punto de falla típico, esquema del JSON de salida no documentado públicamente (la celda 9 imprime el JSON crudo primero antes de parsear). <strong>Pendiente que el usuario lo corra en Colab y reporte errores/resultados reales.</strong></p>
+    </div>
+  </details>
+
+  <details class="item" open>
     <summary>P1 — Validar precisión del análisis geométrico <span class="badge progress">En curso</span></summary>
     <div class="item-body">
       <p>Primera prioridad. OpenCV (geometría de recintos) + Claude Vision/GPT-4o (semántica) trabajando juntos — es lo que da valor real hoy.</p>
