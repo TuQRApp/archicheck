@@ -104,6 +104,27 @@ El usuario pidió preparar un prompt (guardado en `Fase 2/Benchmark/Prompt_Bench
 
 **Sin ejecutar nada todavía** — pendiente que el usuario decida por cuál empezar.
 
+## 🆕 Segunda ronda de investigación (2026-08-05, misma noche) — "cómo usar FloorplanVLM en la práctica", 6 documentos más (Claude/ChatGPT/Gemini/Copilot ×2/Perplexity), verificados contra fuente primaria
+
+El usuario siguió investigando en paralelo cómo usar FloorplanVLM concretamente, consultando 6 IAs más (guardadas en `Fase 2/Desarrollos/Test/Bench/`: `Uso FloorplanVLM {Claude,Chatgpt,Gemini,Copilot,Perplexity}.pdf` + `Alternativas a Floorplan.ai Copilot.pdf`). Mismo criterio de verificación contra fuente primaria aplicado.
+
+**Corrección a la entrada anterior de esta misma sesión**: dijimos "no hay pesos" para FloorplanVLM — más preciso: **no hay reproducción oficial del 92.52% IoU** (entrenado con dataset propietario de Beike/Ke.com — `Floorplan-2M`/`HQ-300K`, nunca liberado, con infraestructura de 32×H200 según un documento), **pero sí existe un adapter LoRA real y descargable**: `huggingface.co/mudasir13cs/qwen25-vl-3b-floorplan-grpo` — **verificado directamente, carga y funciona**: Qwen2.5-VL-3B + GRPO con recompensas geométricas, entrenado sobre CubiCasa5K + `Forceless/Zenodo10K`. Sin métricas de evaluación publicadas para este checkpoint específico (nadie verificó qué tan bien funciona en la práctica).
+
+**🔴 Bloqueo legal real, confirmado directamente**: CubiCasa5K es **CC BY-NC 4.0** (uso no comercial) — verificado en `github.com/CubiCasa/CubiCasa5k/blob/master/LICENSE`. Cualquier peso entrenado con ese dataset — incluido el adapter de arriba, que la propia ficha de HuggingFace etiqueta explícitamente "non-commercial/research use" — hereda esa restricción. Usar ese checkpoint en producción en ArchiCheck (producto comercial) es un problema legal antes que técnico, salvo que se reentrene desde cero con datos propios (planos chilenos corregidos vía la interfaz de validación gráfica).
+
+**🔴 Error de fondo detectado y corregido en la recomendación de uno de los documentos (Copilot, "Alternativas a Floorplan.ai")**: proponía Raster-to-Graph, PolyRoom y RoomFormer como prioridad 1/2/3 "porque atacan mejor la generalización estructural". Verificados los 3 repos reales:
+- **Raster-to-Graph** (Eurographics 2024) — repo real `github.com/SizheHu/Raster-to-Graph` (no `HSZVIS` como decía el documento — confundió organización/usuario), pesos pre-entrenados publicados, **sí toma imagen raster de plano como entrada — aplica a nuestro problema**. Matiz no mencionado por la fuente: el dataset de entrenamiento (LIFULL HOME'S) NO es de descarga libre, requiere solicitud + aprobación semanal.
+- **PolyRoom** (ECCV 2024, `github.com/3dv-casia/PolyRoom`, real) — **❌ toma NUBE DE PUNTOS 3D como entrada, no imagen 2D** — reconstruye plantas desde escaneos 3D de un espacio ya construido (tipo LIDAR), no desde el PDF/imagen de un plano de arquitecto. **No aplica a nuestro problema**, contrario a como lo presentó el documento.
+- **RoomFormer** (CVPR 2023, `github.com/ywyue/RoomFormer`, real, pesos públicos) — **❌ mismo problema**: procesa nube de puntos 3D pre-procesada a imágenes 256×256, evaluado en Structured3D/SceneCAD (escaneos sintéticos de interiores) — **no aplica a nuestro problema**.
+
+De los 3 candidatos nuevos de esa ronda, **solo Raster-to-Graph es relevante** — los otros 2 resuelven una tarea distinta (reconstrucción desde escaneo 3D, no vectorización de un plano 2D existente).
+
+**Patrón de diseño convergente, útil independiente de qué modelo se elija** (aparece en los documentos de Copilot y ChatGPT): usar cualquiera de estos modelos (FloorplanVLM, Raster-to-Graph) **no como reemplazo del pipeline determinístico, sino como detector de discrepancias en paralelo** — si el modelo dice "7 puertas" donde el parser vectorial dice "0", se genera un conflicto explícito para revisión del arquitecto, nunca se acepta automáticamente. Encaja directo con la interfaz de validación gráfica ya construida — mismo principio de "no confiar ciegamente" ya aplicado en todo el proyecto.
+
+**Otros hallazgos menores de esta ronda**: Gemini repitió, en un documento de seguimiento, la afirmación ya refutada de que existe un "repositorio oficial liberado en 2026" para FloorplanVLM — mismo patrón de sobreconfianza que ya se había detectado y corregido. Un documento de ChatGPT fue al extremo opuesto: afirmó que no existe ningún peso/repo/API pública para FloorplanVLM, lo cual también es impreciso (sí existe el adapter comunitario ya descrito) — ilustra que ninguna IA individual es confiable sin verificación cruzada contra fuente primaria, en cualquiera de las dos direcciones (sobre-confianza y sub-confianza).
+
+**Sin ejecutar nada todavía.**
+
 ### P1 — Validar precisión del análisis geométrico (antes "P3", ahora primera prioridad)
 
 > **✅ RESUELTO (2026-07-28) — era caché del navegador, no un bug de código.** La corrida de prueba `2026-07-27 2352` mostraba "DS 50/2015 Art. N" intacto pese al fix ya desplegado — se sospechó bug real. Se descartó paso a paso: (1) Vercel dashboard confirmó deploy "Ready · Latest" del commit correcto; (2) revisar el código fuente confirmó `sanitizeDS50()` bien definido y aplicado envolviendo `merged` antes de `setResult`; (3) **la prueba definitiva fue abrir una ventana de incógnito** (sin ningún caché posible) y repetir la corrida con el mismo JSON de PDV — ahí los 3 fixes de la sesión anterior se confirmaron funcionando al 100% (PDF `2026-07-28 2138`):

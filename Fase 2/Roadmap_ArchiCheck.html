@@ -609,6 +609,18 @@
     </div>
   </details>
 
+  <details class="item">
+    <summary>🆕 Segunda ronda: "cómo usar FloorplanVLM", 6 documentos más <span class="badge progress">2026-08-05, verificado</span></summary>
+    <div class="item-body">
+      <p>El usuario siguió investigando en paralelo cómo usar FloorplanVLM concretamente, consultando 6 IAs más (guardadas en <code>Fase 2/Desarrollos/Test/Bench/</code>). Mismo criterio de verificación contra fuente primaria.</p>
+      <p><strong>Corrección a la entrada anterior</strong>: no hay reproducción oficial del 92.52% IoU (dataset propietario de Beike/Ke.com, nunca liberado), <strong>pero sí existe un adapter LoRA real y descargable</strong> (<code>huggingface.co/mudasir13cs/qwen25-vl-3b-floorplan-grpo</code>, verificado que carga y funciona: Qwen2.5-VL-3B + CubiCasa5K). Sin métricas de evaluación publicadas para este checkpoint.</p>
+      <p><strong>🔴 Bloqueo legal real, confirmado</strong>: CubiCasa5K es <strong>CC BY-NC 4.0</strong> (verificado en su LICENSE de GitHub) — cualquier peso entrenado con ese dataset (incluido el adapter, etiquetado explícitamente "non-commercial/research use") hereda esa restricción. Usarlo en producción en ArchiCheck (producto comercial) es un problema legal, no solo técnico.</p>
+      <p><strong>🔴 Error de fondo corregido</strong>: un documento (Copilot) propuso Raster-to-Graph, PolyRoom y RoomFormer como prioridad 1/2/3. Verificados los 3 repos reales: <strong>Raster-to-Graph</strong> (<code>github.com/SizheHu/Raster-to-Graph</code>, no <code>HSZVIS</code> como decía el doc) sí toma imagen raster como entrada — aplica, aunque su dataset de entrenamiento requiere solicitud. <strong>PolyRoom</strong> y <strong>RoomFormer</strong> — ambos reales, ambos con repos/pesos públicos, pero **toman nube de puntos 3D como entrada, no imagen 2D** — reconstruyen plantas desde escaneo 3D de un espacio construido, tarea distinta a vectorizar un PDF de plano. No aplican a nuestro problema, contrario a como se presentaron.</p>
+      <p><strong>Patrón de diseño útil, independiente del modelo</strong>: usar estos modelos como <strong>detector de discrepancias en paralelo</strong> al pipeline determinístico — si dicen "7 puertas" donde el parser dice "0", se genera un conflicto para revisión del arquitecto, nunca se acepta automáticamente. Encaja con la interfaz de validación gráfica ya construida.</p>
+      <p><strong>Lección de proceso</strong>: Gemini repitió la afirmación ya refutada de un "repo oficial liberado 2026"; un documento de ChatGPT fue al extremo opuesto y dijo que no existe ningún peso público (tampoco preciso). Ninguna IA individual es confiable sin verificación cruzada, en cualquier dirección (sobre-confianza o sub-confianza). Sin ejecutar nada todavía.</p>
+    </div>
+  </details>
+
   <details class="item" open>
     <summary>P1 — Validar precisión del análisis geométrico <span class="badge progress">En curso</span></summary>
     <div class="item-body">
