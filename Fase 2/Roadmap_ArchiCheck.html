@@ -889,15 +889,16 @@
     </div>
   </details>
 
-  <details class="item">
-    <summary>P1b — U-Net + MLSTRUCT-FP <span class="badge pending">Pendiente</span></summary>
+  <details class="item" open>
+    <summary>P1b — U-Net + MLSTRUCT-FP <span class="badge progress">Checkpoint probado, fine-tuning propio pendiente 2026-08-07</span></summary>
     <div class="item-body">
-      <p>Misma familia que P1, en paralelo, no depende de nada — puede arrancar ya.</p>
+      <p>Misma familia que P1, en paralelo.</p>
       <ul>
         <li>Dataset MLSTRUCT-FP (Pizarro, 954 planos chilenos), target IoU ≥0.90 (referencia publicada: promedio 0.77, moda 0.90).</li>
         <li>Alcance real: solo segmenta muros, no puertas/ventanas/escaleras — complementario a P1, no reemplazo.</li>
-        <li>Paso recomendado antes de gastar en GPU: probar el checkpoint pre-entrenado (<code>no_rot_256_50</code>) contra 1-2 planos chilenos reales — gratis, dice si hace falta entrenar desde cero.</li>
       </ul>
+      <p><strong>✅ Paso "probar el checkpoint pre-entrenado gratis antes de gastar en GPU" — HECHO 2026-08-06, resultado: 0% recall</strong> en ambos niveles de prueba (ver benchmark completo arriba). El checkpoint <code>no_rot_256_50</code> es real y legítimo (entrenado 2023, 10 épocas) pero no generaliza al estilo visual del plano de prueba (blueprint escaneado real vs. renders sintéticos limpios de su dataset) — descarta usar el checkpoint tal cual, sin entrenar. El 0% no dice que el U-Net como arquitectura sea inviable, dice que el checkpoint publicado no transfiere al estilo de dibujo real de producción.</p>
+      <p class="note"><strong>🔲 Pendiente — el usuario lo retoma 2026-08-07 (mañana)</strong>: definir el plan de fine-tuning propio con datos chilenos reales en el estilo visual de producción (no el dataset sintético original), GPU en RunPod/Vast.ai, y decidir si fine-tunear desde <code>no_rot_256_50</code> o entrenar desde cero.</p>
     </div>
   </details>
 
