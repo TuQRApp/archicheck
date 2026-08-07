@@ -419,6 +419,9 @@ function buildColabTexto(json) {
 const CORRECCIONES_VACIAS = {
   recintosEditados: {}, recintosEliminados: [], cortes: [], fusiones: [], areasExcluidas: [],
   elementosPuntualesEditados: {}, elementosPuntualesEliminados: [], elementosPuntualesNuevos: [],
+  // motivo opcional por elemento eliminado (id -> texto), separado de elementosPuntualesEliminados
+  // para no tocar los .includes(id) ya usados en varios lugares — ver eliminarElemento().
+  motivosEliminacion: {},
 };
 
 // "campo" apunta a analisis_semantico[campo] (detección vía Claude Vision) para las categorías
@@ -661,7 +664,7 @@ function construirColabJsonCorregido(colabJson, correcciones) {
 // el dataset al esquema completo del portal (analisis_semantico cambia seguido). dpi/proyecto son
 // campos top-level de colabJsonCorregido, se repiten en cada página exportada para que el archivo
 // sea autocontenido (el notebook de rasterización recibe un JSON por página, no el árbol completo).
-function construirDatasetMurosPorPagina(colabJsonCorregido) {
+function construirDatasetMurosPorPagina(colabJsonCorregido, murosDescartadosPorEntryIdx = {}) {
   const dpi = colabJsonCorregido?.dpi;
   const proyecto = colabJsonCorregido?.proyecto || "proyecto";
   return (colabJsonCorregido?.paginas || []).map(pag => ({
@@ -672,7 +675,27 @@ function construirDatasetMurosPorPagina(colabJsonCorregido) {
     // puertas_geo al mismo costo — deja el pipeline listo para reusarse en P04 (puertas) sin
     // tener que volver a tocar este exportador.
     puertas_geo: pag.puertas_geo || [],
+    // Muros que el arquitecto descartó durante la revisión, con motivo si lo dejó — no son dato
+    // positivo de entrenamiento (por eso van aparte, no en muros_geo), pero documentan patrones
+    // reales de falso positivo del extractor geométrico (OpenCV), útiles para mejorarlo después.
+    muros_descartados: murosDescartadosPorEntryIdx[pag.entry_idx] || [],
   }));
+}
+
+// Muros eliminados por el arquitecto, calculados contra colabJson ORIGINAL (sin corregir) —
+// construirColabJsonCorregido ya los saca por completo de pag.muros_geo, así que hay que ir a
+// buscarlos antes de ese filtro para no perder el registro de qué se descartó y por qué.
+function construirMurosDescartadosPorPagina(colabJson, correcciones) {
+  const out = {};
+  for (const pag of colabJson?.paginas || []) {
+    out[pag.entry_idx] = (pag.muros_geo || [])
+      .filter(m => correcciones.elementosPuntualesEliminados.includes(m.id))
+      .map(m => ({
+        id: m.id, motivo: correcciones.motivosEliminacion?.[m.id] || null,
+        segmentos: m.segmentos, ancho_linea_prom: m.ancho_linea_prom, largo_total_m: m.largo_total_m,
+      }));
+  }
+  return out;
 }
 
 // Descarga, por cada página con PNG limpio disponible, el par (imagen sin overlay, geometría de
@@ -680,8 +703,9 @@ function construirDatasetMurosPorPagina(colabJsonCorregido) {
 // descarga que descargarPngsRevisados (linea de abajo) para el PNG, y el patrón Blob de exportPDF
 // para el JSON — sin inventar un mecanismo nuevo. colabPngs[i].objectUrl es el PNG crudo sin
 // overlay (leerPngCrudo); pngsRevisadosPorPagina NO sirve acá, tiene anotaciones dibujadas encima.
-function descargarDatasetMuros(colabJsonCorregido, colabPngs, tsFile) {
-  const paginasDataset = construirDatasetMurosPorPagina(colabJsonCorregido);
+function descargarDatasetMuros(colabJson, colabJsonCorregido, colabCorrecciones, colabPngs, tsFile) {
+  const murosDescartadosPorEntryIdx = construirMurosDescartadosPorPagina(colabJson, colabCorrecciones);
+  const paginasDataset = construirDatasetMurosPorPagina(colabJsonCorregido, murosDescartadosPorEntryIdx);
   for (const pagDs of paginasDataset) {
     const png = (colabPngs || []).find(p => p.entryIdx === pagDs.entry_idx);
     if (!png?.objectUrl) continue; // sin PNG limpio no hay par usable, se salta
@@ -862,7 +886,7 @@ INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
    • Documentación faltante: CIP, cuadro superficies, cuadro iluminación, estudio carga ocupación, especificaciones RF (DDU 390)
 2. Las observaciones de cada sección deben ser DISTINTAS y específicas de esa etapa. No repitas el mismo hallazgo en múltiples secciones.
 2b. Si el contexto incluye "CANDIDATAS de Colab" para un recinto/elemento, no generes una observación aparte sobre el mismo hallazgo — consolídala: usa tu normativa completa para confirmar o corregir el artículo y la criticidad, y entrega una única observación final.
-3. iluminacion_ventilacion.tabla: incluye una fila por cada recinto habitable visible. Si no puedes medir el área de ventana desde el plano, usa area_ventana_m2:null y cumple:"VERIFICAR".
+3. iluminacion_ventilacion.tabla: incluye una fila por cada recinto habitable visible. Los PNG marcados "ANOTADO" traen las ventanas (y puertas/muros/escaleras/rampas) ya revisadas o agregadas a mano por el arquitecto, dibujadas directamente sobre el plano con un id visible (ej. "V-A1") — úsalas: para cada ventana anotada, identificá visualmente en qué recinto está dibujada (por proximidad al muro y al nombre del recinto en el plano) y usá su ancho marcado (la línea entre los 2 puntos de la marca) junto con una altura estándar de ventana (~1.20 m si no hay cota de altura visible) para estimar area_ventana_m2 de ese recinto. Si aun así no podés determinar con confianza a qué recinto corresponde una ventana anotada o no hay ninguna marca visible para un recinto, usa area_ventana_m2:null y cumple:"VERIFICAR" — no inventes una asociación que no podés sustentar visualmente.
 3b. Pendiente de rampas (OGUC Art. 4.1.7 N°2): la pendiente máxima NO es un valor fijo de 8%. Usa la fórmula real: i% = 12.8 - 0.5333*L, donde L es el largo de desarrollo de la rampa en metros (válida entre L=1.5m→12% y L=9m→8%). Calcula el máximo permitido para el largo real de la rampa antes de decidir si incumple, y cita el margen exacto en la observación (ej. "supera en 0.18 puntos porcentuales el máximo de 10.40% para un desarrollo de 4.5m" — no "supera el 8%").
 3c. Ancho de escaleras (OGUC Art. 4.2.10): NO cites Art. 4.2.2 para esto — ese artículo es sobre autorización de cambio de destino, no tiene relación con escaleras. El ancho mínimo NO es un valor fijo de 1.20m: es una tabla por carga de ocupación servida por la escalera — ≤50 personas → 1.10m; 51-100 → 1.20m; 101-150 → 1.30m; 151-200 → 1.40m; 201-250 → 1.50m; sobre 250 → se requieren 2 escaleras. Calcula o estima la carga de ocupación del área servida antes de fijar el mínimo aplicable; si no puedes calcularla, usa el piso de la tabla (1.10m), no 1.20m por defecto. Cita siempre Art. 4.2.10, nunca 4.2.2.
 4b. circulaciones.tabla — ancho_minimo_m: usa SIEMPRE el mínimo MÁS RESTRICTIVO de todos los artículos aplicables. Si citas DS 50/2015 Art. 22 o Art. 23, el mínimo es 1.50m (no 1.20m). Si citas OGUC Art. 4.2.4 con carga >50 personas, el mínimo puede superar 1.20m según fórmula. Para escaleras, aplica la tabla de la instrucción 3c (no un valor fijo). El campo ancho_minimo_m debe coincidir con el valor que determina el resultado de 'cumple'.
@@ -1394,12 +1418,17 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onCerrar }) {
   const [tipoRecinto, setTipoRecinto] = useState("");
   const [areaM2, setAreaM2] = useState("");
   const [anchoM, setAnchoM] = useState("");
+  // Motivo opcional del descarte -- sobre todo relevante para Muro (dataset de fine-tuning: saber
+  // POR QUÉ un muro detectado por OpenCV era un falso positivo, no solo que se borró) pero
+  // disponible para cualquier elemento puntual, mismo campo simple para todos.
+  const [motivoEliminar, setMotivoEliminar] = useState("");
 
   useEffect(() => {
     setNombre(item?.nombre ?? item?.ubicacion_o_recinto ?? "");
     setTipoRecinto(item?.tipo ?? "");
     setAreaM2(item?.area_m2 ?? "");
     setAnchoM(item?.categoria === "muro" ? (item?.largo_m ?? "") : (item?.ancho_estimado_m ?? ""));
+    setMotivoEliminar("");
   }, [item]);
 
   if (!item) return null;
@@ -1439,9 +1468,26 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onCerrar }) {
             geometría de N segmentos, no un único punto; para reubicarlo hoy se elimina y se vuelve
             a marcar (mismo patrón que cambiar de categoría). */}
         {!esRecinto && !esPoligono && <button style={btnStyle("#D68910")} onClick={onMover}>Mover</button>}
-        <button style={btnStyle("#C0392B")} onClick={onEliminar}>Eliminar</button>
+        {/* Motivo obligatorio para elementos puntuales (a pedido explícito del usuario, 2026-08-07):
+            sin motivo escrito el borrado no documenta nada útil para detectar patrones de falso
+            positivo del extractor — el botón queda deshabilitado hasta que se escriba algo. */}
+        <button style={{ ...btnStyle("#C0392B"), opacity: (!esRecinto && !motivoEliminar.trim()) ? 0.5 : 1, cursor: (!esRecinto && !motivoEliminar.trim()) ? "not-allowed" : "pointer" }}
+          disabled={!esRecinto && !motivoEliminar.trim()}
+          onClick={() => onEliminar(motivoEliminar)}>
+          Eliminar
+        </button>
         <button style={btnStyle("#B8C5E0")} onClick={onCerrar}>Cancelar</button>
       </div>
+      {!esRecinto && (
+        <>
+          <input style={{ ...inputStyle, marginTop: 8, marginBottom: 0 }} value={motivoEliminar}
+            onChange={e => setMotivoEliminar(e.target.value)}
+            placeholder="Motivo del descarte (obligatorio para eliminar) — ej. 'es un mesón, no un muro'" />
+          {!motivoEliminar.trim() && (
+            <div style={{ fontSize: 10, color: "#C0392B", marginTop: 4 }}>Escribe un motivo para poder eliminar.</div>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -1647,7 +1693,7 @@ function RevisionModal({
               tipo={selectedTipo}
               item={recintoSel || elementoSel}
               onGuardar={patch => recintoSel ? onGuardarRecinto(patch) : onGuardarElemento(elementoSel, patch)}
-              onEliminar={() => recintoSel ? onEliminarRecinto() : onEliminarElemento(elementoSel)}
+              onEliminar={motivo => recintoSel ? onEliminarRecinto() : onEliminarElemento(elementoSel, motivo)}
               onMover={onMoverElemento}
               onCerrar={onCerrarPanel}
             />
@@ -2270,7 +2316,7 @@ ${printRef.current.innerHTML}
     const ts = analysisTimestamp || new Date();
     const pad = n => n.toString().padStart(2, "0");
     const tsFile = `${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(ts.getDate())}_${pad(ts.getHours())}${pad(ts.getMinutes())}`;
-    descargarDatasetMuros(colabJsonCorregido, colabPngs, tsFile);
+    descargarDatasetMuros(colabJson, colabJsonCorregido, colabCorrecciones, colabPngs, tsFile);
   }
 
   useEffect(() => {
@@ -2418,10 +2464,15 @@ ${printRef.current.innerHTML}
       : { ...prev, elementosPuntualesEditados: { ...prev.elementosPuntualesEditados, [item.id]: { ...prev.elementosPuntualesEditados[item.id], ...patch } } });
   }
 
-  function eliminarElemento(item) {
-    setColabCorrecciones(prev => item._nuevo
-      ? { ...prev, elementosPuntualesNuevos: prev.elementosPuntualesNuevos.filter(e => e.id !== item.id) }
-      : { ...prev, elementosPuntualesEliminados: [...prev.elementosPuntualesEliminados, item.id] });
+  function eliminarElemento(item, motivo) {
+    setColabCorrecciones(prev => {
+      const motivosEliminacion = motivo?.trim()
+        ? { ...prev.motivosEliminacion, [item.id]: motivo.trim() }
+        : prev.motivosEliminacion;
+      return item._nuevo
+        ? { ...prev, elementosPuntualesNuevos: prev.elementosPuntualesNuevos.filter(e => e.id !== item.id), motivosEliminacion }
+        : { ...prev, elementosPuntualesEliminados: [...prev.elementosPuntualesEliminados, item.id], motivosEliminacion };
+    });
     setReviewSelectedId(null); setReviewSelectedTipo(null);
   }
 
@@ -2591,9 +2642,24 @@ ${printRef.current.innerHTML}
           }
         }
       }
+      // Manda el PNG ANOTADO (con las marcas de puertas/ventanas/muros/escaleras/rampas que el
+      // arquitecto confirmó/agregó/eliminó en la revisión gráfica) en vez del PNG limpio, cuando
+      // esté disponible — antes se mandaba siempre el limpio, así que Claude nunca veía ninguna
+      // corrección hecha a mano (ni su posición, ni su recinto): la corrección quedaba solo en el
+      // JSON como un conteo agregado, sin geometría. pngsRevisadosPorPagina ya existe y se genera
+      // en handleConfirmarRevision(), que es obligatorio antes de habilitar "Analizar expediente"
+      // — por eso debería estar poblado para cada página siempre; el fallback al PNG limpio es
+      // solo por robustez, no un camino esperado.
       for (const png of colabPngs) {
-        imageContent.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: png.base64 } });
-        imageContent.push({ type: "text", text: `[COLAB PNG: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales]` });
+        const revisado = pngsRevisadosPorPagina?.[png.entryIdx];
+        if (revisado?.dataUrl) {
+          const base64Anotado = revisado.dataUrl.split(",")[1] || "";
+          imageContent.push({ type: "image", source: { type: "base64", media_type: "image/png", data: base64Anotado } });
+          imageContent.push({ type: "text", text: `[COLAB PNG ANOTADO: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales, CON las puertas/ventanas/muros/escaleras/rampas ya revisadas, corregidas o agregadas a mano por el arquitecto marcadas directamente sobre el plano (etiqueta = id del elemento, ej. "V-A1")]` });
+        } else {
+          imageContent.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: png.base64 } });
+          imageContent.push({ type: "text", text: `[COLAB PNG: "${png.name}" — segmentación OpenCV de recintos, áreas y anchos medidos desde píxeles reales]` });
+        }
       }
 
       // Usa el JSON de Colab ya corregido por el arquitecto en la revisión gráfica (si se confirmó)
@@ -3155,7 +3221,7 @@ ${printRef.current.innerHTML}
                 onGuardarRecinto={patch => { aplicarCorreccionRecinto(reviewSelectedId, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
                 onEliminarRecinto={() => eliminarRecinto(reviewSelectedId)}
                 onGuardarElemento={(item, patch) => { aplicarCorreccionElemento(item, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
-                onEliminarElemento={item => eliminarElemento(item)}
+                onEliminarElemento={(item, motivo) => eliminarElemento(item, motivo)}
                 onMoverElemento={() => setReviewTool("mover")}
                 onCerrarPanel={() => { setReviewSelectedId(null); setReviewSelectedTipo(null); }}
                 onFinalizar={handleFinalizarModal}
