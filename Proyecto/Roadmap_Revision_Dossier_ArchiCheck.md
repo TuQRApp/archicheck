@@ -165,7 +165,7 @@ A pedido explícito del usuario: revisión completa de los 10 documentos de IA +
 
 | # | Candidato | Evidencia de calidad | Alcance | Camino técnico | Riesgo/fricción real (no descalifica, solo informa) |
 |---|---|---|---|---|---|
-| 1 | **Raster2Seq** | Verificado: F1 real en 2 datasets, generalización cross-dominio demostrada (WAFFLE zero-shot) | Muros+puertas+ventanas+recintos+semántica — pipeline completo | Self-host, pesos oficiales MIT descargables ya | Sin confirmar geometría no-Manhattan; zona gris legal por datos de entrenamiento CC BY-NC (consulta legal recomendada) |
+| 1 | **Raster2Seq** | Verificado en paper: F1 real en 2 datasets, generalización cross-dominio demostrada (WAFFLE zero-shot). **✅ Verificado contra nuestro propio ground truth (2026-08-06): puertas con señal real (recall 41-60%, precisión 37-62% según nivel/tolerancia) — pero ventanas prácticamente sin funcionar (recall 0-11% incluso con 3m de tolerancia, peor que CubiCasa5K en esa clase)** | Muros+puertas+ventanas+recintos+semántica en teoría — **en la práctica, solo puertas aportan señal usable en nuestros planos** | Self-host, pesos oficiales MIT descargables ya | Sin confirmar geometría no-Manhattan; zona gris legal por datos de entrenamiento CC BY-NC (consulta legal recomendada); detección de ventanas no utilizable tal cual |
 | 2 | **FloorplanVLM (reentrenado desde cero con datos propios)** | Paper original: 92.52% IoU muros, benchmark FPBench-2K, no-Manhattan confirmado — pero esa cifra es con datos propietarios de Beike, no reproducible tal cual | Muros+vanos+recintos vía JSON topológico nativo (el diseño de salida más cercano a lo que necesita el motor de reglas) | Reentrenar desde cero (receta: CubiCasa5K → planos chilenos propios corregidos vía interfaz de validación → casos problemáticos), GPU + semanas | Caro y lento, pero es el camino que evita el bloqueo CC BY-NC del adapter comunitario — sigue siendo "lo más parecido a floorplan.ai" en espíritu de diseño |
 | 3 | **MitUNet** | Verificado: mIoU 88.75%, precisión 93.60%, recall 94.48%, tabla de paper real con ablation contra 4 baselines | Solo muros | Self-host, pesos ya descargables | Sin evaluar contra nuestro propio ground truth todavía |
 | 4 | **MLSTRUCT-FP / U-Net (Pizarro)** | Reportado por el propio autor: IoU 0.77 promedio / 0.90 moda, descrito como "prueba de concepto" — nunca lo corrimos nosotros | Solo muros | Self-host, checkpoint pre-entrenado gratis disponible hace semanas sin ejecutar | Cifra más baja que MitUNet, pero coincidencia de dominio perfecta (planos chilenos reales, sin intermediario extranjero) — el más barato de probar de toda la lista |
@@ -288,7 +288,20 @@ A pedido del usuario, tras confirmar que `floor-plan-walls` (Roboflow) da 0% rec
 
 **✅ `ResizeAndPad` verificado directamente (código fuente real, no supuesto)**: preserva relación de aspecto (`scale = min(256/alto, 256/ancho)`), padding **centrado** (no pegado a una esquina) repartido en ambos lados. Dado que nuestros planos son mucho más altos que anchos, el alto determina la escala y el padding cae solo en el ancho. Se agregó la **Celda 11** al notebook — convierte cada predicción puerta/ventana del espacio 256×256 de vuelta al espacio relativo original con esta transformación exacta, y calcula recall (¿cada punto GT tiene una predicción cerca?) y precisión (¿cada predicción tiene un punto GT cerca?) contra `GT_NIVEL1`/`GT_NIVEL2`, con tolerancia de 0.04 (~1.2m real) dada la baja resolución del espacio 256×256. Mismo patrón de verificación posicional ya usado para MitUNet y en su momento para CubiCasa5K/DINO — no confiar en el conteo crudo de la ronda anterior hasta tener este número real.
 
-**Sin ejecutar todavía** — pendiente que el usuario corra la Celda 11 y reporte el recall/precisión real por posición.
+**✅✅✅ VEREDICTO FINAL 2026-08-06 (novena y décima corrida) — recall/precisión real por posición, medido con 2 tolerancias distintas para descartar que fuera un artefacto de umbral.**
+
+| | Nivel 1 (tol. 0.04≈1.2m → 0.10≈3m) | Nivel 2 (tol. 0.04≈1.2m → 0.10≈3m) |
+|---|---|---|
+| Puertas recall | 17.6% → **41.2%** | 30% → **60%** |
+| Puertas precisión | 37.5% → **62.5%** | 37.5% → **37.5%** |
+| Ventanas recall | 0% → **0%** | 0% → **11.1%** |
+| Ventanas precisión | 0% → **0%** | 0% → **33.3%** |
+
+**Puertas: señal real, no ruido** — el recall mejora consistentemente al ampliar la tolerancia (comportamiento esperado de un detector con imprecisión geométrica real, no de uno que falla al azar). Comparable o algo mejor que la precisión de puertas de CubiCasa5K (19-36%), muy por encima de floor-plan-walls y Grounding DINO+SAM2 (0% ambos en esta métrica).
+
+**Ventanas: fallo real, no artefacto de tolerancia** — incluso con 3m de margen (mucho más generoso que cualquier tolerancia arquitectónica razonable), el recall sigue en 0-11%. Esto es **peor que CubiCasa5K**, que tenía 100% de precisión en ventanas (cuando decía "ventana", siempre acertaba) aunque con recall bajo (29-36%) — la comparación no favorece a Raster2Seq en esta clase específica.
+
+**Veredicto calibrado, corrigiendo el tono más optimista de la entrada anterior**: Raster2Seq no es la solución integral que su evidencia de paper (Room F1 88.7 en CubiCasa5K) sugería para nuestro caso — es el primer modelo externo de todo el benchmark con señal real en **puertas específicamente** (útil como segunda opinión/detector de discrepancias en paralelo al pipeline propio, nunca como fuente única), pero su detección de **ventanas no aporta nada usable** en planos chilenos de este tipo. Actualiza la tabla de ranking: Raster2Seq mantiene su lugar #1 por ser el único con evidencia real y verificada de *algún* valor práctico (puertas), pero ya no se presenta como "pipeline completo funcional" — es parcial, con una limitación real y medida en ventanas.
 
 ### P1 — Validar precisión del análisis geométrico (antes "P3", ahora primera prioridad)
 

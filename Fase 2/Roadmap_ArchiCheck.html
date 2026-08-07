@@ -686,7 +686,7 @@
       <table class="gap">
         <thead><tr><th>#</th><th>Candidato</th><th>Evidencia de calidad</th><th>Alcance</th><th>Camino técnico</th><th>Riesgo/fricción (no descalifica)</th></tr></thead>
         <tbody>
-          <tr><td>1</td><td><strong>Raster2Seq</strong></td><td>F1 real en 2 datasets, generalización cross-dominio demostrada (WAFFLE zero-shot)</td><td>Muros+puertas+ventanas+recintos+semántica — pipeline completo</td><td>Self-host, pesos MIT descargables ya</td><td>Sin confirmar no-Manhattan; zona gris legal por datos de entrenamiento</td></tr>
+          <tr><td>1</td><td><strong>Raster2Seq</strong></td><td>F1 real en 2 datasets (paper). <strong>✅ Verificado 2026-08-06 contra nuestro ground truth: puertas con señal real (recall 41-60%), ventanas sin funcionar (recall 0-11%)</strong> — ver sección de resultados más abajo</td><td>Muros+puertas+ventanas+recintos+semántica en teoría — <strong>en la práctica, solo puertas útiles</strong></td><td>Self-host, pesos MIT descargables ya</td><td>Sin confirmar no-Manhattan; zona gris legal por datos de entrenamiento; ventanas no usables</td></tr>
           <tr><td>2</td><td><strong>FloorplanVLM (reentrenado desde cero)</strong></td><td>Paper original: 92.52% IoU, no-Manhattan confirmado — con datos propietarios no reproducibles tal cual</td><td>Muros+vanos+recintos vía JSON topológico nativo, el diseño más alineado al motor de reglas</td><td>Reentrenar desde cero (CubiCasa5K→planos chilenos propios→casos problemáticos), GPU+semanas</td><td>Caro y lento, pero evita el bloqueo legal del adapter comunitario — sigue siendo "lo más parecido a floorplan.ai" en espíritu</td></tr>
           <tr><td>3</td><td><strong>MitUNet</strong></td><td>mIoU 88.75%, precisión 93.60%, recall 94.48% — verificado</td><td>Solo muros</td><td>Self-host, pesos ya descargables</td><td>Sin evaluar contra nuestro ground truth</td></tr>
           <tr><td>4</td><td><strong>MLSTRUCT-FP / U-Net (Pizarro)</strong></td><td>IoU 0.77/0.90 reportado por el autor, "prueba de concepto" — nunca lo corrimos</td><td>Solo muros</td><td>Self-host, checkpoint gratis disponible hace semanas sin usar</td><td>Cifra más baja que MitUNet, pero dominio chileno real — el más barato de probar de toda la lista</td></tr>
@@ -754,7 +754,22 @@
       </table>
       </div>
       <p class="note">⚠️ Esto es solo conteo, NO verificado por posición — un "8 de 17" no confirma que esas predicciones estén en el lugar correcto.</p>
-      <p><strong>✅ <code>ResizeAndPad</code> verificado directamente</strong>: preserva relación de aspecto (<code>scale = min(256/alto, 256/ancho)</code>), padding <strong>centrado</strong>. Se agregó la Celda 11 al notebook — convierte cada predicción de vuelta al espacio relativo original con esta transformación exacta y calcula recall/precisión reales contra el ground truth, con tolerancia de 0.04 (~1.2m). <strong>Pendiente que el usuario la corra y reporte el número real.</strong></p>
+      <p><strong>✅ <code>ResizeAndPad</code> verificado directamente</strong>: preserva relación de aspecto (<code>scale = min(256/alto, 256/ancho)</code>), padding <strong>centrado</strong>. Se agregó la Celda 11 al notebook — convierte cada predicción de vuelta al espacio relativo original con esta transformación exacta y calcula recall/precisión reales contra el ground truth, con tolerancia de 0.04 (~1.2m).</p>
+      <p><strong>✅✅✅ VEREDICTO FINAL (novena y décima corrida) — recall/precisión real, medido con 2 tolerancias para descartar artefacto de umbral.</strong></p>
+      <div class="tbl-wrap">
+      <table class="gap">
+        <thead><tr><th></th><th>Nivel 1 (tol. 0.04→0.10)</th><th>Nivel 2 (tol. 0.04→0.10)</th></tr></thead>
+        <tbody>
+          <tr><td>Puertas recall</td><td>17.6% → <strong>41.2%</strong></td><td>30% → <strong>60%</strong></td></tr>
+          <tr><td>Puertas precisión</td><td>37.5% → <strong>62.5%</strong></td><td>37.5% → <strong>37.5%</strong></td></tr>
+          <tr><td>Ventanas recall</td><td>0% → <strong>0%</strong></td><td>0% → <strong>11.1%</strong></td></tr>
+          <tr><td>Ventanas precisión</td><td>0% → <strong>0%</strong></td><td>0% → <strong>33.3%</strong></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p><strong>Puertas: señal real</strong> — el recall mejora consistentemente con más tolerancia (comportamiento esperado de imprecisión geométrica real, no de fallo aleatorio). Comparable o mejor que la precisión de puertas de CubiCasa5K (19-36%), muy por encima de floor-plan-walls/DINO+SAM2 (0%).</p>
+      <p><strong>Ventanas: fallo real, no artefacto</strong> — incluso con 3m de margen sigue en 0-11% recall. Peor que CubiCasa5K en esta clase (100% precisión, 29-36% recall).</p>
+      <p><strong>Veredicto calibrado</strong>: Raster2Seq no es la solución integral que sugería su evidencia de paper — tiene señal real solo en <strong>puertas</strong> (útil como segunda opinión en paralelo, nunca como fuente única), pero su detección de <strong>ventanas no aporta nada usable</strong> en planos chilenos de este tipo.</p>
     </div>
   </details>
 
