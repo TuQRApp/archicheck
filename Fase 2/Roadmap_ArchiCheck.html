@@ -890,7 +890,7 @@
   </details>
 
   <details class="item" open>
-    <summary>P1b — U-Net + MLSTRUCT-FP <span class="badge progress">Checkpoint probado, fine-tuning propio pendiente 2026-08-07</span></summary>
+    <summary>P1b — U-Net + MLSTRUCT-FP <span class="badge progress">Pipeline de datos construido 2026-08-07</span></summary>
     <div class="item-body">
       <p>Misma familia que P1, en paralelo.</p>
       <ul>
@@ -898,7 +898,13 @@
         <li>Alcance real: solo segmenta muros, no puertas/ventanas/escaleras — complementario a P1, no reemplazo.</li>
       </ul>
       <p><strong>✅ Paso "probar el checkpoint pre-entrenado gratis antes de gastar en GPU" — HECHO 2026-08-06, resultado: 0% recall</strong> en ambos niveles de prueba (ver benchmark completo arriba). El checkpoint <code>no_rot_256_50</code> es real y legítimo (entrenado 2023, 10 épocas) pero no generaliza al estilo visual del plano de prueba (blueprint escaneado real vs. renders sintéticos limpios de su dataset) — descarta usar el checkpoint tal cual, sin entrenar. El 0% no dice que el U-Net como arquitectura sea inviable, dice que el checkpoint publicado no transfiere al estilo de dibujo real de producción.</p>
-      <p class="note"><strong>🔲 Pendiente — el usuario lo retoma 2026-08-07 (mañana)</strong>: definir el plan de fine-tuning propio con datos chilenos reales en el estilo visual de producción (no el dataset sintético original), GPU en RunPod/Vast.ai, y decidir si fine-tunear desde <code>no_rot_256_50</code> o entrenar desde cero.</p>
+      <p><strong>✅ Pipeline de datos construido 2026-08-07</strong> (primer paso antes de GPU). Relevamiento previo confirmó solo 9 planos únicos reales en el proyecto (PdV: 2, Beauchef: 4, Isla de Pascua: 1, Campo Lindo: 2 — en la práctica solo 4 estilos de dibujo distintos), y que ninguna corrección de <code>muros_geo</code> se persistía a disco (vivía solo en memoria de React por sesión). Se construyó:</p>
+      <ul>
+        <li><strong>Portal</strong> (<code>src/App.jsx</code>): <code>construirDatasetMurosPorPagina()</code> + <code>descargarDatasetMuros()</code> (reusa <code>descargarPngsRevisados</code> y el patrón <code>Blob</code> de <code>exportPDF</code>) + botón "📦 Exportar dataset de muros" en la pantalla de informe final, deshabilitado si el arquitecto no confirmó la revisión gráfica.</li>
+        <li><strong>Notebook Colab</strong> <code>Fase 2/Dataset_Fine_Tuning_MLSTRUCT-FP/Preparar_Dataset_Muros_2026-08-07.ipynb</code> (11 celdas): rasteriza cada muro a máscara binaria 256×256, estructura <code>&lt;proyecto&gt;_&lt;fname_tag&gt;/{original,256}/</code> + manifest CSV acumulativo, verificación visual, descarga <code>.zip</code>.</li>
+      </ul>
+      <p class="note"><strong>Corrección real durante el diseño</strong>: se verificó contra el JSON real de PdV que <code>ancho_linea_prom</code> está en <strong>puntos PDF</strong> (PyMuPDF, sin pasar por <code>to_px()</code>), no en metros como se asumió al principio — conversión correcta <code>ancho_px = ancho_linea_prom * (dpi/72)</code>. La hipótesis de metros habría dado un grosor de ~100px, absurdo.</p>
+      <p class="note"><strong>🔲 Backfill pendiente (tarea manual del usuario)</strong>: de los 9 planos, solo PdV ya tiene <code>muros_geo</code> en su JSON de Colab más reciente — Beauchef, Isla de Pascua y Campo Lindo requieren re-correr <code>Fase 2/Desarrollos/Test/ArchiCheck_Base 05ago_1130.ipynb</code> antes de poder validarse en el portal. Esto sigue siendo solo infraestructura — con los 9 planos corregidos aún sería una fracción mínima de los 954 originales; sugerencia sin confirmar: no retomar GPU hasta ~30-50 planos validados.</p>
     </div>
   </details>
 

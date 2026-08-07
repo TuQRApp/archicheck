@@ -656,6 +656,57 @@ function construirColabJsonCorregido(colabJson, correcciones) {
   return clon;
 }
 
+// JSON reducido y autocontenido por página, con solo lo necesario para rasterizar máscaras de
+// entrenamiento (fine-tuning propio de MLSTRUCT-FP) — no todo colabJsonCorregido, para no acoplar
+// el dataset al esquema completo del portal (analisis_semantico cambia seguido). dpi/proyecto son
+// campos top-level de colabJsonCorregido, se repiten en cada página exportada para que el archivo
+// sea autocontenido (el notebook de rasterización recibe un JSON por página, no el árbol completo).
+function construirDatasetMurosPorPagina(colabJsonCorregido) {
+  const dpi = colabJsonCorregido?.dpi;
+  const proyecto = colabJsonCorregido?.proyecto || "proyecto";
+  return (colabJsonCorregido?.paginas || []).map(pag => ({
+    proyecto, dpi,
+    entry_idx: pag.entry_idx, pagina: pag.pagina, fname_tag: pag.fname_tag,
+    imagen_w_px: pag.imagen_w_px, imagen_h_px: pag.imagen_h_px, mpp: pag.mpp,
+    muros_geo: pag.muros_geo || [],
+    // puertas_geo al mismo costo — deja el pipeline listo para reusarse en P04 (puertas) sin
+    // tener que volver a tocar este exportador.
+    puertas_geo: pag.puertas_geo || [],
+  }));
+}
+
+// Descarga, por cada página con PNG limpio disponible, el par (imagen sin overlay, geometría de
+// muros ya corregida por el arquitecto) que alimenta el dataset de fine-tuning. Mismo patrón de
+// descarga que descargarPngsRevisados (linea de abajo) para el PNG, y el patrón Blob de exportPDF
+// para el JSON — sin inventar un mecanismo nuevo. colabPngs[i].objectUrl es el PNG crudo sin
+// overlay (leerPngCrudo); pngsRevisadosPorPagina NO sirve acá, tiene anotaciones dibujadas encima.
+function descargarDatasetMuros(colabJsonCorregido, colabPngs, tsFile) {
+  const paginasDataset = construirDatasetMurosPorPagina(colabJsonCorregido);
+  for (const pagDs of paginasDataset) {
+    const png = (colabPngs || []).find(p => p.entryIdx === pagDs.entry_idx);
+    if (!png?.objectUrl) continue; // sin PNG limpio no hay par usable, se salta
+    const etiqueta = pagDs.fname_tag || `pagina${pagDs.pagina}`;
+    const base = `ArchiCheck_dataset_muros_${pagDs.proyecto}_${etiqueta}_${tsFile}`;
+
+    const aImg = document.createElement("a");
+    aImg.href = png.objectUrl;
+    aImg.download = `${base}.png`;
+    document.body.appendChild(aImg);
+    aImg.click();
+    aImg.remove();
+
+    const blob = new Blob([JSON.stringify({ ...pagDs, png_origen: png.name }, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const aJson = document.createElement("a");
+    aJson.href = url;
+    aJson.download = `${base}.json`;
+    document.body.appendChild(aJson);
+    aJson.click();
+    aJson.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
+}
+
 // ── Prompt Capa 1: levantamiento geométrico ────────────────────────────────
 function buildPromptCapa1(tipo, comuna, archivos, preguntas = {}, colabData = null) {
   const tipoLabel = TIPOS.find(t => t.id === tipo)?.label || tipo;
@@ -2208,6 +2259,18 @@ ${printRef.current.innerHTML}
     // informe (arriba) no lleva ningún dibujo nuevo, esto es aparte, no se toca printRef/PrintReport.
     const tsFile = `${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(ts.getDate())}_${pad(ts.getHours())}${pad(ts.getMinutes())}`;
     descargarPngsRevisados(pngsRevisadosPorPagina, tsFile);
+  }
+
+  // Exporta el par (PNG limpio, muros_geo corregido) para el dataset de fine-tuning propio de
+  // MLSTRUCT-FP — deshabilitado en la UI si el arquitecto nunca confirmó la revisión gráfica
+  // (colabJsonCorregido null), a propósito: exportar muros sin corregir como si fueran dato
+  // validado contaminaría el dataset con el mismo ruido de extracción que se busca corregir.
+  function exportDatasetMuros() {
+    if (!colabJsonCorregido) return;
+    const ts = analysisTimestamp || new Date();
+    const pad = n => n.toString().padStart(2, "0");
+    const tsFile = `${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(ts.getDate())}_${pad(ts.getHours())}${pad(ts.getMinutes())}`;
+    descargarDatasetMuros(colabJsonCorregido, colabPngs, tsFile);
   }
 
   useEffect(() => {
@@ -3829,6 +3892,8 @@ ${printRef.current.innerHTML}
                   <div style={{ display:"flex", gap:10 }}>
                     <button onClick={resetApp} style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #D1D9EE", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>↩ Nuevo análisis</button>
                     <button onClick={exportPDF} style={{ flex:1, padding:"13px", background:"linear-gradient(90deg,#1B3A8A,#2952A3)", border:"none", borderRadius:10, color:"#fff", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>🖨 Exportar informe</button>
+                    <button onClick={exportDatasetMuros} disabled={!colabJsonCorregido} title={!colabJsonCorregido ? "Confirma la revisión gráfica de muros antes de exportar el dataset" : ""}
+                      style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #2952A3", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor: colabJsonCorregido ? "pointer" : "not-allowed", opacity: colabJsonCorregido ? 1 : 0.5 }}>📦 Exportar dataset de muros</button>
                   </div>
                 </div>
               );
