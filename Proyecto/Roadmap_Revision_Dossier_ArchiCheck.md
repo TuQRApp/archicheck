@@ -1354,6 +1354,8 @@ Runbook completo en `archicheck\Fase 2\P1b_Runbook_UNet_MLSTRUCT-FP.md` (2026-07
 - **Backfill pendiente (tarea manual del usuario, no de código)**: de los 9 planos, solo PdV (2 páginas) ya tiene `muros_geo` en su JSON de Colab más reciente — Beauchef, Isla de Pascua y Campo Lindo requieren re-correr `Fase 2/Desarrollos/Test/ArchiCheck_Base 05ago_1130.ipynb` (ya funciona) antes de poder validarse en el portal.
 - Advertencia mantenida: esto es solo infraestructura — incluso con los 9 planos corregidos, sigue siendo una fracción mínima de los 954 planos originales. Sugerencia sin confirmar aún: no retomar GPU hasta acumular ~30-50 planos validados de proyectos variados.
 
+**🐛 Bug real encontrado durante el backfill de PdV (2026-08-07)**: el botón "Exportar dataset de muros" había quedado ubicado en la pantalla de **informe final** (post-análisis), que solo se llega corriendo el análisis LLM completo y pago — pero exportar el dataset de muros no necesita ese análisis, solo la revisión gráfica confirmada. Esto obligaba a gastar en una corrida real de la API solo para descargar el dataset. **Corregido**: el botón se movió a la sección "REVISIÓN GRÁFICA DE GEOMETRÍA" (pantalla de carga, junto a "Revisar de nuevo →"), visible en cuanto `revisionConfirmada` es true — sin depender de correr el análisis. Se eliminó de la pantalla de informe final.
+
 ### P2 — Normativa: OGUC completo + RAG (segunda prioridad)
 OGUC completo vía RAG (pgvector), +15-20 circulares DDU adicionales.
 

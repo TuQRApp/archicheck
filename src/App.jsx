@@ -1570,7 +1570,7 @@ function LeyendaHerramientas({ tool, onChangeTool, elementosDetectados, muroPunt
 
 // ── Bloque completo de revisión gráfica (compone canvas + panel + tabla + leyenda) ──
 // ── Tarjeta compacta que dispara el modal de revisión (no muestra el editor inline) ──
-function RevisionGraficaGeometria({ entriesConPng, revisionConfirmada, onAbrirModal }) {
+function RevisionGraficaGeometria({ entriesConPng, revisionConfirmada, onAbrirModal, onExportarDataset }) {
   if (!entriesConPng.length) return null;
   return (
     <div style={{ marginBottom: 18, border: `1px solid ${revisionConfirmada ? "#1E8449" : "#E74C3C"}`, borderRadius: 10, overflow: "hidden" }}>
@@ -1584,10 +1584,22 @@ function RevisionGraficaGeometria({ entriesConPng, revisionConfirmada, onAbrirMo
         <span style={{ fontSize: 12, color: "#6B7A99" }}>
           {entriesConPng.length} página{entriesConPng.length > 1 ? "s" : ""} lista{entriesConPng.length > 1 ? "s" : ""} para revisar, una por una, en pantalla completa.
         </span>
-        <button onClick={onAbrirModal}
-          style={{ border: "none", borderRadius: 8, padding: "10px 18px", fontSize: 12, fontWeight: 600, fontFamily: "inherit", cursor: "pointer", background: "linear-gradient(90deg,#1B3A8A,#2952A3)", color: "#fff" }}>
-          {revisionConfirmada ? "Revisar de nuevo →" : "Revisar geometría →"}
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          {/* Exportar el dataset de muros no requiere correr el análisis completo (pago) — solo
+              necesita la revisión gráfica confirmada, por eso vive acá y no en la pantalla de
+              informe final (donde vivía antes, mal ubicado: obligaba a un análisis real solo para
+              descargar el dataset). */}
+          {revisionConfirmada && (
+            <button onClick={onExportarDataset}
+              style={{ border: "1px solid #2952A3", borderRadius: 8, padding: "10px 18px", fontSize: 12, fontWeight: 600, fontFamily: "inherit", cursor: "pointer", background: "#fff", color: "#2952A3" }}>
+              📦 Exportar dataset de muros
+            </button>
+          )}
+          <button onClick={onAbrirModal}
+            style={{ border: "none", borderRadius: 8, padding: "10px 18px", fontSize: 12, fontWeight: 600, fontFamily: "inherit", cursor: "pointer", background: "linear-gradient(90deg,#1B3A8A,#2952A3)", color: "#fff" }}>
+            {revisionConfirmada ? "Revisar de nuevo →" : "Revisar geometría →"}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -3199,6 +3211,7 @@ ${printRef.current.innerHTML}
                 entriesConPng={entriesConPng}
                 revisionConfirmada={revisionConfirmada}
                 onAbrirModal={() => { setReviewModalStep(0); setReviewModalOpen(true); }}
+                onExportarDataset={exportDatasetMuros}
               />
             )}
 
@@ -3959,8 +3972,6 @@ ${printRef.current.innerHTML}
                   <div style={{ display:"flex", gap:10 }}>
                     <button onClick={resetApp} style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #D1D9EE", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>↩ Nuevo análisis</button>
                     <button onClick={exportPDF} style={{ flex:1, padding:"13px", background:"linear-gradient(90deg,#1B3A8A,#2952A3)", border:"none", borderRadius:10, color:"#fff", fontSize:13, fontFamily:"inherit", cursor:"pointer" }}>🖨 Exportar informe</button>
-                    <button onClick={exportDatasetMuros} disabled={!colabJsonCorregido} title={!colabJsonCorregido ? "Confirma la revisión gráfica de muros antes de exportar el dataset" : ""}
-                      style={{ flex:1, padding:"13px", background:"#FFFFFF", border:"1px solid #2952A3", borderRadius:10, color:"#2952A3", fontSize:13, fontFamily:"inherit", cursor: colabJsonCorregido ? "pointer" : "not-allowed", opacity: colabJsonCorregido ? 1 : 0.5 }}>📦 Exportar dataset de muros</button>
                   </div>
                 </div>
               );
