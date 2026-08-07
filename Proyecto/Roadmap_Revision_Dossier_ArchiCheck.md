@@ -339,7 +339,9 @@ El usuario pidió probarlo contra el mismo ground truth, retomando el runbook ya
 
 **🐛 Sexto bug real (misma corrida, con los 5 fixes previos aplicados)**: la importación pasó por completo `_model.py` y falló en un archivo distinto, `ml/utils/plot/_keras.py` (`ModuleNotFoundError: No module named 'keras.layers.wrappers'`) — un utilitario de **visualización** de arquitectura (dibuja el grafo del modelo con pydot/GraphViz), nunca invocado durante `load_session()`/`predict()`. Verificado el código fuente real: `Wrapper` solo se usa en `isinstance()` dentro de funciones de ploteo que jamás se llaman aquí. **Corregido**: mismo patrón `_stub_if_missing`, clase dummy para `keras.layers.wrappers.Wrapper`.
 
-**Sin ejecutar todavía el resto** — pendiente que el usuario reintente con los 6 fixes aplicados, mismo flujo iterativo que maduró el notebook de Raster2Seq (7 bugs reales encontrados y corregidos uno por uno antes de llegar al resultado final).
+**🐛 Séptimo bug real (misma corrida, con los 6 fixes previos aplicados) — el primero que no es un símbolo faltante**: la importación se completó del todo (sin más errores de módulos/símbolos) y llegó hasta la construcción del modelo (`UNETFloorPhotoModel(...)`), donde falló con `ValueError: Argument(s) not recognized: {'lr': 0.0001}`. Se verificó el código fuente real de `_fp_unet.py`: el `__init__` de `UNETFloorPhotoModel` compila el modelo de forma incondicional con `Adam(lr=1e-4)` — el Keras moderno renombró el parámetro a `learning_rate` y rechaza `lr`. Al ser código vendored (no se puede editar el repo), se parcheó la clase `Adam` desde la propia celda: una subclase `_AdamCompat` que traduce el kwarg `lr` → `learning_rate` antes de delegar al `__init__` real, inyectada en `keras.optimizers.Adam` **antes** de que `_fp_unet.py` la importe.
+
+**Sin ejecutar todavía el resto** — pendiente que el usuario reintente con los 7 fixes aplicados, mismo flujo iterativo que maduró el notebook de Raster2Seq (7 bugs reales encontrados y corregidos uno por uno antes de llegar al resultado final).
 
 ### P1 — Validar precisión del análisis geométrico (antes "P3", ahora primera prioridad)
 
