@@ -303,6 +303,20 @@ A pedido del usuario, tras confirmar que `floor-plan-walls` (Roboflow) da 0% rec
 
 **Veredicto calibrado, corrigiendo el tono más optimista de la entrada anterior**: Raster2Seq no es la solución integral que su evidencia de paper (Room F1 88.7 en CubiCasa5K) sugería para nuestro caso — es el primer modelo externo de todo el benchmark con señal real en **puertas específicamente** (útil como segunda opinión/detector de discrepancias en paralelo al pipeline propio, nunca como fuente única), pero su detección de **ventanas no aporta nada usable** en planos chilenos de este tipo. Actualiza la tabla de ranking: Raster2Seq mantiene su lugar #1 por ser el único con evidencia real y verificada de *algún* valor práctico (puertas), pero ya no se presenta como "pipeline completo funcional" — es parcial, con una limitación real y medida en ventanas.
 
+**✅✅✅ VEREDICTO FINAL 2026-08-06 — MitUNet contra el ground truth de muros propio.** Resultado (Celda 5, mismo patrón de verificación visual + muestreo de puntos GT ya usado): **Nivel 1 — 6/21 puntos de muro dentro de la máscara predicha (recall 28.6%)**; **Nivel 2 — 14/27 (recall 51.9%)**. Confirmado visualmente: la máscara predicha es fragmentada — capta algo de la estructura general (en Nivel 2 se reconoce vagamente la forma de Bodega/pasillo) pero con muchos segmentos cortados y ruido disperso, muy lejos de una extracción limpia. Muy por debajo del 88.75% mIoU que el propio paper reporta en su dominio de fine-tuning (planos rusos/CIS) — mismo patrón de brecha de dominio que el resto del benchmark, no una excepción.
+
+## 🏁 Cierre del benchmark completo de extracción geométrica (2026-08-05 a 2026-08-06) — comparación final de todo lo probado con rigor
+
+| Modelo | Resultado real verificado (no marketing, no conteo crudo) |
+|---|---|
+| Grounding DINO+SAM2 | ~0% recall general |
+| floor-plan-walls (Roboflow) | 0% puertas, 0% ventanas (verificado con 3 configuraciones) |
+| CubiCasa5K | Puertas: precisión 19-36%. Ventanas: 100% precisión, recall 29-36% |
+| **Raster2Seq** | Puertas: recall 41-60%, precisión 37-62% (señal real). Ventanas: recall 0-11% (no funciona) |
+| **MitUNet** | Muros: recall 28.6%-51.9% (señal real pero fragmentada, débil) |
+
+**Conclusión general del benchmark**: ningún modelo externo probado alcanza un desempeño confiable y listo para producción en nuestro tipo de plano chileno — cada uno tiene el mismo problema de fondo (brecha de dominio/generalización), solo que en distinto grado y en distinta clase de elemento. Lo más rescatable de toda la investigación: **Raster2Seq para puertas** y **MitUNet para muros** aportan señal real, no ruido — pero ambos únicamente como **complemento de verificación cruzada** en paralelo al pipeline propio (patrón "detector de discrepancias" ya establecido), nunca como reemplazo ni como fuente confiable en solitario. Esto refuerza, con evidencia empírica real acumulada en 2 días de benchmark riguroso, la estrategia de fondo que ya regía el proyecto: extracción determinística propia + validación humana del arquitecto sigue siendo la base más confiable, alimentada progresivamente con fine-tuning sobre datos chilenos reales (MLSTRUCT-FP, la interfaz de validación gráfica como fuente de entrenamiento continuo) en vez de depender de un modelo externo listo para usar.
+
 ### P1 — Validar precisión del análisis geométrico (antes "P3", ahora primera prioridad)
 
 > **✅ RESUELTO (2026-07-28) — era caché del navegador, no un bug de código.** La corrida de prueba `2026-07-27 2352` mostraba "DS 50/2015 Art. N" intacto pese al fix ya desplegado — se sospechó bug real. Se descartó paso a paso: (1) Vercel dashboard confirmó deploy "Ready · Latest" del commit correcto; (2) revisar el código fuente confirmó `sanitizeDS50()` bien definido y aplicado envolviendo `merged` antes de `setResult`; (3) **la prueba definitiva fue abrir una ventana de incógnito** (sin ningún caché posible) y repetir la corrida con el mismo JSON de PDV — ahí los 3 fixes de la sesión anterior se confirmaron funcionando al 100% (PDF `2026-07-28 2138`):

@@ -770,6 +770,26 @@
       <p><strong>Puertas: señal real</strong> — el recall mejora consistentemente con más tolerancia (comportamiento esperado de imprecisión geométrica real, no de fallo aleatorio). Comparable o mejor que la precisión de puertas de CubiCasa5K (19-36%), muy por encima de floor-plan-walls/DINO+SAM2 (0%).</p>
       <p><strong>Ventanas: fallo real, no artefacto</strong> — incluso con 3m de margen sigue en 0-11% recall. Peor que CubiCasa5K en esta clase (100% precisión, 29-36% recall).</p>
       <p><strong>Veredicto calibrado</strong>: Raster2Seq no es la solución integral que sugería su evidencia de paper — tiene señal real solo en <strong>puertas</strong> (útil como segunda opinión en paralelo, nunca como fuente única), pero su detección de <strong>ventanas no aporta nada usable</strong> en planos chilenos de este tipo.</p>
+      <p><strong>✅✅✅ VEREDICTO FINAL — MitUNet contra el ground truth de muros propio.</strong> Nivel 1: 6/21 puntos de muro dentro de la máscara predicha (recall 28.6%). Nivel 2: 14/27 (recall 51.9%). Confirmado visualmente: máscara fragmentada, capta algo de la estructura general pero con muchos segmentos cortados — muy por debajo del 88.75% mIoU que el paper reporta en su dominio de fine-tuning (planos rusos/CIS). Mismo patrón de brecha de dominio que el resto del benchmark.</p>
+    </div>
+  </details>
+
+  <details class="item" open>
+    <summary>🏁 Cierre del benchmark completo de extracción geométrica <span class="badge done">2026-08-05 a 2026-08-06 — comparación final</span></summary>
+    <div class="item-body">
+      <div class="tbl-wrap">
+      <table class="gap">
+        <thead><tr><th>Modelo</th><th>Resultado real verificado</th></tr></thead>
+        <tbody>
+          <tr><td>Grounding DINO+SAM2</td><td>~0% recall general</td></tr>
+          <tr><td>floor-plan-walls (Roboflow)</td><td>0% puertas, 0% ventanas (3 configuraciones)</td></tr>
+          <tr><td>CubiCasa5K</td><td>Puertas: precisión 19-36%. Ventanas: 100% precisión, recall 29-36%</td></tr>
+          <tr><td><strong>Raster2Seq</strong></td><td>Puertas: recall 41-60%, precisión 37-62% (señal real). Ventanas: recall 0-11% (no funciona)</td></tr>
+          <tr><td><strong>MitUNet</strong></td><td>Muros: recall 28.6%-51.9% (señal real pero fragmentada, débil)</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p><strong>Conclusión general</strong>: ningún modelo externo probado alcanza un desempeño confiable y listo para producción en nuestro tipo de plano chileno — cada uno tiene el mismo problema de fondo (brecha de dominio), solo que en distinto grado y en distinta clase de elemento. Lo más rescatable: Raster2Seq para puertas y MitUNet para muros aportan señal real, no ruido — pero ambos únicamente como <strong>complemento de verificación cruzada</strong> en paralelo al pipeline propio, nunca como reemplazo. Refuerza, con evidencia empírica real, la estrategia de fondo del proyecto: extracción determinística propia + validación humana sigue siendo la base más confiable, alimentada progresivamente con fine-tuning sobre datos chilenos reales (MLSTRUCT-FP, la interfaz de validación gráfica como fuente de entrenamiento continuo) en vez de depender de un modelo externo listo para usar.</p>
     </div>
   </details>
 
