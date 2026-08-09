@@ -892,7 +892,7 @@
   </details>
 
   <details class="item" open>
-    <summary>P1b — U-Net + MLSTRUCT-FP <span class="badge progress">Fix heurística "fusionado" 2026-08-08, sin correr en Colab</span></summary>
+    <summary>P1b — U-Net + MLSTRUCT-FP <span class="badge progress">Fusionado confirmado en Colab + fix deslinde 2026-08-09, sin correr</span></summary>
     <div class="item-body">
       <p>Misma familia que P1, en paralelo.</p>
       <ul>
@@ -920,6 +920,16 @@
       <p class="note"><strong>Primer intento con defecto propio detectado a tiempo</strong>: partir en cruces reales (nodo 3+ segmentos), sin cortar en esquinas simples (nodo grado 2 — un muro puede doblar 90° y seguir siendo uno solo, confirmado contra <code>MU-A48</code> del backfill: 1 muro, 2 quiebres de 90°). El clustering de nodos con Union-Find transitivo de siempre reprodujo <strong>el mismo defecto un nivel más abajo</strong>: nodo de grado 222 con bbox de 14.79m × 1.35m sobre datos reales.</p>
       <p><strong>Fix real</strong>: clustering de nodos no-transitivo — cada cluster acumula un bbox explícito y solo acepta un punto si el bbox <strong>resultante</strong> se mantiene bajo un tope de diámetro (<code>TOL_DIAMETRO_CLUSTER_PX = 60px</code>, ~0.35m). Nodos patológicos desaparecen (máx. bbox ~0.35m); de MU01 emergen <strong>53 cadenas con largos plausibles</strong> (1.5m–12.25m) en vez de 1 blob de 351m. Validado en JS standalone contra los segmentos reales de MU01, portado a Python (<code>_dividir_en_muros_por_union</code>) e integrado en <code>extraer_datos_vectoriales</code>. Escrito en <code>ArchiCheck_Base 05ago_1130.ipynb</code> (backup previo guardado), outputs limpiados.</p>
       <p class="note">🔲 <strong>Sin correr en Colab todavía</strong> (no hay Python local en esta sesión, solo revisión manual línea por línea contra la versión JS) — pendiente que el usuario lo corra contra PdV y verifique visualmente. Fuera de esta pasada, para después: detección de "deslinde" (el ejemplo real, MU02, resultó ser un símbolo de burbuja de eje, no una línea de límite de predio), cotas que no calzan con la firma del Paso 1.6, y el subrayado del título del plano.</p>
+      <p><strong>✅ CONFIRMADO EN COLAB REAL 2026-08-09 — fix de fusionado validado + nuevo fix de "línea de referencia periódica".</strong> Corrida real contra PdV: 683 (Nivel 1) y 417 (Nivel 2) muros exportados, de ~8 fusionados originales. Confirmado visualmente con <code>visualizar_muros.mjs</code>: los muros siguen el trazo real del plano, esquinas incluidas, puertas bien ancladas. El bug de fusionado queda confirmado resuelto con datos reales, no solo en teoría.</p>
+      <p class="note"><strong>Costo real encontrado</strong>: ~1100 muros entre ambas páginas, ~50% fragmentos &lt;0.3m — impracticable de revisar a mano (antes ~40-50 elementos). La concentración de fragmentos chicos NO era ruido disperso: coincidía exactamente con "Deslinde Límite Propiedad", "Línea de Edificación" y "Línea Oficial" del plano — confirmando que el pendiente ya identificado (deslinde) era la causa.</p>
+      <p><strong>Detector de "línea de referencia periódica" — 3 iteraciones, cada una validada visualmente antes de aceptarla</strong>:</p>
+      <ul>
+        <li><strong>v1 (ventana deslizante 1D)</strong>: reprodujo el MISMO defecto que el bug original de fusionado — encadenó muros de zonas totalmente distintas (Baño Universal + escalera + Oficina) en un cluster de 97 miembros, solo por estar secuencialmente cerca al ordenar.</li>
+        <li><strong>v2 (Union-Find con colinealidad + gap acotado, mismo criterio que Paso 1.5)</strong>: corrige el encadenamiento. Con span mínimo 8m, la escalera dejó de aparecer como sospechosa — confirmado visualmente, sin líneas rojas sobre los peldaños.</li>
+        <li><strong>v3 (protección por ancho de línea)</strong>: encontró un segundo falso positivo — una pared real (ancho 0.12) casi superpuesta con la línea de deslinde vecina (ancho 1.44). Protección agregada: un muro en cluster sospechoso solo se excluye si su propio ancho es ≥0.3 (paredes reales en este PDF: 0.12-0.86; rayado de referencia: 0.54-1.44).</li>
+      </ul>
+      <p class="note"><strong>Resultado final validado visualmente</strong> (rojo=excluido/verde=mantenido sobre el PNG real, ambas páginas): solo las 3 franjas de referencia reales quedan en rojo — 155/683 y 154/417 excluidos. Escalera, puertas y todas las paredes reales quedan en verde. Los excluidos se guardan en <code>muros_excluidos_por_referencia</code> (no se borran en silencio, mismo patrón que <code>muros_descartados</code>).</p>
+      <p class="note">🔲 <strong>Sin correr en Colab todavía</strong> — función <code>_detectar_lineas_referencia_periodicas</code> escrita en el notebook vigente (backup previo guardado), pendiente que el usuario la corra contra PdV y los otros 3 planos. Fuera de alcance todavía: cotas sin firma del Paso 1.6, subrayado del título.</p>
     </div>
   </details>
 
