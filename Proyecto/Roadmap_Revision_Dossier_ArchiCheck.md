@@ -1034,6 +1034,29 @@ El usuario confirmó la dirección propuesta (reusar una idea similar al reconoc
 
 **Estado**: notebook y `App.jsx` con todos los fixes de esta auditoría, build del portal (`npm run build`) confirmado exitoso. Backup del notebook guardado antes de cada cambio (`Versiones anteriores/`). El gap de ventanas queda como pendiente explícito — requiere el mismo tipo de esfuerzo de varias rondas que tomó el clasificador de puertas (patrón geométrico: 3 líneas paralelas cruzando el hueco de un muro, según ya lo anticipaba la decisión original del 2026-08-04), no es un fix rápido.
 
+## 🪟 Investigación de ventana real 2026-08-09 — no son "3 líneas", es un rectángulo (quad) + 1 línea central
+
+Al retomar el gap de ventanas, el usuario mostró con capturas reales (zoom progresivo guiado, varias rondas de coordenadas fallidas hasta triangular la posición exacta) una ventana confirmada en PdV Nivel 1 (pared entre Terraza y Cocina-Barra). Se agregó un diagnóstico crudo (`DIAGNOSTICO VENTANA`, sin filtrar) en esa zona exacta (x=664-715, y=3103-3494) — **corrida real en Colab**: el símbolo NO es 3 líneas independientes, es un objeto `'qu'` (cuadrilátero/rectángulo, el marco de la ventana) más 1 línea `'l'` central (el parteluz). El pipeline hoy solo mete operaciones `'l'` a `segmentos_l` — los `'qu'`/`'re'` van a `otros_items`, un balde aparte que nunca se evalúa para clasificar muros. Por eso los 2 bordes del rectángulo nunca llegan a `muros_geo`: no es un bug de clasificación, es que ese tipo de dato ni siquiera es candidato. Implicancia: un clasificador geométrico de ventanas necesita procesar `otros_items` (rectángulos), no solo líneas — enfoque distinto al de puertas (arco sobre líneas/curvas).
+
+## 🔧 Corrección de reglas ejes/cotas 2026-08-09 — el usuario corrigió mi entendimiento, 2 falsos positivos reales encontrados y corregidos antes de aplicar nada
+
+Revisando por qué el ruido de "línea de referencia" seguía apareciendo, el usuario corrigió 2 reglas mal entendidas: (1) **líneas discontinuas** — cualquier guion cuenta, sin mínimo de segmentos ni largo (no solo cadenas largas tipo deslinde); (2) **cotas** — se identifican por la geometría de una "cruz" (marca perpendicular + diagonal) en uno o ambos extremos del portador, sin importar su largo ni cercanía a texto extraído — no por parecerse a un muro corto.
+
+Se agregaron 2 diagnósticos de **solo lectura** (preview, sin aplicar nada a Paso 1.5/1.6) para previsualizar qué agarrarían las reglas relajadas antes de tocar el pipeline real — decisión explícita del usuario, mismo criterio que evitó 3 problemas reales anteriores esta sesión. **v1 tuvo 2 falsos positivos reales**, encontrados verificando visualmente 2 ejemplos contra el plano: un muro real (esquina en L) se coló en "ejes relajado" (span=2.01m, solo 2 segmentos — con 1 solo hueco es imposible distinguir un guion real de un muro con un corte incidental); otro muro real (base de Baño Universal, 1.85m) se coló en "cotas relajado" porque pasaba cerca de la marca de una cota vecina no relacionada, sin tener la cruz él mismo. **v2 corrige ambos**: ejes exige mínimo 2 huecos (3 segmentos) con tamaños consistentes entre sí; cotas exige que la marca perpendicular y la diagonal se encuentren casi en el mismo punto (cruz real), no solo que ambas estén sueltas cerca del portador. Se corrigió además un bug de coordenadas propio (faltaba `ajustar()` para el offset del recorte en páginas que no empiezan en 0%, como pag2-2). Pendiente: correr v2 en Colab y revisar de nuevo.
+
+## 🗂️ HALLAZGO POTENCIALMENTE GRANDE 2026-08-09 — los PDF tienen capas (OCG) nativas con nombres explícitos, incluida "Muros"/"Ejes"/"Cotas"/"Ptas Ventanas"
+
+Investigando un caso real de eje/rasante pasando sobre muros y ventanas (ejemplo de Isla de Pascua aportado por el usuario, marcado en verde sobre el plano), se preguntó si los PDF vienen con capas nativas que ayuden a separar semánticamente ejes de muros, en vez de reconstruir esa separación con heurísticas geométricas.
+
+**Confirmado leyendo los PDF crudos** (búsqueda de texto `/OCProperties`, sin PyMuPDF — método validado primero contra Campo Lindo, ya conocido "con layers" por nombre de archivo, antes de confiar en el resultado): **PdV, Beauchef y Campo Lindo SÍ tienen capas PDF nativas (OCG) — Isla de Pascua NO.** Las capas de PdV tienen nombres explícitos que coinciden exactamente con las categorías que toda la heurística geométrica de esta sesión (fusionado, deslinde, ejes/cotas relajado) intenta reconstruir por patrones de línea:
+
+```
+Muros, Ejes, Cotas, Ptas Ventanas, Muebles, ARTEFACTOS,
+Proyecciones, Muros Proy, Formato, Superficies, 0
+```
+
+**Sin confirmar todavía**: si `get_drawings()` (la función ya usada para extraer trazos) expone a qué capa pertenece cada trazo individual — PyMuPDF puede o no reportar esto, no se puede verificar sin correr Python real. Diagnóstico agregado (`DIAGNOSTICO CAPAS`): lista las capas vía `doc.get_ocgs()` (cruzar contra los nombres ya confirmados) e inspecciona las claves completas de los primeros `paths` de `get_drawings()`/`get_cdrawings()` por si ya trae info de capa en algún campo no leído hasta ahora. **Si esto funciona, es potencialmente mucho más robusto que toda la heurística geométrica construida hasta ahora** — la separación semántica ya existe en el PDF, no habría que adivinarla. Pendiente que el usuario corra el notebook en Colab y reporte qué imprime `DIAGNOSTICO CAPAS`.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
