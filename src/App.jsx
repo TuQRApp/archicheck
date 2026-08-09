@@ -374,16 +374,6 @@ function buildColabTexto(json) {
           lines.push(`    [Colab-Claude ${o.gravedad || "?"}] ${o.recinto_afectado || "(sin recinto asociado)"}: ${o.descripcion || ""} — ${o.articulo || "sin artículo citado"}${medida}`);
         }
       }
-      const dinoEls = p.elementos_dino || [];
-      if (dinoEls.length > 0) {
-        const conteo = {};
-        for (const e of dinoEls) conteo[e.tipo] = (conteo[e.tipo] || 0) + 1;
-        lines.push(`  DINO detectó: ${Object.entries(conteo).map(([t, n]) => `${t}=${n}`).join(", ")}`);
-        const puertasAngostas = dinoEls.filter(e => e.tipo === "puerta" && e.ancho_m < 0.90);
-        const escAngostas    = dinoEls.filter(e => e.tipo === "escalera" && e.ancho_m < 1.20);
-        if (puertasAngostas.length) lines.push(`    ⚠ DINO: ${puertasAngostas.length} puerta(s) con ancho <0.90 m detectadas`);
-        if (escAngostas.length)     lines.push(`    ⚠ DINO: ${escAngostas.length} escalera(s) con ancho <1.20 m detectadas`);
-      }
       const semEls = p.analisis_semantico?.elementos_detectados;
       if (semEls) {
         const semParts = [];
@@ -401,7 +391,7 @@ function buildColabTexto(json) {
       lines.push(`\nHay ${totalInc} alertas OpenCV. Si la cota declarada en plano confirma el incumplimiento → ALTA. Si no hay cota o el valor parece fuera de escala → VERIFICAR.\n`);
     const rg = json.resumen_global || {};
     if (rg.puertas_detectadas != null && (rg.puertas_detectadas > 0 || rg.ventanas_detectadas > 0 || rg.escaleras_detectadas > 0))
-      lines.push(`RESUMEN DINO global: puertas=${rg.puertas_detectadas}, ventanas=${rg.ventanas_detectadas ?? 0}, escaleras=${rg.escaleras_detectadas ?? 0}, rampas=${rg.rampas_detectadas ?? 0}. Usa estos conteos en el campo 'cantidad' de vectorizacion.elementos.`);
+      lines.push(`RESUMEN de elementos detectados en Colab (análisis semántico Claude Vision, consolidado): puertas=${rg.puertas_detectadas}, ventanas=${rg.ventanas_detectadas ?? 0}, escaleras=${rg.escaleras_detectadas ?? 0}, rampas=${rg.rampas_detectadas ?? 0}. Usa estos conteos en el campo 'cantidad' de vectorizacion.elementos.`);
     return lines.join("\n") + "\n";
   }
   if (json.tabla_cruzada) {
@@ -760,7 +750,7 @@ Tu tarea es el LEVANTAMIENTO GEOMÉTRICO: separación de capas gráficas, identi
 Para cada planta identifica los recintos visibles con bbox como fracción de la imagen (bbox:[x1,y1,x2,y2] donde 0,0 es esquina superior-izquierda y 1,1 inferior-derecha). Omite bbox si no puedes estimarlo con confianza.
 IMPORTANTE: NO inventes ni estimes superficies. Usa SOLO los valores de cotas escritos claramente en el plano (números con dimensión). Si no hay cota visible, pon superficie_m2:null. No copies la escala como si fuera un área.
 Para pasillos y circulaciones: reporta SIEMPRE el ancho MÍNIMO declarado en el plano (la cota más estrecha de todo el recorrido), no el ancho en un tramo específico ni el promedio.
-Si el análisis Colab incluye datos DINO, úsalos para informar el campo 'cantidad' de vectorizacion.elementos (puertas, ventanas, escaleras, rampas).
+Si el análisis Colab incluye conteos de elementos (análisis semántico), úsalos para informar el campo 'cantidad' de vectorizacion.elementos (puertas, ventanas, escaleras, rampas).
 ${buildColabTexto(colabData)}
 Responde SOLO con JSON puro sin markdown:
 {"analisis_por_archivo":[{"archivo":"...","tipo_detectado":"...","estado":"OK|CON OBSERVACIONES|INCOMPLETO|NO LEGIBLE","elementos_ok":["..."],"recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"pagina":1,"bbox":[0.1,0.1,0.5,0.5],"estado":"OK|OBSERVADO|INCUMPLE","observacion":"..."}]}],"capa1":{"separacion":{"capas":[{"nombre":"...","contenido":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"reconocimiento":{"stats":{"recintos_total":0,"niveles":0},"recintos_por_nivel":[{"nivel":"...","recintos":[{"nombre":"...","uso":"...","superficie_m2":0,"estado":"OK|OBSERVADO|INCUMPLE"}]}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"vectorizacion":{"elementos":[{"tipo":"...","cantidad":0,"descripcion":"...","paginas":"...","estado":"OK|OBSERVADO"}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]},"modelo":{"organizacion_funcional":[{"nivel":"...","uso":"...","area_m2":0,"conexion":"..."}],"accesos_evacuacion":[{"elemento":"...","estado":"OK|OBSERVADO|INCUMPLE","nota":"..."}],"observaciones":[{"descripcion":"...","articulo":"...","criticidad":"ALTA|MEDIA|BAJA","correccion":"..."}]}}}`;
@@ -2779,9 +2769,12 @@ ${printRef.current.innerHTML}
 
       // ── Post-procesado: parchar datos desde Colab (usa el JSON ya corregido por el arquitecto) ──
       if (colabJsonEfectivo) {
-        // Fix 1: cantidades en vectorización desde resumen DINO/semántico
+        // Fix 1: cantidades en vectorización desde el resumen semántico de Colab
+        // (Claude Vision, vía analisis_semantico.elementos_detectados consolidado
+        // en resumen_global -- el intento previo con Grounding DINO + SAM 2 se
+        // sacó del notebook el 2026-08-09, confirmado ~0% recall en planos CAD)
         const rg = colabJsonEfectivo.resumen_global || {};
-        const dinoMap = {
+        const conteoColabMap = {
           puerta:   rg.puertas_detectadas   ?? 0,
           ventana:  rg.ventanas_detectadas  ?? 0,
           escalera: rg.escaleras_detectadas ?? 0,
@@ -2790,7 +2783,7 @@ ${printRef.current.innerHTML}
         if (merged.capa1?.vectorizacion?.elementos) {
           for (const el of merged.capa1.vectorizacion.elementos) {
             const tipo = (el.tipo || "").toLowerCase();
-            for (const [key, cnt] of Object.entries(dinoMap)) {
+            for (const [key, cnt] of Object.entries(conteoColabMap)) {
               if (cnt > 0 && tipo.includes(key)) { el.cantidad = cnt; break; }
             }
           }

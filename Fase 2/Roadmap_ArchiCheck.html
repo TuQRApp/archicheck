@@ -892,7 +892,7 @@
   </details>
 
   <details class="item" open>
-    <summary>P1b — U-Net + MLSTRUCT-FP <span class="badge progress">Fusionado confirmado en Colab + fix deslinde 2026-08-09, sin correr</span></summary>
+    <summary>P1b — U-Net + MLSTRUCT-FP <span class="badge progress">DINO eliminado + auditoría 2026-08-09 (gap ventanas encontrado)</span></summary>
     <div class="item-body">
       <p>Misma familia que P1, en paralelo.</p>
       <ul>
@@ -930,6 +930,10 @@
       </ul>
       <p class="note"><strong>Resultado final validado visualmente</strong> (rojo=excluido/verde=mantenido sobre el PNG real, ambas páginas): solo las 3 franjas de referencia reales quedan en rojo — 155/683 y 154/417 excluidos. Escalera, puertas y todas las paredes reales quedan en verde. Los excluidos se guardan en <code>muros_excluidos_por_referencia</code> (no se borran en silencio, mismo patrón que <code>muros_descartados</code>).</p>
       <p class="note">🔲 <strong>Sin correr en Colab todavía</strong> — función <code>_detectar_lineas_referencia_periodicas</code> escrita en el notebook vigente (backup previo guardado), pendiente que el usuario la corra contra PdV y los otros 3 planos. Fuera de alcance todavía: cotas sin firma del Paso 1.6, subrayado del título.</p>
+      <p><strong>✅ 2026-08-09 — Grounding DINO + SAM 2 eliminado del notebook (confirmado dead weight) + auditoría completa pedida por el usuario ("todo tiene que cuadrar a la perfección").</strong> DINO seguía corriendo de verdad cada corrida (GPU real) pero su resultado siempre se descartaba (~0% recall confirmado en benchmark previo, fallback a Claude Vision semántico el 100% de las veces). Eliminadas Celdas 4b/4c, limpiado código muerto asociado en Celda 5 (bboxes DINO) y Celda 6 (fallback). <strong>El notebook ya no requiere GPU.</strong></p>
+      <p class="note"><strong>Auditoría roadmap↔código — 3 inconsistencias reales corregidas</strong>: (1) el prompt del portal le decía a Claude "RESUMEN DINO global" sobre datos que en realidad siempre venían del propio análisis semántico de Claude — corregido; (2) <code>muros_excluidos_por_referencia</code> (fix de ayer) quedaba anidado dentro de <code>datos_vectoriales</code> en vez de ser campo de nivel superior como <code>muros_geo</code>/<code>puertas_geo</code> — corregido; (3) variable <code>dinoMap</code> renombrada a <code>conteoColabMap</code> con comentario honesto.</p>
+      <p class="note">🔴 <strong>GAP REAL DE DISEÑO ENCONTRADO, SIN RESOLVER</strong>: la decisión del 2026-08-04 dice explícitamente "fuente única para TODOS los elementos" (puerta Y ventana), pero solo se construyó el clasificador geométrico de <strong>puertas</strong> — <code>ventanas_geo</code> no existe en ningún lado. Ventana sigue 100% Claude Vision (mismo problema de posición P04/V02 que la decisión buscaba eliminar). Pendiente explícito, mismo esfuerzo de varias rondas que tomó el clasificador de puertas (patrón: 3 líneas paralelas cruzando el hueco de un muro).</p>
+      <p class="note">Verificado sin cambios necesarios: motivo de eliminación obligatorio, PNG anotado enviado a Claude, botón de exportación en sección correcta, exclusión de achurado por color, exclusión de ejes/cotas intacta, cita normativa escalera 4.2.10, instrucción 3d, esquema p1/p2 consistente. Build del portal confirmado exitoso.</p>
     </div>
   </details>
 
