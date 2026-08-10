@@ -1067,6 +1067,18 @@ Corrida real confirma: cada `path` de `get_drawings()` trae la clave `'layer'` c
 
 **Pendiente**: que el usuario complete `MAPEO_CAPAS` para PdV y corra de nuevo, para confirmar que la señal por capa reduce el ruido de ejes/cotas relajado sin perder muros reales.
 
+## ✅ CONFIRMADO Y RESUELTO 2026-08-09 — `MAPEO_CAPAS` funciona (Muros exportados bajó 683→517 / 417→312), y las reglas geométricas relajadas v2 quedaron descartadas (0% precisión contra la capa real)
+
+Corrida real de PdV con `MAPEO_CAPAS` completo (`muro: ['Muros']`, `eje: ['Ejes']`, `cota: ['Cotas']`, `puerta_ventana: ['Ptas Ventanas']`, `mobiliario: ['Muebles', 'ARTEFACTOS']`) confirma impacto real y positivo: **Muros exportados bajó de 683→517 (Nivel 1) y 417→312 (Nivel 2)** — la capa ya filtra ruido antes de que llegue al blob geométrico. **Mobiliario por capa: 80 y 31 segmentos evitados** — resuelve directo el gap de "artefactos/mobiliario contaminando recintos" documentado hace semanas.
+
+Se agregó la capa real de cada candidato a los diagnósticos EJES/COTAS RELAJADO v2 (ver sección anterior) para poder verificar, con datos reales, si las reglas geométricas relajadas encontraban ejes/cotas de verdad o ruido. **Resultado: 0% de precisión.** De 45 candidatos de "cota relajada" (pág 1), **ninguno** estaba en la capa real `Cotas` (9 en `Muros`, 9 `Proyecciones`, 8 `Muebles`, 12 `Formato`, 2 `Muros Proy`) — incluido el falso positivo ya confirmado visualmente (pared de Baño Universal, 1.85m), ahora también confirmado por capa: `capa=Muros`. De 16 cadenas de "eje relajado" (ambas páginas), **ninguna** estaba puramente en la capa real `Ejes` (mezcla de `Muros`/`Proyecciones`/`ARTEFACTOS`/`Muebles`/`Cotas+Muros`).
+
+**Decisión (con el usuario)**: eliminar el bloque de diagnóstico EJES/COTAS RELAJADO v2 del notebook — quedaba probado que la detección geométrica pura de ejes/cotas relajados no es confiable en este tipo de plano; la señal que sí funciona (mapeo de capas como OR sobre Paso 1.5/1.6) ya está implementada y validada con datos reales. No se deja como código muerto ni como diagnóstico decorativo.
+
+**Aprendizaje que aplica hacia adelante**: para *cualquier* plano con capas OCG nativas (confirmado que Beauchef y Campo Lindo también las tienen, además de PdV), el mapeo de capas debería ser la señal primaria para ejes/cotas/mobiliario — la heurística geométrica queda como respaldo solo para planos sin capas nativas (confirmado que Isla de Pascua no las tiene).
+
+**Pendiente**: validar `muro` y `puerta_ventana` (hoy solo diagnóstico, no restrictivos) antes de usarlos para filtrar de verdad; completar `MAPEO_CAPAS` para Beauchef y Campo Lindo cuando se retome su validación.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
