@@ -1,4 +1,4 @@
-✓ Cuadro de superficies: 2156 caracteres extraidos de la pagina 1
+ ✓ Cuadro de superficies: 2156 caracteres extraidos de la pagina 1
 
 ========================================================
   Página 2  —  escala 1:50
@@ -9,18 +9,16 @@
   ✓ Claude: 15 recintos, 5 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
-  ✓ MAPEO POR CAPA: 156 eje, 83 cota, 1433 mobiliario, 362 muro (diagnostico, no restrictivo todavia), 987 sin capa mapeada — de 3021 segmentos totales
-  ✓ COTAS (linea): 101 segmentos identificados como linea/marca de cota (Paso 1.6)
-  ✓ EJES/RASANTES: 259 segmentos identificados como referencia (Paso 1.5), 150 evitados de proteger como muro pese a superar el span minimo
-  ✓ COTAS (linea): 93 segmentos adicionales evitados de proteger como muro (Paso 1.6)
-  ✓ MOBILIARIO (por capa): 80 segmentos evitados de proteger como muro
+  ✓ COTAS (linea): 19 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 103 segmentos identificados como referencia (Paso 1.5), 99 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 16 segmentos adicionales evitados de proteger como muro (Paso 1.6)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 1
-  ✓ Muros exportados: 517 (de 9 grupos protegidos, 515 segmentos descartados por angulo no-ortogonal, 46 descartados por color amarillo/achurado Se-retira)
-  ✓ Lineas de referencia periodicas (deslinde/rasante/linea oficial): 138 muros movidos a muros_excluidos_por_referencia (no arquitectura real)
+  ✓ Muros exportados: 683 (de 9 grupos protegidos, 537 segmentos descartados por angulo no-ortogonal, 61 descartados por color amarillo/achurado Se-retira)
+  ✓ Lineas de referencia periodicas (deslinde/rasante/linea oficial): 155 muros movidos a muros_excluidos_por_referencia (no arquitectura real)
   ✓ Puertas exportadas (clasificador geometrico): 11
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 1561), ((0.87, 0.43, 0.43), 1044), ((1.0, 0.75, 0.0), 416)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 9 grupos protegidos como muro, top 25 por span (73 textos de cota disponibles para el chequeo de distancia):
-     span=26.77m  bbox=14.8x22.31m  n_seg=1153  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=2.0/12.3/43.3
+     span=26.77m  bbox=14.8x22.31m  n_seg=1153  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=3.3/11.0/40.0
      span=15.01m  bbox=14.81x2.41m  n_seg=106  ancho_linea(min/mediana/max)=0.12/0.54/1.44  %cerca_cota(30/60/100px, n=106)=8.5/20.8/33.0
      span=9.21m  bbox=6.35x6.67m  n_seg=64  ancho_linea(min/mediana/max)=0.12/0.72/0.72  %cerca_cota(30/60/100px, n=64)=0.0/10.9/39.1
      span=3.63m  bbox=3.45x1.14m  n_seg=53  ancho_linea(min/mediana/max)=0.3/0.3/0.72  %cerca_cota(30/60/100px, n=53)=0.0/1.9/7.5
@@ -69,6 +67,14 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
       layer = Muros
       seqno = 2
+  DIAGNOSTICO DASHES: 0 de 3021 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM (4)'
+  DIAGNOSTICO TOC: 5 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'Rest Pza PdV (021 06 21)-DOM (1)', 1]
+    [2, 'Rest Pza PdV (021 06 21)-DOM (2)', 2]
+    [2, 'Rest Pza PdV (021 06 21)-DOM (3)', 3]
+    [2, 'Rest Pza PdV (021 06 21)-DOM (4)', 4]
   DIAGNOSTICO RAW_DRAWINGS: 5 zona(s) Cocina/Pasillo/Oficina, radio 250px, sin filtros
     zona=Cocina centro=(2322,978): 0 item(s) crudo(s) sin filtrar
     zona=Cocina centro=(1329,1896): 10 item(s) crudo(s) sin filtrar
@@ -111,75 +117,14 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     ('l', (715, 3494, 664, 3494), (0.0, 0.0, 0.0), None, 0.72)
     ('l', (690, 3103, 690, 3494), (0.0, 0.0, 0.0), None, 0.54)
     ('l', (715, 3103, 664, 3103), (0.0, 0.0, 0.0), None, 0.72)
-  DIAGNOSTICO EJES RELAJADO v2 (preview, NO aplicado, min 2 huecos consistentes): 14 cadena(s) nueva(s) que la regla actual (Paso 1.5) no agarra
-    n_segmentos=3 span_m=1.66 muestra_p1=(996, 1560) muestra_p2=(919, 1560) capas=['Muros', 'Muros Proy']
-    n_segmentos=3 span_m=1.06 muestra_p1=(1438, 3430) muestra_p2=(1404, 3430) capas=['Cotas', 'Muros']
-    n_segmentos=3 span_m=0.41 muestra_p1=(1659, 3600) muestra_p2=(1634, 3600) capas=['Cotas', 'Muros']
-    n_segmentos=3 span_m=0.9 muestra_p1=(2314, 3362) muestra_p2=(2314, 3328) capas=['Proyecciones']
-    n_segmentos=3 span_m=0.6 muestra_p1=(2047, 1219) muestra_p2=(2004, 1219) capas=['Cotas', 'Muros']
-    n_segmentos=3 span_m=0.6 muestra_p1=(2047, 1066) muestra_p2=(2004, 1066) capas=['Cotas', 'Muros']
-    n_segmentos=4 span_m=0.02 muestra_p1=(2157, 2971) muestra_p2=(2157, 2971) capas=['ARTEFACTOS']
-    n_segmentos=3 span_m=0.7 muestra_p1=(2335, 1560) muestra_p2=(2335, 1611) capas=['Muebles', 'Muros']
-    n_segmentos=4 span_m=0.92 muestra_p1=(2297, 2129) muestra_p2=(2263, 2129) capas=['Cotas', 'Muros']
-    n_segmentos=3 span_m=0.76 muestra_p1=(2203, 2002) muestra_p2=(2203, 2036) capas=['Muros']
-    n_segmentos=4 span_m=0.26 muestra_p1=(934, 1019) muestra_p2=(934, 1018) capas=['ARTEFACTOS']
-    n_segmentos=3 span_m=1.11 muestra_p1=(2033, 2622) muestra_p2=(2049, 2574) capas=['Proyecciones']
-    n_segmentos=3 span_m=1.05 muestra_p1=(1924, 2622) muestra_p2=(1924, 2576) capas=['Proyecciones']
-    n_segmentos=3 span_m=1.05 muestra_p1=(1878, 2622) muestra_p2=(1878, 2576) capas=['Proyecciones']
-  DIAGNOSTICO COTAS RELAJADO v2 (preview, NO aplicado, cruz real entre marcas): 45 segmento(s) portador nuevo(s), que la regla actual (Paso 1.6) no agarra
-    largo_m=1.3 p1=(1693, 3090) p2=(1914, 3090) capa=Muros
-    largo_m=0.1 p1=(1940, 3090) p2=(1940, 3073) capa=Muros
-    largo_m=0.2 p1=(1940, 2954) p2=(1940, 2920) capa=Muros
-    largo_m=0.1 p1=(1914, 3090) p2=(1914, 3073) capa=Muros
-    largo_m=0.2 p1=(1914, 2954) p2=(1914, 2920) capa=Muros
-    largo_m=0.25 p1=(1786, 2393) p2=(1829, 2393) capa=Muros
-    largo_m=1.85 p1=(1982, 2393) p2=(2297, 2393) capa=Muros
-    largo_m=0.1 p1=(2297, 2393) p2=(2314, 2393) capa=Muros
-    largo_m=0.15 p1=(1940, 3073) p2=(1914, 3073) capa=Muros
-    largo_m=0.02 p1=(1501, 3543) p2=(1500, 3546) capa=Proyecciones
-    largo_m=0.06 p1=(1500, 3546) p2=(1499, 3556) capa=Proyecciones
-    largo_m=0.06 p1=(1499, 3556) p2=(1498, 3565) capa=Proyecciones
-    largo_m=0.06 p1=(1498, 3565) p2=(1497, 3575) capa=Proyecciones
-    largo_m=0.03 p1=(1497, 3575) p2=(1497, 3570) capa=Proyecciones
-    largo_m=0.03 p1=(1477, 3544) p2=(1473, 3542) capa=Proyecciones
-    largo_m=0.3 p1=(1736, 2376) p2=(1786, 2376) capa=Muros
-    largo_m=0.3 p1=(2314, 2444) p2=(2314, 2393) capa=Muros
-    largo_m=0.2 p1=(2297, 2129) p2=(2263, 2129) capa=Muros
-    largo_m=0.15 p1=(2297, 2367) p2=(2297, 2393) capa=Proyecciones
-    largo_m=0.36 p1=(1824, 2129) p2=(1885, 2129) capa=Muebles
-    largo_m=0.04 p1=(1852, 2139) p2=(1851, 2133) capa=Muebles
-    largo_m=0.03 p1=(1858, 2134) p2=(1858, 2139) capa=Muebles
-    largo_m=0.01 p1=(1853, 2137) p2=(1853, 2139) capa=Muebles
-    largo_m=0.01 p1=(1857, 2139) p2=(1857, 2137) capa=Muebles
-    largo_m=0.02 p1=(1857, 2137) p2=(1853, 2137) capa=Muebles
-    largo_m=0.04 p1=(1853, 2148) p2=(1852, 2141) capa=Muebles
-    largo_m=0.04 p1=(1857, 2141) p2=(1856, 2148) capa=Muebles
-    largo_m=0.28 p1=(2263, 2393) p2=(2216, 2393) capa=Proyecciones
-    largo_m=0.28 p1=(1923, 2129) p2=(1876, 2129) capa=Proyecciones
-    largo_m=0.28 p1=(1833, 2129) p2=(1786, 2129) capa=Proyecciones
-    largo_m=0.25 p1=(1513, 3536) p2=(1482, 3567) capa=0
-    largo_m=0.4 p1=(2067, 2622) p2=(2067, 2691) capa=Muros Proy
-    largo_m=0.3 p1=(2059, 2631) p2=(2059, 2683) capa=Muros Proy
-    largo_m=0.01 p1=(315, 1919) p2=(315, 1916) capa=Formato
-    largo_m=0.01 p1=(300, 1895) p2=(298, 1895) capa=Formato
-    largo_m=0.15 p1=(290, 1919) p2=(316, 1919) capa=Formato
-    largo_m=0.01 p1=(2731, 1919) p2=(2730, 1916) capa=Formato
-    largo_m=0.01 p1=(2680, 1917) p2=(2679, 1919) capa=Formato
-    largo_m=0.17 p1=(2699, 1890) p2=(2705, 1919) capa=Formato
-    largo_m=0.15 p1=(2705, 1919) p2=(2679, 1919) capa=Formato
-    largo_m=0.13 p1=(233, 1926) p2=(255, 1926) capa=Formato
-    largo_m=0.14 p1=(279, 1926) p2=(303, 1926) capa=Formato
-    largo_m=0.14 p1=(327, 1926) p2=(351, 1926) capa=Formato
-    largo_m=0.14 p1=(2679, 1926) p2=(2703, 1926) capa=Formato
-    largo_m=0.13 p1=(2727, 1926) p2=(2749, 1926) capa=Formato
-  ✓ Vectorial: 73 textos (cotas/nombres), 2192 trazos candidatos a símbolo, 1147 tramos protegidos como muro (por conectividad, no por largo), 413 tramos desprotegidos por parecer achurado (rampa/escalera), 103 en 5 cadena(s) de línea discontinua
+  ✓ Vectorial: 73 textos (cotas/nombres), 1984 trazos candidatos a símbolo, 1355 tramos protegidos como muro (por conectividad, no por largo), 480 tramos desprotegidos por parecer achurado (rampa/escalera), 103 en 5 cadena(s) de línea discontinua
      muestra de cadenas discontinuas detectadas: [{'n_segmentos': 7, 'span_m': 2.5}, {'n_segmentos': 9, 'span_m': 3.25}, {'n_segmentos': 4, 'span_m': 1.2}, {'n_segmentos': 5, 'span_m': 1.35}, {'n_segmentos': 52, 'span_m': 2.5}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 73 textos, 103 líneas discontinuas, 2192 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
-  ✓ OpenCV: 22 espacios >= 0.5 m²
-  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 77.03m²
-  ✓ Cruce: 13/22 con nombre | 3 incumpl. geo
-  ⚠ 9 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E14, E08, E06, E10, E17, E15, E22, E12, E13
+  ✓ Limpieza pre-umbral: 73 textos, 103 líneas discontinuas, 1984 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 24 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 76.15m²
+  ✓ Cruce: 15/24 con nombre | 1 incumpl. geo
+  ⚠ 9 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E16, E10, E08, E12, E17, E23, E21, E15, E14
 
 ========================================================
   Página 2  —  escala 1:50
@@ -187,17 +132,15 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 ========================================================
   2790x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 8 recintos, 4 incumplimientos
+  ✓ Claude: 7 recintos, 4 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
-  ✓ MAPEO POR CAPA: 156 eje, 83 cota, 1006 mobiliario, 826 muro (diagnostico, no restrictivo todavia), 588 sin capa mapeada — de 2659 segmentos totales
-  ✓ COTAS (linea): 83 segmentos identificados como linea/marca de cota (Paso 1.6)
-  ✓ EJES/RASANTES: 178 segmentos identificados como referencia (Paso 1.5), 76 evitados de proteger como muro pese a superar el span minimo
-  ✓ COTAS (linea): 73 segmentos adicionales evitados de proteger como muro (Paso 1.6)
-  ✓ MOBILIARIO (por capa): 31 segmentos evitados de proteger como muro
+  ✓ COTAS (linea): 0 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 22 segmentos identificados como referencia (Paso 1.5), 22 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 0 segmentos adicionales evitados de proteger como muro (Paso 1.6)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 6
-  ✓ Muros exportados: 312 (de 9 grupos protegidos, 962 segmentos descartados por angulo no-ortogonal, 279 descartados por color amarillo/achurado Se-retira)
-  ✓ Lineas de referencia periodicas (deslinde/rasante/linea oficial): 138 muros movidos a muros_excluidos_por_referencia (no arquitectura real)
+  ✓ Muros exportados: 417 (de 9 grupos protegidos, 1001 segmentos descartados por angulo no-ortogonal, 303 descartados por color amarillo/achurado Se-retira)
+  ✓ Lineas de referencia periodicas (deslinde/rasante/linea oficial): 154 muros movidos a muros_excluidos_por_referencia (no arquitectura real)
   ✓ Puertas exportadas (clasificador geometrico): 8
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.87, 0.43, 0.43), 1258), ((0.0, 0.0, 0.0), 1074), ((1.0, 0.75, 0.0), 303), ((1.0, 0.0, 0.0), 24)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 9 grupos protegidos como muro, top 25 por span (46 textos de cota disponibles para el chequeo de distancia):
@@ -250,6 +193,14 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
       layer = Muros
       seqno = 2
+  DIAGNOSTICO DASHES: 0 de 2659 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM (4)'
+  DIAGNOSTICO TOC: 5 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'Rest Pza PdV (021 06 21)-DOM (1)', 1]
+    [2, 'Rest Pza PdV (021 06 21)-DOM (2)', 2]
+    [2, 'Rest Pza PdV (021 06 21)-DOM (3)', 3]
+    [2, 'Rest Pza PdV (021 06 21)-DOM (4)', 4]
   DIAGNOSTICO RAW_DRAWINGS: 3 zona(s) Cocina/Pasillo/Oficina, radio 250px, sin filtros
     zona=Oficina centro=(965,3278): 0 item(s) crudo(s) sin filtrar
     zona=Oficina centro=(1896,3278): 22 item(s) crudo(s) sin filtrar
@@ -297,65 +248,15 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=250px): 2 item(s) crudo(s) sin filtrar
     ('l', (562, 2785, 562, 3720), (0.0, 0.0, 0.0), None, 0.72)
     ('l', (613, 2785, 613, 3670), (0.0, 0.0, 0.0), None, 0.72)
-  DIAGNOSTICO EJES RELAJADO v2 (preview, NO aplicado, min 2 huecos consistentes): 2 cadena(s) nueva(s) que la regla actual (Paso 1.5) no agarra
-    n_segmentos=16 span_m=0.81 muestra_p1=(894, 2880) muestra_p2=(903, 2870) capas=['Muros']
-    n_segmentos=3 span_m=0.57 muestra_p1=(2263, 3193) muestra_p2=(2195, 3193) capas=['Muros', 'Muros Proy']
-  DIAGNOSTICO COTAS RELAJADO v2 (preview, NO aplicado, cruz real entre marcas): 46 segmento(s) portador nuevo(s), que la regla actual (Paso 1.6) no agarra
-    largo_m=4.6 p1=(2382, 2394) p2=(2382, 1612) capa=Muros Proy
-    largo_m=4.1 p1=(2382, 1612) p2=(1685, 1612) capa=Muros Proy
-    largo_m=1.2 p1=(817, 1612) p2=(613, 1612) capa=Muros Proy
-    largo_m=3.7 p1=(613, 1612) p2=(613, 2241) capa=Muros Proy
-    largo_m=1.85 p1=(1880, 2394) p2=(2195, 2394) capa=Muros
-    largo_m=1.1 p1=(2195, 2394) p2=(2382, 2394) capa=Muros Proy
-    largo_m=0.3 p1=(817, 2394) p2=(817, 2445) capa=Muros
-    largo_m=0.45 p1=(817, 2445) p2=(894, 2445) capa=Muros
-    largo_m=0.36 p1=(617, 2568) p2=(678, 2568) capa=ARTEFACTOS
-    largo_m=0.2 p1=(630, 2559) p2=(664, 2559) capa=ARTEFACTOS
-    largo_m=1.2 p1=(817, 1612) p2=(613, 1612) capa=Muros
-    largo_m=3.7 p1=(613, 1612) p2=(613, 2241) capa=Muros
-    largo_m=3.7 p1=(596, 2241) p2=(596, 1612) capa=Muros
-    largo_m=1.3 p1=(596, 1594) p2=(817, 1594) capa=Muros
-    largo_m=0.2 p1=(613, 2275) p2=(613, 2241) capa=Muros
-    largo_m=0.12 p1=(816, 2468) p2=(817, 2488) capa=ARTEFACTOS
-    largo_m=0.11 p1=(817, 2508) p2=(816, 2527) capa=ARTEFACTOS
-    largo_m=1.2 p1=(613, 2572) p2=(817, 2572) capa=Muros
-    largo_m=0.75 p1=(817, 2572) p2=(817, 2445) capa=Muros
-    largo_m=0.1 p1=(817, 2445) p2=(834, 2445) capa=Muros
-    largo_m=0.75 p1=(834, 2445) p2=(834, 2572) capa=Muros
-    largo_m=1.3 p1=(834, 2590) p2=(613, 2590) capa=Muros
-    largo_m=0.8 p1=(1183, 2590) p2=(1047, 2590) capa=Muros
-    largo_m=0.6 p1=(1047, 2564) p2=(1149, 2564) capa=Muros
-    largo_m=4.7 p1=(2399, 2411) p2=(2399, 1612) capa=Muros
-    largo_m=1.3 p1=(2399, 1594) p2=(2178, 1594) capa=Muros
-    largo_m=1.2 p1=(2178, 1612) p2=(2382, 1612) capa=Muros
-    largo_m=4.6 p1=(2382, 1612) p2=(2382, 2394) capa=Muros
-    largo_m=1.1 p1=(2382, 2411) p2=(2195, 2411) capa=Muros
-    largo_m=1.1 p1=(2195, 2394) p2=(2382, 2394) capa=Muros
-    largo_m=0.8 p1=(1336, 2879) p2=(1336, 3015) capa=Ptas Ventanas
-    largo_m=0.25 p1=(1025, 2205) p2=(995, 2174) capa=0
-    largo_m=0.25 p1=(2348, 1579) p2=(2379, 1610) capa=0
-    largo_m=0.01 p1=(213, 1920) p2=(213, 1917) capa=Formato
-    largo_m=0.01 p1=(198, 1896) p2=(196, 1896) capa=Formato
-    largo_m=0.15 p1=(188, 1920) p2=(214, 1920) capa=Formato
-    largo_m=0.01 p1=(2629, 1920) p2=(2628, 1917) capa=Formato
-    largo_m=0.01 p1=(2595, 1896) p2=(2593, 1896) capa=Formato
-    largo_m=0.01 p1=(2578, 1917) p2=(2578, 1920) capa=Formato
-    largo_m=0.17 p1=(2598, 1891) p2=(2603, 1920) capa=Formato
-    largo_m=0.15 p1=(2603, 1920) p2=(2577, 1920) capa=Formato
-    largo_m=0.13 p1=(131, 1927) p2=(153, 1927) capa=Formato
-    largo_m=0.14 p1=(177, 1927) p2=(201, 1927) capa=Formato
-    largo_m=0.14 p1=(225, 1927) p2=(249, 1927) capa=Formato
-    largo_m=0.14 p1=(2577, 1927) p2=(2601, 1927) capa=Formato
-    largo_m=0.13 p1=(2625, 1927) p2=(2647, 1927) capa=Formato
-  ✓ Vectorial: 46 textos (cotas/nombres), 1538 trazos candidatos a símbolo, 1348 tramos protegidos como muro (por conectividad, no por largo), 819 tramos desprotegidos por parecer achurado (rampa/escalera), 22 en 4 cadena(s) de línea discontinua
+  ✓ Vectorial: 46 textos (cotas/nombres), 1380 trazos candidatos a símbolo, 1506 tramos protegidos como muro (por conectividad, no por largo), 865 tramos desprotegidos por parecer achurado (rampa/escalera), 22 en 4 cadena(s) de línea discontinua
      muestra de cadenas discontinuas detectadas: [{'n_segmentos': 5, 'span_m': 1.31}, {'n_segmentos': 6, 'span_m': 1.61}, {'n_segmentos': 5, 'span_m': 1.31}, {'n_segmentos': 6, 'span_m': 1.61}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 46 textos, 22 líneas discontinuas, 1538 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
-  ✓ OpenCV: 20 espacios >= 0.5 m²
-  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 231.11m²
-  ✓ Cruce: 8/20 con nombre | 0 incumpl. geo
-  ⚠ 12 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E03, E19, E01, E20, E09, E10, E18, E04, E08, E17, E07, E13
+  ✓ Limpieza pre-umbral: 46 textos, 22 líneas discontinuas, 1380 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 18 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 226.13m²
+  ✓ Cruce: 7/18 con nombre | 0 incumpl. geo
+  ⚠ 11 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E02, E17, E01, E18, E10, E09, E16, E04, E12, E15, E07
 
 ========================================================
 ✓ Procesadas 2 / 2 páginas
-  Incumplimientos geométricos totales: 3
+  Incumplimientos geométricos totales: 1
