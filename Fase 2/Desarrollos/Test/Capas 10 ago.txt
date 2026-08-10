@@ -1,0 +1,159 @@
+Capa real: Muros / MUROS
+PdV: ✅
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: muro. Respuesta: Ok
+────────────────────────────────────────
+Capa real: Muros Proy / MUROS_PROY
+PdV: ✅
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: ⚠️ decide tú — ¿muro real o solo proyectado?: Respuesta. Respuesta: Se deben marcar para ignorar, porque corresponden a otros pisos-
+────────────────────────────────────────
+Capa real: Ejes
+PdV: ✅
+Beauchef: ❌
+Campo Lindo: ❌
+Categoría propuesta: eje. Respuesta. Cuando se ve que existe, se debe preguntar si se ignora.
+────────────────────────────────────────
+Capa real: Cotas / COTAS / cotas
+PdV: ✅
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: cota. Respuesta: Se debe ignorar como elemento de la construcción, pero se debe usar la medida que indica.
+────────────────────────────────────────
+Capa real: BM-COTAS-0.13
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ❌
+Categoría propuesta: cota. Respuesta: Ok
+────────────────────────────────────────
+Capa real: Ptas Ventanas
+PdV: ✅
+Beauchef: ❌
+Campo Lindo: ❌
+Categoría propuesta: puerta_ventana. Respuesta: Ok
+────────────────────────────────────────
+Capa real: Puertas / puertas
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: puerta_ventana. Respuesta: Ok
+────────────────────────────────────────
+Capa real: Ventanas
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: puerta_ventana. Respuesta: Ok
+────────────────────────────────────────
+Capa real: Muebles / MUEBLES
+PdV: ✅
+Beauchef: ✅
+Campo Lindo: ❌                                                                                Categoría propuesta: mobiliario. Respuesta: Ok. Se debería ignorar siempre.
+────────────────────────────────────────                                                       Capa real: ARTEFACTOS
+PdV: ✅                                                                                        Beauchef: ✅
+Campo Lindo: ❌                                                                                Categoría propuesta: ⚠️ decide túanitarios (otra cosa)?. Respuesta: Ok. Se debería ignorar siempre.
+────────────────────────────────────────                                                       Capa real: MOBILIARIO / mobiliari
+PdV: ❌                                                                                        Beauchef: ✅
+Campo Lindo: ✅                                                                                Categoría propuesta: mobiliario. Respuesta: Ok. Se debería ignorar siempre.
+────────────────────────────────────────                                                       Capa real: Accesibilidad
+PdV: ❌                                                                                        Beauchef: ✅
+Campo Lindo: ❌                                                                                Categoría propuesta: accesibilidaiagnóstico por ahora (no hay
+ninguna etapa del pipeline que use esta señal todavía)  Respuesta: Se debe considerar.
+─────────────────────────────────
+Capa real: Escalera                                                                            PdV: ❌
+Beauchef: ❌                                                                                   Campo Lindo: ❌
+Categoría propuesta: no existe en ningún archivo — dejo la categoría escalera lista igual, por si aparece en un plano futuro. Respuesta: Ok. 
+─────────────────────────────────
+Capa real: MARCADOR CORTES-ELEVACIONES
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ❌
+Categoría propuesta: corte_elevacion — nueva. Ojo: es solo el símbolo (círculo+flecha) que marca en la planta de dónde sale un corte, no el contenido real de la lámina de corte/elevación. Respuesta: Ok. 
+─────────────────────────────────
+Capa real: LINEA TERRENO ORIGINAL
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ❌
+Categoría propuesta: deslinde_terreno — nueva, candidato fuerte para reemplazar el detector
+geométrico de "línea de referenci. Respuesta: Ok. 
+────────────────────────────────────────
+Capa real: cierre / calle / calle
+PdV: ❌
+Beauchef: ❌
+Campo Lindo: ✅
+Categoría propuesta: deslinde_terindo con otros nombres. Respuesta: Ok. 
+────────────────────────────────────────
+Capa real: Proyecciones / PROYECC
+PdV: ✅
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: sin categoríer con esto). Respuesta: Se deben marcar para ignorar, porque corresponden a otros pisos-
+────────────────────────────────────────
+Capa real: Formato / FORMATO
+PdV: ✅
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: sin categorír el marco/cajetín del plano de
+forma más confiable que por geometría. esto). Respuesta: Se deben marcar para ignorar, 
+─────────────────────────────────
+Capa real: Superficies
+PdV: ✅
+Beauchef: ❌
+Campo Lindo: ❌
+Categoría propuesta: sin categoría (ya se usa PAGINA_CUADRO_SUPERFICIES por separado). Respuesta: Se debe validar contra la tabla.
+─────────────────────────────────
+Capa real: NIVELES
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ❌
+Categoría propuesta: sin categoría. Respuesta: Márcalo en el roadmap para validar con mi equipo de arquitectos.
+─────────────────────────────────
+Capa real: PAVIMENTOS / suelos / techos
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: sin categoría (material, no geometría de muro). Respuesta: Márcalo en el roadmap para validar con mi equipo de arquitectos.
+─────────────────────────────────
+Capa real: ILUMINACION
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ❌
+Categoría propuesta: sin categoría. Respuesta: Márcalo en el roadmap para validar con mi equipo de arquitectos.
+─────────────────────────────────
+Capa real: Cubiertas
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: sin categoría (techos/cubierta, no aplica a plantas). Respuesta: Márcalo en el roadmap para validar con mi equipo de arquitectos.
+─────────────────────────────────
+Capa real: HATCH
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ❌
+Categoría propuesta: sin categoría — candidato a reemplazar el filtro de achurado por color. Respuesta: Márcalo en el roadmap para validar con mi equipo de arquitectos.
+─────────────────────────────────
+Capa real: BALL
+PdV: ❌
+Beauchef: ✅
+Campo Lindo: ❌
+Categoría propuesta: sin identificar qué es — no adivino. Respuesta: Márcalo en el roadmap para validar con mi equipo de arquitectos.
+─────────────────────────────────
+Capa real: Textos / TEXTO / TEXTOS ROJOS / TEXTOS
+PdV: ✅(no, ver nota)❌
+Beauchef: ✅
+Campo Lindo: ✅
+Categoría propuesta: sin categoría (texto, no geometría). Respuesta: Márcalo en el roadmap para validar con mi equipo de arquitectos.
+─────────────────────────────────
+Capa real: 0 (capa por defecto)
+PdV: ✅
+Beauchef: ✅
+Campo Lindo: ❌
+Categoría propuesta: 🚩 red flag de disciplina CAD — nada debería quedar aquí a propósito Respuesta: eliminado 
+
+
+algunas cosas:
+- Siempre debes procesar por separado, en la medida que se pueda en cada archivo, las capas de puertas y ventanas. No entiendo exactamente tu clasificación de Categorías.
+- Agrega una funcionalidad en el roadmap. En la pestaña de visualización, cuando se selecciona un tipo de elemento, debes "iluminar" los elementos que hay de ese tipo, de forma tal de saber cuáles y cuáles no hay. Esto se hace pinchando el botón. Una funcionalidad similar a la anterior es que se debe poder seleccionar capas, y también iluminar, y se pueda agregar o eliminar elementos. 
+- Recuérdame si cuando agregamos un elementos con los clicks, eres capaz de asignarlo correctamente en el plano. Es decir, "Esta puerta corresponde a la salida de la cocina, y mide 0,9m". 
+- Cuando se selecciona una capa, se debe poder marcar para ignorar.

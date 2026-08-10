@@ -1114,7 +1114,33 @@ El usuario pidió: (1) agregar capa de "Accesibilidad" (Beauchef) — aclarando 
 
 **Categorías nuevas agregadas al template de Celda 3** (todas solo-diagnóstico por ahora): `accesibilidad` (paraguas — en Beauchef es una sola capa real que probablemente mezcla rampas+ascensores+otros sin separar), `ascensor` y `rampa` (separadas, por si el proyecto sí las distingue — pedido explícito del usuario), `escalera`, `columna` (fuente de confusión típica con muro — ya se coló un pilar como falso positivo de "eje" en el diagnóstico relajado v1 de esta sesión), `achurado` (Beauchef ya tiene una capa real `HATCH`, candidato a reforzar el filtro de achurado por color amarillo), `formato` (candidato a excluir el cajetín/marco de forma más confiable que por geometría), `corte_elevacion` (ojo: en Beauchef es solo el símbolo/marcador sobre la planta, no el contenido real de una lámina de corte), `deslinde_terreno` (candidato fuerte para reemplazar el detector geométrico de "línea de referencia periódica" ya construido).
 
-Notebook renombrado `ArchiCheck_Base 10ago_1445.ipynb` (el anterior, `10ago_1330`, a `Versiones anteriores/`). **Pendiente**: que el usuario decida, de la tabla completa presentada, qué capas van en qué categoría por proyecto, y corra de nuevo.
+Notebook renombrado `ArchiCheck_Base 10ago_1445.ipynb` (el anterior, `10ago_1330`, a `Versiones anteriores/`).
+
+## ✅ 2026-08-10 (mismo día) — el usuario revisó la tabla completa capa por capa y tomó decisión en cada una; `MAPEO_CAPAS` implementa categoría `ignorar` + separación real `puerta`/`ventana`
+
+El usuario devolvió la tabla completa (`Fase 2/Desarrollos/Test/Capas 10 ago.txt`) con una decisión explícita por cada capa real de los 3 proyectos. Resumen de decisiones y lo implementado:
+
+- **`Muros Proy`/`MUROS_PROY` y `Proyecciones`/`PROYECCIONES` → nueva categoría `ignorar`** ("se deben marcar para ignorar, porque corresponden a otros pisos"). Junto con `Formato`/`FORMATO` y la capa por defecto `0` (`"eliminado"`), forman la primera categoría con **lógica propia real** además de `mobiliario` — excluye el segmento de poder protegerse como muro en el Paso 2, mismo mecanismo que `mobiliario` pero motivo distinto (no es que sea mobiliario, es que no corresponde a este nivel o no es geometría de construcción en absoluto).
+- **Puertas y ventanas: separadas siempre que el PDF lo permita** ("Siempre debes procesar por separado... No entiendo exactamente tu clasificación de Categorías") — `puerta_ventana` se dividió en `puerta` y `ventana`. En Beauchef/Campo Lindo (que sí traen capas separadas) cada una mapea a su categoría real; en PdV (capa combinada `Ptas Ventanas`) esa misma capa se lista en ambas categorías — sigue siendo diagnóstico, no cambia resultado, pero ya no fuerza una única categoría combinada cuando el dato de origen sí distingue.
+- **Mobiliario/Artefactos: confirmado, siempre se debe ignorar** (ya implementado desde antes).
+- **Accesibilidad: "se debe considerar"** — confirma prioridad de la categoría paraguas ya agregada, más `ascensor`/`rampa` separadas por si el proyecto las distingue.
+- **Ejes: "cuando se ve que existe, se debe preguntar si se ignora"** — sin UI interactiva en Colab, se implementó como aviso explícito en Celda 3: si el PDF trae una capa candidata a eje/rasante/grilla que no está en `MAPEO_CAPAS['eje']`, imprime una pregunta; si sí está, confirma que quedó activa a propósito.
+- **`Cotas`: "se debe ignorar como elemento de la construcción, pero se debe usar la medida que indica"** — la exclusión geométrica ya existe; **falta diseñar** la lectura del valor numérico de la cota y su cruce contra la geometría medida (no implementado, ver pendiente abajo).
+- **`Superficies`: "se debe validar contra la tabla"** — cruzar el área que indica esta capa contra el cuadro de superficies ya extraído (`PAGINA_CUADRO_SUPERFICIES`) — no implementado, pendiente de diseño.
+- **NIVELES, PAVIMENTOS/suelos/techos, ILUMINACION, Cubiertas, HATCH, BALL, Textos: "Márcalo en el roadmap para validar con mi equipo de arquitectos"** — deliberadamente sin categoría ni decisión todavía. Quedan documentadas como capas reales confirmadas, a la espera de que el equipo de arquitectos del usuario defina si valen la pena aislar y para qué.
+
+**Mapeos completos, listos para copiar/pegar, para los 3 proyectos** quedaron directamente en los comentarios de Celda 3 (no hace falta rederivarlos cada vez).
+
+Notebook renombrado `ArchiCheck_Base 10ago_1620.ipynb` (el anterior, `10ago_1445`, a `Versiones anteriores/`).
+
+### 🆕 Pendientes de diseño nuevos, agregados a pedido del usuario (no implementados todavía)
+
+1. **Portal — "iluminar" elementos/capas al seleccionarlos.** En la pantalla de revisión gráfica, al seleccionar un tipo de elemento (categoría) debe resaltarse sobre el plano cada instancia de ese tipo ya detectada, con un botón — para que el arquitecto vea de un vistazo cuáles hay y cuáles faltan. Funcionalidad simétrica para **capas**: seleccionar una capa (de las que trae el PDF) y resaltar sus trazos sobre el plano. Ambas vistas deben permitir agregar o eliminar elementos directamente desde ahí.
+2. **Portal — marcar una capa para ignorar, desde la misma interfaz de selección de capas.** Extensión directa de lo anterior: al seleccionar una capa, poder marcarla "ignorar" ahí mismo (hoy esa decisión solo se toma en Colab, vía `MAPEO_CAPAS['ignorar']`, manualmente).
+3. **Cota: usar el valor numérico, no solo excluir la geometría.** Diseñar cómo asociar el texto de una cota (`cotas_texto`, ya extraído) con el segmento de muro/vano que mide, para validar la medida real contra el dato declarado en el plano — hoy `cotas_texto` se extrae pero no se cruza sistemáticamente contra ningún segmento específico.
+4. **Superficies: validar el área de la capa contra el cuadro de superficies.** Cruzar lo que dibuja la capa `Superficies` (cuando existe) contra `PAGINA_CUADRO_SUPERFICIES`, mismo espíritu que la validación de áreas ya existente pero a nivel de capa nativa en vez de solo OCR/texto de tabla.
+
+**Verificado sobre el código real (`src/App.jsx`), a pedido del usuario ("recuérdame si...")**: hoy, al agregar un elemento por clic (puerta/ventana/escalera/rampa), el clic **solo** captura posición y calcula `ancho_estimado_m` geométricamente — **no** se puede escribir una etiqueta ni una medida a mano en el momento del clic (`ubicacion_o_recinto` nace vacío, `""`). **Después**, si el arquitecto selecciona ese elemento ya creado, el panel `PanelRetag` (`App.jsx` línea ~1407) sí permite escribir texto libre en "Ubicación / descripción" (ej. "puerta de salida de cocina") y corregir a mano el ancho/largo en metros — pero es un paso posterior, no simultáneo al clic. No existe hoy forma de cambiar la categoría de un elemento ya creado (hay que eliminar y volver a marcar).
 
 ---
 
