@@ -1133,6 +1133,12 @@ El usuario devolvió la tabla completa (`Fase 2/Desarrollos/Test/Capas 10 ago.tx
 
 Notebook renombrado `ArchiCheck_Base 10ago_1620.ipynb` (el anterior, `10ago_1445`, a `Versiones anteriores/`).
 
+## ✅ 2026-08-10 (mismo día) — diagnóstico EJES/COTAS RELAJADO v2 reincorporado como sugerencia de solo lectura, condicionado a "sin capa mapeada"
+
+El usuario preguntó si no convenía mantener ambas formas de detectar ejes/cotas (geométrica + capa) en vez de haber eliminado la geométrica del todo, y aplicar el mismo criterio a "todas las capas/investigaciones". Se le explicó la distinción: la evidencia de 0% de precisión es real y específica — de 45 candidatos "cota relajada" contra la capa real de PdV, 0 coincidían — así que reactivarla como señal automática permanente reintroduciría el mismo ruido que se pasó la sesión eliminando. Pero para proyectos **sin** capa de esa categoría (Beauchef/Campo Lindo no tienen `eje`; cualquier plano sin capas OCG como Isla de Pascua) esa evidencia nunca se probó ahí — sigue siendo la única señal disponible.
+
+**Acordado e implementado**: el diagnóstico `EJES/COTAS RELAJADO v2` completo (con la lógica ya validada v2: mínimo 2 huecos consistentes para ejes, cruz real entre marca perpendicular y diagonal para cotas) se reincorporó al notebook, pero **condicionado**: solo corre y se imprime cuando `MAPEO_CAPAS['eje']`/`['cota']` está vacío para ese proyecto. Si la capa SÍ está mapeada, imprime un aviso explicando que se omite porque la capa ya es más confiable. **Nunca se aplica automáticamente** en ningún caso — sigue siendo preview de solo lectura, para que el arquitecto lo confirme cuando exista la interfaz de revisión gráfica (o manualmente hoy). Notebook renombrado `ArchiCheck_Base 10ago_1715.ipynb` (el anterior, `10ago_1620`, a `Versiones anteriores/`).
+
 ### 🆕 Pendientes de diseño nuevos, agregados a pedido del usuario (no implementados todavía)
 
 1. **Portal — "iluminar" elementos/capas al seleccionarlos.** En la pantalla de revisión gráfica, al seleccionar un tipo de elemento (categoría) debe resaltarse sobre el plano cada instancia de ese tipo ya detectada, con un botón — para que el arquitecto vea de un vistazo cuáles hay y cuáles faltan. Funcionalidad simétrica para **capas**: seleccionar una capa (de las que trae el PDF) y resaltar sus trazos sobre el plano. Ambas vistas deben permitir agregar o eliminar elementos directamente desde ahí.
