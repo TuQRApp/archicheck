@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="420" viewBox="0 0 1200 420">
+  <title>ArchiCheck Logo</title>
+  <desc>Editable RGB SVG logo. Blueprint architectural frame with integrated verification check.</desc>
+
+  <!-- RGB palette:
+       Navy #0B3D91
+       Mint green #10B981
+  -->
+
+  <!-- Isotype -->
+  <g id="isotype" transform="translate(45,35)">
+    <!-- Architectural / blueprint frame -->
+    <path d="M35 105 V35 H105
+             M165 35 H235 V105
+             M235 165 V235 H165
+             M105 235 H35 V165"
+          fill="none"
+          stroke="#0B3D91"
+          stroke-width="18"
+          stroke-linecap="square"
+          stroke-linejoin="miter"/>
+
+    <!-- Blueprint guide / construction lines -->
+    <path d="M105 20 V250
+             M20 135 H250"
+          fill="none"
+          stroke="#0B3D91"
+          stroke-width="7"
+          stroke-dasharray="18 14"
+          opacity="0.9"/>
+
+    <!-- Integrated verification mark -->
+    <path d="M82 137 L119 174 L205 88"
+          fill="none"
+          stroke="#10B981"
+          stroke-width="28"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g id="wordmark"
+     font-family="Montserrat, Poppins, Avenir Next, Arial, sans-serif"
+     font-size="128"
+     font-weight="600"
+     letter-spacing="-5">
+    <text x="330" y="260" fill="#0B3D91">Archi</text>
+    <text x="670" y="260" fill="#10B981">Check</text>
+  </g>
+</svg>
