@@ -1148,6 +1148,18 @@ El usuario preguntó si no convenía mantener ambas formas de detectar ejes/cota
 
 **Verificado sobre el código real (`src/App.jsx`), a pedido del usuario ("recuérdame si...")**: hoy, al agregar un elemento por clic (puerta/ventana/escalera/rampa), el clic **solo** captura posición y calcula `ancho_estimado_m` geométricamente — **no** se puede escribir una etiqueta ni una medida a mano en el momento del clic (`ubicacion_o_recinto` nace vacío, `""`). **Después**, si el arquitecto selecciona ese elemento ya creado, el panel `PanelRetag` (`App.jsx` línea ~1407) sí permite escribir texto libre en "Ubicación / descripción" (ej. "puerta de salida de cocina") y corregir a mano el ancho/largo en metros — pero es un paso posterior, no simultáneo al clic. No existe hoy forma de cambiar la categoría de un elemento ya creado (hay que eliminar y volver a marcar).
 
+## 🔴 2026-08-11 — "Nunca dejar pasar errores en silencio": definición permanente del usuario para todo el proyecto, aplicada primero a `MAPEO_CAPAS`
+
+El usuario declaró explícitamente: *"Si el mapeo no matchea, debes avisar. En general, y para todas las funcionalidades desde ahora en adelante, no dejes pasar errores en silencio. Eso es una definición importante."* — formulado a propósito como principio general, no acotado al mapeo de capas puntual (ver [[feedback_archicheck_workflow]] para la entrada permanente guardada).
+
+**Aplicado de inmediato a un punto real donde hoy podía fallar en silencio**: el chequeo de typos de Celda 3 ya validaba que los *nombres de capa* dentro de `MAPEO_CAPAS` existieran en el PDF real, pero **no validaba las *claves de categoría* en sí** — si el usuario escribía `'Eje'` (mayúscula) o `'ejes '` (plural/espacio) en vez de `'eje'`, eso se trataba como una categoría nueva cualquiera, sin aplicar la lógica real de eje/cota/mobiliario/ignorar, y sin ningún aviso.
+
+**Implementado (notebook `ArchiCheck_Base 11ago_1030.ipynb`, el anterior `10ago_1715` a `Versiones anteriores/`)**:
+1. **Celda 3**: nuevo chequeo que compara cada clave de `MAPEO_CAPAS` (normalizada: minúsculas + sin espacios extra) contra las 4 categorías con lógica real (`eje`, `cota`, `mobiliario`, `ignorar`) — si hay coincidencia normalizada pero no exacta, avisa que probablemente es un typo y que esa lógica NO se va a aplicar.
+2. **Celda 4**: si una categoría tiene capas mapeadas en `MAPEO_CAPAS` pero termina con 0 coincidencias reales en una página específica, imprime un aviso explícito — en vez de que ese "0" quede perdido dentro del resto del resumen de `MAPEO POR CAPA`.
+
+**Aplica hacia adelante a cualquier trabajo futuro del proyecto, no solo a `MAPEO_CAPAS`** — es el criterio a usar por defecto ante cualquier condición de "esto podría no coincidir/no encontrarse/fallar parcialmente".
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
