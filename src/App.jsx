@@ -1307,12 +1307,12 @@ function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, mpp, ra
 
 // Herramientas cuyo click se interpreta como el 1º/2º punto de una línea o caja (2 clics),
 // en vez de una selección directa — mismo mecanismo, distinto significado según la herramienta.
-const HERRAMIENTAS_DOS_CLICS = new Set(["puerta", "ventana", "escalera", "rampa", "muro"]);
+const HERRAMIENTAS_DOS_CLICS = new Set(["puerta", "ventana", "escalera", "rampa", "muro", "cortar"]);
 
 function RevisionGeometricaCanvas({
   png, mediciones, elementosPuntuales, imagenWPx, imagenHPx, mpp,
   tool, selectedId, linePoints = [], zoom = 1,
-  onSeleccionar, onLinePoint, onMoverDestino,
+  onSeleccionar, onLinePoint, onMoverDestino, onToggleFusion,
 }) {
   const canvasRef = useRef();
   const imgRef = useRef();
@@ -1364,6 +1364,11 @@ function RevisionGeometricaCanvas({
       return;
     }
     if (tool === "mover") { onMoverDestino?.(pt); return; }
+    if (tool === "fusionar") {
+      const r = hitTestRecinto(mediciones, pt.x, pt.y);
+      if (r) onToggleFusion?.(r.id);
+      return;
+    }
     if (HERRAMIENTAS_DOS_CLICS.has(tool)) { onLinePoint?.(pt); }
   }
 
@@ -1520,14 +1525,18 @@ function TablaDudas({ dudas, onIrADuda }) {
 }
 
 // ── Selector de herramienta activa ──────────────────────────────────────────
-// Herramientas de recintos (Cortar/Fusionar/Excluir área) deshabilitadas por ahora, a pedido
-// explícito del usuario (2026-08-02) — ver roadmap. La lógica de datos (ejecutarCorte/
-// ejecutarFusion/calcularAreaExcluida, y su reintegración en getMedicionesPorPagina/
-// construirColabJsonCorregido) queda intacta sin tocar, solo no hay forma de dispararla desde
-// la UI; los arrays correspondientes en colabCorrecciones simplemente quedan siempre vacíos.
-function LeyendaHerramientas({ tool, onChangeTool, elementosDetectados, muroPuntosCount, onConfirmarMuro }) {
+// Excluir área sigue deshabilitada por ahora (ver roadmap, reactivación por pasos a pedido del
+// usuario 2026-08-11) — Cortar y Fusionar ya se reactivaron. La lógica de datos
+// (calcularAreaExcluida, y su reintegración en getMedicionesPorPagina/construirColabJsonCorregido)
+// sigue intacta sin tocar para cuando le toque el turno.
+function LeyendaHerramientas({
+  tool, onChangeTool, elementosDetectados, muroPuntosCount, onConfirmarMuro, recintoSeleccionado,
+  fusionSet = [], onConfirmarFusion,
+}) {
   const base = [
     { id: "seleccionar", label: "Seleccionar" },
+    { id: "cortar", label: "✂ Cortar recinto" },
+    { id: "fusionar", label: "⛓ Fusionar recintos" },
   ];
   const btnStyle = (activo, col) => ({
     border: `1px solid ${activo ? col : "#D1D9EE"}`, borderRadius: 6, padding: "6px 11px", fontSize: 11,
@@ -1535,9 +1544,10 @@ function LeyendaHerramientas({ tool, onChangeTool, elementosDetectados, muroPunt
   });
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", marginBottom: 10 }}>
-      {base.map(b => (
-        <button key={b.id} style={btnStyle(tool === b.id, "#2952A3")} onClick={() => onChangeTool(b.id)}>{b.label}</button>
-      ))}
+      {base.map(b => {
+        const col = b.id === "cortar" ? "#C0392B" : b.id === "fusionar" ? "#B8860B" : "#2952A3";
+        return <button key={b.id} style={btnStyle(tool === b.id, col)} onClick={() => onChangeTool(b.id)}>{b.label}</button>;
+      })}
       <span style={{ width: 1, height: 18, background: "#D1D9EE", margin: "0 4px" }} />
       {CATEGORIAS_ELEMENTO.map(cat => {
         const col = COLORES_ELEMENTO_PUNTUAL[cat.id];
@@ -1553,6 +1563,21 @@ function LeyendaHerramientas({ tool, onChangeTool, elementosDetectados, muroPunt
       )}
       {tool === "muro" && muroPuntosCount > 0 && muroPuntosCount < 2 && (
         <span style={{ fontSize: 10, color: "#6B7A99" }}>Marca al menos 2 puntos para confirmar el muro</span>
+      )}
+      {tool === "cortar" && !recintoSeleccionado && (
+        <span style={{ fontSize: 10, color: "#C0392B" }}>Primero selecciona un recinto (herramienta "Seleccionar"), después vuelve a "Cortar recinto" y marca la línea de corte</span>
+      )}
+      {tool === "cortar" && recintoSeleccionado && (
+        <span style={{ fontSize: 10, color: "#6B7A99" }}>Cortando <strong>{recintoSeleccionado}</strong> — marca 2 puntos para trazar la línea de corte</span>
+      )}
+      {tool === "fusionar" && fusionSet.length >= 2 && (
+        <button style={{ ...btnStyle(true, "#1E8449") }} onClick={onConfirmarFusion}>Confirmar fusión de {fusionSet.length} recintos ({fusionSet.join(", ")})</button>
+      )}
+      {tool === "fusionar" && fusionSet.length === 1 && (
+        <span style={{ fontSize: 10, color: "#6B7A99" }}>Marcado <strong>{fusionSet[0]}</strong> — hace falta al menos 1 recinto más (clic para agregar, clic de nuevo para sacarlo)</span>
+      )}
+      {tool === "fusionar" && fusionSet.length === 0 && (
+        <span style={{ fontSize: 10, color: "#6B7A99" }}>Haz clic sobre 2 o más recintos para marcarlos, después confirma la fusión</span>
       )}
     </div>
   );
@@ -1605,8 +1630,8 @@ const navBtnStyle = (primary) => ({ border: primary ? "none" : "1px solid #D1D9E
 function RevisionModal({
   colabJson, colabPngs, correcciones,
   entriesConPng, stepIndex, setStepIndex,
-  tool, setTool, selectedId, selectedTipo, linePoints,
-  onSeleccionar, onLinePoint, onMoverDestino, onConfirmarMuro,
+  tool, setTool, selectedId, selectedTipo, linePoints, fusionSet = [],
+  onSeleccionar, onLinePoint, onMoverDestino, onConfirmarMuro, onToggleFusion, onConfirmarFusion,
   onGuardarRecinto, onEliminarRecinto, onGuardarElemento, onEliminarElemento, onMoverElemento, onCerrarPanel,
   onFinalizar, onCerrarModal,
 }) {
@@ -1676,7 +1701,9 @@ function RevisionModal({
 
       <div style={{ background: "#F4F6FB", padding: "8px 18px", borderBottom: "1px solid #D1D9EE" }}>
         <LeyendaHerramientas tool={tool} onChangeTool={setTool} elementosDetectados={elementosDetectados}
-          muroPuntosCount={linePoints.length} onConfirmarMuro={onConfirmarMuro} />
+          muroPuntosCount={linePoints.length} onConfirmarMuro={onConfirmarMuro}
+          recintoSeleccionado={selectedTipo === "recinto" ? selectedId : null}
+          fusionSet={fusionSet} onConfirmarFusion={onConfirmarFusion} />
       </div>
 
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
@@ -1686,6 +1713,7 @@ function RevisionModal({
             imagenWPx={pagJson.imagen_w_px} imagenHPx={pagJson.imagen_h_px} mpp={pagJson.mpp}
             tool={tool} selectedId={selectedId} linePoints={linePoints} zoom={zoom}
             onSeleccionar={onSeleccionar} onLinePoint={onLinePoint} onMoverDestino={onMoverDestino}
+            onToggleFusion={onToggleFusion}
           />
         </div>
         <div style={{ width: 320, background: "#fff", borderLeft: "1px solid #D1D9EE", padding: 14, overflowY: "auto" }}>
@@ -2239,6 +2267,11 @@ export default function ArchiCheck() {
   const [reviewSelectedId, setReviewSelectedId] = useState(null);
   const [reviewSelectedTipo, setReviewSelectedTipo] = useState(null); // "recinto" | "elemento" | null
   const [reviewLinePoints, setReviewLinePoints] = useState([]);
+  // Reactivado 2026-08-11 (paso 2, después de Cortar) — ids de recintos acumulados con la
+  // herramienta "Fusionar recintos" antes de confirmar. No reusa reviewSelectedId (que es un solo
+  // id) porque una fusión necesita 2+ a la vez, acumulados con clics sueltos (no un par como las
+  // herramientas de 2 clics) — mismo espíritu que reviewLinePoints pero sobre recintos, no puntos.
+  const [reviewFusionSet, setReviewFusionSet] = useState([]);
   // entry_idx (no "pagina") identifica cada entrada de colabJson.paginas[] de forma única — una
   // misma página física puede tener 2+ entradas/crops (ej. "pag2-1"/"pag2-2") con el mismo número
   // de pagina, por eso no se puede usar pagina como clave. La "página activa" del modal se deriva
@@ -2505,16 +2538,37 @@ ${printRef.current.innerHTML}
     setReviewTool("seleccionar");
   }
 
-  // Limpia cualquier trazo de muro (u otro punto de línea) a medio marcar al cambiar de
-  // herramienta — evita que puntos de un intento abandonado se mezclen con el siguiente.
+  // Limpia cualquier trazo de muro (u otro punto de línea) o selección de fusión a medio marcar
+  // al cambiar de herramienta — evita que un intento abandonado se mezcle con el siguiente.
   function handleCambiarHerramienta(t) {
     setReviewTool(t);
     setReviewLinePoints([]);
+    setReviewFusionSet([]);
   }
 
   function handleSeleccionarEnCanvas(id, tipoSel) {
     setReviewSelectedId(id);
     setReviewSelectedTipo(tipoSel);
+  }
+
+  // Reactivado 2026-08-11 (paso 2) — acumula/quita ids de recinto del set de fusión. Toggle (no
+  // solo agregar) para poder corregir un clic accidental sin tener que cancelar todo el intento.
+  function handleToggleFusion(id) {
+    setReviewFusionSet(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  }
+
+  function handleConfirmarFusion() {
+    if (reviewFusionSet.length < 2) return;
+    const mediciones = getMedicionesPorPagina(colabJson, colabCorrecciones, reviewActiveEntry);
+    const recintos = reviewFusionSet.map(id => mediciones.find(r => r.id === id)).filter(Boolean);
+    if (recintos.length < 2) return; // alguno ya no existe (ej. eliminado entretanto) — no fusionar a medias
+    const { bbox, area_m2 } = ejecutarFusion(recintos);
+    // nombre/uso vacíos a propósito, mismo criterio que Cortar — el arquitecto confirma el
+    // resultado fusionado a mano vía "Seleccionar" + PanelRetag, no se adivina de cuál de los
+    // recintos originales heredar el nombre.
+    const resultado = { id: recintos[0].id, bbox, area_m2: Math.round(area_m2 * 100) / 100, nombre: "", uso: "" };
+    setColabCorrecciones(prev => ({ ...prev, fusiones: [...prev.fusiones, { entryIdx: reviewActiveEntry, ids: reviewFusionSet, resultado }] }));
+    setReviewFusionSet([]);
   }
 
   function handleMoverDestino(pt) {
@@ -2525,8 +2579,10 @@ ${printRef.current.innerHTML}
     if (item) moverElemento(item, pt, pag.imagen_w_px, pag.imagen_h_px);
   }
 
-  // Cortar/Excluir área (recintos) deshabilitados por ahora — ver LeyendaHerramientas. Esta
-  // función quedó reducida al único caso vivo (marcar elemento puntual nuevo).
+  // Reactivado 2026-08-11 (Cortar) a pedido explícito del usuario — ver LeyendaHerramientas y
+  // roadmap. Excluir área sigue sin reactivar (paso siguiente, no este). La lógica de datos
+  // (ejecutarCorte y su reintegración en getMedicionesPorPagina/construirColabJsonCorregido)
+  // nunca se tocó desde que se apagó — solo faltaba esta rama para poder dispararla.
   function ejecutarAccionDosClicks(p1, p2) {
     const pag = colabJson?.paginas?.find(p => p.entry_idx === reviewActiveEntry);
     if (!pag) return;
@@ -2534,6 +2590,31 @@ ${printRef.current.innerHTML}
 
     if (CATEGORIAS_ELEMENTO.some(c => c.id === reviewTool)) {
       agregarElementoNuevo(reviewTool, reviewActiveEntry, p1, p2, mpp, pag.imagen_w_px, pag.imagen_h_px);
+      return;
+    }
+    if (reviewTool === "cortar") {
+      // Requiere un recinto ya seleccionado con la herramienta "Seleccionar" ANTES de cambiar a
+      // "Cortar" — reviewSelectedId no se limpia al cambiar de herramienta (ver
+      // handleCambiarHerramienta), así que sigue apuntando al recinto elegido. Si no hay
+      // selección, no se hace nada en silencio — LeyendaHerramientas avisa con texto que hace
+      // falta seleccionar primero (ver hint ahí), este early-return es el mismo caso ya cubierto.
+      if (reviewSelectedTipo !== "recinto" || !reviewSelectedId) return;
+      const mediciones = getMedicionesPorPagina(colabJson, colabCorrecciones, reviewActiveEntry);
+      const recinto = mediciones.find(r => r.id === reviewSelectedId);
+      if (!recinto?.bbox) return;
+      const [bboxA, bboxB] = ejecutarCorte(recinto.bbox, p1, p2);
+      // nombre/uso quedan vacíos a propósito — son dos recintos nuevos que el arquitecto todavía
+      // no confirmó, se renombran a mano vía "Seleccionar" + PanelRetag después del corte (mismo
+      // patrón que cualquier elemento sin_nombre_confirmar).
+      const resultado = [bboxA, bboxB].map((bbox, i) => ({
+        id: `${recinto.id}-${i === 0 ? "A" : "B"}`,
+        bbox,
+        area_m2: Math.round(bbox.w * bbox.h * mpp * mpp * 100) / 100,
+        nombre: "",
+        uso: recinto.uso || "",
+      }));
+      setColabCorrecciones(prev => ({ ...prev, cortes: [...prev.cortes, { entryIdx: reviewActiveEntry, origenId: recinto.id, resultado }] }));
+      setReviewSelectedId(null); setReviewSelectedTipo(null);
     }
   }
 
@@ -3221,10 +3302,13 @@ ${printRef.current.innerHTML}
                 selectedId={reviewSelectedId}
                 selectedTipo={reviewSelectedTipo}
                 linePoints={reviewLinePoints}
+                fusionSet={reviewFusionSet}
                 onSeleccionar={handleSeleccionarEnCanvas}
                 onLinePoint={handleReviewLinePoint}
                 onMoverDestino={handleMoverDestino}
                 onConfirmarMuro={handleConfirmarMuro}
+                onToggleFusion={handleToggleFusion}
+                onConfirmarFusion={handleConfirmarFusion}
                 onGuardarRecinto={patch => { aplicarCorreccionRecinto(reviewSelectedId, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
                 onEliminarRecinto={() => eliminarRecinto(reviewSelectedId)}
                 onGuardarElemento={(item, patch) => { aplicarCorreccionElemento(item, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
