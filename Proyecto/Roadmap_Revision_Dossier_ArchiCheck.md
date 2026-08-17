@@ -1174,6 +1174,18 @@ Las 3 herramientas de recinto que se habían apagado el 2 de agosto (ver secció
 
 Limitación heredada (no introducida ahora): ningún recinto se resalta visualmente en el canvas al seleccionarlo — las 3 herramientas dependen solo de texto ("Cortando: E5", "Marcado E01...") como feedback, no de un highlight real sobre el plano.
 
+## ✅ CERRADO 2026-08-17 — Investigación "PdV muro count collapse (517→122)": 122/94 CONFIRMADO correcto, el 528/263 visto en el portal era JSON de prueba obsoleto
+
+Al probar el ciclo completo del portal, el usuario notó pantallas con "cientos de muros" — claramente irreal para este plano. Investigado antes de seguir, según el principio de no dejar pasar errores en silencio.
+
+**Confirmado real**: el JSON usado en la prueba (`archicheck_geometrico_pdv_09ago_2002.json`, corrida del 9-ago 20:02) tiene 528 `muros_geo` (Nivel 1) y 263 (Nivel 2) — el portal los renderiza 1:1 sin deduplicar (`src/App.jsx:505`).
+
+**Causa raíz**: ese JSON es de un estado intermedio del pipeline — posterior al fix de `MAPEO_CAPAS` (683→517 / 417→312) pero anterior a los filtros de ángulo no-ortogonal y color amarillo "Se retira" que el notebook vigente (`ArchiCheck_Base 11ago_1145.ipynb`) ya aplica. Una corrida más reciente del mismo PDF (`Fase 2/Desarrollos/Test/pdv/Celda 4 pdv.txt`) exporta **122 muros (Nivel 1) y 94 (Nivel 2)**.
+
+**Verificado visualmente, no solo por plausibilidad**: overlays ya existentes (`verif_resultado_real_pag2-1.png` / `_pag2-2.png`, 9-ago) muestran los muros extraídos en verde sobre el plano real — calzan con precisión sobre los muros reales de ambos niveles, sin muros espurios ni duplicados, y las zonas achuradas amarillas ("Se retira") quedan correctamente excluidas.
+
+**Conclusión**: 122/94 es el número correcto del pipeline vigente. El 528/263 fue un dato de prueba obsoleto, no un defecto sin resolver. Pendiente no bloqueante: regenerar el JSON de PdV con el notebook vigente y re-subir al portal para repetir la prueba de ciclo completo con datos limpios.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
