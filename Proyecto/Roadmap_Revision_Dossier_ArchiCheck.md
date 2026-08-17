@@ -1160,6 +1160,20 @@ El usuario declaró explícitamente: *"Si el mapeo no matchea, debes avisar. En 
 
 **Aplica hacia adelante a cualquier trabajo futuro del proyecto, no solo a `MAPEO_CAPAS`** — es el criterio a usar por defecto ante cualquier condición de "esto podría no coincidir/no encontrarse/fallar parcialmente".
 
+## ✅ 2026-08-11 a 2026-08-17 — Cortar/Fusionar/Excluir área REACTIVADAS por pasos, probadas en vivo con datos reales — ya NO están deshabilitadas
+
+Las 3 herramientas de recinto que se habían apagado el 2 de agosto (ver sección "Qué se sacó de la UI" más arriba) se reactivaron una por una, cada una probada en el navegador real (`npm run dev`, JSON+PNGs reales de PdV subidos por el flujo normal del portal) antes de pasar a la siguiente — a pedido explícito del usuario ("vamos paso a paso").
+
+- **Cortar**: seleccionar recinto con "Seleccionar" → cambiar a "✂ Cortar recinto" → 2 clics trazan la línea de corte. El recinto se reemplaza por 2 nuevos (`{id}-A`/`{id}-B`). Probado con "Baño Personal Hombres" (E03, 11.09 m²) → "E03-B", 11.53 m² recalculados.
+- **Fusionar**: nuevo estado `reviewFusionSet` — clic sobre 2+ recintos los marca (toggle), botón "Confirmar fusión" junta bbox + suma áreas reales. Probado con "Terraza" (36.57 m²) + "Cocina" (21.61 m²) → 58.18 m² (suma exacta).
+- **Excluir área**: misma mecánica de 2 clics que Cortar pero con vista previa de rectángulo — resta el área marcada sin reemplazar el recinto (la selección no se limpia después, para marcar varias zonas seguidas). Probado: 58.18 m² → 57.63 m² tras excluir una zona.
+
+**2 bugs reales encontrados probando en vivo (ninguno se habría visto solo con el build limpio)**:
+1. El campo real del recinto para su tipo de espacio es `tipo` (confirmado en el JSON de Colab), no `uso` como se asumió sin verificar — la primera prueba de Fusionar mostró el síntoma exacto: área perfecta (58.18 m², suma real) pero el campo Tipo seguía mostrando "terraza" del original en vez de quedar vacío. Corregido en Cortar (hereda `tipo` del original a propósito) y Fusionar (queda vacío a propósito, dos recintos pueden ser de tipos distintos).
+2. El área de Excluir área no se redondeaba (`getMedicionesPorPagina`, código preexistente nunca antes ejercitado con datos reales) — salía `57.63033425385861` en vez de `57.63`. Corregido con el mismo redondeo ya usado en Cortar/Fusionar.
+
+Limitación heredada (no introducida ahora): ningún recinto se resalta visualmente en el canvas al seleccionarlo — las 3 herramientas dependen solo de texto ("Cortando: E5", "Marcado E01...") como feedback, no de un highlight real sobre el plano.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
