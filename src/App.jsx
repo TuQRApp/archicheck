@@ -482,7 +482,10 @@ function getMedicionesPorPagina(colabJson, correcciones, entryIdx) {
     const excl = correcciones.areasExcluidas.filter(a => a.recintoId === r.id && a.entryIdx === entryIdx);
     if (!excl.length) return r;
     const areaExcluidaTotal = excl.reduce((acc, a) => acc + a.bbox.w * a.bbox.h * mpp * mpp, 0);
-    return { ...r, area_m2: Math.max(0, (r.area_m2 || 0) - areaExcluidaTotal), _areas_excluidas: excl };
+    // 2026-08-17: redondeo agregado (bug real encontrado probando Excluir área en vivo) -- sin
+    // esto el area quedaba con muchos decimales de punto flotante (ej. 57.63033425385861) en vez
+    // de un valor limpio, mismo criterio de redondeo ya usado en Cortar/Fusionar.
+    return { ...r, area_m2: Math.round(Math.max(0, (r.area_m2 || 0) - areaExcluidaTotal) * 100) / 100, _areas_excluidas: excl };
   });
   return mg;
 }
@@ -1307,7 +1310,7 @@ function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, mpp, ra
 
 // Herramientas cuyo click se interpreta como el 1º/2º punto de una línea o caja (2 clics),
 // en vez de una selección directa — mismo mecanismo, distinto significado según la herramienta.
-const HERRAMIENTAS_DOS_CLICS = new Set(["puerta", "ventana", "escalera", "rampa", "muro", "cortar"]);
+const HERRAMIENTAS_DOS_CLICS = new Set(["puerta", "ventana", "escalera", "rampa", "muro", "cortar", "excluir_area"]);
 
 function RevisionGeometricaCanvas({
   png, mediciones, elementosPuntuales, imagenWPx, imagenHPx, mpp,
@@ -1383,7 +1386,7 @@ function RevisionGeometricaCanvas({
     }
     if (linePoints.length !== 1) return;
     const pt = puntoDesdeEvento(e);
-    const esRectangulo = CATEGORIAS_ELEMENTO.find(c => c.id === tool)?.forma === "rectangulo";
+    const esRectangulo = CATEGORIAS_ELEMENTO.find(c => c.id === tool)?.forma === "rectangulo" || tool === "excluir_area";
     const tipo = esRectangulo ? "rect" : "linea";
     previewRef.current = { p1: linePoints[0], p2: pt, tipo };
     redibujar(previewRef.current);
@@ -1525,18 +1528,19 @@ function TablaDudas({ dudas, onIrADuda }) {
 }
 
 // ── Selector de herramienta activa ──────────────────────────────────────────
-// Excluir área sigue deshabilitada por ahora (ver roadmap, reactivación por pasos a pedido del
-// usuario 2026-08-11) — Cortar y Fusionar ya se reactivaron. La lógica de datos
-// (calcularAreaExcluida, y su reintegración en getMedicionesPorPagina/construirColabJsonCorregido)
-// sigue intacta sin tocar para cuando le toque el turno.
+// Cortar, Fusionar y Excluir área reactivadas por pasos a pedido del usuario (2026-08-11 a
+// 2026-08-17). La lógica de datos (ejecutarCorte/ejecutarFusion/calcularAreaExcluida, y su
+// reintegración en getMedicionesPorPagina/construirColabJsonCorregido) nunca se tocó desde que
+// se apagaron el 2 de agosto — solo faltaba la UI para dispararlas.
 function LeyendaHerramientas({
   tool, onChangeTool, elementosDetectados, muroPuntosCount, onConfirmarMuro, recintoSeleccionado,
-  fusionSet = [], onConfirmarFusion,
+  fusionSet = [], onConfirmarFusion, areasExcluidasCount = 0,
 }) {
   const base = [
     { id: "seleccionar", label: "Seleccionar" },
     { id: "cortar", label: "✂ Cortar recinto" },
     { id: "fusionar", label: "⛓ Fusionar recintos" },
+    { id: "excluir_area", label: "▭ Excluir área" },
   ];
   const btnStyle = (activo, col) => ({
     border: `1px solid ${activo ? col : "#D1D9EE"}`, borderRadius: 6, padding: "6px 11px", fontSize: 11,
@@ -1545,7 +1549,7 @@ function LeyendaHerramientas({
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", marginBottom: 10 }}>
       {base.map(b => {
-        const col = b.id === "cortar" ? "#C0392B" : b.id === "fusionar" ? "#B8860B" : "#2952A3";
+        const col = b.id === "cortar" ? "#C0392B" : b.id === "fusionar" ? "#B8860B" : b.id === "excluir_area" ? "#7D3C98" : "#2952A3";
         return <button key={b.id} style={btnStyle(tool === b.id, col)} onClick={() => onChangeTool(b.id)}>{b.label}</button>;
       })}
       <span style={{ width: 1, height: 18, background: "#D1D9EE", margin: "0 4px" }} />
@@ -1578,6 +1582,15 @@ function LeyendaHerramientas({
       )}
       {tool === "fusionar" && fusionSet.length === 0 && (
         <span style={{ fontSize: 10, color: "#6B7A99" }}>Haz clic sobre 2 o más recintos para marcarlos, después confirma la fusión</span>
+      )}
+      {tool === "excluir_area" && !recintoSeleccionado && (
+        <span style={{ fontSize: 10, color: "#C0392B" }}>Primero selecciona un recinto (herramienta "Seleccionar"), después vuelve a "Excluir área" y marca el rectángulo (2 clics: esquina a esquina)</span>
+      )}
+      {tool === "excluir_area" && recintoSeleccionado && (
+        <span style={{ fontSize: 10, color: "#6B7A99" }}>
+          Excluyendo área de <strong>{recintoSeleccionado}</strong> — marca 2 esquinas del rectángulo a restar
+          {areasExcluidasCount > 0 ? ` (${areasExcluidasCount} zona${areasExcluidasCount > 1 ? "s" : ""} ya excluida${areasExcluidasCount > 1 ? "s" : ""} en este recinto — podés marcar más)` : ""}
+        </span>
       )}
     </div>
   );
@@ -1646,6 +1659,9 @@ function RevisionModal({
   const elementosPuntuales = entryIdx != null ? getElementosPuntualesConPosicion(colabJson, correcciones, entryIdx) : [];
   const elementosDetectados = entryIdx != null ? calcularElementosDetectadosResumen(colabJson, correcciones, entryIdx) : {};
   const dudas = calcularDudas(mediciones, elementosDetectados);
+  const areasExcluidasCount = selectedTipo === "recinto" && selectedId
+    ? correcciones.areasExcluidas.filter(a => a.entryIdx === entryIdx && a.recintoId === selectedId).length
+    : 0;
 
   const recintoSel = selectedTipo === "recinto" ? mediciones.find(r => r.id === selectedId) : null;
   const elementoSel = selectedTipo === "elemento" ? elementosPuntuales.find(e => e.id === selectedId) : null;
@@ -1703,7 +1719,8 @@ function RevisionModal({
         <LeyendaHerramientas tool={tool} onChangeTool={setTool} elementosDetectados={elementosDetectados}
           muroPuntosCount={linePoints.length} onConfirmarMuro={onConfirmarMuro}
           recintoSeleccionado={selectedTipo === "recinto" ? selectedId : null}
-          fusionSet={fusionSet} onConfirmarFusion={onConfirmarFusion} />
+          fusionSet={fusionSet} onConfirmarFusion={onConfirmarFusion}
+          areasExcluidasCount={areasExcluidasCount} />
       </div>
 
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
@@ -2627,6 +2644,22 @@ ${printRef.current.innerHTML}
       }));
       setColabCorrecciones(prev => ({ ...prev, cortes: [...prev.cortes, { entryIdx: reviewActiveEntry, origenId: recinto.id, resultado }] }));
       setReviewSelectedId(null); setReviewSelectedTipo(null);
+      return;
+    }
+    if (reviewTool === "excluir_area") {
+      // Reactivado 2026-08-17 (paso 3, ultima de las 3 herramientas de recinto) — mismo
+      // requisito que Cortar: recinto ya seleccionado antes de cambiar a esta herramienta.
+      // A diferencia de Cortar/Fusionar, el recinto NO se reemplaza -- sigue existiendo, solo se
+      // le resta el area del rectangulo marcado (getMedicionesPorPagina ya hace la resta real via
+      // calcularAreaExcluida). Por eso, a proposito, NO se limpia la seleccion al terminar: el
+      // arquitecto puede marcar varias zonas seguidas (ej. 2 muebles distintos) sobre el mismo
+      // recinto sin tener que volver a "Seleccionar" cada vez.
+      if (reviewSelectedTipo !== "recinto" || !reviewSelectedId) return;
+      const x = Math.min(p1.x, p2.x), y = Math.min(p1.y, p2.y);
+      const w = Math.abs(p2.x - p1.x), h = Math.abs(p2.y - p1.y);
+      if (w < 1 || h < 1) return; // rectangulo degenerado (doble clic casi en el mismo punto)
+      const bbox = { x, y, w, h };
+      setColabCorrecciones(prev => ({ ...prev, areasExcluidas: [...prev.areasExcluidas, { entryIdx: reviewActiveEntry, recintoId: reviewSelectedId, bbox }] }));
     }
   }
 
