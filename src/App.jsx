@@ -2563,10 +2563,16 @@ ${printRef.current.innerHTML}
     const recintos = reviewFusionSet.map(id => mediciones.find(r => r.id === id)).filter(Boolean);
     if (recintos.length < 2) return; // alguno ya no existe (ej. eliminado entretanto) — no fusionar a medias
     const { bbox, area_m2 } = ejecutarFusion(recintos);
-    // nombre/uso vacíos a propósito, mismo criterio que Cortar — el arquitecto confirma el
-    // resultado fusionado a mano vía "Seleccionar" + PanelRetag, no se adivina de cuál de los
-    // recintos originales heredar el nombre.
-    const resultado = { id: recintos[0].id, bbox, area_m2: Math.round(area_m2 * 100) / 100, nombre: "", uso: "" };
+    // nombre y tipo vacíos a propósito — a diferencia de Cortar (un solo recinto original, mismo
+    // tipo en ambos pedazos), una fusión junta 2+ recintos que pueden ser de tipos distintos (el
+    // caso de prueba real: "Terraza" + "Cocina") — no hay un tipo/nombre correcto para adivinar,
+    // el arquitecto lo confirma a mano vía "Seleccionar" + PanelRetag.
+    // 2026-08-17: corregido bug real encontrado probando en vivo -- el campo real es "tipo", no
+    // "uso". Con el nombre equivocado, fusion.resultado nunca tocaba el campo tipo de verdad, y
+    // el spread {...r, ...fusion.resultado} en getMedicionesPorPagina dejaba pasar el tipo
+    // original del primer recinto sin querer (ej. el resultado fusionado seguia mostrando
+    // "terraza" en el campo Tipo, en vez de quedar vacio como estaba pensado).
+    const resultado = { id: recintos[0].id, bbox, area_m2: Math.round(area_m2 * 100) / 100, nombre: "", tipo: "" };
     setColabCorrecciones(prev => ({ ...prev, fusiones: [...prev.fusiones, { entryIdx: reviewActiveEntry, ids: reviewFusionSet, resultado }] }));
     setReviewFusionSet([]);
   }
@@ -2603,15 +2609,21 @@ ${printRef.current.innerHTML}
       const recinto = mediciones.find(r => r.id === reviewSelectedId);
       if (!recinto?.bbox) return;
       const [bboxA, bboxB] = ejecutarCorte(recinto.bbox, p1, p2);
-      // nombre/uso quedan vacíos a propósito — son dos recintos nuevos que el arquitecto todavía
-      // no confirmó, se renombran a mano vía "Seleccionar" + PanelRetag después del corte (mismo
-      // patrón que cualquier elemento sin_nombre_confirmar).
+      // nombre queda vacío a propósito — son dos recintos nuevos que el arquitecto todavía no
+      // confirmó, se renombran a mano vía "Seleccionar" + PanelRetag después del corte (mismo
+      // patrón que cualquier elemento sin_nombre_confirmar). tipo SÍ se hereda del recinto
+      // original (a diferencia de Fusionar) -- un corte parte UN recinto en dos, ambos pedazos
+      // siguen siendo del mismo tipo de espacio (ej. cortar un "baño" da dos trozos de "baño").
+      // 2026-08-17: corregido bug real encontrado probando en vivo -- el campo real del objeto
+      // recinto es "tipo" (confirmado en el JSON de Colab, ej. "tipo": "terraza"), no "uso" como
+      // se habia asumido sin verificar -- con el nombre de campo equivocado, esto nunca heredaba
+      // nada de verdad (recinto.uso siempre es undefined).
       const resultado = [bboxA, bboxB].map((bbox, i) => ({
         id: `${recinto.id}-${i === 0 ? "A" : "B"}`,
         bbox,
         area_m2: Math.round(bbox.w * bbox.h * mpp * mpp * 100) / 100,
         nombre: "",
-        uso: recinto.uso || "",
+        tipo: recinto.tipo || "",
       }));
       setColabCorrecciones(prev => ({ ...prev, cortes: [...prev.cortes, { entryIdx: reviewActiveEntry, origenId: recinto.id, resultado }] }));
       setReviewSelectedId(null); setReviewSelectedTipo(null);
