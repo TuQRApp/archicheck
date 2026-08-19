@@ -1355,6 +1355,14 @@ La teoría de "línea central del muro" (ronda anterior) también resultó equiv
 
 **Archivo final**: `conteo_manual_puertas_n1_v17.png`, en `Fase 2/Desarrollos/Test/pdv/`.
 
+## ✅ Décima vuelta, misma fecha (2026-08-19) — Coc-izq/Coc-der: el radio "refinado" (0.735m/0.747m) también era la curva equivocada; el radio simple (0.8m, mitad exacta de la cota) era correcto
+
+Con el gozne ya en el lugar correcto (centro de la hoja), el arquitecto notó que los arcos de Coc-izq/Coc-der quedaban con radio más corto que el real ("más cerca" del gozne). Verificado leyendo 2 puntos directos del arco de referencia contra el gozne ya confirmado (1217/1489, 2431.5): ambos dan ~134-136px, prácticamente 0.8m exacto — el ajuste de círculo de la ronda anterior (rms<0.5, que parecía confiable) había enganchado una curva más corta y distinta a la real. Corregido a r=136px=0.8m para ambas. **Verificado: calzan exactas, sin ningún hueco.**
+
+**Lección reforzada**: un ajuste de círculo con residuo bajo no es prueba suficiente de que se ajustó a la curva correcta — sigue haciendo falta verificar contra el gozne ya confirmado antes de aceptar el resultado. El valor "ingenuo" (mitad exacta de la cota) resultó ser el correcto — no descartar la hipótesis simple solo por parecer poco sofisticada.
+
+**Archivo final**: `conteo_manual_puertas_n1_v18.png`, en `Fase 2/Desarrollos/Test/pdv/`. Con esto, las 5 puertas de esta serie (TCa, TCb, Coc-izq, Coc-der, BU) quedan pixel-perfectas.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
