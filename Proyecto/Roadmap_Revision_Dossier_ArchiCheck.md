@@ -1377,6 +1377,45 @@ Se retomó Nivel 2 usando el método madurado en Nivel 1: ajuste de círculo por
 
 ---
 
+## ✅ Validación de procedencia de datos (2026-08-19) — se confirmó qué notebook generó el JSON de PdV usado en todo el trabajo de muros/puertas, y que re-correrlo con el notebook actual no cambia nada
+
+El arquitecto preguntó si el JSON de PdV usado para todo el trabajo de goznes/arcos (`archicheck_geometrico_pdv_09ago_2002.json`) se había generado con el notebook vigente (`ArchiCheck_Base 11ago_1145.ipynb`) y si hacía falta re-correrlo para no invalidar lo hecho.
+
+**Diagnóstico, no supuesto:**
+- El JSON no trae metadata de versión interna. Por timestamp de archivo (JSON generado 09ago 20:02, y el guardado de notebook más cercano anterior fue `09ago_1956`, a las 19:50) se infirió que salió de una versión ~2 días y ~8 guardados anterior a la actual — no la vigente.
+- Se comparó (diff real, celda por celda, hash MD5) el notebook `09ago_1956` contra el `11ago_1145` actual: solo las Celdas 3 (config) y 4 (extracción) cambiaron; 5/6/7 (OpenCV, recintos, export) idénticas. El cambio en Celda 4 (365 líneas agregadas / 152 eliminadas) agrega mapeo por capa OCG del PDF (`MAPEO_CAPAS`): exclusión de segmentos por capa `'ignorar'`/`'mobiliario'` antes de proteger como muro (Paso 2), separación puerta/ventana por capa, señal adicional de eje/cota por capa, y varios diagnósticos de solo lectura (dashes nativos, metadata del PDF, TOC, distribución de capas).
+- **Riesgo real encontrado dentro del propio código**: un comentario del 11 de agosto documenta que, en una prueba anterior con `MAPEO_CAPAS['ignorar']` lleno para PdV, el conteo de muros exportados cayó de 517/312 a 122/94 — quedó como investigación abierta sin confirmar si esa caída era correcta (otro piso/cajetín) o un error (excluía geometría real, ej. aleros sobre muros reales). Pero se confirmó que, tal como está guardado el notebook, `MAPEO_CAPAS` vive vacío (plantilla sin completar) — con eso vacío, toda la lógica nueva es un no-op.
+
+**Re-corrida real (2026-08-19), instrucción explícita del arquitecto de dejar `MAPEO_CAPAS` vacío:** se re-corrió el notebook actual contra el PDF de PdV → `archicheck_geometrico_pdv_19ago_2021.json`. Se verificó el log (`Celda 4 pdv.txt`) confirmando que no aparece ninguna línea de `MAPEO POR CAPA`/exclusión por `ignorar`/`mobiliario` — la corrida no activó la lógica nueva, como se esperaba.
+
+**Comparación programática (multiset, no solo conteo) entre el JSON viejo (09ago) y el nuevo (19ago) para ambos niveles:**
+- **`puertas_geo`**: **100% idéntico** — 11/11 (N1) y 8/8 (N2), mismas coordenadas `p1`/`p2` de cada segmento.
+- **`muros_geo`**: **100% idéntico** — 528/528 (N1) y 263/263 (N2). (Una primera pasada con `Set` sin contar duplicados dio 523/528 y 254/263 — se confirmó que eran claves duplicadas preexistentes en AMBOS JSON, no una diferencia real; con conteo por multiset el match es total.)
+
+**Conclusión:** todo el trabajo de goznes/radios/arcos de Nivel 1 y Nivel 2, validado pixel a pixel contra el arco real impreso en el plano, sigue siendo válido sin ninguna re-verificación — la geometría de origen (`muros_geo`/`puertas_geo`) es idéntica entre ambos JSON. El nuevo JSON (19ago) queda disponible en la carpeta `pdv/` como el más reciente, pero no reemplaza ni invalida ningún hallazgo. Ver [[project_archicheck_pipeline]] y [[feedback_archicheck_workflow]].
+
+---
+
+## ✅ Investigación del desglose real de `MAPEO_CAPAS['ignorar']` para PdV (2026-08-19) — las 4 capas quedan confirmadas seguras de excluir, tras corregir un error de lectura visual propio
+
+Seguimiento directo del hallazgo anterior (la caída de muros 517/312→122/94 al activar `'ignorar'`, investigación que había quedado abierta en el propio código). El arquitecto corrió Celda 3 con `MAPEO_CAPAS = {'ignorar': ['Muros Proy', 'Proyecciones', 'Formato', '0'], ...}` (el mapeo ya sugerido comentado en Celda 3) + Celda 4, generando `archicheck_geometrico_pdv_19ago_2046.json` y el log `Celda 4 pdv.txt` con el desglose nuevo por capa real.
+
+**Confirmado el drop histórico**: N1 522 segmentos excluidos por `'ignorar'` (Proyecciones 509, Formato 227, Muros Proy 63, '0' 40 — suman más porque un segmento puede tener match en conectividad, no 1:1) → muros exportados 122. N2: 514 excluidos (Formato 230, Proyecciones 170, Muros Proy 93, '0' 21) → muros exportados 94.
+
+**Verificación visual (crop + zoom sobre el PNG base sin filtrar, no solo confiar en el nombre de la capa) de una muestra de cada capa, coordenadas tomadas directo del log:**
+- **`'Formato'`** (N1 y N2, muestras en y≈3702-3704): confirmado cajetín/marco de lámina. Excluir es correcto.
+- **`'0'`** (N1, muestra en (680,3752)-(649,3721) y similares): confirmado marca de cruz/tick de una cota ("1.3" vertical). Excluir es correcto.
+- **`'Proyecciones'`** (N1, muestra en y=2920, 4 segmentos ~0.21-0.25m consecutivos): confirmado — son los ticks/línea de una cota horizontal ("1.3"), no un muro. **`'Proyecciones'`** (N2, muestras de 0.02-0.06m): confirmado — fragmentos de un símbolo de artefacto sanitario (curvas concéntricas + hexágono, mismo patrón que el caso PG11 de esta sesión). Excluir es correcto en ambos niveles.
+- **`'Muros Proy'`** (N1, muestra (664,2240)-(664,1611), 3.7m): visualmente es una **línea gris fina** cruzando el espacio "Terraza" (E08) — consistente con una línea de proyección/referencia real, no un muro. Excluir es correcto acá.
+
+**🔴 Error propio encontrado y corregido en el acto (N2, `'Muros Proy'`, muestra (2433,2445)-(2433,1560), 5.2m):** en la primera lectura visual (a ojo, sobre el crop) concluí que esta línea era "visualmente idéntica al muro real confirmado de Bodega" — conclusión errónea. El arquitecto pidió la captura marcada explícitamente ("no veo la línea que me dices") y, al intentar señalarla con una flecha, la primera marca también salió mal posicionada (bug de composición SVG en el script de anotación). Se resolvió **midiendo el color de pixel exacto** en vez de estimar a ojo: la banda roja gruesa (muro real confirmado) está en x=2380-2400; el segmento reportado como `'Muros Proy'` está en **x=2433, a 33-50px de distancia**, y su pixel real es un gris casi invisible (RGB 240,240,240) — es decir, había confundido dos elementos distintos que están muy cerca entre sí. Con las dos líneas marcadas por separado y verificadas por color exacto (no por estimación visual), quedó claro que `'Muros Proy'` en N2 tampoco es un muro real. El arquitecto confirmó independientemente ("en Bodega/Punto de aplicación rasante no hay ningún muro proyectado") antes de ver la corrección.
+
+**Conclusión final, confirmada por el arquitecto:** las 4 capas (`'Formato'`, `'0'`, `'Proyecciones'`, `'Muros Proy'`) quedan seguras de mapear a `'ignorar'` para PdV — `MAPEO_CAPAS['ignorar'] = ['Muros Proy', 'Proyecciones', 'Formato', '0']` es la recomendación completa. **No se activó nada en producción todavía** — esta corrida fue puramente de diagnóstico, el JSON validado (`19ago_2021`, idéntico al original `09ago_2002`) sigue siendo la fuente vigente hasta que se decida adoptar el mapeo de capas de forma definitiva.
+
+**Lección de proceso reutilizable, reafirma una regla ya permanente**: una conclusión "visual" sobre a qué elemento corresponde una coordenada reportada en un log **no es válida hasta confirmarla por color/pixel exacto**, no por cercanía aparente en una captura — dos elementos a 30-50px de distancia son fácilmente confundibles a simple vista, sobre todo en un plano denso. Mismo principio que ya regía para los arcos de puertas ([[feedback_archicheck_workflow]]), extendido aquí a cualquier verificación visual de capas/clasificación.
+
+---
+
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
 
 **Por qué importa más de lo que parece (no es solo UX):** si un elemento no fue detectado, su verificación normativa nunca corre — una puerta angosta que el sistema no vio es una infracción a OGUC 4.2.2 que ArchiCheck jamás va a marcar, en silencio. Es el escenario que más daña la confianza en la herramienta: que la DOM detecte algo que ArchiCheck no. Esta funcionalidad convierte "elemento invisible para el modelo" en "elemento igual verificado" — y es en la práctica **un prerrequisito de que P4 (motor de reglas determinista) entregue valor completo**: P4 necesita el inventario completo de elementos para poder correr sus chequeos sobre todos los elementos reales, no solo los que el modelo alcanzó a ver.

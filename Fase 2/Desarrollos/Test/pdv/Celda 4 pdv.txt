@@ -1,4 +1,4 @@
-  ✓ Cuadro de superficies: 2156 caracteres extraidos de la pagina 1
+✓ Cuadro de superficies: 2156 caracteres extraidos de la pagina 1
 
 ========================================================
   Página 2  —  escala 1:50
@@ -6,15 +6,40 @@
 ========================================================
   2860x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 14 recintos, 5 incumplimientos
+  ✓ Claude: 14 recintos, 4 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
-  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 83 cota, 0 deslinde_terreno, 156 eje, 0 escalera, 977 ignorar, 1433 mobiliario, 362 muro, 9 puerta, 0 rampa, 9 ventana, 1 sin capa mapeada — de 3021 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 83 cota, 156 eje, 0 escalera, 977 ignorar, 1433 mobiliario, 362 muro, 9 puerta, 0 rampa, 9 ventana, 1 sin capa mapeada — de 3021 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
   ✓ COTAS (linea): 101 segmentos identificados como linea/marca de cota (Paso 1.6)
   ✓ EJES/RASANTES: 259 segmentos identificados como referencia (Paso 1.5), 150 evitados de proteger como muro pese a superar el span minimo
   ✓ COTAS (linea): 93 segmentos adicionales evitados de proteger como muro (Paso 1.6)
   ✓ MOBILIARIO (por capa): 80 segmentos evitados de proteger como muro
   ✓ IGNORAR (por capa): 839 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      'Proyecciones': 509 segmentos evitados de proteger
+        largo_m=0.21 p1=(1438, 2920) p2=(1474, 2920)
+        largo_m=0.25 p1=(1495, 2920) p2=(1538, 2920)
+        largo_m=0.25 p1=(1559, 2920) p2=(1602, 2920)
+        largo_m=0.21 p1=(1623, 2920) p2=(1659, 2920)
+        largo_m=0.25 p1=(1786, 2444) p2=(1786, 2486)
+      'Formato': 227 segmentos evitados de proteger
+        largo_m=0.5 p1=(530, 3702) p2=(615, 3702)
+        largo_m=0.0 p1=(657, 3702) p2=(657, 3702)
+        largo_m=0.5 p1=(700, 3702) p2=(785, 3702)
+        largo_m=0.0 p1=(1167, 3702) p2=(1167, 3702)
+        largo_m=0.5 p1=(1210, 3702) p2=(1295, 3702)
+      'Muros Proy': 63 segmentos evitados de proteger
+        largo_m=3.7 p1=(664, 2240) p2=(664, 1611)
+        largo_m=1.2 p1=(715, 1560) p2=(919, 1560)
+        largo_m=0.35 p1=(1438, 3720) p2=(1378, 3720)
+        largo_m=0.5 p1=(1378, 3720) p2=(1378, 3805)
+        largo_m=2.0 p1=(1378, 3805) p2=(1718, 3805)
+      '0': 40 segmentos evitados de proteger
+        largo_m=0.26 p1=(680, 3752) p2=(649, 3721)
+        largo_m=0.26 p1=(649, 3942) p2=(680, 3973)
+        largo_m=0.25 p1=(1802, 2046) p2=(1771, 2076)
+        largo_m=0.25 p1=(2265, 2076) p2=(2295, 2046)
+        largo_m=0.25 p1=(2358, 2145) p2=(2327, 2114)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 1
   ✓ Muros exportados: 122 (de 9 grupos protegidos, 96 segmentos descartados por angulo no-ortogonal, 46 descartados por color amarillo/achurado Se-retira)
   ✓ Puertas exportadas (clasificador geometrico): 1
@@ -69,6 +94,19 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
       layer = Muros
       seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 3718 paths totales en get_drawings(), distribucion completa por capa:
+    'Muros': 1124
+    'ARTEFACTOS': 654
+    'Formato': 635
+    'Ejes': 306
+    'Proyecciones': 295
+    'Cotas': 221
+    'Muebles': 112
+    '': 107
+    'Muros Proy': 100
+    '0': 72
+    'Ptas Ventanas': 66
+    '_____láminas': 26
   DIAGNOSTICO DASHES: 0 de 3021 segmentos tienen patron de guion nativo (dashes) no vacio
   DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM (4)'
   DIAGNOSTICO TOC: 5 marcador(es)/bookmark(s) en el documento
@@ -127,7 +165,8 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Limpieza pre-umbral: 73 textos, 139 líneas discontinuas, 2995 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
   ✓ OpenCV: 7 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 268.32m²
-  ✓ Cruce: 7/7 con nombre | 2 incumpl. geo
+  ✓ Cruce: 6/7 con nombre | 1 incumpl. geo
+  ⚠ 1 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E05
 
 ========================================================
   Página 2  —  escala 1:50
@@ -135,15 +174,40 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 ========================================================
   2790x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 7 recintos, 5 incumplimientos
+  ✓ Claude: 8 recintos, 4 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
-  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 83 cota, 0 deslinde_terreno, 156 eje, 0 escalera, 567 ignorar, 1006 mobiliario, 826 muro, 20 puerta, 0 rampa, 20 ventana, 1 sin capa mapeada — de 2659 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 83 cota, 156 eje, 0 escalera, 567 ignorar, 1006 mobiliario, 826 muro, 20 puerta, 0 rampa, 20 ventana, 1 sin capa mapeada — de 2659 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
   ✓ COTAS (linea): 83 segmentos identificados como linea/marca de cota (Paso 1.6)
   ✓ EJES/RASANTES: 178 segmentos identificados como referencia (Paso 1.5), 76 evitados de proteger como muro pese a superar el span minimo
   ✓ COTAS (linea): 73 segmentos adicionales evitados de proteger como muro (Paso 1.6)
   ✓ MOBILIARIO (por capa): 31 segmentos evitados de proteger como muro
   ✓ IGNORAR (por capa): 514 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      'Formato': 230 segmentos evitados de proteger
+        largo_m=0.5 p1=(428, 3704) p2=(513, 3704)
+        largo_m=0.0 p1=(555, 3704) p2=(555, 3704)
+        largo_m=0.5 p1=(598, 3704) p2=(683, 3704)
+        largo_m=0.0 p1=(1065, 3704) p2=(1065, 3704)
+        largo_m=0.5 p1=(1108, 3704) p2=(1193, 3704)
+      'Proyecciones': 170 segmentos evitados de proteger
+        largo_m=0.06 p1=(690, 1663) p2=(690, 1672)
+        largo_m=0.06 p1=(690, 1672) p2=(691, 1682)
+        largo_m=0.06 p1=(691, 1682) p2=(693, 1692)
+        largo_m=0.02 p1=(693, 1692) p2=(694, 1695)
+        largo_m=0.03 p1=(700, 1715) p2=(702, 1719)
+      'Muros Proy': 93 segmentos evitados de proteger
+        largo_m=5.2 p1=(2433, 2445) p2=(2433, 1560)
+        largo_m=4.4 p1=(2433, 1560) p2=(1685, 1560)
+        largo_m=1.5 p1=(817, 1560) p2=(562, 1560)
+        largo_m=4.0 p1=(562, 1560) p2=(562, 2241)
+        largo_m=4.6 p1=(2382, 2394) p2=(2382, 1612)
+      '0': 21 segmentos evitados de proteger
+        largo_m=0.25 p1=(995, 2379) p2=(1025, 2409)
+        largo_m=0.25 p1=(917, 2273) p2=(887, 2242)
+        largo_m=0.25 p1=(887, 2379) p2=(917, 2409)
+        largo_m=0.25 p1=(955, 2552) p2=(986, 2521)
+        largo_m=0.25 p1=(849, 2521) p2=(819, 2552)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 6
   ✓ Muros exportados: 94 (de 9 grupos protegidos, 687 segmentos descartados por angulo no-ortogonal, 145 descartados por color amarillo/achurado Se-retira)
   ✓ Puertas exportadas (clasificador geometrico): 6
@@ -198,6 +262,19 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
       layer = Muros
       seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 3718 paths totales en get_drawings(), distribucion completa por capa:
+    'Muros': 1124
+    'ARTEFACTOS': 654
+    'Formato': 635
+    'Ejes': 306
+    'Proyecciones': 295
+    'Cotas': 221
+    'Muebles': 112
+    '': 107
+    'Muros Proy': 100
+    '0': 72
+    'Ptas Ventanas': 66
+    '_____láminas': 26
   DIAGNOSTICO DASHES: 0 de 2659 segmentos tienen patron de guion nativo (dashes) no vacio
   DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM (4)'
   DIAGNOSTICO TOC: 5 marcador(es)/bookmark(s) en el documento
@@ -262,8 +339,8 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ OpenCV: 14 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 281.17m²
   ✓ Cruce: 7/14 con nombre | 0 incumpl. geo
-  ⚠ 7 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E01, E14, E06, E05, E09, E10, E12
+  ⚠ 7 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E01, E14, E05, E09, E10, E12, E08
 
 ========================================================
 ✓ Procesadas 2 / 2 páginas
-  Incumplimientos geométricos totales: 2
+  Incumplimientos geométricos totales: 1

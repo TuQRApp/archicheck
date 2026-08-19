@@ -3,7 +3,7 @@
 ==================================================================
   Proyecto: pdv
   Archivo : 05+06 Planos Rest Pza PdV (021 06 21).pdf
-  Fecha   : 09/08/2026 20:12
+  Fecha   : 19/08/2026 20:52
   Páginas : 2 + 2
 
   ------------------------------------------------------------------
@@ -12,85 +12,60 @@
   ------------------------------------------------------------------
   ID      Nombre                     Tipo          Area m2  Ancho m  Estado
   --      ------                     ----          -------  -------  ------
-  E11     Cocina Barra sin atención  cocina          64.36    13.71  OK
-  E02     Cocina (zona media)        cocina          47.89     8.17  OK
-  E01     Terraza (lateral izquierd  terraza         36.57    16.81  OK
-  E05     Cocina (zona norte)        cocina          21.61     3.52  OK
-  E18     Pasillo                    pasillo         17.73      4.4  OK
-  E13     Oficina                    oficina         13.71     1.95  OK
-  E03     Baño Personal Hombres      bano            11.09     4.09  OK
-  E16     Baño Universal             bano             9.67     2.24  OK
-  E20     Terraza (frontal derecha)  terraza          8.38     2.95  OK
-  E09     Bodega (zona norte derech  bodega           6.25     1.55  OK
-  E10     Espacio E10 (SIN NOMBRE -  otro             4.52     0.49  OK
-  E06     Baño Personal Mujeres      bano             4.29      1.8  OK
-  E07     Bodega (zona norte izquie  bodega           3.68     1.81  OK
-  E22     Terraza (frontal izquierd  terraza          2.78      1.0  OK
-  E08     Espacio E08 (SIN NOMBRE -  otro             2.30     1.12  OK
-  E19     Espacio E19 (SIN NOMBRE -  otro             2.14     0.99  OK
-  E12     Espacio E12 (SIN NOMBRE -  otro             2.01     2.64  OK
-  E17     Espacio E17 (SIN NOMBRE -  otro             2.00      0.9  OK
-  E04     Baño Personal              bano             1.79     1.36  OK
-  E24     Espacio E24 (SIN NOMBRE -  otro             1.34     0.71  OK
-  E23     Espacio E23 (SIN NOMBRE -  otro             1.08     0.39  OK
-  E21     Espacio E21 (SIN NOMBRE -  otro             0.80     0.39  OK
-  E15     Espacio E15 (SIN NOMBRE -  otro             0.67     0.75  OK
-  E14     Espacio E14 (SIN NOMBRE -  otro             0.65     1.14  OK
-          TOTAL                                     267.30
+  E04     Pasillo                    pasillo         40.20     7.95  OK
+  E01     Terraza (zona media izqui  terraza         36.57    16.81  OK
+  E03     Baño Universal             bano            29.72     5.24  OK
+  E06     Oficina                    oficina          8.81     2.95  OK
+  E05     Espacio E05 (SIN NOMBRE -  otro             2.14     0.99  OK
+  E02     Baño Personal              bano             2.06     1.36  OK
+  E07     Terraza (frente derecha)   terraza          0.80     0.39  OK
+          TOTAL                                     120.30
 
   INCUMPLIMIENTOS GEOMETRICOS (1)
   ------------------------------------------------------------------
-  [CIRCULO_GIRO]  E16 Baño Universal
+  [CIRCULO_GIRO]  E03 Baño Universal
     Medido: None m  |  Minimo: 1.5 m  |  Deficit: None m
     Ref: DDU 351 / Art. 4.1.7 OGUC — circulo de giro 1,50 m en recintos accesibles
 
-  OBSERVACIONES NORMATIVAS CLAUDE (7)
-  [ALTA] Art. 4.2.10 OGUC — Pendiente de rampa de acceso universal declarada en 10.58%, superior al máximo p
-  [ALTA] Art. 4.2.10 OGUC / DDU 279 — Baño Universal no presenta circulo de giro de 1.50m claramente dibujado en plano
-  [ALTA] Art. 4.2.9 OGUC — El acceso principal al edificio presenta desnivel de +0.45m respecto al nivel ex
-  [MEDIA] Art. 4.2.10 OGUC — El ancho de la rampa de acceso universal de 1.3m está en el límite mínimo exigid
-  [ALTA] Art. 4.5.7 OGUC — Para uso restaurante, se requieren servicios higiénicos para clientes diferencia
-  [MEDIA] Art. 4.2.4 OGUC — No se identifican salidas de emergencia adicionales a la salida principal en Niv
-  [BAJA] Art. 4.2.7 OGUC — Pavimento podotáctil señalado en zona exterior, debe verificarse continuidad des
+  OBSERVACIONES NORMATIVAS CLAUDE (4)
+  [ALTA] Art. 4.1.7 OGUC — Pendiente de rampa acceso universal declarada en 10.58%, superior al máximo perm
+  [MEDIA] Art. 4.1.7 OGUC — El Baño Universal presenta dimensiones interiores aproximadas de 2.9 x 1.55m. El
+  [ALTA] Art. 4.2.7 OGUC — Acceso principal con desnivel +0.45m. Si bien existe rampa, la pendiente excede 
+  [MEDIA] Art. 4.2.10 OGUC — No se verifica salida de emergencia alternativa al acceso principal en planta ni
 
   ------------------------------------------------------------------
   PAGINA 2 [pag2-2]  |  1:50  |  planta — otro
-  Nivel: Nivel 2 - Situacion Propuesta
+  Nivel: Nivel 2 - Situación Propuesta
   ------------------------------------------------------------------
   ID      Nombre                     Tipo          Area m2  Ancho m  Estado
   --      ------                     ----          -------  -------  ------
-  E05     Bodega (derecha)           bodega          21.53     3.47  OK
-  E13     Oficina (izquierda)        oficina         15.84     4.25  OK
-  E14     Oficina (derecha)          oficina         10.86      3.0  OK
+  E07     Pasillo                    pasillo         42.30     8.41  OK
+  E03     Bodega (derecha)           bodega          24.06     3.47  OK
+  E04     Bodega (izquierda)         bodega          12.19     3.04  OK
   E02     Baño Clientes mujeres      bano            10.70     1.81  OK
-  E11     Pasillo                    pasillo         10.04     4.21  OK
-  E03     Bodega (izquierda)         bodega           8.91      3.2  OK
-  E17     Espacio E17 (SIN NOMBRE -  otro             6.67     2.41  OK
-  E06     Espacio E06 (SIN NOMBRE -  otro             6.49     1.54  OK
+  E13     Oficina (derecha)          oficina          6.67     2.41  OK
   E01     Espacio E01 (SIN NOMBRE -  otro             5.88     0.35  OK
-  E18     Espacio E18 (SIN NOMBRE -  otro             5.50     0.33  OK
-  E08     Espacio E08 (SIN NOMBRE -  otro             4.39     1.18  OK
-  E10     Espacio E10 (SIN NOMBRE -  otro             3.93      1.8  OK
-  E09     Espacio E09 (SIN NOMBRE -  otro             2.38     2.43  OK
-  E16     Espacio E16 (SIN NOMBRE -  otro             2.26      1.2  OK
-  E04     Espacio E04 (SIN NOMBRE -  otro             1.99     0.93  OK
-  E12     Baño Clientes hombres      bano             1.92     1.35  OK
-  E15     Espacio E15 (SIN NOMBRE -  otro             1.09     1.08  OK
-  E07     Espacio E07 (SIN NOMBRE -  otro             1.08     1.23  OK
-          TOTAL                                     121.50
+  E14     Espacio E14 (SIN NOMBRE -  otro             5.50     0.33  OK
+  E06     Escalera                   escalera         4.36      1.8  OK
+  E11     Baño Clientes hombres      bano             2.20     1.35  OK
+  E05     Espacio E05 (SIN NOMBRE -  otro             1.94     1.23  OK
+  E09     Espacio E09 (SIN NOMBRE -  otro             0.91     0.93  OK
+  E10     Espacio E10 (SIN NOMBRE -  otro             0.59     0.71  OK
+  E12     Espacio E12 (SIN NOMBRE -  otro             0.52     0.45  OK
+  E08     Espacio E08 (SIN NOMBRE -  otro             0.51     0.89  OK
+          TOTAL                                     118.30
 
-  OBSERVACIONES NORMATIVAS CLAUDE (3)
-  [ALTA] Art. 4.2.10 OGUC — El Nivel 2 es un piso alto accesible únicamente por escalera interna. No cuenta 
-  [MEDIA] Art. 4.1.7 OGUC — El proyecto corresponde a destino restaurante. El Nivel 2 dispone de baños para 
-  [BAJA] Art. 4.2.4 OGUC — Ancho mínimo de pasillos de circulación para uso público (restaurante) debe ser 
+  OBSERVACIONES NORMATIVAS CLAUDE (4)
+  [ALTA] Art. 4.1.10 / Art. 4.2.10 — Nivel 2 es un piso alto accesible únicamente por escalera interior (peldaños 11-
+  [MEDIA] Art. 4.1.7 OGUC — No se detecta baño universal (accesible para PMR) en el Nivel 2. El cuadro de su
+  [MEDIA] Art. 4.2.10 OGUC — El ancho de la escalera principal (ES01) debe verificarse en función de la carga
+  [BAJA] Art. 4.1.6 OGUC — Las bodegas del Nivel 2 se ubican en el sector norte del nivel. No se aprecia ve
 
 ==================================================================
-  (conteos desde análisis semántico Claude — DINO no detectó elementos)
-  Puertas semántico: 22  Ventanas: 4  Escaleras: 2
 
-✓ JSON guardado: archicheck_geometrico_pdv_09ago_2002.json
+✓ JSON guardado: archicheck_geometrico_pdv_19ago_2046.json
   Paginas   : 2
-  Area total: 388.8 m2
-  Recintos  : 42
+  Area total: 238.6 m2
+  Recintos  : 21
   Incumpl.  : 1
-  Elementos (semantico) — Puertas:22  Ventanas:4  Escaleras:2  Rampas:0
+  Elementos (semantico) — Puertas:22  Ventanas:3  Escaleras:2  Rampas:0
