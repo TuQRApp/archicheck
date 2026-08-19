@@ -1363,6 +1363,18 @@ Con el gozne ya en el lugar correcto (centro de la hoja), el arquitecto notó qu
 
 **Archivo final**: `conteo_manual_puertas_n1_v18.png`, en `Fase 2/Desarrollos/Test/pdv/`. Con esto, las 5 puertas de esta serie (TCa, TCb, Coc-izq, Coc-der, BU) quedan pixel-perfectas.
 
+## 🔶 Nivel 2 de PdV — primera pasada (2026-08-19), aplicando el método ya validado en Nivel 1
+
+Se retomó Nivel 2 usando el método madurado en Nivel 1: ajuste de círculo por mínimos cuadrados sobre los puntos reales de `puertas_geo` (nunca `puntos_union`, ya confirmado poco confiable), cruzado contra `muros_geo` para validar que el gozne cae sobre un muro real, y verificación visual contra el arco de referencia ya impreso en el plano antes de dar cada una por buena.
+
+**8 puertas crudas en `puertas_geo` de Nivel 2 (entry_idx 1, `pag2-2`), todas con ajuste muy limpio**: PG01 (r=0.802m, dist. a muro 0.004m), PG02 (r=0.799m, 0.002m), PG03 (r=0.599m, 0.001m), PG04 (r=0.601m, 0.002m), PG05 (r=0.799m, 0.000m), PG06 (r=0.594m, 0.000m), PG07 (r=0.801m, 0.000m), PG08 (r=0.797m, dist. algo mayor 0.119m pero aún razonable). Todas con rms de ajuste entre 0.08 y 0.33px — la calidad de datos crudos de Nivel 2 resultó notablemente mejor que la de Nivel 1.
+
+**🐛 Bug encontrado de inmediato al construir el overlay — el mismo error de `puntos_union` que ya se había corregido en Nivel 1, reaparecido por no aplicar el fix a este código nuevo.** PG03 salió con el arco apuntando hacia afuera del muro (hacia "Punto Aplicación Rasante", un callout, no un espacio real) en vez de hacia adentro de "Baño Clientes Mujeres" donde está el arco real impreso. Corregido usando los extremos reales de la nube de puntos del trazo (`pts[0]`/`pts[pts.length-1]`) en vez de `puntos_union` — afectó también a PG04, PG06 y PG08. **Verificado con overlay: las 8 puertas calzan contra su arco de referencia real** (PG01/02 en el pasillo hacia la escalera, PG03/04 en los 2 baños de clientes, PG05/06 agrupadas en una esquina — mismo patrón de "2 puertas muy cerca" ya visto en Nivel 1 con PG08/09/10 —, PG07 hacia el pasillo, PG08 hacia la bodega).
+
+**Barrido rápido por posibles puertas faltantes** (mismo patrón que en Nivel 1, donde 6 puertas no estaban en `puertas_geo`): revisadas las zonas con cotas "0.85"/"0.85" y "1.4" cerca de Bodega derecha — corresponden a hatching de "Se construye"/deslinde, no a vanos de puerta, sin arco de referencia visible ahí. **No fue un barrido tan exhaustivo como el de Nivel 1** — no se puede descartar del todo que falte alguna puerta sin cruzar cada cota de vano contra un arco real, punto pendiente si aparecen inconsistencias más adelante.
+
+**Archivo**: `conteo_manual_puertas_n2_v1.png`, en `Fase 2/Desarrollos/Test/pdv/`. Pendiente: revisión del arquitecto (mismo proceso que Nivel 1 — nada se da por cerrado sin su confirmación).
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
