@@ -1204,6 +1204,24 @@ Metodología final, confirmada nivel por nivel con el arquitecto mirando el plan
 
 ---
 
+## 🔶 EN PROGRESO 2026-08-19 — Mismo ejercicio para puertas (PdV Nivel 1): geometría de arcos resuelta, posición/tamaño vs. vano real todavía pendiente
+
+Repitiendo el método validado con muros (revisión visual del arquitecto, iterativo) sobre `puertas_geo` del mismo JSON de PdV N1 (11 puertas crudas).
+
+**Hallazgos confirmados con datos reales, no con estimación visual:**
+1. **PG05 y PG06 son falsos positivos** — PG05 es la línea guía de la etiqueta de un recinto (no un arco), PG06 confunde la simbología de quiebre de la escalera con un arco de puerta. Descartados.
+2. **PG08, PG09 y PG10 son 3 puertas reales distintas, no 2** — el hallazgo inicial ("PG09+PG10 son el mismo arco partido") era incorrecto. Ajustando un círculo por mínimos cuadrados a los puntos crudos de `segmentos` (no a estimación visual de capturas) se confirma: PG10 (extremo izquierdo, cierra en 0°, abre en 90°/abajo), PG09 (centro, cierra en 0°, abre en -90°/arriba), PG08 (extremo derecho, cierra en 180°, abre en 90°/abajo) — exactamente como lo describió el arquitecto ("las de los extremos hacia abajo y la del centro hacia arriba, los arcos lo indican"). Un fragmento de 2 segmentos casi-rectos dentro de los datos de `PG10` que parecía "una puerta oculta" resultó ser solo ruido de la propia curva de PG10, no una puerta adicional.
+3. **6 puertas reales no estaban en `puertas_geo` en absoluto** (omisión de detección, no fragmentación): Terraza-Cocina (doble hoja), vano de 1.6m Pasillo-Cocina (doble hoja), Baño Universal (1), junto a Oficina (1). Encontradas porque el arquitecto las marcó en rojo sobre capturas del render — **las marcas rojas son solo referencia de ubicación aproximada, nunca la geometría final**; cada una se reconstruyó midiendo el vano real (par de jambas) sobre el plano base.
+4. **Bug real de renderizado encontrado y corregido**: la función de arco tomaba el camino largo (270°) en vez del corto (90°) cuando los dos ángulos cardinales eran del tipo (180°, -90°) — un bug de manejo de wraparound en la normalización de ángulos, no un error de medición. Confirmado con test aislado (ejes marcados) y con overlay directo contra el plano base antes de darlo por corregido. Afectaba específicamente a PG02, PG03, PG07, PG11, PG13, PG15.
+
+**Estado real — NO cerrado**: el arquitecto confirmó que la orientación y el ángulo (90° vs 270°) ya están bien en `conteo_manual_puertas_n1_v7.png`, pero **la posición y el tamaño de varios arcos todavía no calzan exactamente con el vano real** (gozne y radio no coinciden con precisión con las jambas reales del muro) — mismo tipo de imprecisión que ya se había corregido una vez para muros. Pendiente retomar: volver a medir gozne/radio de cada puerta contra el gap real (no contra el punto medio del segmento más largo ni contra estimación visual de un crop), verificando cada una con overlay antes de presentar. Aplica en particular a las puertas reconstruidas manualmente (sin datos en `puertas_geo`): Terraza-Cocina, vano 1.6m, Baño Universal, junto a Oficina.
+
+**Nomenclatura**: unificada a la serie `PG12`-`PG17` para las puertas nuevas (se abandonó el esquema ad-hoc `N1a`/`N2b` usado en un intento intermedio, que generó confusión).
+
+**Archivo de trabajo**: `conteo_manual_puertas_n1_v7.png` en `Fase 2/Desarrollos/Test/pdv/` (versiones v1-v6 conservadas como historial). Nivel 2 de puertas todavía no se ha empezado.
+
+---
+
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
 
 **Por qué importa más de lo que parece (no es solo UX):** si un elemento no fue detectado, su verificación normativa nunca corre — una puerta angosta que el sistema no vio es una infracción a OGUC 4.2.2 que ArchiCheck jamás va a marcar, en silencio. Es el escenario que más daña la confianza en la herramienta: que la DOM detecte algo que ArchiCheck no. Esta funcionalidad convierte "elemento invisible para el modelo" en "elemento igual verificado" — y es en la práctica **un prerrequisito de que P4 (motor de reglas determinista) entregue valor completo**: P4 necesita el inventario completo de elementos para poder correr sus chequeos sobre todos los elementos reales, no solo los que el modelo alcanzó a ver.
