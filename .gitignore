@@ -26,3 +26,6 @@ dist-ssr
 # Archivos personales del usuario, no relacionados con el proyecto
 /Fase 2/Desarrollos/Test/Temas al roadmap.txt
 /Fase 2/Gastos BIG12.txt
+
+# Archivos temporales de Word/Office (se crean solos al tener un .docx abierto)
+~$*

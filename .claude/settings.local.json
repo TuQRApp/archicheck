@@ -23,7 +23,8 @@
       "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"bloquear DWG, modal instrucciones exportacion, alerta no legible\")",
       "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"rediseno paleta institucional chilena: azul blanco gris\")",
       "Bash(git -C \"C:/Users/nicolas.estragues/Documents/Claude/archicheck\" commit -m \"aplicar Inter como fuente principal en todo el proyecto\")",
-      "Bash(claude install:*)"
+      "Bash(claude install:*)",
+      "PowerShell(npm *)"
     ]
   }
 }
