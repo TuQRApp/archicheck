@@ -1340,6 +1340,21 @@ El arquitecto marcó 5 puertas más que parecían cerradas (PG-TCa, PG-TCb, PG-C
 
 **Archivo final**: `conteo_manual_puertas_n1_v16.png`, en `Fase 2/Desarrollos/Test/pdv/`.
 
+## ✅✅✅ Novena vuelta, misma fecha (2026-08-19) — corrección final: el gozne va en el centro de la HOJA, no del muro. Cierra el ciclo de TCa/TCb/Coc-izq/Coc-der/BU con las 5 pixel-perfectas.
+
+La teoría de "línea central del muro" (ronda anterior) también resultó equivocada — el arquitecto lo confirmó con evidencia directa: en TCa/TCb, la cara exterior (x=919) quedaba muy a la izquierda, la línea central (x=944.5) quedó muy a la derecha, y ninguna de las dos era correcta. El arquitecto dio la pista definitiva: *"usa la definición del centro de la hoja (2 líneas paralelas)"*.
+
+**Hallazgo por pixel exacto sobre el PNG base**: dentro del espesor del muro (2 caras reales, ~51px≈0.3m) hay un SEGUNDO par de líneas mucho más angosto (~5-9px≈5cm, plausible como grosor real de hoja de puerta) — ese es el elemento gráfico correcto. Su punto medio es el gozne:
+- **TCa/TCb**: par de líneas en x=925/x=934 → centro x=929.5 (ni la cara del muro en 919, ni el centro del muro en 944.5).
+- **Coc-izq/Coc-der**: comparten una misma línea de hoja/umbral en y=2429/y=2434 → centro y=2431.5 (corre de lado a lado del vano de 1.6m).
+- **BU**: par de líneas en y=2418/y=2425 → centro y=2421.5 (muy cerca del centro del muro que ya tenía, por eso esa una había quedado bien "por casualidad").
+
+**Verificado: las 5 arcos ahora calzan exactos sobre el arco real, sin ningún hueco visible** — el mejor resultado de match visual de toda la sesión.
+
+**Lección de proceso guardada como permanente**: 3 rondas de corrección (cara del muro → centro del muro → centro de la hoja) porque cada teoría intermedia derivaba el gozne de la geometría del MURO, cuando en realidad depende de un elemento gráfico distinto (la hoja) que hay que buscar explícitamente. Ante cualquier duda de posición de gozne: buscar primero un par de líneas más angosto que el del muro, dentro de su espesor — eso es casi siempre la hoja. Y el criterio final e inapelable sigue siendo el de siempre: el arco dibujado debe calzar exacto contra el real, ninguna teoría geométrica reemplaza esa verificación.
+
+**Archivo final**: `conteo_manual_puertas_n1_v17.png`, en `Fase 2/Desarrollos/Test/pdv/`.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
