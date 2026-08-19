@@ -1325,6 +1325,21 @@ El arquitecto confirmó PG09 y PG-OF correctas. Corrección final: en PG-AN1/PG-
 
 **Archivo final**: `conteo_manual_puertas_n1_v14.png`, en `Fase 2/Desarrollos/Test/pdv/`.
 
+## ✅✅ Séptima/octava vuelta, misma fecha (2026-08-19) — definición permanente más fuerte: "si el arco está bien dibujado, es mandatorio que quede exactamente sobre el arco del plano, sin excepción"
+
+El arquitecto marcó 5 puertas más que parecían cerradas (PG-TCa, PG-TCb, PG-Coc-izq, PG-Coc-der, PG-BU) con un desfase real y visible contra el arco impreso, y elevó esto a definición permanente: si el arco se dibuja correctamente, es mandatorio que coincida exactamente con el arco real del plano — y cuando esa coincidencia es exacta, sirve como confirmación fuerte de dónde va el gozne.
+
+**Diagnóstico caso por caso**:
+- **PG-TCa/PG-TCb**: el gozne estaba en la CARA exterior del muro (un vértice real, pero no el correcto) — el muro tiene 2 caras paralelas reales (~0.3m de espesor, confirmado en `muros_geo`: x=919/x=970 en la zona TC). Corregido a la **línea central** (x=944.5). Verificado: calza exacto.
+- **PG-Coc-izq/PG-Coc-der**: la posición ya estaba bien (línea central del muro, y=2418.5 — promedio de las 2 caras reales y=2393/y=2444, mismo espesor 0.3m). El error real era el **radio**: se había asumido mitad exacta de la cota del vano (1.6m/2=0.8m), pero dos hojas que comparten un vano no necesariamente lo reparten en partes iguales. Radio real medido por ajuste de círculo (rms 0.47-0.48, muy limpio): 0.735m y 0.747m.
+- **PG-BU**: ya estaba correcta con el criterio de línea central — confirmado sin cambios.
+
+**Método usado para diagnosticar y corregir, documentado para reusar**: grilla de coordenadas reales superpuesta sobre el propio overlay (mi arco + el arco de referencia, ambos visibles) para ver el desfase con precisión; detección de color acotada a una caja muy ajustada (para evitar contaminación de textos/otras puertas/símbolos cercanos) + ajuste de círculo por mínimos cuadrados; el color del arco de referencia varía por zona (gris, rosa/salmón, o rojo más saturado) — siempre muestrear el color real antes de asumir un matcher; rms<1px sobre ≥50 puntos = confirmación fuerte, rms alto = casi siempre contaminación, acotar más la búsqueda.
+
+**2 aclaraciones adicionales del arquitecto, guardadas como permanentes**: (1) la regla de "auditar todo lo ya construido al corregir un patrón" no es solo para puertas — aplica a ventanas, muros, escaleras, cualquier categoría; (2) las capturas marcadas del arquitecto son referencia aproximada de dónde mirar, no una medida literal — el elemento se construye aplicando las reglas ya definidas, no calcando la marca a mano.
+
+**Archivo final**: `conteo_manual_puertas_n1_v16.png`, en `Fase 2/Desarrollos/Test/pdv/`.
+
 ---
 
 Hoy, cuando el sistema no identifica algo con confianza, lo descarta en silencio (DINO filtra por `MIN_CONFIANZA` y sigue de largo; Claude Vision simplemente no lo menciona). El diseño nuevo reemplaza eso por un paso obligatorio: **antes de correr el análisis de cumplimiento normativo completo, el arquitecto valida y corrige toda la geometría detectada, sobre una interfaz gráfica.**
