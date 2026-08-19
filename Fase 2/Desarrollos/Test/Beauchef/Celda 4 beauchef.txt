@@ -6,31 +6,214 @@
 ========================================================
   2919x2313 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 5 recintos, 5 incumplimientos
+  ✓ Claude: 5 recintos, 4 incumplimientos
   → Extracción vectorial...
-  ✓ EJES/COTAS: 39 segmentos identificados como referencia (Paso 1.5), 39 evitados de proteger como muro pese a superar el span minimo
-  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 13 grupos protegidos como muro, top 25 por span (4 textos de cota disponibles para el chequeo de distancia):
-     span=23.91m  bbox=10.78x21.34m  n_seg=29  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=29)=0.0/0.0/0.0
-     span=20.3m  bbox=8.93x18.23m  n_seg=364  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.7/2.0
-     span=15.07m  bbox=0.3x15.06m  n_seg=11  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=11)=0.0/0.0/0.0
-     span=13.94m  bbox=0.3x13.93m  n_seg=11  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=11)=0.0/0.0/0.0
-     span=10.32m  bbox=0.56x10.3m  n_seg=15  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=15)=0.0/0.0/0.0
-     span=10.31m  bbox=0.51x10.3m  n_seg=183  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=183)=0.0/0.0/0.0
-     span=10.11m  bbox=0.45x10.1m  n_seg=91  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=91)=0.0/0.0/0.0
-     span=9.95m  bbox=0.3x9.95m  n_seg=343  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
-     span=9.36m  bbox=9.3x1.02m  n_seg=68  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=68)=0.0/0.0/0.0
-     span=9.3m  bbox=9.29x0.4m  n_seg=243  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=243)=0.0/0.0/0.0
-     span=9.3m  bbox=9.29x0.32m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=7)=0.0/0.0/0.0
-     span=7.88m  bbox=3.8x6.9m  n_seg=28  ancho_linea(min/mediana/max)=0.12/0.12/0.12  %cerca_cota(30/60/100px, n=28)=0.0/0.0/0.0
-     span=2.72m  bbox=0.0x2.72m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
-  ✓ Vectorial: 4 textos (cotas/nombres), 1004 trazos candidatos a símbolo, 1355 tramos protegidos como muro (por conectividad, no por largo), 443 tramos desprotegidos por parecer achurado (rampa/escalera), 39 en 2 cadena(s) de línea discontinua
-     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 4, 'span_m': 4.98}, {'n_segmentos': 35, 'span_m': 4.0}]
+DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 112 corte_elevacion, 2134 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 418 ignorar, 73 mobiliario, 0 muro, 17 puerta, 0 rampa, 1 ventana, 222 sin capa mapeada — de 2977 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['accesibilidad'] = ['Accesibilidad'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['achurado'] = ['HATCH'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['LINEA TERRENO ORIGINAL'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['muro'] = ['MUROS'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 2134 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 99 segmentos identificados como referencia (Paso 1.5), 99 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 1050 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 73 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 323 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 6
+  ✓ Muros exportados: 252 (de 9 grupos protegidos, 78 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
+  ✓ Puertas exportadas (clasificador geometrico): 7
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 3273)]
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 9 grupos protegidos como muro, top 25 por span (11 textos de cota disponibles para el chequeo de distancia):
+     span=16.84m  bbox=13.9x9.5m  n_seg=678  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.3/0.3/1.3
+     span=10.64m  bbox=10.6x0.91m  n_seg=161  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=161)=0.0/0.0/0.0
+     span=10.52m  bbox=10.5x0.56m  n_seg=21  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=21)=0.0/0.0/0.0
+     span=10.51m  bbox=10.5x0.51m  n_seg=186  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=186)=0.0/0.0/0.0
+     span=9.56m  bbox=1.02x9.5m  n_seg=287  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=287)=0.0/19.5/27.5
+     span=6.1m  bbox=6.1x0.0m  n_seg=33  ancho_linea(min/mediana/max)=0.12/0.12/0.12  %cerca_cota(30/60/100px, n=33)=0.0/0.0/0.0
+     span=3.86m  bbox=3.79x0.71m  n_seg=260  ancho_linea(min/mediana/max)=0/0.0/0.3  %cerca_cota(30/60/100px, n=260)=0.0/0.0/2.7
+     span=3.86m  bbox=3.79x0.71m  n_seg=266  ancho_linea(min/mediana/max)=0/0.0/0.3  %cerca_cota(30/60/100px, n=266)=0.0/0.0/0.0
+     span=2.72m  bbox=2.72x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 2 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(4985,3150)-(5009,3219) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+    tipo=(4, 'Square') bbox_px=(5345,3150)-(5369,3219) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 7 fuente(s) en esta pagina
+    (56, 'ttf', 'TrueType', 'Swiss721BT-RomanCondensed', 'F10', 'WinAnsiEncoding', 0)
+    (53, 'ttf', 'Type0', 'Swiss721BT-RomanCondensed', 'F9', 'Identity-H', 0)
+    (76, 'ttf', 'TrueType', 'CenturyGothic', 'F11', 'WinAnsiEncoding', 0)
+    (7, 'ttf', 'TrueType', 'Verdana', 'F1', 'WinAnsiEncoding', 0)
+    (14, 'ttf', 'TrueType', 'ArialMT', 'F2', 'WinAnsiEncoding', 0)
+    (26, 'ttf', 'Type0', 'ArialMT', 'F5', 'Identity-H', 0)
+    (19, 'ttf', 'TrueType', 'Arial-BoldMT', 'F3', 'WinAnsiEncoding', 0)
+  DIAGNOSTICO CAPAS: 31 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=1 {'name': '6º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=2 {'name': '1º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=8 {'name': 'Muros Proy', 'intent': [], 'on': True, 'usage': None}
+    xref=9 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=29 {'name': 'ARTEFACTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=30 {'name': 'Textos', 'intent': [], 'on': True, 'usage': None}
+    xref=57 {'name': '5º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=58 {'name': 'TEXTOS ROJOS', 'intent': [], 'on': True, 'usage': None}
+    xref=59 {'name': 'BM-COTAS-0.13', 'intent': [], 'on': True, 'usage': None}
+    xref=60 {'name': '0', 'intent': [], 'on': True, 'usage': None}
+    xref=61 {'name': 'NIVELES', 'intent': [], 'on': True, 'usage': None}
+    xref=62 {'name': 'LINEA TERRENO ORIGINAL', 'intent': [], 'on': True, 'usage': None}
+    xref=65 {'name': 'PROYECCION', 'intent': [], 'on': True, 'usage': None}
+    xref=66 {'name': '2º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=67 {'name': 'Puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=68 {'name': 'PAVIMENTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=69 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=70 {'name': 'COTAS', 'intent': [], 'on': True, 'usage': None}
+    xref=71 {'name': 'MARCADOR CORTES-ELEVACIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=77 {'name': 'PROYECCIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=78 {'name': 'MOBILIARIO', 'intent': [], 'on': True, 'usage': None}
+    xref=79 {'name': 'Accesibilidad', 'intent': [], 'on': True, 'usage': None}
+    xref=80 {'name': 'HATCH', 'intent': [], 'on': True, 'usage': None}
+    xref=83 {'name': 'BALL', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': '4º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': '3º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'MUROS', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'ILUMINACION', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'MUEBLES', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'TEXTO', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO DASHES: 0 de 2977 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
+  DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (1)', 1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (2)', 2]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (3)', 3]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (4)', 4]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (5)', 5]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (6)', 6]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (7)', 7]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (8)', 8]
+    [2, 'CC-BEAUCHEFF_DOM-DOM Acc (1)', 9]
+  DIAGNOSTICO RAW_DRAWINGS: 0 zona(s) Cocina/Pasillo/Oficina, radio 250px, sin filtros
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=250px): 31 item(s) crudo(s) sin filtrar
+    ('l', (628, 3533, 628, 3518), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (628, 3429, 628, 3207), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (628, 3207, 742, 3207), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (822, 3207, 911, 3207), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (911, 3235, 822, 3235), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (742, 3235, 654, 3235), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (654, 3235, 654, 3429), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (654, 3518, 654, 3533), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (911, 3235, 911, 3207), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (822, 3235, 822, 3207), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (742, 3235, 742, 3207), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (654, 3518, 628, 3518), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (654, 3533, 628, 3533), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (654, 3429, 628, 3429), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (821, 3242, 821, 3415), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (654, 3518, 654, 3429), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (628, 3429, 628, 3518), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (641, 3429, 641, 3518), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (742, 3235, 822, 3235), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (742, 3207, 822, 3207), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (742, 3221, 822, 3221), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (654, 3113, 602, 3113), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (619, 3122, 637, 3104), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (628, 3138, 628, 3087), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (587, 3487, 587, 3487), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (612, 3487, 612, 3487), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (638, 3487, 638, 3487), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (663, 3487, 804, 3487), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (804, 3487, 804, 3546), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (802, 3487, 802, 3546), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (800, 3487, 800, 3546), (0.0, 0.0, 0.0), None, 0.3)
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 172 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=3.21 muestra_p1=(1019, 723) muestra_p2=(475, 723) capas=['Puertas']
+    n_segmentos=3 span_m=0.97 muestra_p1=(475, 1968) muestra_p2=(475, 1934) capas=['0']
+    n_segmentos=4 span_m=0.21 muestra_p1=(666, 1926) muestra_p2=(667, 1927) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(932, 1929) muestra_p2=(932, 1933) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(932, 1935) muestra_p2=(932, 1939) capas=['COTAS']
+    n_segmentos=3 span_m=0.1 muestra_p1=(944, 1942) muestra_p2=(944, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1020, 1926) muestra_p2=(1019, 1927) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1017, 1929) muestra_p2=(1017, 1933) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1017, 1935) muestra_p2=(1017, 1940) capas=['COTAS']
+    n_segmentos=5 span_m=0.24 muestra_p1=(1017, 1940) muestra_p2=(1019, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1019, 1942) muestra_p2=(1020, 1943) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1140, 1926) muestra_p2=(1138, 1926) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1136, 1929) muestra_p2=(1136, 1933) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1136, 1935) muestra_p2=(1136, 1939) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1136, 1939) muestra_p2=(1138, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1138, 1942) muestra_p2=(1140, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.13 muestra_p1=(1140, 1942) muestra_p2=(1141, 1942) capas=['COTAS']
+    n_segmentos=3 span_m=0.19 muestra_p1=(1501, 1934) muestra_p2=(1502, 1936) capas=['COTAS']
+    n_segmentos=3 span_m=0.21 muestra_p1=(1500, 1942) muestra_p2=(1498, 1942) capas=['COTAS']
+    n_segmentos=3 span_m=0.23 muestra_p1=(1496, 1942) muestra_p2=(1494, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1494, 1942) muestra_p2=(1494, 1941) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1888, 1926) muestra_p2=(1886, 1926) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1886, 1926) muestra_p2=(1885, 1929) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1885, 1929) muestra_p2=(1884, 1933) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1884, 1935) muestra_p2=(1885, 1939) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1885, 1939) muestra_p2=(1886, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1886, 1942) muestra_p2=(1888, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.13 muestra_p1=(1888, 1942) muestra_p2=(1889, 1942) capas=['COTAS']
+    n_segmentos=3 span_m=0.97 muestra_p1=(2227, 1934) muestra_p2=(2227, 1968) capas=['0']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2098, 1932) muestra_p2=(2100, 1931) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2102, 1931) muestra_p2=(2103, 1932) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2098, 1942) muestra_p2=(2098, 1941) capas=['COTAS']
+    n_segmentos=7 span_m=0.23 muestra_p1=(1710, 2000) muestra_p2=(1712, 2001) capas=['COTAS']
+    n_segmentos=4 span_m=0.17 muestra_p1=(1712, 2001) muestra_p2=(1714, 2003) capas=['COTAS']
+    n_segmentos=5 span_m=0.19 muestra_p1=(1714, 2003) muestra_p2=(1714, 2005) capas=['COTAS']
+    n_segmentos=3 span_m=0.12 muestra_p1=(1731, 2009) muestra_p2=(1730, 2011) capas=['COTAS']
+    n_segmentos=6 span_m=0.29 muestra_p1=(1327, 2059) muestra_p2=(1328, 2058) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1337, 2059) muestra_p2=(1336, 2063) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1336, 2065) muestra_p2=(1337, 2070) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(1337, 2070) muestra_p2=(1338, 2072) capas=['COTAS']
+    n_segmentos=5 span_m=0.23 muestra_p1=(1338, 2072) muestra_p2=(1340, 2073) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2332, 1845) muestra_p2=(2332, 1846) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2335, 1848) muestra_p2=(2339, 1848) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2341, 1848) muestra_p2=(2345, 1848) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2345, 1848) muestra_p2=(2348, 1846) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2348, 1846) muestra_p2=(2349, 1845) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2332, 1725) muestra_p2=(2332, 1727) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2335, 1728) muestra_p2=(2339, 1729) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2341, 1729) muestra_p2=(2345, 1728) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2345, 1728) muestra_p2=(2348, 1727) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2348, 1727) muestra_p2=(2348, 1725) capas=['COTAS']
+    n_segmentos=5 span_m=0.23 muestra_p1=(2332, 1632) muestra_p2=(2332, 1634) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2335, 1635) muestra_p2=(2339, 1636) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2341, 1636) muestra_p2=(2345, 1635) capas=['COTAS']
+    n_segmentos=5 span_m=0.23 muestra_p1=(2348, 1634) muestra_p2=(2348, 1632) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2332, 1547) muestra_p2=(2332, 1549) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2335, 1550) muestra_p2=(2339, 1550) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2341, 1550) muestra_p2=(2345, 1550) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2345, 1550) muestra_p2=(2348, 1549) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2348, 1549) muestra_p2=(2348, 1547) capas=['COTAS']
+  ✓ Vectorial: 11 textos (cotas/nombres), 2591 trazos candidatos a símbolo, 348 tramos protegidos como muro (por conectividad, no por largo), 230 tramos desprotegidos por parecer achurado (rampa/escalera), 124 en 5 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 6, 'span_m': 1.0}, {'n_segmentos': 4, 'span_m': 5.4}, {'n_segmentos': 33, 'span_m': 6.1}, {'n_segmentos': 12, 'span_m': 1.02}, {'n_segmentos': 50, 'span_m': 9.2}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 4 textos, 39 líneas discontinuas, 1004 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
-  ✓ OpenCV: 11 espacios >= 0.5 m²
-  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 84.27m²
-  ✓ Cruce: 5/11 con nombre | 2 incumpl. geo
-  ⚠ 6 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E10, E05, E09, E01, E08, E11
+  ✓ Limpieza pre-umbral: 11 textos, 124 líneas discontinuas, 2591 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 4 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 168.3m²
+  ✓ Cruce: 4/4 con nombre | 2 incumpl. geo
 
 ========================================================
   Página 3  —  escala 1:50
@@ -38,24 +221,209 @@
 ========================================================
   2474x1904 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 6 recintos, 3 incumplimientos
+  ✓ Claude: 6 recintos, 2 incumplimientos
   → Extracción vectorial...
-  ✓ EJES/COTAS: 37 segmentos identificados como referencia (Paso 1.5), 37 evitados de proteger como muro pese a superar el span minimo
-  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 6 grupos protegidos como muro, top 25 por span (5 textos de cota disponibles para el chequeo de distancia):
-     span=13.81m  bbox=9.2x10.3m  n_seg=46  ancho_linea(min/mediana/max)=0.12/1.44/1.44  %cerca_cota(30/60/100px, n=46)=0.0/0.0/0.0
-     span=10.44m  bbox=0.91x10.4m  n_seg=152  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=152)=0.0/0.0/0.0
-     span=9.22m  bbox=9.2x0.59m  n_seg=15  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=15)=0.0/0.0/0.0
-     span=9.01m  bbox=9.0x0.27m  n_seg=207  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=207)=0.0/0.0/0.0
-     span=6.1m  bbox=0.0x6.1m  n_seg=33  ancho_linea(min/mediana/max)=0.12/0.12/0.12  %cerca_cota(30/60/100px, n=33)=0.0/0.0/0.0
-     span=3.86m  bbox=0.71x3.79m  n_seg=266  ancho_linea(min/mediana/max)=0/0.0/0.3  %cerca_cota(30/60/100px, n=266)=0.0/0.0/0.0
-  ✓ Vectorial: 5 textos (cotas/nombres), 392 trazos candidatos a símbolo, 682 tramos protegidos como muro (por conectividad, no por largo), 400 tramos desprotegidos por parecer achurado (rampa/escalera), 37 en 2 cadena(s) de línea discontinua
-     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 4, 'span_m': 5.4}, {'n_segmentos': 33, 'span_m': 6.1}]
+DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
+  ✓ MAPEO POR CAPA: 110 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 1909 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 481 ignorar, 360 mobiliario, 0 muro, 18 puerta, 0 rampa, 0 ventana, 84 sin capa mapeada — de 2962 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['achurado'] = ['HATCH'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['corte_elevacion'] = ['MARCADOR CORTES-ELEVACIONES'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['LINEA TERRENO ORIGINAL'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['muro'] = ['MUROS'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['ventana'] = ['Ventanas'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 1909 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 74 segmentos identificados como referencia (Paso 1.5), 74 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 1050 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 360 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 407 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 5
+  ✓ Muros exportados: 99 (de 4 grupos protegidos, 94 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
+  ✓ Puertas exportadas (clasificador geometrico): 5
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 2910), ((0.18, 0.72, 0.0), 52)]
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 4 grupos protegidos como muro, top 25 por span (8 textos de cota disponibles para el chequeo de distancia):
+     span=15.2m  bbox=12.87x8.1m  n_seg=1471  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
+     span=12.62m  bbox=12.6x0.62m  n_seg=315  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
+     span=11.11m  bbox=11.1x0.56m  n_seg=315  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
+     span=4.62m  bbox=4.62x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 2 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(1873,3135)-(1897,3204) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+    tipo=(4, 'Square') bbox_px=(2233,3135)-(2257,3204) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 7 fuente(s) en esta pagina
+    (56, 'ttf', 'TrueType', 'Swiss721BT-RomanCondensed', 'F10', 'WinAnsiEncoding', 0)
+    (53, 'ttf', 'Type0', 'Swiss721BT-RomanCondensed', 'F9', 'Identity-H', 0)
+    (76, 'ttf', 'TrueType', 'CenturyGothic', 'F11', 'WinAnsiEncoding', 0)
+    (7, 'ttf', 'TrueType', 'Verdana', 'F1', 'WinAnsiEncoding', 0)
+    (14, 'ttf', 'TrueType', 'ArialMT', 'F2', 'WinAnsiEncoding', 0)
+    (26, 'ttf', 'Type0', 'ArialMT', 'F5', 'Identity-H', 0)
+    (19, 'ttf', 'TrueType', 'Arial-BoldMT', 'F3', 'WinAnsiEncoding', 0)
+  DIAGNOSTICO CAPAS: 31 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=1 {'name': '6º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=2 {'name': '1º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=8 {'name': 'Muros Proy', 'intent': [], 'on': True, 'usage': None}
+    xref=9 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=29 {'name': 'ARTEFACTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=30 {'name': 'Textos', 'intent': [], 'on': True, 'usage': None}
+    xref=57 {'name': '5º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=58 {'name': 'TEXTOS ROJOS', 'intent': [], 'on': True, 'usage': None}
+    xref=59 {'name': 'BM-COTAS-0.13', 'intent': [], 'on': True, 'usage': None}
+    xref=60 {'name': '0', 'intent': [], 'on': True, 'usage': None}
+    xref=61 {'name': 'NIVELES', 'intent': [], 'on': True, 'usage': None}
+    xref=62 {'name': 'LINEA TERRENO ORIGINAL', 'intent': [], 'on': True, 'usage': None}
+    xref=65 {'name': 'PROYECCION', 'intent': [], 'on': True, 'usage': None}
+    xref=66 {'name': '2º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=67 {'name': 'Puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=68 {'name': 'PAVIMENTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=69 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=70 {'name': 'COTAS', 'intent': [], 'on': True, 'usage': None}
+    xref=71 {'name': 'MARCADOR CORTES-ELEVACIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=77 {'name': 'PROYECCIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=78 {'name': 'MOBILIARIO', 'intent': [], 'on': True, 'usage': None}
+    xref=79 {'name': 'Accesibilidad', 'intent': [], 'on': True, 'usage': None}
+    xref=80 {'name': 'HATCH', 'intent': [], 'on': True, 'usage': None}
+    xref=83 {'name': 'BALL', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': '4º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': '3º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'MUROS', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'ILUMINACION', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'MUEBLES', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'TEXTO', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO DASHES: 0 de 2962 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
+  DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (1)', 1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (2)', 2]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (3)', 3]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (4)', 4]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (5)', 5]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (6)', 6]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (7)', 7]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (8)', 8]
+    [2, 'CC-BEAUCHEFF_DOM-DOM Acc (1)', 9]
+  DIAGNOSTICO RAW_DRAWINGS: 0 zona(s) Cocina/Pasillo/Oficina, radio 250px, sin filtros
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=250px): 29 item(s) crudo(s) sin filtrar
+    ('l', (916, 3196, 916, 3423), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (893, 3423, 893, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (893, 3196, 916, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (916, 3423, 893, 3423), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (730, 3227, 730, 3400), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (567, 3227, 567, 3400), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (476, 3223, 563, 3223), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (643, 3223, 732, 3223), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (812, 3223, 893, 3223), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (476, 3196, 563, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (643, 3196, 732, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (812, 3196, 893, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (476, 3223, 563, 3223), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (643, 3223, 732, 3223), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (476, 3223, 476, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (563, 3223, 563, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (643, 3223, 643, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (732, 3223, 732, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (812, 3223, 812, 3196), (0.0, 0.0, 0.0), None, 1.44)
+    ('l', (812, 3223, 732, 3223), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (643, 3223, 563, 3223), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (812, 3196, 732, 3196), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (643, 3196, 563, 3196), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (812, 3209, 732, 3209), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (643, 3209, 563, 3209), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (882, 3472, 741, 3472), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (741, 3472, 741, 3531), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (743, 3472, 743, 3531), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (745, 3472, 745, 3531), (0.0, 0.0, 0.0), None, 0.3)
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 125 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=0.11 muestra_p1=(546, 124) muestra_p2=(547, 125) capas=['COTAS']
+    n_segmentos=3 span_m=0.11 muestra_p1=(547, 127) muestra_p2=(546, 129) capas=['COTAS']
+    n_segmentos=5 span_m=0.18 muestra_p1=(551, 138) muestra_p2=(552, 139) capas=['COTAS']
+    n_segmentos=5 span_m=0.14 muestra_p1=(560, 122) muestra_p2=(559, 123) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(288, 118) muestra_p2=(286, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(285, 121) muestra_p2=(284, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(284, 128) muestra_p2=(285, 132) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(285, 132) muestra_p2=(286, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(286, 134) muestra_p2=(288, 135) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(798, 118) muestra_p2=(796, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(795, 121) muestra_p2=(794, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(794, 128) muestra_p2=(795, 132) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(795, 132) muestra_p2=(796, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(796, 134) muestra_p2=(798, 135) capas=['COTAS']
+    n_segmentos=3 span_m=0.08 muestra_p1=(1068, 126) muestra_p2=(1069, 128) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1308, 118) muestra_p2=(1306, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1305, 121) muestra_p2=(1304, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1304, 128) muestra_p2=(1305, 132) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(1305, 132) muestra_p2=(1306, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1306, 134) muestra_p2=(1308, 135) capas=['COTAS']
+    n_segmentos=3 span_m=0.17 muestra_p1=(1560, 125) muestra_p2=(1561, 124) capas=['COTAS']
+    n_segmentos=3 span_m=0.17 muestra_p1=(1561, 124) muestra_p2=(1561, 123) capas=['COTAS']
+    n_segmentos=3 span_m=0.15 muestra_p1=(1566, 123) muestra_p2=(1567, 124) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1818, 118) muestra_p2=(1817, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1815, 121) muestra_p2=(1815, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1815, 128) muestra_p2=(1815, 132) capas=['COTAS']
+    n_segmentos=5 span_m=0.24 muestra_p1=(1815, 132) muestra_p2=(1817, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1817, 134) muestra_p2=(1818, 135) capas=['COTAS']
+    n_segmentos=4 span_m=0.17 muestra_p1=(2071, 125) muestra_p2=(2071, 124) capas=['COTAS']
+    n_segmentos=3 span_m=0.14 muestra_p1=(2077, 124) muestra_p2=(2078, 125) capas=['COTAS']
+    n_segmentos=5 span_m=0.18 muestra_p1=(2082, 138) muestra_p2=(2083, 139) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2329, 118) muestra_p2=(2327, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2326, 121) muestra_p2=(2325, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2325, 128) muestra_p2=(2326, 132) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2326, 132) muestra_p2=(2327, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2327, 134) muestra_p2=(2329, 135) capas=['COTAS']
+    n_segmentos=3 span_m=0.18 muestra_p1=(1300, 55) muestra_p2=(1301, 54) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1310, 55) muestra_p2=(1311, 53) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(1311, 53) muestra_p2=(1311, 52) capas=['COTAS']
+    n_segmentos=3 span_m=0.12 muestra_p1=(1334, 52) muestra_p2=(1335, 53) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(206, 1276) muestra_p2=(207, 1278) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(209, 1279) muestra_p2=(213, 1280) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(216, 1280) muestra_p2=(220, 1279) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(220, 1279) muestra_p2=(222, 1278) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(222, 1278) muestra_p2=(223, 1276) capas=['COTAS']
+    n_segmentos=3 span_m=0.15 muestra_p1=(211, 1018) muestra_p2=(212, 1017) capas=['COTAS']
+    n_segmentos=3 span_m=0.11 muestra_p1=(212, 1017) muestra_p2=(213, 1017) capas=['COTAS']
+    n_segmentos=3 span_m=0.12 muestra_p1=(215, 1017) muestra_p2=(217, 1017) capas=['COTAS']
+    n_segmentos=5 span_m=0.15 muestra_p1=(220, 998) muestra_p2=(222, 998) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(206, 766) muestra_p2=(207, 767) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(209, 769) muestra_p2=(213, 769) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(216, 769) muestra_p2=(220, 769) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(220, 769) muestra_p2=(222, 767) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(222, 767) muestra_p2=(223, 766) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(206, 255) muestra_p2=(207, 257) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(209, 258) muestra_p2=(213, 259) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(216, 259) muestra_p2=(220, 258) capas=['COTAS']
+    n_segmentos=5 span_m=0.24 muestra_p1=(220, 258) muestra_p2=(222, 257) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(222, 257) muestra_p2=(223, 255) capas=['COTAS']
+    n_segmentos=3 span_m=0.18 muestra_p1=(165, 884) muestra_p2=(164, 884) capas=['COTAS']
+  ✓ Vectorial: 8 textos (cotas/nombres), 2935 trazos candidatos a símbolo, 211 tramos protegidos como muro (por conectividad, no por largo), 114 tramos desprotegidos por parecer achurado (rampa/escalera), 104 en 3 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 60, 'span_m': 5.8}, {'n_segmentos': 14, 'span_m': 1.32}, {'n_segmentos': 30, 'span_m': 2.81}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 5 textos, 37 líneas discontinuas, 392 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
-  ✓ OpenCV: 8 espacios >= 0.5 m²
-  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 62.84m²
-  ✓ Cruce: 4/8 con nombre | 0 incumpl. geo
-  ⚠ 4 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E04, E06, E03, E07
+  ✓ Limpieza pre-umbral: 8 textos, 104 líneas discontinuas, 2935 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 7 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 115.01m²
+  ✓ Cruce: 6/7 con nombre | 3 incumpl. geo
+  ⚠ 1 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E01
 
 ========================================================
   Página 3  —  escala 1:50
@@ -63,36 +431,189 @@
 ========================================================
   4642x2500 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 7 recintos, 5 incumplimientos
+  ✓ Claude: 7 recintos, 3 incumplimientos
   → Extracción vectorial...
-  ✓ EJES/COTAS: 203 segmentos identificados como referencia (Paso 1.5), 184 evitados de proteger como muro pese a superar el span minimo
-  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 18 grupos protegidos como muro, top 25 por span (11 textos de cota disponibles para el chequeo de distancia):
-     span=23.87m  bbox=10.78x21.29m  n_seg=27  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=27)=0.0/0.0/0.0
-     span=18.82m  bbox=11.36x15.01m  n_seg=408  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
-     span=15.03m  bbox=0.67x15.01m  n_seg=12  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=12)=0.0/0.0/0.0
-     span=15.0m  bbox=0.45x14.99m  n_seg=139  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=139)=0.0/0.0/0.0
-     span=13.82m  bbox=0.37x13.82m  n_seg=405  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
-     span=13.82m  bbox=0.3x13.82m  n_seg=11  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=11)=0.0/0.0/0.0
-     span=12.84m  bbox=8.1x9.97m  n_seg=1286  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
-     span=12.32m  bbox=0.62x12.3m  n_seg=190  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=190)=0.0/0.0/0.0
-     span=12.17m  bbox=9.5x7.6m  n_seg=505  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.3
-     span=10.81m  bbox=0.56x10.8m  n_seg=190  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=190)=0.0/0.0/0.0
-     span=10.34m  bbox=0.91x10.3m  n_seg=12  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=12)=0.0/0.0/0.0
-     span=10.32m  bbox=0.56x10.3m  n_seg=8  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=8)=0.0/0.0/0.0
-     span=9.3m  bbox=9.29x0.38m  n_seg=243  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=243)=0.0/0.0/0.0
-     span=9.3m  bbox=9.29x0.32m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=7)=0.0/0.0/0.0
-     span=4.62m  bbox=0.0x4.62m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
-     span=4.18m  bbox=0.35x4.16m  n_seg=16  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=16)=0.0/0.0/0.0
-     span=3.47m  bbox=0.71x3.4m  n_seg=252  ancho_linea(min/mediana/max)=0/0.0/0.3  %cerca_cota(30/60/100px, n=252)=0.0/0.0/4.8
-     span=1.51m  bbox=0.2x1.5m  n_seg=4  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=4)=0.0/0.0/0.0
-  ✓ Vectorial: 11 textos (cotas/nombres), 2105 trazos candidatos a símbolo, 3532 tramos protegidos como muro (por conectividad, no por largo), 1356 tramos desprotegidos por parecer achurado (rampa/escalera), 203 en 5 cadena(s) de línea discontinua
-     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 50, 'span_m': 9.2}, {'n_segmentos': 60, 'span_m': 5.8}, {'n_segmentos': 14, 'span_m': 1.32}, {'n_segmentos': 60, 'span_m': 6.6}, {'n_segmentos': 4, 'span_m': 1.21}]
+DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 32 corte_elevacion, 2809 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 388 ignorar, 164 mobiliario, 0 muro, 67 puerta, 0 rampa, 0 ventana, 278 sin capa mapeada — de 3738 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['accesibilidad'] = ['Accesibilidad'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['achurado'] = ['HATCH'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['LINEA TERRENO ORIGINAL'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['muro'] = ['MUROS'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['ventana'] = ['Ventanas'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 2809 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 117 segmentos identificados como referencia (Paso 1.5), 98 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 1523 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 75 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 387 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 0
+  ✓ Muros exportados: 217 (de 12 grupos protegidos, 29 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
+  ✓ Lineas de referencia periodicas (deslinde/rasante/linea oficial): 29 muros movidos a muros_excluidos_por_referencia (no arquitectura real)
+  ✓ Puertas exportadas (clasificador geometrico): 0
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 3738)]
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 12 grupos protegidos como muro, top 25 por span (8 textos de cota disponibles para el chequeo de distancia):
+     span=26.05m  bbox=23.45x11.36m  n_seg=766  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
+     span=25.34m  bbox=22.93x10.78m  n_seg=55  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=55)=0.0/0.0/0.0
+     span=20.6m  bbox=20.59x0.45m  n_seg=229  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=229)=0.0/0.0/0.0
+     span=20.31m  bbox=20.3x0.68m  n_seg=28  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=28)=0.0/0.0/0.0
+     span=20.3m  bbox=20.29x0.37m  n_seg=747  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
+     span=20.3m  bbox=20.29x0.3m  n_seg=21  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=21)=0.0/0.0/0.0
+     span=9.3m  bbox=0.38x9.29m  n_seg=243  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=243)=0.0/0.0/0.0
+     span=9.3m  bbox=0.32x9.29m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=7)=0.0/0.0/0.0
+     span=9.3m  bbox=0.4x9.29m  n_seg=243  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=243)=0.0/0.0/0.0
+     span=9.3m  bbox=0.32x9.29m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=7)=0.0/0.0/0.0
+     span=4.18m  bbox=4.16x0.35m  n_seg=16  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=16)=0.0/0.0/0.0
+     span=3.26m  bbox=3.26x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 2 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(5006,811)-(5030,880) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+    tipo=(4, 'Square') bbox_px=(5366,811)-(5390,880) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 7 fuente(s) en esta pagina
+    (56, 'ttf', 'TrueType', 'Swiss721BT-RomanCondensed', 'F10', 'WinAnsiEncoding', 0)
+    (53, 'ttf', 'Type0', 'Swiss721BT-RomanCondensed', 'F9', 'Identity-H', 0)
+    (76, 'ttf', 'TrueType', 'CenturyGothic', 'F11', 'WinAnsiEncoding', 0)
+    (7, 'ttf', 'TrueType', 'Verdana', 'F1', 'WinAnsiEncoding', 0)
+    (14, 'ttf', 'TrueType', 'ArialMT', 'F2', 'WinAnsiEncoding', 0)
+    (26, 'ttf', 'Type0', 'ArialMT', 'F5', 'Identity-H', 0)
+    (19, 'ttf', 'TrueType', 'Arial-BoldMT', 'F3', 'WinAnsiEncoding', 0)
+  DIAGNOSTICO CAPAS: 31 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=1 {'name': '6º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=2 {'name': '1º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=8 {'name': 'Muros Proy', 'intent': [], 'on': True, 'usage': None}
+    xref=9 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=29 {'name': 'ARTEFACTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=30 {'name': 'Textos', 'intent': [], 'on': True, 'usage': None}
+    xref=57 {'name': '5º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=58 {'name': 'TEXTOS ROJOS', 'intent': [], 'on': True, 'usage': None}
+    xref=59 {'name': 'BM-COTAS-0.13', 'intent': [], 'on': True, 'usage': None}
+    xref=60 {'name': '0', 'intent': [], 'on': True, 'usage': None}
+    xref=61 {'name': 'NIVELES', 'intent': [], 'on': True, 'usage': None}
+    xref=62 {'name': 'LINEA TERRENO ORIGINAL', 'intent': [], 'on': True, 'usage': None}
+    xref=65 {'name': 'PROYECCION', 'intent': [], 'on': True, 'usage': None}
+    xref=66 {'name': '2º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=67 {'name': 'Puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=68 {'name': 'PAVIMENTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=69 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=70 {'name': 'COTAS', 'intent': [], 'on': True, 'usage': None}
+    xref=71 {'name': 'MARCADOR CORTES-ELEVACIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=77 {'name': 'PROYECCIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=78 {'name': 'MOBILIARIO', 'intent': [], 'on': True, 'usage': None}
+    xref=79 {'name': 'Accesibilidad', 'intent': [], 'on': True, 'usage': None}
+    xref=80 {'name': 'HATCH', 'intent': [], 'on': True, 'usage': None}
+    xref=83 {'name': 'BALL', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': '4º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': '3º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'MUROS', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'ILUMINACION', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'MUEBLES', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'TEXTO', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO DASHES: 0 de 3738 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
+  DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (1)', 1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (2)', 2]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (3)', 3]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (4)', 4]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (5)', 5]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (6)', 6]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (7)', 7]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (8)', 8]
+    [2, 'CC-BEAUCHEFF_DOM-DOM Acc (1)', 9]
+  DIAGNOSTICO RAW_DRAWINGS: 0 zona(s) Cocina/Pasillo/Oficina, radio 250px, sin filtros
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=250px): 0 item(s) crudo(s) sin filtrar
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 166 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=0.69 muestra_p1=(2689, 1123) muestra_p2=(2603, 1123) capas=['MOBILIARIO']
+    n_segmentos=3 span_m=0.69 muestra_p1=(2035, 1123) muestra_p2=(2122, 1123) capas=['MOBILIARIO']
+    n_segmentos=3 span_m=0.64 muestra_p1=(3861, 1386) muestra_p2=(3861, 1293) capas=['MOBILIARIO']
+    n_segmentos=5 span_m=0.83 muestra_p1=(3536, 1386) muestra_p2=(3536, 1293) capas=['MOBILIARIO']
+    n_segmentos=5 span_m=0.83 muestra_p1=(1162, 1386) muestra_p2=(1162, 1293) capas=['MOBILIARIO']
+    n_segmentos=3 span_m=0.63 muestra_p1=(843, 1386) muestra_p2=(843, 1293) capas=['MOBILIARIO']
+    n_segmentos=6 span_m=0.76 muestra_p1=(3731, 111) muestra_p2=(3694, 89) capas=['4º PLANO']
+    n_segmentos=6 span_m=0.76 muestra_p1=(1058, 55) muestra_p2=(1036, 67) capas=['4º PLANO']
+    n_segmentos=4 span_m=0.33 muestra_p1=(640, 2155) muestra_p2=(637, 2156) capas=['COTAS']
+    n_segmentos=4 span_m=0.33 muestra_p1=(637, 2179) muestra_p2=(640, 2180) capas=['COTAS']
+    n_segmentos=4 span_m=0.27 muestra_p1=(1074, 2128) muestra_p2=(1075, 2129) capas=['COTAS']
+    n_segmentos=3 span_m=0.16 muestra_p1=(1091, 2115) muestra_p2=(1094, 2116) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1923, 2127) muestra_p2=(1922, 2128) capas=['COTAS']
+    n_segmentos=3 span_m=0.15 muestra_p1=(1922, 2128) muestra_p2=(1923, 2129) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1933, 2105) muestra_p2=(1932, 2107) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1932, 2110) muestra_p2=(1933, 2112) capas=['COTAS']
+    n_segmentos=3 span_m=0.15 muestra_p1=(2768, 2128) muestra_p2=(2769, 2129) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2779, 2105) muestra_p2=(2778, 2107) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2778, 2110) muestra_p2=(2779, 2112) capas=['COTAS']
+    n_segmentos=3 span_m=0.29 muestra_p1=(3173, 2156) muestra_p2=(3171, 2160) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(3171, 2160) muestra_p2=(3170, 2166) capas=['COTAS']
+    n_segmentos=4 span_m=0.33 muestra_p1=(3170, 2169) muestra_p2=(3171, 2175) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(3608, 2128) muestra_p2=(3609, 2129) capas=['COTAS']
+    n_segmentos=3 span_m=0.16 muestra_p1=(3644, 2118) muestra_p2=(3642, 2120) capas=['COTAS']
+    n_segmentos=3 span_m=0.16 muestra_p1=(3641, 2120) muestra_p2=(3638, 2118) capas=['COTAS']
+    n_segmentos=5 span_m=0.27 muestra_p1=(1062, 2248) muestra_p2=(1063, 2250) capas=['COTAS']
+    n_segmentos=5 span_m=0.22 muestra_p1=(1073, 2248) muestra_p2=(1072, 2246) capas=['COTAS']
+    n_segmentos=4 span_m=0.25 muestra_p1=(2333, 2229) muestra_p2=(2332, 2235) capas=['COTAS']
+    n_segmentos=4 span_m=0.25 muestra_p1=(2332, 2239) muestra_p2=(2333, 2245) capas=['COTAS']
+    n_segmentos=3 span_m=0.24 muestra_p1=(2350, 2248) muestra_p2=(2351, 2250) capas=['COTAS']
+    n_segmentos=5 span_m=0.27 muestra_p1=(3619, 2248) muestra_p2=(3620, 2250) capas=['COTAS']
+    n_segmentos=3 span_m=0.21 muestra_p1=(3640, 2233) muestra_p2=(3639, 2236) capas=['COTAS']
+    n_segmentos=4 span_m=0.21 muestra_p1=(3638, 2239) muestra_p2=(3635, 2240) capas=['COTAS']
+    n_segmentos=3 span_m=0.2 muestra_p1=(3629, 2236) muestra_p2=(3628, 2233) capas=['COTAS']
+    n_segmentos=6 span_m=0.34 muestra_p1=(2340, 2296) muestra_p2=(2339, 2300) capas=['COTAS']
+    n_segmentos=3 span_m=0.28 muestra_p1=(2340, 2303) muestra_p2=(2339, 2309) capas=['COTAS']
+    n_segmentos=3 span_m=0.28 muestra_p1=(2339, 2309) muestra_p2=(2337, 2312) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(2330, 2312) muestra_p2=(2329, 2310) capas=['COTAS']
+    n_segmentos=3 span_m=0.25 muestra_p1=(4401, 1684) muestra_p2=(4407, 1685) capas=['COTAS']
+    n_segmentos=4 span_m=0.25 muestra_p1=(4411, 1685) muestra_p2=(4417, 1684) capas=['COTAS']
+    n_segmentos=3 span_m=0.19 muestra_p1=(4420, 1666) muestra_p2=(4422, 1666) capas=['COTAS']
+    n_segmentos=4 span_m=0.35 muestra_p1=(4383, 1583) muestra_p2=(4387, 1585) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(4406, 1568) muestra_p2=(4407, 1567) capas=['COTAS']
+    n_segmentos=4 span_m=0.18 muestra_p1=(4387, 1558) muestra_p2=(4384, 1557) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(4414, 1235) muestra_p2=(4418, 1236) capas=['COTAS']
+    n_segmentos=3 span_m=0.16 muestra_p1=(4397, 1192) muestra_p2=(4396, 1195) capas=['COTAS']
+    n_segmentos=3 span_m=0.29 muestra_p1=(4383, 910) muestra_p2=(4387, 912) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(4387, 912) muestra_p2=(4393, 913) capas=['COTAS']
+    n_segmentos=4 span_m=0.33 muestra_p1=(4396, 913) muestra_p2=(4402, 912) capas=['COTAS']
+    n_segmentos=3 span_m=0.22 muestra_p1=(4406, 894) muestra_p2=(4407, 894) capas=['COTAS']
+    n_segmentos=4 span_m=0.18 muestra_p1=(4517, 1227) muestra_p2=(4513, 1228) capas=['COTAS']
+    n_segmentos=3 span_m=0.24 muestra_p1=(4420, 1873) muestra_p2=(4422, 1873) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(4397, 1844) muestra_p2=(4400, 1845) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(4402, 1845) muestra_p2=(4404, 1844) capas=['COTAS']
+    n_segmentos=3 span_m=0.25 muestra_p1=(4400, 1448) muestra_p2=(4397, 1448) capas=['COTAS']
+    n_segmentos=7 span_m=0.35 muestra_p1=(4396, 1453) muestra_p2=(4397, 1456) capas=['COTAS']
+    n_segmentos=4 span_m=0.35 muestra_p1=(4418, 1448) muestra_p2=(4414, 1447) capas=['COTAS']
+    n_segmentos=3 span_m=0.22 muestra_p1=(680, 334) muestra_p2=(678, 338) capas=['COTAS']
+    n_segmentos=3 span_m=0.19 muestra_p1=(678, 338) muestra_p2=(677, 344) capas=['COTAS']
+    n_segmentos=3 span_m=0.19 muestra_p1=(677, 348) muestra_p2=(678, 354) capas=['COTAS']
+  ✓ Vectorial: 8 textos (cotas/nombres), 3903 trazos candidatos a símbolo, 280 tramos protegidos como muro (por conectividad, no por largo), 46 tramos desprotegidos por parecer achurado (rampa/escalera), 117 en 5 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 4, 'span_m': 4.98}, {'n_segmentos': 94, 'span_m': 10.16}, {'n_segmentos': 4, 'span_m': 1.21}, {'n_segmentos': 4, 'span_m': 1.21}, {'n_segmentos': 7, 'span_m': 1.28}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 11 textos, 203 líneas discontinuas, 2105 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
-  ✓ OpenCV: 34 espacios >= 0.5 m²
-  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 107.13m²
-  ✓ Cruce: 7/34 con nombre | 1 incumpl. geo
-  ⚠ 27 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E10, E23, E09, E29, E30, E02, E03, E12, E13, E33, E32, E31, E34, E16, E15, E26, E05, E04, E06, E27, E07, E11, E20, E18, E21, E01, E19
+  ✓ Limpieza pre-umbral: 8 textos, 117 líneas discontinuas, 3903 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 19 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 255.05m²
+  ✓ Cruce: 5/19 con nombre | 1 incumpl. geo
+  ⚠ 14 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E04, E07, E12, E13, E05, E06, E18, E09, E10, E14, E15, E16, E17, E19
 
 ========================================================
   Página 3  —  escala 1:50
@@ -102,14 +623,155 @@
   → Claude Vision...
   ✓ Claude: 1 recintos, 2 incumplimientos
   → Extracción vectorial...
-  ✓ EJES/COTAS: 0 segmentos identificados como referencia (Paso 1.5), 0 evitados de proteger como muro pese a superar el span minimo
-  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 0 grupos protegidos como muro, top 25 por span (0 textos de cota disponibles para el chequeo de distancia):
-  ✓ Vectorial: 0 textos (cotas/nombres), 1 trazos candidatos a símbolo, 0 tramos protegidos como muro (por conectividad, no por largo), 0 tramos desprotegidos por parecer achurado (rampa/escalera), 0 en 0 cadena(s) de línea discontinua
+DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 277 achurado, 0 ascensor, 0 columna, 177 corte_elevacion, 968 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 109 ignorar, 0 mobiliario, 0 muro, 0 puerta, 0 rampa, 0 ventana, 1415 sin capa mapeada — de 2946 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['accesibilidad'] = ['Accesibilidad'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['LINEA TERRENO ORIGINAL'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['mobiliario'] = ['MUEBLES', 'ARTEFACTOS', 'MOBILIARIO'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['muro'] = ['MUROS'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['puerta'] = ['Puertas'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['ventana'] = ['Ventanas'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 968 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 20 segmentos identificados como referencia (Paso 1.5), 20 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 661 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ IGNORAR (por capa): 109 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 0
+  ✓ Muros exportados: 944 (de 2 grupos protegidos, 729 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
+  ✓ Puertas exportadas (clasificador geometrico): 0
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 2351), ((1.0, 1.0, 1.0), 699), ((0.78, 0.78, 0.78), 427)]
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 2 grupos protegidos como muro, top 25 por span (10 textos de cota disponibles para el chequeo de distancia):
+     span=8.26m  bbox=4.98x6.6m  n_seg=2488  ancho_linea(min/mediana/max)=0/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
+     span=3.59m  bbox=3.59x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 2 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(278,781)-(302,850) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+    tipo=(4, 'Square') bbox_px=(638,781)-(662,850) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 7 fuente(s) en esta pagina
+    (56, 'ttf', 'TrueType', 'Swiss721BT-RomanCondensed', 'F10', 'WinAnsiEncoding', 0)
+    (53, 'ttf', 'Type0', 'Swiss721BT-RomanCondensed', 'F9', 'Identity-H', 0)
+    (76, 'ttf', 'TrueType', 'CenturyGothic', 'F11', 'WinAnsiEncoding', 0)
+    (7, 'ttf', 'TrueType', 'Verdana', 'F1', 'WinAnsiEncoding', 0)
+    (14, 'ttf', 'TrueType', 'ArialMT', 'F2', 'WinAnsiEncoding', 0)
+    (26, 'ttf', 'Type0', 'ArialMT', 'F5', 'Identity-H', 0)
+    (19, 'ttf', 'TrueType', 'Arial-BoldMT', 'F3', 'WinAnsiEncoding', 0)
+  DIAGNOSTICO CAPAS: 31 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=1 {'name': '6º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=2 {'name': '1º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=8 {'name': 'Muros Proy', 'intent': [], 'on': True, 'usage': None}
+    xref=9 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=29 {'name': 'ARTEFACTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=30 {'name': 'Textos', 'intent': [], 'on': True, 'usage': None}
+    xref=57 {'name': '5º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=58 {'name': 'TEXTOS ROJOS', 'intent': [], 'on': True, 'usage': None}
+    xref=59 {'name': 'BM-COTAS-0.13', 'intent': [], 'on': True, 'usage': None}
+    xref=60 {'name': '0', 'intent': [], 'on': True, 'usage': None}
+    xref=61 {'name': 'NIVELES', 'intent': [], 'on': True, 'usage': None}
+    xref=62 {'name': 'LINEA TERRENO ORIGINAL', 'intent': [], 'on': True, 'usage': None}
+    xref=65 {'name': 'PROYECCION', 'intent': [], 'on': True, 'usage': None}
+    xref=66 {'name': '2º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=67 {'name': 'Puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=68 {'name': 'PAVIMENTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=69 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=70 {'name': 'COTAS', 'intent': [], 'on': True, 'usage': None}
+    xref=71 {'name': 'MARCADOR CORTES-ELEVACIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=77 {'name': 'PROYECCIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=78 {'name': 'MOBILIARIO', 'intent': [], 'on': True, 'usage': None}
+    xref=79 {'name': 'Accesibilidad', 'intent': [], 'on': True, 'usage': None}
+    xref=80 {'name': 'HATCH', 'intent': [], 'on': True, 'usage': None}
+    xref=83 {'name': 'BALL', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': '4º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': '3º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'MUROS', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'ILUMINACION', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'MUEBLES', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'TEXTO', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO DASHES: 0 de 2946 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
+  DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (1)', 1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (2)', 2]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (3)', 3]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (4)', 4]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (5)', 5]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (6)', 6]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (7)', 7]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (8)', 8]
+    [2, 'CC-BEAUCHEFF_DOM-DOM Acc (1)', 9]
+  DIAGNOSTICO RAW_DRAWINGS: 0 zona(s) Cocina/Pasillo/Oficina, radio 250px, sin filtros
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=250px): 0 item(s) crudo(s) sin filtrar
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 40 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=0.19 muestra_p1=(287, 808) muestra_p2=(286, 808) capas=['6º PLANO']
+    n_segmentos=3 span_m=0.02 muestra_p1=(649, 836) muestra_p2=(649, 836) capas=['6º PLANO']
+    n_segmentos=4 span_m=0.12 muestra_p1=(167, 134) muestra_p2=(166, 136) capas=['COTAS']
+    n_segmentos=3 span_m=0.1 muestra_p1=(170, 140) muestra_p2=(170, 139) capas=['COTAS']
+    n_segmentos=5 span_m=0.12 muestra_p1=(774, 133) muestra_p2=(774, 134) capas=['COTAS']
+    n_segmentos=5 span_m=0.27 muestra_p1=(463, 77) muestra_p2=(463, 81) capas=['COTAS']
+    n_segmentos=7 span_m=0.29 muestra_p1=(463, 83) muestra_p2=(463, 87) capas=['COTAS']
+    n_segmentos=4 span_m=0.1 muestra_p1=(129, 201) muestra_p2=(128, 200) capas=['COTAS']
+    n_segmentos=4 span_m=0.1 muestra_p1=(128, 200) muestra_p2=(126, 200) capas=['COTAS']
+    n_segmentos=3 span_m=0.07 muestra_p1=(122, 200) muestra_p2=(121, 201) capas=['COTAS']
+    n_segmentos=4 span_m=0.08 muestra_p1=(131, 595) muestra_p2=(131, 595) capas=['COTAS']
+    n_segmentos=4 span_m=0.3 muestra_p1=(126, 589) muestra_p2=(127, 588) capas=['COTAS']
+    n_segmentos=3 span_m=0.1 muestra_p1=(121, 997) muestra_p2=(122, 998) capas=['COTAS']
+    n_segmentos=3 span_m=0.12 muestra_p1=(128, 998) muestra_p2=(129, 997) capas=['COTAS']
+    n_segmentos=3 span_m=0.07 muestra_p1=(121, 988) muestra_p2=(122, 989) capas=['COTAS']
+    n_segmentos=3 span_m=0.07 muestra_p1=(122, 989) muestra_p2=(124, 989) capas=['COTAS']
+    n_segmentos=5 span_m=0.07 muestra_p1=(126, 989) muestra_p2=(128, 989) capas=['COTAS']
+    n_segmentos=5 span_m=0.08 muestra_p1=(813, 249) muestra_p2=(814, 250) capas=['COTAS']
+    n_segmentos=3 span_m=0.06 muestra_p1=(815, 251) muestra_p2=(817, 251) capas=['COTAS']
+    n_segmentos=4 span_m=0.09 muestra_p1=(818, 251) muestra_p2=(820, 251) capas=['COTAS']
+    n_segmentos=3 span_m=0.08 muestra_p1=(820, 251) muestra_p2=(821, 250) capas=['COTAS']
+    n_segmentos=5 span_m=0.07 muestra_p1=(813, 387) muestra_p2=(814, 388) capas=['COTAS']
+    n_segmentos=3 span_m=0.07 muestra_p1=(815, 388) muestra_p2=(817, 389) capas=['COTAS']
+    n_segmentos=3 span_m=0.07 muestra_p1=(818, 389) muestra_p2=(820, 388) capas=['COTAS']
+    n_segmentos=5 span_m=0.07 muestra_p1=(821, 388) muestra_p2=(822, 387) capas=['COTAS']
+    n_segmentos=5 span_m=0.06 muestra_p1=(822, 387) muestra_p2=(822, 386) capas=['COTAS']
+    n_segmentos=6 span_m=0.11 muestra_p1=(815, 805) muestra_p2=(815, 804) capas=['COTAS']
+    n_segmentos=5 span_m=0.07 muestra_p1=(814, 796) muestra_p2=(815, 797) capas=['COTAS']
+    n_segmentos=3 span_m=0.07 muestra_p1=(815, 797) muestra_p2=(817, 797) capas=['COTAS']
+    n_segmentos=4 span_m=0.07 muestra_p1=(818, 797) muestra_p2=(820, 797) capas=['COTAS']
+    n_segmentos=5 span_m=0.07 muestra_p1=(821, 796) muestra_p2=(822, 795) capas=['COTAS']
+    n_segmentos=5 span_m=0.06 muestra_p1=(822, 795) muestra_p2=(822, 794) capas=['COTAS']
+    n_segmentos=3 span_m=0.24 muestra_p1=(884, 602) muestra_p2=(885, 601) capas=['COTAS']
+    n_segmentos=3 span_m=0.16 muestra_p1=(861, 565) muestra_p2=(860, 568) capas=['COTAS']
+    n_segmentos=4 span_m=0.09 muestra_p1=(293, 1041) muestra_p2=(293, 1042) capas=['COTAS']
+    n_segmentos=4 span_m=0.07 muestra_p1=(598, 1033) muestra_p2=(597, 1034) capas=['COTAS']
+    n_segmentos=4 span_m=0.07 muestra_p1=(597, 1041) muestra_p2=(598, 1042) capas=['COTAS']
+    n_segmentos=3 span_m=0.07 muestra_p1=(771, 1033) muestra_p2=(770, 1034) capas=['COTAS']
+    n_segmentos=5 span_m=0.27 muestra_p1=(463, 1107) muestra_p2=(463, 1110) capas=['COTAS']
+    n_segmentos=7 span_m=0.29 muestra_p1=(463, 1113) muestra_p2=(463, 1116) capas=['COTAS']
+  ✓ Vectorial: 10 textos (cotas/nombres), 1357 trazos candidatos a símbolo, 1699 tramos protegidos como muro (por conectividad, no por largo), 1464 tramos desprotegidos por parecer achurado (rampa/escalera), 20 en 1 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 20, 'span_m': 1.1}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 0 textos, 0 líneas discontinuas, 1 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ Limpieza pre-umbral: 10 textos, 20 líneas discontinuas, 1357 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
   ✓ OpenCV: 1 espacios >= 0.5 m²
   ✓ Cruce: 1/1 con nombre | 0 incumpl. geo
 
 ========================================================
 ✓ Procesadas 4 / 4 páginas
-  Incumplimientos geométricos totales: 3
+  Incumplimientos geométricos totales: 6

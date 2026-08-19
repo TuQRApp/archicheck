@@ -1,4 +1,4 @@
- ✓ Cuadro de superficies: 2156 caracteres extraidos de la pagina 1
+  ✓ Cuadro de superficies: 2156 caracteres extraidos de la pagina 1
 
 ========================================================
   Página 2  —  escala 1:50
@@ -6,19 +6,21 @@
 ========================================================
   2860x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 15 recintos, 5 incumplimientos
+  ✓ Claude: 14 recintos, 5 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
-  ✓ COTAS (linea): 19 segmentos identificados como linea/marca de cota (Paso 1.6)
-  ✓ EJES/RASANTES: 103 segmentos identificados como referencia (Paso 1.5), 99 evitados de proteger como muro pese a superar el span minimo
-  ✓ COTAS (linea): 16 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 83 cota, 0 deslinde_terreno, 156 eje, 0 escalera, 977 ignorar, 1433 mobiliario, 362 muro, 9 puerta, 0 rampa, 9 ventana, 1 sin capa mapeada — de 3021 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ✓ COTAS (linea): 101 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 259 segmentos identificados como referencia (Paso 1.5), 150 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 93 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 80 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 839 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 1
-  ✓ Muros exportados: 683 (de 9 grupos protegidos, 537 segmentos descartados por angulo no-ortogonal, 61 descartados por color amarillo/achurado Se-retira)
-  ✓ Lineas de referencia periodicas (deslinde/rasante/linea oficial): 155 muros movidos a muros_excluidos_por_referencia (no arquitectura real)
-  ✓ Puertas exportadas (clasificador geometrico): 11
+  ✓ Muros exportados: 122 (de 9 grupos protegidos, 96 segmentos descartados por angulo no-ortogonal, 46 descartados por color amarillo/achurado Se-retira)
+  ✓ Puertas exportadas (clasificador geometrico): 1
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 1561), ((0.87, 0.43, 0.43), 1044), ((1.0, 0.75, 0.0), 416)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 9 grupos protegidos como muro, top 25 por span (73 textos de cota disponibles para el chequeo de distancia):
-     span=26.77m  bbox=14.8x22.31m  n_seg=1153  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=3.3/11.0/40.0
+     span=26.77m  bbox=14.8x22.31m  n_seg=1153  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=2.3/13.0/44.0
      span=15.01m  bbox=14.81x2.41m  n_seg=106  ancho_linea(min/mediana/max)=0.12/0.54/1.44  %cerca_cota(30/60/100px, n=106)=8.5/20.8/33.0
      span=9.21m  bbox=6.35x6.67m  n_seg=64  ancho_linea(min/mediana/max)=0.12/0.72/0.72  %cerca_cota(30/60/100px, n=64)=0.0/10.9/39.1
      span=3.63m  bbox=3.45x1.14m  n_seg=53  ancho_linea(min/mediana/max)=0.3/0.3/0.72  %cerca_cota(30/60/100px, n=53)=0.0/1.9/7.5
@@ -117,14 +119,15 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     ('l', (715, 3494, 664, 3494), (0.0, 0.0, 0.0), None, 0.72)
     ('l', (690, 3103, 690, 3494), (0.0, 0.0, 0.0), None, 0.54)
     ('l', (715, 3103, 664, 3103), (0.0, 0.0, 0.0), None, 0.72)
-  ✓ Vectorial: 73 textos (cotas/nombres), 1984 trazos candidatos a símbolo, 1355 tramos protegidos como muro (por conectividad, no por largo), 480 tramos desprotegidos por parecer achurado (rampa/escalera), 103 en 5 cadena(s) de línea discontinua
-     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 7, 'span_m': 2.5}, {'n_segmentos': 9, 'span_m': 3.25}, {'n_segmentos': 4, 'span_m': 1.2}, {'n_segmentos': 5, 'span_m': 1.35}, {'n_segmentos': 52, 'span_m': 2.5}]
+  DIAGNOSTICO EJES RELAJADO v2: omitido -- este proyecto ya tiene capa 'eje' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  ✓ Vectorial: 73 textos (cotas/nombres), 2995 trazos candidatos a símbolo, 308 tramos protegidos como muro (por conectividad, no por largo), 119 tramos desprotegidos por parecer achurado (rampa/escalera), 139 en 5 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 6, 'span_m': 1.3}, {'n_segmentos': 7, 'span_m': 2.5}, {'n_segmentos': 9, 'span_m': 3.25}, {'n_segmentos': 4, 'span_m': 1.2}, {'n_segmentos': 4, 'span_m': 1.2}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 73 textos, 103 líneas discontinuas, 1984 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
-  ✓ OpenCV: 24 espacios >= 0.5 m²
-  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 76.15m²
-  ✓ Cruce: 15/24 con nombre | 1 incumpl. geo
-  ⚠ 9 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E16, E10, E08, E12, E17, E23, E21, E15, E14
+  ✓ Limpieza pre-umbral: 73 textos, 139 líneas discontinuas, 2995 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 7 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 268.32m²
+  ✓ Cruce: 7/7 con nombre | 2 incumpl. geo
 
 ========================================================
   Página 2  —  escala 1:50
@@ -132,16 +135,18 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 ========================================================
   2790x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 7 recintos, 4 incumplimientos
+  ✓ Claude: 7 recintos, 5 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
-  ✓ COTAS (linea): 0 segmentos identificados como linea/marca de cota (Paso 1.6)
-  ✓ EJES/RASANTES: 22 segmentos identificados como referencia (Paso 1.5), 22 evitados de proteger como muro pese a superar el span minimo
-  ✓ COTAS (linea): 0 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 83 cota, 0 deslinde_terreno, 156 eje, 0 escalera, 567 ignorar, 1006 mobiliario, 826 muro, 20 puerta, 0 rampa, 20 ventana, 1 sin capa mapeada — de 2659 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ✓ COTAS (linea): 83 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 178 segmentos identificados como referencia (Paso 1.5), 76 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 73 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 31 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 514 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 6
-  ✓ Muros exportados: 417 (de 9 grupos protegidos, 1001 segmentos descartados por angulo no-ortogonal, 303 descartados por color amarillo/achurado Se-retira)
-  ✓ Lineas de referencia periodicas (deslinde/rasante/linea oficial): 154 muros movidos a muros_excluidos_por_referencia (no arquitectura real)
-  ✓ Puertas exportadas (clasificador geometrico): 8
+  ✓ Muros exportados: 94 (de 9 grupos protegidos, 687 segmentos descartados por angulo no-ortogonal, 145 descartados por color amarillo/achurado Se-retira)
+  ✓ Puertas exportadas (clasificador geometrico): 6
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.87, 0.43, 0.43), 1258), ((0.0, 0.0, 0.0), 1074), ((1.0, 0.75, 0.0), 303), ((1.0, 0.0, 0.0), 24)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 9 grupos protegidos como muro, top 25 por span (46 textos de cota disponibles para el chequeo de distancia):
      span=26.77m  bbox=14.79x22.31m  n_seg=1268  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/0.0
@@ -248,15 +253,17 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=250px): 2 item(s) crudo(s) sin filtrar
     ('l', (562, 2785, 562, 3720), (0.0, 0.0, 0.0), None, 0.72)
     ('l', (613, 2785, 613, 3670), (0.0, 0.0, 0.0), None, 0.72)
-  ✓ Vectorial: 46 textos (cotas/nombres), 1380 trazos candidatos a símbolo, 1506 tramos protegidos como muro (por conectividad, no por largo), 865 tramos desprotegidos por parecer achurado (rampa/escalera), 22 en 4 cadena(s) de línea discontinua
+  DIAGNOSTICO EJES RELAJADO v2: omitido -- este proyecto ya tiene capa 'eje' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  ✓ Vectorial: 46 textos (cotas/nombres), 2052 trazos candidatos a símbolo, 834 tramos protegidos como muro (por conectividad, no por largo), 662 tramos desprotegidos por parecer achurado (rampa/escalera), 22 en 4 cadena(s) de línea discontinua
      muestra de cadenas discontinuas detectadas: [{'n_segmentos': 5, 'span_m': 1.31}, {'n_segmentos': 6, 'span_m': 1.61}, {'n_segmentos': 5, 'span_m': 1.31}, {'n_segmentos': 6, 'span_m': 1.61}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 46 textos, 22 líneas discontinuas, 1380 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
-  ✓ OpenCV: 18 espacios >= 0.5 m²
-  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 226.13m²
-  ✓ Cruce: 7/18 con nombre | 0 incumpl. geo
-  ⚠ 11 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E02, E17, E01, E18, E10, E09, E16, E04, E12, E15, E07
+  ✓ Limpieza pre-umbral: 46 textos, 22 líneas discontinuas, 2052 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 14 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 281.17m²
+  ✓ Cruce: 7/14 con nombre | 0 incumpl. geo
+  ⚠ 7 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E01, E14, E06, E05, E09, E10, E12
 
 ========================================================
 ✓ Procesadas 2 / 2 páginas
-  Incumplimientos geométricos totales: 1
+  Incumplimientos geométricos totales: 2

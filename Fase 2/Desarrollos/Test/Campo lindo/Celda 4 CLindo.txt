@@ -1,4 +1,4 @@
-✓ Cuadro de superficies: 2799 caracteres extraidos de la pagina 1
+  ✓ Cuadro de superficies: 2799 caracteres extraidos de la pagina 1
 
 ========================================================
   Página 2  —  escala 1:50
@@ -8,9 +8,20 @@
   → Claude Vision...
   ✓ Claude: 14 recintos, 5 incumplimientos
   → Extracción vectorial...
-  ✓ EJES/COTAS: 111 segmentos identificados como referencia (Paso 1.5), 111 evitados de proteger como muro pese a superar el span minimo
+DIAGNOSTICO ROTACION: rotation=0  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 2384.0, 1684.0)
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 157 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 580 ignorar, 703 mobiliario, 179 muro, 38 puerta, 0 rampa, 66 ventana, 52 sin capa mapeada — de 1775 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['cierre', 'calle', 'calle tierra'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 157 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 111 segmentos identificados como referencia (Paso 1.5), 111 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 133 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 667 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 454 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 9
+  ✓ Muros exportados: 291 (de 20 grupos protegidos, 4 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
+  ✓ Puertas exportadas (clasificador geometrico): 9
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 1407), ((1.0, 0.0, 0.0), 368)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 20 grupos protegidos como muro, top 25 por span (59 textos de cota disponibles para el chequeo de distancia):
-     span=32.92m  bbox=28.99x15.59m  n_seg=1539  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.7/4.3/11.3
+     span=32.92m  bbox=28.99x15.59m  n_seg=1539  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=1.0/4.3/13.3
      span=6.25m  bbox=6.25x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
      span=3.08m  bbox=3.08x0.01m  n_seg=2  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=2)=0.0/0.0/0.0
      span=2.96m  bbox=2.65x1.33m  n_seg=52  ancho_linea(min/mediana/max)=0.12/0.12/0.12  %cerca_cota(30/60/100px, n=52)=0.0/0.0/0.0
@@ -30,14 +41,125 @@
      span=1.75m  bbox=1.73x0.29m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.54/0.54  %cerca_cota(30/60/100px, n=7)=0.0/14.3/42.9
      span=1.73m  bbox=1.73x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
      span=1.51m  bbox=0.34x1.47m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=7)=0.0/0.0/0.0
-  ✓ Vectorial: 59 textos (cotas/nombres), 256 trazos candidatos a símbolo, 1563 tramos protegidos como muro (por conectividad, no por largo), 518 tramos desprotegidos por parecer achurado (rampa/escalera), 111 en 5 cadena(s) de línea discontinua
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 1 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(5754,4740)-(5778,4770) info={'content': 'N', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 3 fuente(s) en esta pagina
+    (60, 'ttf', 'Type0', 'ArialMT', 'F1', 'Identity-H', 0)
+    (59, 'ttf', 'Type0', 'Dutch801BT-Roman', 'F2', 'Identity-H', 0)
+    (58, 'ttf', 'Type0', 'BankGothicBT-Light', 'F3', 'Identity-H', 0)
+  DIAGNOSTICO CAPAS: 46 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=83 {'name': 'puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': 'mobiliario', 'intent': [], 'on': True, 'usage': None}
+    xref=85 {'name': 'TEXTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=86 {'name': 'MUROS_PROY', 'intent': [], 'on': True, 'usage': None}
+    xref=87 {'name': 'cotas', 'intent': [], 'on': True, 'usage': None}
+    xref=88 {'name': 'calle', 'intent': [], 'on': True, 'usage': None}
+    xref=89 {'name': 'calle tierra', 'intent': [], 'on': True, 'usage': None}
+    xref=90 {'name': 'cierre', 'intent': [], 'on': True, 'usage': None}
+    xref=91 {'name': 'suelos', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': 'techos', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'Muros', 'intent': [], 'on': True, 'usage': None}
+    xref=94 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=95 {'name': 'proyecciones', 'intent': [], 'on': True, 'usage': None}
+    xref=96 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=97 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=98 {'name': 'suelos', 'intent': [], 'on': True, 'usage': None}
+    xref=99 {'name': 'proyecciones', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'Muros', 'intent': [], 'on': True, 'usage': None}
+    xref=101 {'name': 'MUROS_PROY', 'intent': [], 'on': True, 'usage': None}
+    xref=102 {'name': 'mobiliario', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=104 {'name': 'TEXTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=105 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=106 {'name': 'cotas', 'intent': [], 'on': True, 'usage': None}
+    xref=107 {'name': 'techos', 'intent': [], 'on': True, 'usage': None}
+    xref=108 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=109 {'name': 'mobiliario', 'intent': [], 'on': True, 'usage': None}
+    xref=110 {'name': 'TEXTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=111 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=112 {'name': 'suelos', 'intent': [], 'on': True, 'usage': None}
+    xref=113 {'name': 'Muros', 'intent': [], 'on': True, 'usage': None}
+    xref=114 {'name': 'techos', 'intent': [], 'on': True, 'usage': None}
+    xref=115 {'name': 'puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=116 {'name': 'proyecciones', 'intent': [], 'on': True, 'usage': None}
+    xref=117 {'name': 'cotas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'MUROS_PROY', 'intent': [], 'on': True, 'usage': None}
+    xref=120 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=121 {'name': 'mobiliario', 'intent': [], 'on': True, 'usage': None}
+    xref=122 {'name': 'techos', 'intent': [], 'on': True, 'usage': None}
+    xref=123 {'name': 'Muros', 'intent': [], 'on': True, 'usage': None}
+    xref=124 {'name': 'suelos', 'intent': [], 'on': True, 'usage': None}
+    xref=125 {'name': 'MUROS_PROY', 'intent': [], 'on': True, 'usage': None}
+    xref=126 {'name': 'cotas', 'intent': [], 'on': True, 'usage': None}
+    xref=127 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=128 {'name': 'TEXTOS', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = suelos
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = proyecciones
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = proyecciones
+      seqno = 2
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = suelos
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = proyecciones
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = proyecciones
+      seqno = 2
+  DIAGNOSTICO DASHES: 0 de 1775 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot17.hdi 17.00.072.00000' creator='AutoCAD 2025 - English 2025 (25.0)' title='Lam. Empl.'
+  DIAGNOSTICO TOC: 5 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'Casa CampoLindo (14 08 23)-Lam. Empl.', 1]
+    [2, 'Casa CampoLindo (14 08 23)-Lam. Plant. 1', 2]
+    [2, 'Casa CampoLindo (14 08 23)-Lam. Plant. 2', 3]
+    [2, 'Casa CampoLindo (14 08 23)-Lamina Elev.', 4]
+  DIAGNOSTICO RAW_DRAWINGS: 1 zona(s) Cocina/Pasillo/Oficina, radio 250px, sin filtros
+    zona=Cocina centro=(2274,1352): 9 item(s) crudo(s) sin filtrar
+      ('l', 2167, 1469, (0.0, 0.0, 0.0), None, 0.3)
+      ('l', 2120, 1498, (0.0, 0.0, 0.0), None, 0.3)
+      ('l', 2167, 1549, (0.0, 0.0, 0.0), None, 0.3)
+      ('c', 2147, 1524, (0.0, 0.0, 0.0), None, 0.3)
+      ('c', 2125, 1524, (0.0, 0.0, 0.0), None, 0.3)
+      ('c', 2125, 1546, (0.0, 0.0, 0.0), None, 0.3)
+      ('c', 2147, 1546, (0.0, 0.0, 0.0), None, 0.3)
+      ('c', 2099, 1522, (0.0, 0.0, 0.0), None, 0.3)
+      ('l', 2120, 1251, (0.0, 0.0, 0.0), None, 0.3)
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=250px): 7 item(s) crudo(s) sin filtrar
+    ('l', (608, 3571, 682, 3368), (0.0, 0.0, 0.0), None, 0.3)
+    ('l', (649, 3436, 546, 3436), (0.0, 0.0, 0.0), None, 0.54)
+    ('l', (598, 3521, 598, 3478), (0.0, 0.0, 0.0), None, 0.54)
+    ('l', (598, 3478, 640, 3478), (0.0, 0.0, 0.0), None, 0.54)
+    ('l', (640, 3478, 598, 3436), (0.0, 0.0, 0.0), None, 0.54)
+    ('l', (598, 3436, 555, 3478), (0.0, 0.0, 0.0), None, 0.54)
+    ('l', (555, 3478, 598, 3478), (0.0, 0.0, 0.0), None, 0.54)
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 7 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=0.16 muestra_p1=(2614, 1641) muestra_p2=(2602, 1641) capas=['Muros', 'mobiliario']
+    n_segmentos=4 span_m=0.35 muestra_p1=(5582, 1543) muestra_p2=(5537, 1543) capas=['Muros', 'Ventanas', 'mobiliario']
+    n_segmentos=4 span_m=0.35 muestra_p1=(5582, 1704) muestra_p2=(5537, 1704) capas=['Muros', 'Ventanas', 'mobiliario']
+    n_segmentos=4 span_m=0.28 muestra_p1=(1683, 1213) muestra_p2=(1695, 1213) capas=['Muros', 'cotas', 'mobiliario']
+    n_segmentos=3 span_m=0.13 muestra_p1=(4179, 1619) muestra_p2=(4179, 1608) capas=['Muros', 'mobiliario']
+    n_segmentos=4 span_m=0.13 muestra_p1=(1526, 1282) muestra_p2=(1526, 1299) capas=['Muros', 'proyecciones', 'puertas']
+    n_segmentos=3 span_m=0.13 muestra_p1=(4723, 1603) muestra_p2=(4723, 1624) capas=['Muros', 'mobiliario']
+  ✓ Vectorial: 59 textos (cotas/nombres), 1472 trazos candidatos a símbolo, 309 tramos protegidos como muro (por conectividad, no por largo), 24 tramos desprotegidos por parecer achurado (rampa/escalera), 149 en 5 cadena(s) de línea discontinua
      muestra de cadenas discontinuas detectadas: [{'n_segmentos': 17, 'span_m': 8.09}, {'n_segmentos': 10, 'span_m': 4.71}, {'n_segmentos': 10, 'span_m': 6.79}, {'n_segmentos': 5, 'span_m': 4.28}, {'n_segmentos': 8, 'span_m': 3.34}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 59 textos, 111 líneas discontinuas, 256 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
-  ✓ OpenCV: 19 espacios >= 0.5 m²
-  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 412.0m²
-  ✓ Cruce: 13/19 con nombre | 4 incumpl. geo
-  ⚠ 6 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E07, E19, E17, E13, E02, E04
+  ✓ Limpieza pre-umbral: 59 textos, 149 líneas discontinuas, 1472 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 4 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 455.14m²
+  ✓ Cruce: 4/4 con nombre | 1 incumpl. geo
 
 ========================================================
   Página 3  —  escala 1:50
@@ -45,11 +167,23 @@
 ========================================================
   5693x3233 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 3 recintos, 4 incumplimientos
+  ✓ Claude: 4 recintos, 3 incumplimientos
   → Extracción vectorial...
-  ✓ EJES/COTAS: 0 segmentos identificados como referencia (Paso 1.5), 0 evitados de proteger como muro pese a superar el span minimo
+DIAGNOSTICO ROTACION: rotation=0  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 2384.0, 1684.0)
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 0 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 183 ignorar, 260 mobiliario, 60 muro, 35 puerta, 0 rampa, 16 ventana, 50 sin capa mapeada — de 604 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['cota'] = ['cotas'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['cierre', 'calle', 'calle tierra'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 0 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 0 segmentos identificados como referencia (Paso 1.5), 0 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 0 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 239 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 2 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 2
+  ✓ Muros exportados: 116 (de 12 grupos protegidos, 6 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
+  ✓ Puertas exportadas (clasificador geometrico): 2
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 583), ((1.0, 0.0, 0.0), 21)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 12 grupos protegidos como muro, top 25 por span (18 textos de cota disponibles para el chequeo de distancia):
-     span=35.21m  bbox=31.57x15.59m  n_seg=362  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=5.3/16.3/26.0
+     span=35.21m  bbox=31.57x15.59m  n_seg=362  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=300)=6.0/17.7/27.0
      span=13.31m  bbox=11.19x7.2m  n_seg=3  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=3)=0.0/0.0/0.0
      span=5.93m  bbox=5.93x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
      span=5.8m  bbox=5.8x0.2m  n_seg=3  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=3)=0.0/0.0/0.0
@@ -61,15 +195,111 @@
      span=1.96m  bbox=1.96x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
      span=1.95m  bbox=1.95x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=1)=0.0/0.0/0.0
      span=1.62m  bbox=1.52x0.56m  n_seg=5  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(30/60/100px, n=5)=0.0/0.0/0.0
-  ✓ Vectorial: 18 textos (cotas/nombres), 233 trazos candidatos a símbolo, 389 tramos protegidos como muro (por conectividad, no por largo), 20 tramos desprotegidos por parecer achurado (rampa/escalera), 10 en 1 cadena(s) de línea discontinua
-     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 10, 'span_m': 2.02}]
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 1 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(5683,4573)-(5707,4603) info={'content': 'N', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 3 fuente(s) en esta pagina
+    (62, 'ttf', 'Type0', 'ArialMT', 'F1', 'Identity-H', 0)
+    (63, 'ttf', 'Type0', 'Dutch801BT-Roman', 'F2', 'Identity-H', 0)
+    (61, 'ttf', 'Type0', 'BankGothicBT-Light', 'F3', 'Identity-H', 0)
+  DIAGNOSTICO CAPAS: 46 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=83 {'name': 'puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': 'mobiliario', 'intent': [], 'on': True, 'usage': None}
+    xref=85 {'name': 'TEXTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=86 {'name': 'MUROS_PROY', 'intent': [], 'on': True, 'usage': None}
+    xref=87 {'name': 'cotas', 'intent': [], 'on': True, 'usage': None}
+    xref=88 {'name': 'calle', 'intent': [], 'on': True, 'usage': None}
+    xref=89 {'name': 'calle tierra', 'intent': [], 'on': True, 'usage': None}
+    xref=90 {'name': 'cierre', 'intent': [], 'on': True, 'usage': None}
+    xref=91 {'name': 'suelos', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': 'techos', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'Muros', 'intent': [], 'on': True, 'usage': None}
+    xref=94 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=95 {'name': 'proyecciones', 'intent': [], 'on': True, 'usage': None}
+    xref=96 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=97 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=98 {'name': 'suelos', 'intent': [], 'on': True, 'usage': None}
+    xref=99 {'name': 'proyecciones', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'Muros', 'intent': [], 'on': True, 'usage': None}
+    xref=101 {'name': 'MUROS_PROY', 'intent': [], 'on': True, 'usage': None}
+    xref=102 {'name': 'mobiliario', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=104 {'name': 'TEXTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=105 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=106 {'name': 'cotas', 'intent': [], 'on': True, 'usage': None}
+    xref=107 {'name': 'techos', 'intent': [], 'on': True, 'usage': None}
+    xref=108 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=109 {'name': 'mobiliario', 'intent': [], 'on': True, 'usage': None}
+    xref=110 {'name': 'TEXTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=111 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=112 {'name': 'suelos', 'intent': [], 'on': True, 'usage': None}
+    xref=113 {'name': 'Muros', 'intent': [], 'on': True, 'usage': None}
+    xref=114 {'name': 'techos', 'intent': [], 'on': True, 'usage': None}
+    xref=115 {'name': 'puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=116 {'name': 'proyecciones', 'intent': [], 'on': True, 'usage': None}
+    xref=117 {'name': 'cotas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'MUROS_PROY', 'intent': [], 'on': True, 'usage': None}
+    xref=120 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=121 {'name': 'mobiliario', 'intent': [], 'on': True, 'usage': None}
+    xref=122 {'name': 'techos', 'intent': [], 'on': True, 'usage': None}
+    xref=123 {'name': 'Muros', 'intent': [], 'on': True, 'usage': None}
+    xref=124 {'name': 'suelos', 'intent': [], 'on': True, 'usage': None}
+    xref=125 {'name': 'MUROS_PROY', 'intent': [], 'on': True, 'usage': None}
+    xref=126 {'name': 'cotas', 'intent': [], 'on': True, 'usage': None}
+    xref=127 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=128 {'name': 'TEXTOS', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = mobiliario
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = mobiliario
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = mobiliario
+      seqno = 4
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = mobiliario
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = mobiliario
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = mobiliario
+      seqno = 4
+  DIAGNOSTICO DASHES: 0 de 604 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot17.hdi 17.00.072.00000' creator='AutoCAD 2025 - English 2025 (25.0)' title='Lam. Empl.'
+  DIAGNOSTICO TOC: 5 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'Casa CampoLindo (14 08 23)-Lam. Empl.', 1]
+    [2, 'Casa CampoLindo (14 08 23)-Lam. Plant. 1', 2]
+    [2, 'Casa CampoLindo (14 08 23)-Lam. Plant. 2', 3]
+    [2, 'Casa CampoLindo (14 08 23)-Lamina Elev.', 4]
+  DIAGNOSTICO RAW_DRAWINGS: 0 zona(s) Cocina/Pasillo/Oficina, radio 250px, sin filtros
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=250px): 0 item(s) crudo(s) sin filtrar
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 8 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=6.55 muestra_p1=(3620, 211) muestra_p2=(2537, 211) capas=['Ventanas', 'suelos']
+    n_segmentos=3 span_m=11.19 muestra_p1=(5540, 1095) muestra_p2=(3637, 1095) capas=['techos']
+    n_segmentos=3 span_m=5.8 muestra_p1=(1539, 1095) muestra_p2=(2523, 1095) capas=['techos']
+    n_segmentos=4 span_m=0.1 muestra_p1=(2731, 757) muestra_p2=(2727, 759) capas=['mobiliario']
+    n_segmentos=3 span_m=0.13 muestra_p1=(2848, 1054) muestra_p2=(2836, 1054) capas=['Muros', 'mobiliario']
+    n_segmentos=3 span_m=2.84 muestra_p1=(2670, 1643) muestra_p2=(2670, 2071) capas=['mobiliario', 'suelos']
+    n_segmentos=4 span_m=0.09 muestra_p1=(3314, 622) muestra_p2=(3316, 620) capas=['proyecciones']
+    n_segmentos=3 span_m=2.13 muestra_p1=(1179, 1368) muestra_p2=(1539, 1368) capas=['puertas']
+  ✓ Vectorial: 18 textos (cotas/nombres), 471 trazos candidatos a símbolo, 148 tramos protegidos como muro (por conectividad, no por largo), 9 tramos desprotegidos por parecer achurado (rampa/escalera), 13 en 1 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 13, 'span_m': 2.62}]
   → OpenCV...
-  ✓ Limpieza pre-umbral: 18 textos, 10 líneas discontinuas, 233 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
-  ✓ OpenCV: 25 espacios >= 0.5 m²
-  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 341.51m²
-  ✓ Cruce: 3/25 con nombre | 0 incumpl. geo
-  ⚠ 22 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E05, E14, E16, E10, E01, E17, E21, E06, E19, E18, E12, E20, E23, E09, E25, E22, E11, E24, E15, E04, E03, E08
+  ✓ Limpieza pre-umbral: 18 textos, 13 líneas discontinuas, 471 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 24 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 341.54m²
+  ✓ Cruce: 4/24 con nombre | 0 incumpl. geo
+  ⚠ 20 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E05, E12, E11, E14, E08, E01, E06, E17, E16, E10, E18, E21, E19, E23, E09, E20, E22, E13, E04, E03
 
 ========================================================
 ✓ Procesadas 2 / 2 páginas
-  Incumplimientos geométricos totales: 4
+  Incumplimientos geométricos totales: 1

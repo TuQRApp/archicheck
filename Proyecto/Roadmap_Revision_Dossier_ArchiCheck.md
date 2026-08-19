@@ -1174,17 +1174,33 @@ Las 3 herramientas de recinto que se habían apagado el 2 de agosto (ver secció
 
 Limitación heredada (no introducida ahora): ningún recinto se resalta visualmente en el canvas al seleccionarlo — las 3 herramientas dependen solo de texto ("Cortando: E5", "Marcado E01...") como feedback, no de un highlight real sobre el plano.
 
-## ✅ CERRADO 2026-08-17 — Investigación "PdV muro count collapse (517→122)": 122/94 CONFIRMADO correcto, el 528/263 visto en el portal era JSON de prueba obsoleto
+## 🔴 REABIERTO 2026-08-17 (misma sesión) — "122/94 confirmado correcto" fue una conclusión apurada y equivocada; el usuario corrigió: hay a lo más 20-30 muros reales en Nivel 1
 
-Al probar el ciclo completo del portal, el usuario notó pantallas con "cientos de muros" — claramente irreal para este plano. Investigado antes de seguir, según el principio de no dejar pasar errores en silencio.
+Primera pasada de esta investigación: se concluyó que 122/94 era correcto tras verificar visualmente que unos overlays (`verif_resultado_real_pag2-*.png`) calzaban sobre los muros reales. **El usuario corrigió de inmediato: "122/94 no es correcto. Hay a lo más 20-30 muros en piso 1. Está sobreescribiendo mucho."** La verificación visual solo confirmaba *posición*, nunca *cardinalidad* — dos líneas paralelas separadas por el espesor de un muro (~10-15cm) son indistinguibles a simple vista en un plano completo.
 
-**Confirmado real**: el JSON usado en la prueba (`archicheck_geometrico_pdv_09ago_2002.json`, corrida del 9-ago 20:02) tiene 528 `muros_geo` (Nivel 1) y 263 (Nivel 2) — el portal los renderiza 1:1 sin deduplicar (`src/App.jsx:505`).
+**Investigación con datos**: un script de clustering sobre el JSON crudo de 528 entradas (agrupando muros paralelos a ≤40px de distancia con rangos solapados, para fusionar las 2 caras de cada tabique) redujo 528 → solo 197 grupos — lejos de 20-30. Fusionar caras paralelas no explica la diferencia.
 
-**Causa raíz**: ese JSON es de un estado intermedio del pipeline — posterior al fix de `MAPEO_CAPAS` (683→517 / 417→312) pero anterior a los filtros de ángulo no-ortogonal y color amarillo "Se retira" que el notebook vigente (`ArchiCheck_Base 11ago_1145.ipynb`) ya aplica. Una corrida más reciente del mismo PDF (`Fase 2/Desarrollos/Test/pdv/Celda 4 pdv.txt`) exporta **122 muros (Nivel 1) y 94 (Nivel 2)**.
+**Causa raíz real** (leyendo `_dividir_en_muros_por_union` en el notebook, docstring del 2026-08-08): el algoritmo corta un `muro` nuevo **en cada cruce en T/X**, no solo en cambios de dirección reales — decisión deliberada para evitar el bug anterior de "todo el piso fusionado en un solo muro de 351m", pero con costo no documentado: un muro largo real (ej. el muro del Pasillo) se parte en tantas entradas como tabiques lo interceptan en T, que no es como un arquitecto cuenta muros. Sumado a las caras paralelas sin fusionar, explica el factor de inflación observado.
 
-**Verificado visualmente, no solo por plausibilidad**: overlays ya existentes (`verif_resultado_real_pag2-1.png` / `_pag2-2.png`, 9-ago) muestran los muros extraídos en verde sobre el plano real — calzan con precisión sobre los muros reales de ambos niveles, sin muros espurios ni duplicados, y las zonas achuradas amarillas ("Se retira") quedan correctamente excluidas.
+**Estado real — no cerrado**: 122/94 no representan "muros" en el sentido que espera el arquitecto. El dato fino puede seguir siendo válido para el dataset de fine-tuning (máscaras de segmentación se benefician de granularidad fina), pero no debería mostrarse tal cual como "N muros" en la revisión gráfica sin un paso de consolidación (fusionar a través de cruces T, cortar solo en cambios de dirección reales, fusionar caras paralelas). Pendiente de decisión con el usuario sobre dónde construir ese paso. No re-correr Colab ni tratar ningún conteo actual como validado hasta resolver esto.
 
-**Conclusión**: 122/94 es el número correcto del pipeline vigente. El 528/263 fue un dato de prueba obsoleto, no un defecto sin resolver. Pendiente no bloqueante: regenerar el JSON de PdV con el notebook vigente y re-subir al portal para repetir la prueba de ciclo completo con datos limpios.
+---
+
+## ✅ RESUELTO 2026-08-18 — Conteo real validado por el arquitecto: Nivel 1 = 28 muros, Nivel 2 = 33 muros (PdV)
+
+Metodología final, confirmada nivel por nivel con el arquitecto mirando el plano real (no automatizable de punta a punta):
+
+1. **Deslinde/línea de edificación**: el rectángulo completo de borde (6 entradas de `muros_geo` por nivel — 4 lados, ej. `MU-A1..A6` en N1, `MU-A7..A12` en N2) queda excluido. Es la línea de propiedad/edificación, duplicando el muro real ~20-25px hacia adentro — no es un muro.
+2. **Fusión de tramos partidos en cruce T**: confirmado el mecanismo (sección anterior), pero **la detección automática de qué tramos fusionar no es confiable**. Un heurístico geométrico (segmentos colineales que se tocan a ≤25px) sobre N2 propuso 9 grupos candidatos; el arquitecto, mirando el plano real, confirmó que solo 2 eran correctos (17+23, 44+45) y rechazó los otros 7 — incluida una lectura mía equivocada de un nicho pequeño (E09, 2.38 m²) como "un muro con retranqueo" cuando en realidad no debía fusionarse. Cualquier automatización futura de este paso necesita un humano en el loop, no puede ser un algoritmo ciego — segunda confirmación de este límite, tras el intento de clustering 528→197 del 17-ago (sección anterior).
+3. **Numeración final**: orden espacial (banda de altura, izquierda→derecha dentro de cada banda), no el ID crudo del JSON.
+
+**Bug encontrado y corregido en el render**: la etiqueta de cada muro se dibujaba en el primer extremo de su primer segmento — cuando dos muros distintos (no fusionados) casi se tocan en un cruce, ambas etiquetas caían en el mismo punto y una tapaba a la otra (muro 4 invisible bajo la etiqueta del muro 15 en N2; detectado por el arquitecto: "no veo el muro 4"). Corregido anclando cada etiqueta al punto medio del segmento más largo del muro, más una pasada anti-colisión que separa etiquetas a menos de 45px de distancia.
+
+**Archivos finales**: `conteo_manual_backfill_v5.png` (N1, 28 muros) y `conteo_manual_n2_v5.png` (N2, 33 muros) en `Fase 2/Desarrollos/Test/pdv/`. Script generador ad-hoc, no forma parte del repo (mismo criterio que `clusterizar_muros.mjs` del 17-ago).
+
+**Pendiente de la decisión de diseño original** (¿consolidación en notebook o en portal?): sigue sin resolver, pero ahora mejor informada — dado que el paso de fusión necesita el ojo del arquitecto por cada cruce, no es un post-proceso automático simple en ninguno de los 2 lugares; probablemente requiere una interfaz de revisión (similar a la de recintos/elementos puntuales que ya existe en el portal) más que un algoritmo ciego.
+
+**Bloqueado para replicar en Beauchef/Isla de Pascua/Campo Lindo**: ninguno tiene hoy un JSON con `muros_geo` vigente. Beauchef corrió el notebook actual (11-ago, log confirma 252/99/217/944 muros crudos por lámina) pero el JSON nunca se descargó. Campo Lindo tiene el mismo caso (log 11-ago con 291/116 muros, pero el JSON guardado es del 1-ago y no trae `muros_geo`). Isla de Pascua solo tiene el JSON del 1-ago, también sin el campo. Requiere re-correr Colab y descargar el `.json` de cada uno antes de repetir este ejercicio ahí.
 
 ---
 
