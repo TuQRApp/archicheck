@@ -1,9 +1,9 @@
 ==================================================================
   ARCHICHECK — INFORME CAPA 1 GEOMETRICA
 ==================================================================
-  Proyecto: bchf
+  Proyecto: beauchef
   Archivo : CC-BEAUCHEFF_DOM Planos.pdf
-  Fecha   : 01/08/2026 03:34
+  Fecha   : 19/08/2026 22:44
   Páginas : 3 + 3 + 3 + 3
 
   ------------------------------------------------------------------
@@ -12,34 +12,27 @@
   ------------------------------------------------------------------
   ID      Nombre                     Tipo          Area m2  Ancho m  Estado
   --      ------                     ----          -------  -------  ------
-  E02     Baño                       bano            13.66      1.7  OK
-  E07     Casino                     sala             8.27     2.68  INCUMPLE
-  E04     Guardia                    oficina          7.33      3.7  OK
-  E03     Taller                     sala             4.88     2.09  INCUMPLE
-  E06     Camarin                    otro             4.81     2.09  OK
-  E10     Espacio E10 (SIN NOMBRE -  otro             4.74     2.08  OK
-  E05     Espacio E05 (SIN NOMBRE -  otro             4.26     2.09  OK
-  E09     Espacio E09 (SIN NOMBRE -  otro             4.17      2.6  OK
-  E01     Espacio E01 (SIN NOMBRE -  otro             3.15     1.21  OK
-  E08     Espacio E08 (SIN NOMBRE -  otro             1.35     0.47  OK
-  E11     Espacio E11 (SIN NOMBRE -  otro             1.02     0.89  OK
-          TOTAL                                      57.60
+  E03     Camarín                    otro            20.84      6.1  OK
+  E01     Taller                     sala             5.28     2.09  INCUMPLE
+  E02     Guardia                    oficina          4.75     2.09  OK
+  E04     Baño                       bano             0.95     0.98  INCUMPLE
+          TOTAL                                      31.80
 
   INCUMPLIMIENTOS GEOMETRICOS (2)
   ------------------------------------------------------------------
-  [AREA]  E07 Casino
-    Medido: 8.27 m2  |  Minimo: 10.0 m2  |  Deficit: 1.73 m2
+  [AREA]  E01 Taller
+    Medido: 5.28 m2  |  Minimo: 10.0 m2  |  Deficit: 4.72 m2
     Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
-  [AREA]  E03 Taller
-    Medido: 4.88 m2  |  Minimo: 10.0 m2  |  Deficit: 5.12 m2
+  [AREA]  E04 Baño
+    Medido: 0.95 m2  |  Minimo: 1.5 m2  |  Deficit: 0.55 m2
     Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
 
   OBSERVACIONES NORMATIVAS CLAUDE (5)
-  [ALTA] Art. 4.1.7 OGUC / DDU 279 — El baño no presenta dimensiones ni disposición compatible con uso por personas e
-  [MEDIA] Art. 4.2.2 OGUC — La puerta del Baño presenta ancho estimado de 0.70 m, inferior al mínimo de 0.80
-  [MEDIA] Art. 4.2.10 OGUC — No se detectan salidas de emergencia claramente definidas hacia el exterior desd
-  [MEDIA] Art. 4.5.2 OGUC — No se aprecia ventilación ni iluminación natural en el recinto Camarin. Al ser u
-  [BAJA] Art. 4.5.2 OGUC — El recinto Baño no presenta ventilación natural visible. Debe contar con ventila
+  [ALTA] Art. 4.2.5 OGUC — No se detectan ventanas ni vanos de iluminación natural en los recintos Guardia,
+  [ALTA] Art. 4.1.7 OGUC — No se identifica salida de emergencia desde el nivel de acceso hacia el exterior
+  [ALTA] Art. 4.2.4 OGUC — El baño no presenta señales de cumplir con estándar de accesibilidad universal (
+  [MEDIA] Art. 4.2.1 OGUC — Ancho de puerta del Baño estimado en 0.70m, inferior al mínimo de 0.90m requerid
+  [BAJA] Art. 4.2.2 OGUC — No se aprecia cuadro de superficies propio de esta lámina de planta de acceso co
 
   ------------------------------------------------------------------
   PAGINA 3 [pag3-2]  |  1:50  |  planta — equipamiento
@@ -47,20 +40,28 @@
   ------------------------------------------------------------------
   ID      Nombre                     Tipo          Area m2  Ancho m  Estado
   --      ------                     ----          -------  -------  ------
-  E02     Enfermeria                 otro             6.52     2.49  OK
-  E05     Baño Universal (PMR)       bano             6.31      2.5  OK
-  E08     Kiosco                     otro             5.32     2.49  OK
-  E04     Espacio E04 (SIN NOMBRE -  otro             3.94     1.56  OK
-  E01     Baño 1 (bloque derecho)    bano             1.75     0.89  OK
-  E06     Espacio E06 (SIN NOMBRE -  otro             1.56     0.65  OK
-  E03     Espacio E03 (SIN NOMBRE -  otro             1.55     0.65  OK
-  E07     Espacio E07 (SIN NOMBRE -  otro             1.43     1.55  OK
-          TOTAL                                      28.40
+  E02     Enfermeria                 otro             7.21     2.49  OK
+  E07     Kiosco                     otro             5.67     2.49  OK
+  E06     Baño accesible (PMR)       bano             2.70     1.59  OK
+  E01     Baño 1 (bloque servicios   bano             1.75     0.89  OK
+  E04     Baño 2 (bloque servicios   bano             0.99     1.03  INCUMPLE
+  E03     Espacio E03 (SIN NOMBRE -  otro             0.86     1.03  OK
+  E05     Baño (junto a Kiosco)      bano             0.77     1.09  INCUMPLE
+          TOTAL                                      19.90
+
+  INCUMPLIMIENTOS GEOMETRICOS (2)
+  ------------------------------------------------------------------
+  [AREA]  E04 Baño 2 (bloque servicios higienicos)
+    Medido: 0.99 m2  |  Minimo: 1.5 m2  |  Deficit: 0.51 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [AREA]  E05 Baño (junto a Kiosco)
+    Medido: 0.77 m2  |  Minimo: 1.5 m2  |  Deficit: 0.73 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
 
   OBSERVACIONES NORMATIVAS CLAUDE (3)
-  [BAJA] Art. 4.1.7 OGUC — Los baños estándar del bloque derecho (Baño 1 y Baño 2) tienen anchos estimados 
-  [BAJA] Art. 4.1.7 OGUC — El baño para PMR debe tener puerta con ancho libre mínimo de 0.90 m y apertura h
-  [BAJA] Art. 4.2.4 OGUC — El Kiosco presenta una configuración en L con acceso al exterior. Verificar que 
+  [MEDIA] Art. 4.1.10 OGUC — El baño pequeño contiguo al Kiosco presenta ancho interior aproximado de 0.90 m 
+  [BAJA] Art. 4.1.7 OGUC / DDU 279 — No se visualiza baño accesible en el bloque de servicios higiénicos del sector d
+  [BAJA] Art. 4.2.4 OGUC — No se visualizan ventanas de ventilación natural en los baños del bloque derecho
 
   ------------------------------------------------------------------
   PAGINA 3 [pag3-3]  |  1:50  |  planta — equipamiento
@@ -68,54 +69,38 @@
   ------------------------------------------------------------------
   ID      Nombre                     Tipo          Area m2  Ancho m  Estado
   --      ------                     ----          -------  -------  ------
-  E08     Guardaropa izquierdo       bodega          16.28     3.39  OK
-  E17     Baño derecho               bano            12.60     4.19  OK
-  E10     Espacio E10 (SIN NOMBRE -  otro            11.64     3.36  OK
-  E24     Camarín izquierdo          otro             7.81     4.06  OK
-  E25     Camarín derecho            otro             7.72     4.06  OK
-  E28     Baño izquierdo             bano             5.89     3.48  OK
-  E22     Escalera central           escalera         4.48     0.97  INCUMPLE
-  E23     Espacio E23 (SIN NOMBRE -  otro             4.42     0.97  OK
-  E14     Guardaropa derecho         bodega           3.88     2.55  OK
-  E09     Espacio E09 (SIN NOMBRE -  otro             3.60     1.75  OK
-  E29     Espacio E29 (SIN NOMBRE -  otro             2.96     0.64  OK
-  E30     Espacio E30 (SIN NOMBRE -  otro             2.83      0.6  OK
-  E02     Espacio E02 (SIN NOMBRE -  otro             2.56     0.33  OK
-  E03     Espacio E03 (SIN NOMBRE -  otro             2.13     0.32  OK
-  E12     Espacio E12 (SIN NOMBRE -  otro             2.09     1.16  OK
-  E13     Espacio E13 (SIN NOMBRE -  otro             2.02     1.16  OK
-  E33     Espacio E33 (SIN NOMBRE -  otro             1.84     0.41  OK
-  E32     Espacio E32 (SIN NOMBRE -  otro             1.83     0.41  OK
-  E31     Espacio E31 (SIN NOMBRE -  otro             1.76     0.41  OK
-  E34     Espacio E34 (SIN NOMBRE -  otro             1.75     0.41  OK
-  E16     Espacio E16 (SIN NOMBRE -  otro             1.51     0.55  OK
-  E15     Espacio E15 (SIN NOMBRE -  otro             1.38      0.5  OK
-  E26     Espacio E26 (SIN NOMBRE -  otro             1.38     0.34  OK
-  E05     Espacio E05 (SIN NOMBRE -  otro             1.17     0.33  OK
-  E04     Espacio E04 (SIN NOMBRE -  otro             0.91     0.33  OK
-  E06     Espacio E06 (SIN NOMBRE -  otro             0.91     0.33  OK
-  E27     Espacio E27 (SIN NOMBRE -  otro             0.91     0.34  OK
-  E07     Espacio E07 (SIN NOMBRE -  otro             0.88     0.33  OK
-  E11     Espacio E11 (SIN NOMBRE -  otro             0.87     1.06  OK
-  E20     Espacio E20 (SIN NOMBRE -  otro             0.58     0.75  OK
-  E18     Espacio E18 (SIN NOMBRE -  otro             0.52     0.67  OK
-  E21     Espacio E21 (SIN NOMBRE -  otro             0.52     0.69  OK
-  E01     Espacio E01 (SIN NOMBRE -  otro             0.51     0.33  OK
-  E19     Espacio E19 (SIN NOMBRE -  otro             0.51     0.66  OK
-          TOTAL                                     112.70
+  E01     Camarín (izquierdo)        otro            10.83     2.03  OK
+  E02     Camarín (derecho)          otro            10.57     2.02  OK
+  E11     Baño (derecho)             bano             9.02      3.5  OK
+  E03     Baño (izquierdo)           bano             7.80     4.06  OK
+  E04     Espacio E04 (SIN NOMBRE -  otro             7.72     4.06  OK
+  E07     Espacio E07 (SIN NOMBRE -  otro             6.81     3.48  OK
+  E12     Espacio E12 (SIN NOMBRE -  otro             6.77     1.71  OK
+  E13     Espacio E13 (SIN NOMBRE -  otro             2.97     0.64  OK
+  E05     Espacio E05 (SIN NOMBRE -  otro             1.23     0.27  OK
+  E06     Espacio E06 (SIN NOMBRE -  otro             1.23     0.27  OK
+  E18     Espacio E18 (SIN NOMBRE -  otro             0.61     0.59  OK
+  E08     Escalera central           escalera         0.60     0.59  INCUMPLE
+  E09     Espacio E09 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E10     Espacio E10 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E14     Espacio E14 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E15     Espacio E15 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E16     Espacio E16 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E17     Espacio E17 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E19     Espacio E19 (SIN NOMBRE -  otro             0.60     0.59  OK
+          TOTAL                                      70.40
 
   INCUMPLIMIENTOS GEOMETRICOS (1)
   ------------------------------------------------------------------
-  [ANCHO]  E22 Escalera central
-    Medido: 0.97 m  |  Minimo: 1.1 m  |  Deficit: 0.13 m
+  [ANCHO]  E08 Escalera central
+    Medido: 0.59 m  |  Minimo: 1.1 m  |  Deficit: 0.51 m
     Ref: Art. 4.2.10 OGUC — tabla por carga de ocupacion, 1,10 m es el piso minimo (hasta 50 personas); puede exigir hasta 1,50 m o 2 escaleras segun ocupacion, no calculado todavia
 
-  OBSERVACIONES NORMATIVAS CLAUDE (5)
-  [ALTA] Art. 4.1.7 OGUC — No se detecta baño accesible para personas con movilidad reducida (PMR) en el se
-  [ALTA] Art. 4.2.10 OGUC — La escalera de acceso al nivel de camarines presenta tramos de ancho estimado ~1
-  [ALTA] Art. 4.1.7 / DDU 279 OGUC — No se detecta rampa de acceso al nivel de camarines. Al ser un nivel diferente d
-  [ALTA] Art. 4.2.4 OGUC — No se detectan salidas de emergencia propias en la planta de camarines. Al parec
-  [BAJA] Art. 4.1.10 OGUC — Las puertas de cubículos de baño presentan ancho estimado ~0.80–0.93 m según con
+  OBSERVACIONES NORMATIVAS CLAUDE (4)
+  [ALTA] Art. 4.1.7 OGUC — No se detecta recinto de baño accesible universal (PMR) en ninguno de los dos ba
+  [MEDIA] Art. 4.2.10 OGUC — No se verifica ancho libre mínimo de escalera según carga de ocupación. La escal
+  [ALTA] Art. 4.1.7 / DS 50 OGUC — No se detecta ruta accesible (rampa o ascensor) al nivel de camarines. Si el niv
+  [ALTA] Art. 4.1.10 OGUC — No se identifican salidas de emergencia directas al exterior desde el nivel de c
 
   ------------------------------------------------------------------
   PAGINA 3 [pag3-4]  |  1:50  |  planta — equipamiento
@@ -123,20 +108,18 @@
   ------------------------------------------------------------------
   ID      Nombre                     Tipo          Area m2  Ancho m  Estado
   --      ------                     ----          -------  -------  ------
-  E01     Sala de Basura             bodega          12.45     5.96  OK
-          TOTAL                                      12.40
+  E01     Sala de Basura             bodega          22.86     5.96  OK
+          TOTAL                                      22.90
 
   OBSERVACIONES NORMATIVAS CLAUDE (2)
-  [MEDIA] Art. 4.5.3 / 4.5.4 OGUC — La puerta lateral derecha de servicio (zona de lavamanos/grifo) presenta un anch
-  [BAJA] Art. 5.7.3 OGUC — Ventilación — Solo se aprecia una ventana/abertura de ventilación superior (superior derecho d
+  [MEDIA] Art. 4.5.7 OGUC — No se observa ventilación natural suficiente acreditada para recinto de acopio d
+  [BAJA] Art. 4.1.7 OGUC / DDU 279 — No se aprecia lavamanos con agua corriente o instalación de aseo dentro del reci
 
 ==================================================================
-  (conteos desde análisis semántico Claude — DINO no detectó elementos)
-  Puertas semántico: 22  Ventanas: 3  Escaleras: 1
 
-✓ JSON guardado: archicheck_geometrico_bchf_01ago_0328.json
+✓ JSON guardado: archicheck_geometrico_beauchef_19ago_2235.json
   Paginas   : 4
-  Area total: 211.1 m2
-  Recintos  : 54
-  Incumpl.  : 3
-  Elementos (semantico) — Puertas:22  Ventanas:3  Escaleras:1  Rampas:0
+  Area total: 145.0 m2
+  Recintos  : 31
+  Incumpl.  : 5
+  Elementos (semantico) — Puertas:22  Ventanas:2  Escaleras:1  Rampas:0

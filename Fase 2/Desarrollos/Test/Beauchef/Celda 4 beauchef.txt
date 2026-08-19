@@ -6,7 +6,7 @@
 ========================================================
   2919x2313 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 5 recintos, 4 incumplimientos
+  ✓ Claude: 5 recintos, 5 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
   ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 112 corte_elevacion, 2134 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 418 ignorar, 73 mobiliario, 0 muro, 17 puerta, 0 rampa, 1 ventana, 222 sin capa mapeada — de 2977 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
@@ -19,12 +19,30 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ COTAS (linea): 1050 segmentos adicionales evitados de proteger como muro (Paso 1.6)
   ✓ MOBILIARIO (por capa): 73 segmentos evitados de proteger como muro
   ✓ IGNORAR (por capa): 323 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      '0': 257 segmentos evitados de proteger
+        largo_m=0.2 p1=(2357, 1863) p2=(2357, 1829)
+        largo_m=0.1 p1=(2351, 1840) p2=(2363, 1852)
+        largo_m=0.2 p1=(2340, 1846) p2=(2374, 1846)
+        largo_m=0.2 p1=(2357, 1795) p2=(2357, 1829)
+        largo_m=0.1 p1=(2363, 1818) p2=(2351, 1806)
+      'PROYECCION': 63 segmentos evitados de proteger
+        largo_m=0.09 p1=(475, 553) p2=(475, 568)
+        largo_m=0.13 p1=(475, 579) p2=(475, 600)
+        largo_m=0.13 p1=(475, 611) p2=(475, 633)
+        largo_m=0.13 p1=(475, 643) p2=(475, 665)
+        largo_m=0.13 p1=(475, 676) p2=(475, 697)
+      'Muros Proy': 2 segmentos evitados de proteger
+        largo_m=0.4 p1=(2006, 1268) p2=(2006, 1336)
+        largo_m=0.4 p1=(1972, 1336) p2=(1972, 1268)
+      'FORMATO': 1 segmentos evitados de proteger
+        largo_m=2.72 p1=(195, 2218) p2=(657, 2218)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 6
   ✓ Muros exportados: 252 (de 9 grupos protegidos, 78 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
   ✓ Puertas exportadas (clasificador geometrico): 7
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 3273)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 9 grupos protegidos como muro, top 25 por span (11 textos de cota disponibles para el chequeo de distancia):
-     span=16.84m  bbox=13.9x9.5m  n_seg=678  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.3/0.3/1.3
+     span=16.84m  bbox=13.9x9.5m  n_seg=678  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(30/60/100px, n=300)=0.0/0.0/1.3
      span=10.64m  bbox=10.6x0.91m  n_seg=161  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=161)=0.0/0.0/0.0
      span=10.52m  bbox=10.5x0.56m  n_seg=21  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=21)=0.0/0.0/0.0
      span=10.51m  bbox=10.5x0.51m  n_seg=186  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(30/60/100px, n=186)=0.0/0.0/0.0
@@ -99,6 +117,32 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
       layer = PROYECCION
       seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 6775 paths totales en get_drawings(), distribucion completa por capa:
+    'FORMATO': 1925
+    '0': 981
+    'COTAS': 937
+    'ARTEFACTOS': 847
+    '6º PLANO': 458
+    'PROYECCION': 348
+    'HATCH': 277
+    'MARCADOR CORTES-ELEVACIONES': 201
+    'MOBILIARIO': 182
+    '2º PLANO': 180
+    '5º PLANO': 132
+    'Puertas': 112
+    'Accesibilidad': 87
+    '': 30
+    '4º PLANO': 24
+    'PROYECCIONES': 17
+    '1º PLANO': 13
+    'PAVIMENTOS': 13
+    'BALL': 8
+    'Muros Proy': 2
+    'Ventanas': 1
+  ⚠ La capa 'MUROS' (mapeada a 'muro') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'BM-COTAS-0.13' (mapeada a 'cota') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'MUEBLES' (mapeada a 'mobiliario') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'LINEA TERRENO ORIGINAL' (mapeada a 'deslinde_terreno') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
   DIAGNOSTICO DASHES: 0 de 2977 segmentos tienen patron de guion nativo (dashes) no vacio
   DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
   DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
@@ -221,7 +265,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 ========================================================
   2474x1904 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 6 recintos, 2 incumplimientos
+  ✓ Claude: 6 recintos, 3 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
   ✓ MAPEO POR CAPA: 110 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 1909 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 481 ignorar, 360 mobiliario, 0 muro, 18 puerta, 0 rampa, 0 ventana, 84 sin capa mapeada — de 2962 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
@@ -235,6 +279,27 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ COTAS (linea): 1050 segmentos adicionales evitados de proteger como muro (Paso 1.6)
   ✓ MOBILIARIO (por capa): 360 segmentos evitados de proteger como muro
   ✓ IGNORAR (por capa): 407 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      '0': 228 segmentos evitados de proteger
+        largo_m=0.2 p1=(236, 1294) p2=(236, 1260)
+        largo_m=0.1 p1=(230, 1271) p2=(242, 1283)
+        largo_m=0.2 p1=(219, 1277) p2=(253, 1277)
+        largo_m=0.2 p1=(236, 1226) p2=(236, 1260)
+        largo_m=0.1 p1=(242, 1249) p2=(230, 1237)
+      'PROYECCION': 120 segmentos evitados de proteger
+        largo_m=0.13 p1=(797, 223) p2=(775, 223)
+        largo_m=0.13 p1=(764, 223) p2=(742, 223)
+        largo_m=0.13 p1=(731, 223) p2=(710, 223)
+        largo_m=0.13 p1=(699, 223) p2=(677, 223)
+        largo_m=0.13 p1=(667, 223) p2=(645, 223)
+      'PROYECCIONES': 58 segmentos evitados de proteger
+        largo_m=0.06 p1=(1148, 928) p2=(1148, 919)
+        largo_m=0.06 p1=(1148, 919) p2=(1147, 909)
+        largo_m=0.03 p1=(1147, 909) p2=(1146, 905)
+        largo_m=0.0 p1=(1140, 882) p2=(1140, 882)
+        largo_m=0.06 p1=(1140, 882) p2=(1136, 873)
+      'FORMATO': 1 segmentos evitados de proteger
+        largo_m=4.62 p1=(99, 1789) p2=(885, 1789)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 5
   ✓ Muros exportados: 99 (de 4 grupos protegidos, 94 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
   ✓ Puertas exportadas (clasificador geometrico): 5
@@ -310,6 +375,32 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
       layer = PROYECCION
       seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 6775 paths totales en get_drawings(), distribucion completa por capa:
+    'FORMATO': 1925
+    '0': 981
+    'COTAS': 937
+    'ARTEFACTOS': 847
+    '6º PLANO': 458
+    'PROYECCION': 348
+    'HATCH': 277
+    'MARCADOR CORTES-ELEVACIONES': 201
+    'MOBILIARIO': 182
+    '2º PLANO': 180
+    '5º PLANO': 132
+    'Puertas': 112
+    'Accesibilidad': 87
+    '': 30
+    '4º PLANO': 24
+    'PROYECCIONES': 17
+    '1º PLANO': 13
+    'PAVIMENTOS': 13
+    'BALL': 8
+    'Muros Proy': 2
+    'Ventanas': 1
+  ⚠ La capa 'MUROS' (mapeada a 'muro') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'BM-COTAS-0.13' (mapeada a 'cota') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'MUEBLES' (mapeada a 'mobiliario') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'LINEA TERRENO ORIGINAL' (mapeada a 'deslinde_terreno') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
   DIAGNOSTICO DASHES: 0 de 2962 segmentos tienen patron de guion nativo (dashes) no vacio
   DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
   DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
@@ -422,8 +513,8 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Limpieza pre-umbral: 8 textos, 104 líneas discontinuas, 2935 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
   ✓ OpenCV: 7 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 115.01m²
-  ✓ Cruce: 6/7 con nombre | 3 incumpl. geo
-  ⚠ 1 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E01
+  ✓ Cruce: 6/7 con nombre | 2 incumpl. geo
+  ⚠ 1 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E03
 
 ========================================================
   Página 3  —  escala 1:50
@@ -431,7 +522,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 ========================================================
   4642x2500 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 7 recintos, 3 incumplimientos
+  ✓ Claude: 7 recintos, 4 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
   ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 32 corte_elevacion, 2809 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 388 ignorar, 164 mobiliario, 0 muro, 67 puerta, 0 rampa, 0 ventana, 278 sin capa mapeada — de 3738 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
@@ -445,6 +536,15 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ COTAS (linea): 1523 segmentos adicionales evitados de proteger como muro (Paso 1.6)
   ✓ MOBILIARIO (por capa): 75 segmentos evitados de proteger como muro
   ✓ IGNORAR (por capa): 387 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      '0': 386 segmentos evitados de proteger
+        largo_m=0.3 p1=(2460, 431) p2=(2460, 482)
+        largo_m=0.15 p1=(2469, 466) p2=(2451, 448)
+        largo_m=0.3 p1=(675, 774) p2=(623, 774)
+        largo_m=0.15 p1=(640, 783) p2=(658, 765)
+        largo_m=0.3 p1=(649, 799) p2=(649, 748)
+      'FORMATO': 1 segmentos evitados de proteger
+        largo_m=3.26 p1=(216, 2416) p2=(770, 2416)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 0
   ✓ Muros exportados: 217 (de 12 grupos protegidos, 29 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
   ✓ Lineas de referencia periodicas (deslinde/rasante/linea oficial): 29 muros movidos a muros_excluidos_por_referencia (no arquitectura real)
@@ -529,6 +629,32 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
       layer = PROYECCION
       seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 6775 paths totales en get_drawings(), distribucion completa por capa:
+    'FORMATO': 1925
+    '0': 981
+    'COTAS': 937
+    'ARTEFACTOS': 847
+    '6º PLANO': 458
+    'PROYECCION': 348
+    'HATCH': 277
+    'MARCADOR CORTES-ELEVACIONES': 201
+    'MOBILIARIO': 182
+    '2º PLANO': 180
+    '5º PLANO': 132
+    'Puertas': 112
+    'Accesibilidad': 87
+    '': 30
+    '4º PLANO': 24
+    'PROYECCIONES': 17
+    '1º PLANO': 13
+    'PAVIMENTOS': 13
+    'BALL': 8
+    'Muros Proy': 2
+    'Ventanas': 1
+  ⚠ La capa 'MUROS' (mapeada a 'muro') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'BM-COTAS-0.13' (mapeada a 'cota') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'MUEBLES' (mapeada a 'mobiliario') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'LINEA TERRENO ORIGINAL' (mapeada a 'deslinde_terreno') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
   DIAGNOSTICO DASHES: 0 de 3738 segmentos tienen patron de guion nativo (dashes) no vacio
   DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
   DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
@@ -635,6 +761,15 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ EJES/RASANTES: 20 segmentos identificados como referencia (Paso 1.5), 20 evitados de proteger como muro pese a superar el span minimo
   ✓ COTAS (linea): 661 segmentos adicionales evitados de proteger como muro (Paso 1.6)
   ✓ IGNORAR (por capa): 109 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      '0': 108 segmentos evitados de proteger
+        largo_m=0.1 p1=(160, 147) p2=(177, 147)
+        largo_m=0.05 p1=(171, 144) p2=(165, 150)
+        largo_m=0.1 p1=(168, 139) p2=(168, 156)
+        largo_m=0.1 p1=(192, 147) p2=(175, 147)
+        largo_m=0.05 p1=(181, 150) p2=(187, 144)
+      'FORMATO': 1 segmentos evitados de proteger
+        largo_m=3.59 p1=(95, 1235) p2=(706, 1235)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 0
   ✓ Muros exportados: 944 (de 2 grupos protegidos, 729 segmentos descartados por angulo no-ortogonal, 0 descartados por color amarillo/achurado Se-retira)
   ✓ Puertas exportadas (clasificador geometrico): 0
@@ -708,6 +843,32 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
       layer = PROYECCION
       seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 6775 paths totales en get_drawings(), distribucion completa por capa:
+    'FORMATO': 1925
+    '0': 981
+    'COTAS': 937
+    'ARTEFACTOS': 847
+    '6º PLANO': 458
+    'PROYECCION': 348
+    'HATCH': 277
+    'MARCADOR CORTES-ELEVACIONES': 201
+    'MOBILIARIO': 182
+    '2º PLANO': 180
+    '5º PLANO': 132
+    'Puertas': 112
+    'Accesibilidad': 87
+    '': 30
+    '4º PLANO': 24
+    'PROYECCIONES': 17
+    '1º PLANO': 13
+    'PAVIMENTOS': 13
+    'BALL': 8
+    'Muros Proy': 2
+    'Ventanas': 1
+  ⚠ La capa 'MUROS' (mapeada a 'muro') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'BM-COTAS-0.13' (mapeada a 'cota') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'MUEBLES' (mapeada a 'mobiliario') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'LINEA TERRENO ORIGINAL' (mapeada a 'deslinde_terreno') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
   DIAGNOSTICO DASHES: 0 de 2946 segmentos tienen patron de guion nativo (dashes) no vacio
   DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
   DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
@@ -774,4 +935,4 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 
 ========================================================
 ✓ Procesadas 4 / 4 páginas
-  Incumplimientos geométricos totales: 6
+  Incumplimientos geométricos totales: 5
