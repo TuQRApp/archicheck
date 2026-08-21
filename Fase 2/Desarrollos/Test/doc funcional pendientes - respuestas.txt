@@ -1,0 +1,57 @@
+Respuestas verificadas con datos reales (no de memoria), 2026-08-21:
+
+1. Worker vigente: ARCHICHECK-WORKER, no laude. Verificado con archivos reales:
+   - archicheck/.env: VITE_WORKER_URL=https://archicheck-worker.nestragues.workers.dev
+   - archicheck-worker/wrangler.toml existe y es la config activa.
+   - En la raíz de Documents/Claude/ NO hay wrangler.jsonc activo, solo
+     wrangler.jsonc.disabled_2026-07-23_apuntaba-a-laude (renombrado ese día).
+   - Conclusión: laude fue desactivado el 2026-07-23 y el frontend nunca volvió
+     a apuntarle. La memoria de Claude decía lo contrario (desactualizada) — ya
+     se corrigió esa memoria. Para deployar: `npx wrangler deploy` desde
+     archicheck-worker/, no desde la raíz.
+
+2. ArchiCheck_Pipeline.ps1/.cmd: OBSOLETO, reemplazado por Colab → portal.
+   Verificado: el archivo no se modifica desde mayo (sin actividad reciente),
+   y la única mención reciente en el roadmap lo cita solo como referencia de
+   un mecanismo de renderizado (Windows.Data.Pdf/WinRT), no como flujo activo.
+   Documentarlo como herramienta de una fase anterior, no como parte del
+   pipeline vigente.
+
+3. _es_amarillo: SIGUE ACTIVO EN EL CÓDIGO HOY, pero su diseño está SUPERADO
+   por una decisión tomada hoy (2026-08-21, todavía sin implementar): el
+   achurado (relleno diagonal) debe ignorarse siempre como geometría —
+   ni incluye ni excluye por sí mismo — y solo la silueta del elemento se
+   procesa como candidato a muro. El color del achurado pasa a usarse
+   SOLO para etiquetar el elemento como agregado/eliminado, buscando la
+   leyenda SIMBOLOGIA real del PDF (nunca hardcodeado rojo=X/amarillo=Y
+   como hace _es_amarillo hoy). Documentar ambos estados: el código actual
+   (activo) y el diseño acordado (pendiente de portar).
+
+4. Bordes de muro con Bézier: confirmado, DESCARTADO a favor de cuerpo
+   cerrado (líneas enfrentadas). Documentaste bien.
+
+5. Ejes — capa manda sola: confirmado correcto, coincide con el código y
+   con el hallazgo de 0% de precisión de la heurística geométrica cuando
+   hay capa mapeada. Documentaste bien.
+
+6. Categoría "segmento corto, no evaluado" (gris): NO es una tercera
+   categoría permanente del diseño — es un hueco identificado hoy mismo
+   (feedback del arquitecto sobre las capturas Cap7/8/10). El umbral real
+   usado en el prototipo de Node: segmentos con largo <= 0.5 * espesor
+   máximo de búsqueda (0.9m * 0.5 = 0.45m) no se evalúan, quedan "sin
+   veredicto". El diseño correcto (no implementado todavía) es que estos
+   segmentos cortos se evalúen con el mismo criterio de cuerpo cerrado
+   (¿forman un cuadrilátero cerrado real?) para clasificarlos activamente
+   como pilar/parteluz — no deben quedar en limbo. Documentar como gap
+   conocido, no como diseño final.
+
+7. El gap de extracción SÍ o NO afecta áreas de recinto: NO, al menos en
+   el caso confirmado (Baño Universal). Verificado con datos reales del
+   JSON de la corrida de hoy: "Baño Universal" aparece correctamente en
+   mediciones_geometricas con área 29.72 m² (coincide con lo visto en las
+   capturas), pese a que sus muros NO aparecen en muros_geo. Esto indica
+   que el cálculo de área de recintos usa una señal distinta e
+   independiente (probablemente el raster/threshold directo, no depende
+   de que el muro haya sobrevivido como candidato en muros_geo). Documentar
+   como confirmado para este caso, no como garantía general — no se probó
+   con otro caso.

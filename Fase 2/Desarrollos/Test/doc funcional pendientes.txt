@@ -1,0 +1,9 @@
+Quedaron 7 puntos marcados "pendiente de confirmar" porque las fuentes se contradecían o faltaba dato:
+
+1. Worker vigente para deploy — el código apunta a archicheck-worker...workers.dev, pero la memoria dice que el vigente es laude (config renombrado a .disabled). No pudo verificar VITE_WORKER_URL en Vercel.
+2. Si ArchiCheck_Pipeline.ps1/.cmd sigue vigente o fue reemplazado por Colab → portal.
+3. Si el filtro _es_amarillo (todavía en el código) se desactiva ya o se mantiene hasta tener el reemplazo.
+4. Bordes de muro con Bézier — un doc lo propone, otro lo descarta a favor de cuerpo cerrado; documentó lo segundo.
+5. Ejes: si la capa manda sola o si la heurística corre siempre además — documentó "capa manda sola" (coincide con el código y con 0% de precisión medido).
+6. Tercera categoría "segmento corto, no evaluado" que aparece en un PNG de las 11:52 pero no en el roadmap (guardado a las 11:18) — falta el umbral y si es parte del diseño o solo ayuda visual.
+7. Si el gap de extracción en zonas con achurado afecta solo el conteo de muros o también las áreas de recinto.

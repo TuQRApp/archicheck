@@ -1,0 +1,2877 @@
+[
+  {
+    "id": "MU01",
+    "largo_total_m": 4.96,
+    "n_segmentos_largos": 4,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          996,
+          1560
+        ],
+        "p2": [
+          919,
+          1560
+        ],
+        "largo_m": "0.45",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              970,
+              1611
+            ],
+            "p2": [
+              1047,
+              1611
+            ]
+          },
+          "muroId": "MU01",
+          "perp_m": "0.30",
+          "solape": "0.34"
+        }
+      },
+      {
+        "p1": [
+          919,
+          1560
+        ],
+        "p2": [
+          919,
+          1866
+        ],
+        "largo_m": "1.80",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              970,
+              1611
+            ],
+            "p2": [
+              970,
+              1866
+            ]
+          },
+          "muroId": "MU01",
+          "perp_m": "0.30",
+          "solape": "0.83"
+        }
+      },
+      {
+        "p1": [
+          970,
+          1611
+        ],
+        "p2": [
+          970,
+          1866
+        ],
+        "largo_m": "1.50",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              919,
+              1560
+            ],
+            "p2": [
+              919,
+              1866
+            ]
+          },
+          "muroId": "MU01",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          970,
+          1611
+        ],
+        "p2": [
+          1047,
+          1611
+        ],
+        "largo_m": "0.45",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              996,
+              1560
+            ],
+            "p2": [
+              919,
+              1560
+            ]
+          },
+          "muroId": "MU01",
+          "perp_m": "0.30",
+          "solape": "0.34"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU02",
+    "largo_total_m": 65.74,
+    "n_segmentos_largos": 20,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          2178,
+          3720
+        ],
+        "p2": [
+          2297,
+          3720
+        ],
+        "largo_m": "0.70",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          2297,
+          3720
+        ],
+        "p2": [
+          2297,
+          3549
+        ],
+        "largo_m": "1.01",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2246,
+              2444
+            ],
+            "p2": [
+              2246,
+              3668
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.30",
+          "solape": "0.70"
+        }
+      },
+      {
+        "p1": [
+          2365,
+          3549
+        ],
+        "p2": [
+          2365,
+          3158
+        ],
+        "largo_m": "2.30",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2246,
+              2444
+            ],
+            "p2": [
+              2246,
+              3668
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.70",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2297,
+          3158
+        ],
+        "p2": [
+          2297,
+          2444
+        ],
+        "largo_m": "4.20",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2246,
+              2444
+            ],
+            "p2": [
+              2246,
+              3668
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2679,
+          3694
+        ],
+        "p2": [
+          2297,
+          3694
+        ],
+        "largo_m": "2.25",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2297,
+              3720
+            ],
+            "p2": [
+              2705,
+              3720
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.15",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2679,
+          1611
+        ],
+        "p2": [
+          2679,
+          3694
+        ],
+        "largo_m": "12.25",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2535,
+              2444
+            ],
+            "p2": [
+              2535,
+              1560
+            ]
+          },
+          "muroId": "MU15",
+          "perp_m": "0.85",
+          "solape": "0.40"
+        }
+      },
+      {
+        "p1": [
+          2297,
+          3720
+        ],
+        "p2": [
+          2705,
+          3720
+        ],
+        "largo_m": "2.40",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2679,
+              3694
+            ],
+            "p2": [
+              2297,
+              3694
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.15",
+          "solape": "0.94"
+        }
+      },
+      {
+        "p1": [
+          2246,
+          2444
+        ],
+        "p2": [
+          2246,
+          3668
+        ],
+        "largo_m": "7.20",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2365,
+              3549
+            ],
+            "p2": [
+              2365,
+              3158
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.70",
+          "solape": "0.32"
+        }
+      },
+      {
+        "p1": [
+          1982,
+          2444
+        ],
+        "p2": [
+          2246,
+          2444
+        ],
+        "largo_m": "1.55",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1982,
+              2393
+            ],
+            "p2": [
+              2297,
+              2393
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1982,
+          2393
+        ],
+        "p2": [
+          2297,
+          2393
+        ],
+        "largo_m": "1.85",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1982,
+              2444
+            ],
+            "p2": [
+              2246,
+              2444
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.30",
+          "solape": "0.84"
+        }
+      },
+      {
+        "p1": [
+          1752,
+          327
+        ],
+        "p2": [
+          2047,
+          327
+        ],
+        "largo_m": "1.73",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1795,
+              369
+            ],
+            "p2": [
+              2004,
+              369
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.25",
+          "solape": "0.71"
+        }
+      },
+      {
+        "p1": [
+          1752,
+          803
+        ],
+        "p2": [
+          1752,
+          327
+        ],
+        "largo_m": "2.80",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1795,
+              752
+            ],
+            "p2": [
+              1795,
+              369
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.25",
+          "solape": "0.80"
+        }
+      },
+      {
+        "p1": [
+          2047,
+          327
+        ],
+        "p2": [
+          2047,
+          803
+        ],
+        "largo_m": "2.80",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2004,
+              369
+            ],
+            "p2": [
+              2004,
+              752
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.25",
+          "solape": "0.80"
+        }
+      },
+      {
+        "p1": [
+          2705,
+          327
+        ],
+        "p2": [
+          2047,
+          327
+        ],
+        "largo_m": "3.87",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2654,
+              369
+            ],
+            "p2": [
+              2047,
+              369
+            ]
+          },
+          "muroId": "MU15",
+          "perp_m": "0.25",
+          "solape": "0.92"
+        }
+      },
+      {
+        "p1": [
+          2705,
+          1611
+        ],
+        "p2": [
+          2705,
+          327
+        ],
+        "largo_m": "7.55",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2654,
+              1560
+            ],
+            "p2": [
+              2654,
+              369
+            ]
+          },
+          "muroId": "MU15",
+          "perp_m": "0.30",
+          "solape": "0.93"
+        }
+      },
+      {
+        "p1": [
+          2047,
+          803
+        ],
+        "p2": [
+          1940,
+          803
+        ],
+        "largo_m": "0.63",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          2004,
+          369
+        ],
+        "p2": [
+          2004,
+          752
+        ],
+        "largo_m": "2.25",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2047,
+              327
+            ],
+            "p2": [
+              2047,
+              803
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1795,
+          369
+        ],
+        "p2": [
+          2004,
+          369
+        ],
+        "largo_m": "1.23",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1752,
+              327
+            ],
+            "p2": [
+              2047,
+              327
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1795,
+          752
+        ],
+        "p2": [
+          1795,
+          369
+        ],
+        "largo_m": "2.25",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1752,
+              803
+            ],
+            "p2": [
+              1752,
+              327
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2535,
+          1611
+        ],
+        "p2": [
+          2705,
+          1611
+        ],
+        "largo_m": "1.00",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2535,
+              1560
+            ],
+            "p2": [
+              2654,
+              1560
+            ]
+          },
+          "muroId": "MU15",
+          "perp_m": "0.30",
+          "solape": "0.70"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU03",
+    "largo_total_m": 7.2,
+    "n_segmentos_largos": 5,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          1693,
+          3668
+        ],
+        "p2": [
+          1897,
+          3668
+        ],
+        "largo_m": "1.20",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1659,
+              3720
+            ],
+            "p2": [
+              1897,
+              3720
+            ]
+          },
+          "muroId": "MU03",
+          "perp_m": "0.31",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1693,
+          3668
+        ],
+        "p2": [
+          1693,
+          3371
+        ],
+        "largo_m": "1.75",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1659,
+              3371
+            ],
+            "p2": [
+              1659,
+              3566
+            ]
+          },
+          "muroId": "MU03",
+          "perp_m": "0.20",
+          "solape": "0.66"
+        }
+      },
+      {
+        "p1": [
+          1659,
+          3720
+        ],
+        "p2": [
+          1897,
+          3720
+        ],
+        "largo_m": "1.40",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1693,
+              3668
+            ],
+            "p2": [
+              1897,
+              3668
+            ]
+          },
+          "muroId": "MU03",
+          "perp_m": "0.31",
+          "solape": "0.86"
+        }
+      },
+      {
+        "p1": [
+          1659,
+          3600
+        ],
+        "p2": [
+          1659,
+          3720
+        ],
+        "largo_m": "0.71",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1693,
+              3668
+            ],
+            "p2": [
+              1693,
+              3371
+            ]
+          },
+          "muroId": "MU03",
+          "perp_m": "0.20",
+          "solape": "0.57"
+        }
+      },
+      {
+        "p1": [
+          1659,
+          3371
+        ],
+        "p2": [
+          1659,
+          3566
+        ],
+        "largo_m": "1.15",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1693,
+              3668
+            ],
+            "p2": [
+              1693,
+              3371
+            ]
+          },
+          "muroId": "MU03",
+          "perp_m": "0.20",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU04",
+    "largo_total_m": 1.65,
+    "n_segmentos_largos": 1,
+    "tiene_algun_paralelo": false,
+    "detalle": [
+      {
+        "p1": [
+          2178,
+          3694
+        ],
+        "p2": [
+          1897,
+          3694
+        ],
+        "largo_m": "1.65",
+        "tiene_paralelo": false,
+        "info": null
+      }
+    ]
+  },
+  {
+    "id": "MU05",
+    "largo_total_m": 5.83,
+    "n_segmentos_largos": 3,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          1736,
+          1611
+        ],
+        "p2": [
+          1659,
+          1611
+        ],
+        "largo_m": "0.45",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1944,
+              1560
+            ],
+            "p2": [
+              1710,
+              1560
+            ]
+          },
+          "muroId": "MU16",
+          "perp_m": "0.30",
+          "solape": "0.34"
+        }
+      },
+      {
+        "p1": [
+          1821,
+          1781
+        ],
+        "p2": [
+          1821,
+          1611
+        ],
+        "largo_m": "1.00",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1838,
+              1798
+            ],
+            "p2": [
+              1838,
+              1611
+            ]
+          },
+          "muroId": "MU16",
+          "perp_m": "0.10",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1736,
+          1781
+        ],
+        "p2": [
+          1736,
+          2223
+        ],
+        "largo_m": "2.60",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1786,
+              1798
+            ],
+            "p2": [
+              1786,
+              2002
+            ]
+          },
+          "muroId": "MU16",
+          "perp_m": "0.29",
+          "solape": "0.46"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU06",
+    "largo_total_m": 3.9,
+    "n_segmentos_largos": 3,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          715,
+          2274
+        ],
+        "p2": [
+          715,
+          2461
+        ],
+        "largo_m": "1.10",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              664,
+              2240
+            ],
+            "p2": [
+              664,
+              2461
+            ]
+          },
+          "muroId": "MU06",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          664,
+          2240
+        ],
+        "p2": [
+          664,
+          2461
+        ],
+        "largo_m": "1.30",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              715,
+              2274
+            ],
+            "p2": [
+              715,
+              2461
+            ]
+          },
+          "muroId": "MU06",
+          "perp_m": "0.30",
+          "solape": "0.85"
+        }
+      },
+      {
+        "p1": [
+          664,
+          2240
+        ],
+        "p2": [
+          775,
+          2240
+        ],
+        "largo_m": "0.65",
+        "tiene_paralelo": false,
+        "info": null
+      }
+    ]
+  },
+  {
+    "id": "MU07",
+    "largo_total_m": 5.84,
+    "n_segmentos_largos": 3,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          690,
+          2461
+        ],
+        "p2": [
+          690,
+          2852
+        ],
+        "largo_m": "2.30",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          715,
+          2852
+        ],
+        "p2": [
+          715,
+          3103
+        ],
+        "largo_m": "1.48",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              664,
+              2852
+            ],
+            "p2": [
+              664,
+              3103
+            ]
+          },
+          "muroId": "MU07",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          664,
+          2852
+        ],
+        "p2": [
+          664,
+          3103
+        ],
+        "largo_m": "1.48",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              715,
+              2852
+            ],
+            "p2": [
+              715,
+              3103
+            ]
+          },
+          "muroId": "MU07",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU08",
+    "largo_total_m": 11.6,
+    "n_segmentos_largos": 4,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          715,
+          2869
+        ],
+        "p2": [
+          1438,
+          2869
+        ],
+        "largo_m": "4.25",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1404,
+              2920
+            ],
+            "p2": [
+              715,
+              2920
+            ]
+          },
+          "muroId": "MU08",
+          "perp_m": "0.30",
+          "solape": "0.95"
+        }
+      },
+      {
+        "p1": [
+          1438,
+          2869
+        ],
+        "p2": [
+          1438,
+          3158
+        ],
+        "largo_m": "1.70",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1404,
+              3158
+            ],
+            "p2": [
+              1404,
+              2920
+            ]
+          },
+          "muroId": "MU08",
+          "perp_m": "0.20",
+          "solape": "0.82"
+        }
+      },
+      {
+        "p1": [
+          1404,
+          3158
+        ],
+        "p2": [
+          1404,
+          2920
+        ],
+        "largo_m": "1.40",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1438,
+              2869
+            ],
+            "p2": [
+              1438,
+              3158
+            ]
+          },
+          "muroId": "MU08",
+          "perp_m": "0.20",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1404,
+          2920
+        ],
+        "p2": [
+          715,
+          2920
+        ],
+        "largo_m": "4.05",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              715,
+              2869
+            ],
+            "p2": [
+              1438,
+              2869
+            ]
+          },
+          "muroId": "MU08",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU09",
+    "largo_total_m": 6.44,
+    "n_segmentos_largos": 4,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          690,
+          3103
+        ],
+        "p2": [
+          690,
+          3494
+        ],
+        "largo_m": "2.30",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          715,
+          3494
+        ],
+        "p2": [
+          715,
+          3668
+        ],
+        "largo_m": "1.02",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              664,
+              3494
+            ],
+            "p2": [
+              664,
+              3720
+            ]
+          },
+          "muroId": "MU09",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          664,
+          3494
+        ],
+        "p2": [
+          664,
+          3720
+        ],
+        "largo_m": "1.33",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              715,
+              3494
+            ],
+            "p2": [
+              715,
+              3668
+            ]
+          },
+          "muroId": "MU09",
+          "perp_m": "0.30",
+          "solape": "0.77"
+        }
+      },
+      {
+        "p1": [
+          664,
+          3720
+        ],
+        "p2": [
+          791,
+          3720
+        ],
+        "largo_m": "0.75",
+        "tiene_paralelo": false,
+        "info": null
+      }
+    ]
+  },
+  {
+    "id": "MU10",
+    "largo_total_m": 9,
+    "n_segmentos_largos": 6,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          1183,
+          3694
+        ],
+        "p2": [
+          791,
+          3694
+        ],
+        "largo_m": "2.30",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          1183,
+          3668
+        ],
+        "p2": [
+          1404,
+          3668
+        ],
+        "largo_m": "1.30",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1183,
+              3720
+            ],
+            "p2": [
+              1438,
+              3720
+            ]
+          },
+          "muroId": "MU10",
+          "perp_m": "0.31",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1404,
+          3430
+        ],
+        "p2": [
+          1404,
+          3668
+        ],
+        "largo_m": "1.40",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1438,
+              3566
+            ],
+            "p2": [
+              1438,
+              3430
+            ]
+          },
+          "muroId": "MU10",
+          "perp_m": "0.20",
+          "solape": "0.57"
+        }
+      },
+      {
+        "p1": [
+          1183,
+          3720
+        ],
+        "p2": [
+          1438,
+          3720
+        ],
+        "largo_m": "1.50",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1183,
+              3668
+            ],
+            "p2": [
+              1404,
+              3668
+            ]
+          },
+          "muroId": "MU10",
+          "perp_m": "0.31",
+          "solape": "0.87"
+        }
+      },
+      {
+        "p1": [
+          1438,
+          3720
+        ],
+        "p2": [
+          1438,
+          3600
+        ],
+        "largo_m": "0.71",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1404,
+              3430
+            ],
+            "p2": [
+              1404,
+              3668
+            ]
+          },
+          "muroId": "MU10",
+          "perp_m": "0.20",
+          "solape": "0.57"
+        }
+      },
+      {
+        "p1": [
+          1438,
+          3566
+        ],
+        "p2": [
+          1438,
+          3430
+        ],
+        "largo_m": "0.80",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1404,
+              3430
+            ],
+            "p2": [
+              1404,
+              3668
+            ]
+          },
+          "muroId": "MU10",
+          "perp_m": "0.20",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU11",
+    "largo_total_m": 7.55,
+    "n_segmentos_largos": 3,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          1693,
+          2920
+        ],
+        "p2": [
+          2246,
+          2920
+        ],
+        "largo_m": "3.25",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1659,
+              2869
+            ],
+            "p2": [
+              2246,
+              2869
+            ]
+          },
+          "muroId": "MU11",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1659,
+          2869
+        ],
+        "p2": [
+          1659,
+          2950
+        ],
+        "largo_m": "0.48",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          1659,
+          2869
+        ],
+        "p2": [
+          2246,
+          2869
+        ],
+        "largo_m": "3.45",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1693,
+              2920
+            ],
+            "p2": [
+              2246,
+              2920
+            ]
+          },
+          "muroId": "MU11",
+          "perp_m": "0.30",
+          "solape": "0.94"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU12",
+    "largo_total_m": 4.5,
+    "n_segmentos_largos": 2,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          1489,
+          2393
+        ],
+        "p2": [
+          1736,
+          2393
+        ],
+        "largo_m": "1.45",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1489,
+              2444
+            ],
+            "p2": [
+              1829,
+              2444
+            ]
+          },
+          "muroId": "MU12",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1489,
+          2444
+        ],
+        "p2": [
+          1829,
+          2444
+        ],
+        "largo_m": "2.00",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1489,
+              2393
+            ],
+            "p2": [
+              1736,
+              2393
+            ]
+          },
+          "muroId": "MU12",
+          "perp_m": "0.30",
+          "solape": "0.73"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU13",
+    "largo_total_m": 3.5,
+    "n_segmentos_largos": 4,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          2263,
+          2036
+        ],
+        "p2": [
+          2263,
+          2129
+        ],
+        "largo_m": "0.55",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2297,
+              2002
+            ],
+            "p2": [
+              2297,
+              2129
+            ]
+          },
+          "muroId": "MU13",
+          "perp_m": "0.20",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2203,
+          2002
+        ],
+        "p2": [
+          2297,
+          2002
+        ],
+        "largo_m": "0.55",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          2297,
+          2002
+        ],
+        "p2": [
+          2297,
+          2129
+        ],
+        "largo_m": "0.75",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2263,
+              2036
+            ],
+            "p2": [
+              2263,
+              2129
+            ]
+          },
+          "muroId": "MU13",
+          "perp_m": "0.20",
+          "solape": "0.73"
+        }
+      },
+      {
+        "p1": [
+          2203,
+          2036
+        ],
+        "p2": [
+          2203,
+          2129
+        ],
+        "largo_m": "0.55",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2263,
+              2036
+            ],
+            "p2": [
+              2263,
+              2129
+            ]
+          },
+          "muroId": "MU13",
+          "perp_m": "0.35",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU14",
+    "largo_total_m": 0.7,
+    "n_segmentos_largos": 0,
+    "tiene_algun_paralelo": false,
+    "detalle": []
+  },
+  {
+    "id": "MU15",
+    "largo_total_m": 24.32,
+    "n_segmentos_largos": 8,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          2484,
+          2393
+        ],
+        "p2": [
+          2484,
+          1611
+        ],
+        "largo_m": "4.60",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2535,
+              2444
+            ],
+            "p2": [
+              2535,
+              1560
+            ]
+          },
+          "muroId": "MU15",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2484,
+          1611
+        ],
+        "p2": [
+          2335,
+          1611
+        ],
+        "largo_m": "0.88",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2535,
+              1560
+            ],
+            "p2": [
+              2335,
+              1560
+            ]
+          },
+          "muroId": "MU15",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2458,
+          2444
+        ],
+        "p2": [
+          2535,
+          2444
+        ],
+        "largo_m": "0.45",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          2535,
+          2444
+        ],
+        "p2": [
+          2535,
+          1560
+        ],
+        "largo_m": "5.20",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2679,
+              1611
+            ],
+            "p2": [
+              2679,
+              3694
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.85",
+          "solape": "0.94"
+        }
+      },
+      {
+        "p1": [
+          2535,
+          1560
+        ],
+        "p2": [
+          2335,
+          1560
+        ],
+        "largo_m": "1.18",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2484,
+              1611
+            ],
+            "p2": [
+              2335,
+              1611
+            ]
+          },
+          "muroId": "MU15",
+          "perp_m": "0.30",
+          "solape": "0.74"
+        }
+      },
+      {
+        "p1": [
+          2535,
+          1560
+        ],
+        "p2": [
+          2654,
+          1560
+        ],
+        "largo_m": "0.70",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2535,
+              1611
+            ],
+            "p2": [
+              2705,
+              1611
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2654,
+          1560
+        ],
+        "p2": [
+          2654,
+          369
+        ],
+        "largo_m": "7.00",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2705,
+              1611
+            ],
+            "p2": [
+              2705,
+              327
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2654,
+          369
+        ],
+        "p2": [
+          2047,
+          369
+        ],
+        "largo_m": "3.57",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2705,
+              327
+            ],
+            "p2": [
+              2047,
+              327
+            ]
+          },
+          "muroId": "MU02",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU16",
+    "largo_total_m": 7.37,
+    "n_segmentos_largos": 5,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          2335,
+          1585
+        ],
+        "p2": [
+          1944,
+          1585
+        ],
+        "largo_m": "2.30",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          1944,
+          1611
+        ],
+        "p2": [
+          1838,
+          1611
+        ],
+        "largo_m": "0.62",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1944,
+              1560
+            ],
+            "p2": [
+              1710,
+              1560
+            ]
+          },
+          "muroId": "MU16",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1944,
+          1560
+        ],
+        "p2": [
+          1710,
+          1560
+        ],
+        "largo_m": "1.38",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1944,
+              1611
+            ],
+            "p2": [
+              1838,
+              1611
+            ]
+          },
+          "muroId": "MU16",
+          "perp_m": "0.30",
+          "solape": "0.45"
+        }
+      },
+      {
+        "p1": [
+          1838,
+          1798
+        ],
+        "p2": [
+          1838,
+          1611
+        ],
+        "largo_m": "1.10",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1821,
+              1781
+            ],
+            "p2": [
+              1821,
+              1611
+            ]
+          },
+          "muroId": "MU05",
+          "perp_m": "0.10",
+          "solape": "0.91"
+        }
+      },
+      {
+        "p1": [
+          1786,
+          1798
+        ],
+        "p2": [
+          1786,
+          2002
+        ],
+        "largo_m": "1.20",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1736,
+              1781
+            ],
+            "p2": [
+              1736,
+              2223
+            ]
+          },
+          "muroId": "MU05",
+          "perp_m": "0.29",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU17",
+    "largo_total_m": 7.2,
+    "n_segmentos_largos": 5,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          919,
+          2138
+        ],
+        "p2": [
+          919,
+          2240
+        ],
+        "largo_m": "0.60",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              970,
+              2138
+            ],
+            "p2": [
+              970,
+              2393
+            ]
+          },
+          "muroId": "MU17",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          970,
+          2138
+        ],
+        "p2": [
+          970,
+          2393
+        ],
+        "largo_m": "1.50",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              919,
+              2138
+            ],
+            "p2": [
+              919,
+              2240
+            ]
+          },
+          "muroId": "MU17",
+          "perp_m": "0.30",
+          "solape": "0.40"
+        }
+      },
+      {
+        "p1": [
+          970,
+          2393
+        ],
+        "p2": [
+          1217,
+          2393
+        ],
+        "largo_m": "1.45",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              919,
+              2444
+            ],
+            "p2": [
+              1217,
+              2444
+            ]
+          },
+          "muroId": "MU17",
+          "perp_m": "0.30",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          919,
+          2444
+        ],
+        "p2": [
+          1217,
+          2444
+        ],
+        "largo_m": "1.75",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              970,
+              2393
+            ],
+            "p2": [
+              1217,
+              2393
+            ]
+          },
+          "muroId": "MU17",
+          "perp_m": "0.30",
+          "solape": "0.83"
+        }
+      },
+      {
+        "p1": [
+          919,
+          2274
+        ],
+        "p2": [
+          919,
+          2444
+        ],
+        "largo_m": "1.00",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              970,
+              2138
+            ],
+            "p2": [
+              970,
+              2393
+            ]
+          },
+          "muroId": "MU17",
+          "perp_m": "0.30",
+          "solape": "0.70"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU18",
+    "largo_total_m": 2.1,
+    "n_segmentos_largos": 2,
+    "tiene_algun_paralelo": false,
+    "detalle": [
+      {
+        "p1": [
+          2026,
+          803
+        ],
+        "p2": [
+          2026,
+          930
+        ],
+        "largo_m": "0.75",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          2026,
+          1066
+        ],
+        "p2": [
+          2026,
+          939
+        ],
+        "largo_m": "0.75",
+        "tiene_paralelo": false,
+        "info": null
+      }
+    ]
+  },
+  {
+    "id": "MU19",
+    "largo_total_m": 0.6,
+    "n_segmentos_largos": 0,
+    "tiene_algun_paralelo": false,
+    "detalle": []
+  },
+  {
+    "id": "MU20",
+    "largo_total_m": 0.6,
+    "n_segmentos_largos": 0,
+    "tiene_algun_paralelo": false,
+    "detalle": []
+  },
+  {
+    "id": "MU21",
+    "largo_total_m": 3.25,
+    "n_segmentos_largos": 4,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          2026,
+          1347
+        ],
+        "p2": [
+          2026,
+          1219
+        ],
+        "largo_m": "0.75",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          2026,
+          1355
+        ],
+        "p2": [
+          2026,
+          1483
+        ],
+        "largo_m": "0.75",
+        "tiene_paralelo": false,
+        "info": null
+      },
+      {
+        "p1": [
+          2004,
+          1483
+        ],
+        "p2": [
+          2004,
+          1560
+        ],
+        "largo_m": "0.45",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2047,
+              1483
+            ],
+            "p2": [
+              2047,
+              1560
+            ]
+          },
+          "muroId": "MU21",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          2047,
+          1483
+        ],
+        "p2": [
+          2047,
+          1560
+        ],
+        "largo_m": "0.45",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              2004,
+              1483
+            ],
+            "p2": [
+              2004,
+              1560
+            ]
+          },
+          "muroId": "MU21",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU22",
+    "largo_total_m": 2.14,
+    "n_segmentos_largos": 2,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          1693,
+          3218
+        ],
+        "p2": [
+          1693,
+          3069
+        ],
+        "largo_m": "0.88",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1659,
+              3069
+            ],
+            "p2": [
+              1659,
+              3218
+            ]
+          },
+          "muroId": "MU22",
+          "perp_m": "0.20",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1659,
+          3069
+        ],
+        "p2": [
+          1659,
+          3218
+        ],
+        "largo_m": "0.88",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1693,
+              3218
+            ],
+            "p2": [
+              1693,
+              3069
+            ]
+          },
+          "muroId": "MU22",
+          "perp_m": "0.20",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU23",
+    "largo_total_m": 50.86,
+    "n_segmentos_largos": 17,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          672,
+          1398
+        ],
+        "p2": [
+          672,
+          369
+        ],
+        "largo_m": "6.05",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              715,
+              369
+            ],
+            "p2": [
+              715,
+              1083
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "0.69"
+        }
+      },
+      {
+        "p1": [
+          672,
+          369
+        ],
+        "p2": [
+          332,
+          369
+        ],
+        "largo_m": "2.00",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1353,
+              327
+            ],
+            "p2": [
+              290,
+              327
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          332,
+          369
+        ],
+        "p2": [
+          332,
+          1398
+        ],
+        "largo_m": "6.05",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              290,
+              327
+            ],
+            "p2": [
+              290,
+              1449
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          715,
+          1449
+        ],
+        "p2": [
+          715,
+          1126
+        ],
+        "largo_m": "1.90",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              672,
+              1398
+            ],
+            "p2": [
+              672,
+              369
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "0.84"
+        }
+      },
+      {
+        "p1": [
+          715,
+          1126
+        ],
+        "p2": [
+          1043,
+          1126
+        ],
+        "largo_m": "1.93",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              715,
+              1083
+            ],
+            "p2": [
+              1001,
+              1083
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "0.87"
+        }
+      },
+      {
+        "p1": [
+          1043,
+          1126
+        ],
+        "p2": [
+          1043,
+          947
+        ],
+        "largo_m": "1.05",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1001,
+              1083
+            ],
+            "p2": [
+              1001,
+              947
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "0.76"
+        }
+      },
+      {
+        "p1": [
+          1001,
+          1083
+        ],
+        "p2": [
+          1001,
+          947
+        ],
+        "largo_m": "0.80",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1043,
+              1126
+            ],
+            "p2": [
+              1043,
+              947
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          715,
+          1083
+        ],
+        "p2": [
+          1001,
+          1083
+        ],
+        "largo_m": "1.68",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              715,
+              1126
+            ],
+            "p2": [
+              1043,
+              1126
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          715,
+          369
+        ],
+        "p2": [
+          715,
+          1083
+        ],
+        "largo_m": "4.20",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              672,
+              1398
+            ],
+            "p2": [
+              672,
+              369
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1001,
+          369
+        ],
+        "p2": [
+          715,
+          369
+        ],
+        "largo_m": "1.68",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1353,
+              327
+            ],
+            "p2": [
+              290,
+              327
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1001,
+          505
+        ],
+        "p2": [
+          1001,
+          369
+        ],
+        "largo_m": "0.80",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1043,
+              369
+            ],
+            "p2": [
+              1043,
+              505
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1043,
+          369
+        ],
+        "p2": [
+          1043,
+          505
+        ],
+        "largo_m": "0.80",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1001,
+              505
+            ],
+            "p2": [
+              1001,
+              369
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1310,
+          369
+        ],
+        "p2": [
+          1043,
+          369
+        ],
+        "largo_m": "1.57",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1353,
+              327
+            ],
+            "p2": [
+              290,
+              327
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1310,
+          760
+        ],
+        "p2": [
+          1310,
+          369
+        ],
+        "largo_m": "2.30",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1353,
+              803
+            ],
+            "p2": [
+              1353,
+              327
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          290,
+          327
+        ],
+        "p2": [
+          290,
+          1449
+        ],
+        "largo_m": "6.60",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              332,
+              369
+            ],
+            "p2": [
+              332,
+              1398
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "0.92"
+        }
+      },
+      {
+        "p1": [
+          1353,
+          327
+        ],
+        "p2": [
+          290,
+          327
+        ],
+        "largo_m": "6.25",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              672,
+              369
+            ],
+            "p2": [
+              332,
+              369
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "0.32"
+        }
+      },
+      {
+        "p1": [
+          1353,
+          803
+        ],
+        "p2": [
+          1353,
+          327
+        ],
+        "largo_m": "2.80",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1310,
+              760
+            ],
+            "p2": [
+              1310,
+              369
+            ]
+          },
+          "muroId": "MU23",
+          "perp_m": "0.25",
+          "solape": "0.82"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU24",
+    "largo_total_m": 2.54,
+    "n_segmentos_largos": 2,
+    "tiene_algun_paralelo": true,
+    "detalle": [
+      {
+        "p1": [
+          1043,
+          803
+        ],
+        "p2": [
+          1166,
+          803
+        ],
+        "largo_m": "0.72",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1043,
+              760
+            ],
+            "p2": [
+              1166,
+              760
+            ]
+          },
+          "muroId": "MU24",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      },
+      {
+        "p1": [
+          1043,
+          760
+        ],
+        "p2": [
+          1166,
+          760
+        ],
+        "largo_m": "0.72",
+        "tiene_paralelo": true,
+        "info": {
+          "otro": {
+            "p1": [
+              1043,
+              803
+            ],
+            "p2": [
+              1166,
+              803
+            ]
+          },
+          "muroId": "MU24",
+          "perp_m": "0.25",
+          "solape": "1.00"
+        }
+      }
+    ]
+  },
+  {
+    "id": "MU25",
+    "largo_total_m": 2.57,
+    "n_segmentos_largos": 1,
+    "tiene_algun_paralelo": false,
+    "detalle": [
+      {
+        "p1": [
+          259,
+          4829
+        ],
+        "p2": [
+          697,
+          4829
+        ],
+        "largo_m": "2.58",
+        "tiene_paralelo": false,
+        "info": null
+      }
+    ]
+  }
+]
