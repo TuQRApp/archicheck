@@ -2056,6 +2056,16 @@ Sesión larga de implementación + depuración del prototipo Node.js de cuerpo c
 
 **Próximo paso**: portar el módulo (validado, 11/11) a Python e integrarlo al notebook — reemplazando el filtro duro de tipo/ángulo/capa del Paso 4 (generador) y la fusión ciega por proximidad (confirmador) por este mismo test. Cambio de arquitectura considerable, no solo un fix puntual.
 
+## ✅ 2026-08-22 (continuación) — Módulo cuerpo cerrado portado a Python (`cuerpo_cerrado.py`), pendiente validar en Colab antes de integrar
+
+**Archivo nuevo**: `Herramientas_CubiCasa5k/cuerpo_cerrado.py` — puerto 1:1 de `_tmp_cuerpo_cerrado.mjs` (mismas funciones, misma lógica geométrica, mismos 3 bugs de fondo ya corregidos, misma regla permanente de línea central = ventana). Diferencia deliberada: usa `cv2`/`numpy` (ya dependencias del pipeline, ver Celda 1) en vez de reimplementar rasterizado/dilatación/flood-fill a mano pixel por pixel como hizo el prototipo Node.js (que no tenía OpenCV disponible) — `cv2.fillPoly` para los cuadriláteros de relleno sólido y el remate de esquinas, `cv2.dilate` con kernel cruz (equivalente exacto a la dilatación 4-conexa por iteración del prototipo), `cv2.connectedComponents` para el equivalente de flood-fill (mismo patrón que `connectedComponentsWithStats` ya usado en la Celda 4). Las claves de segmento (`p1`/`p2`) coinciden con el formato ya usado en `segmentos_l` de `extraer_datos_vectoriales`, para que la integración futura no requiera transformar datos.
+
+**Test de regresión**: `Herramientas_CubiCasa5k/test_cuerpo_cerrado.py` — mismos 4 casos (6 sub-casos con la variante de control) de `_tmp_test_cuerpo_cerrado.mjs`, portados con los mismos datos reales de PdV (pilar MU18 vs ventana idx484, MU13 + fragmento recuperado en capa Proyecciones, control de distancia lejana, MU06 vs MU07 separados por ventana real de 2.3m).
+
+**Sin validar todavía — sin Python disponible en este equipo en esta sesión** (`python`/`python3`/`py` son solo los alias-stub de Microsoft Store, no un intérprete real; sin conda/uv/venv instalado). El código se revisó línea por línea contra el `.mjs` (incluida una corrección real encontrada en la traducción: el chequeo de signos opuestos en `identificarLineasCentrales`, `Math.sign(dX) === Math.sign(dY)`, estaba mal traducido en el primer intento y se corrigió antes de guardar), pero no se ejecutó.
+
+**Próximo paso real (sin cambios respecto a la entrada anterior)**: correr `test_cuerpo_cerrado.py` en Colab (donde `cv2`/`numpy` ya están disponibles) y confirmar 6/6 antes de tocar la Celda 4 real. Recién con eso confirmado, integrar en dos puntos: (1) `_fusionar_muros_por_proximidad` (confirmador) — reemplazar el chequeo ciego `distancia <= tol_fusion_px` por una llamada a `cuerpo_cerrado_fusiona`, cambio contenido porque no toca la heurística de conectividad ya afinada del Paso 2; (2) el filtro de protección del Paso 2 (generador) — integración más grande y riesgosa, requiere validar contra el ground truth de PdV (N1=28, N2=33) en Colab antes de confiar en el resultado, no se debe hacer a ciegas en una sola pasada.
+
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
