@@ -2072,6 +2072,17 @@ El arquitecto corrió `test_cuerpo_cerrado.py` en un notebook nuevo de Colab (su
 
 **Próximo paso**: integrar `cuerpo_cerrado.py` a la Celda 4 real, en dos pasos separados (no en una sola pasada, mismo criterio que ya se usó para la fusión ≤10px el 20-ago): primero `_fusionar_muros_por_proximidad` (confirmador, cambio contenido), correr en Colab contra PdV y comparar contra el resultado actual (N1=25, N2=31) antes de avanzar; recién después, el filtro de protección del Paso 2 (generador).
 
+## 🔧 2026-08-22 (continuación) — Integrado a `_fusionar_muros_por_proximidad`, sin correr en Colab todavía
+
+**Cambio en `cuerpo_cerrado.py`** (antes de tocar el notebook): `construir_contexto_con_pares` (antes privada) ahora es pública, y `cuerpo_cerrado_fusiona` acepta `con_pares_precalculados` opcional — el emparejamiento de anchos sobre el contexto local es O(n²) y no depende del par (A,B) evaluado, así que si se llama muchas veces sobre el mismo contexto (como pasa ahora, una vez por página) conviene calcularlo una sola vez en vez de repetirlo en cada llamada.
+
+**Cambio en la Celda 4** (notebook renombrado `ArchiCheck_Base 22ago_1904.ipynb`, el anterior movido a `Versiones anteriores/`):
+- Import nuevo tras los imports existentes: `from cuerpo_cerrado import cuerpo_cerrado_fusiona, construir_contexto_con_pares`, con fallback a `files.upload()` si el runtime de Colab todavía no tiene el archivo (mismo patrón que la subida del PDF en la Celda 2) — no hace falta editar la Celda 1 ni cambiar el contrato "solo editás la Celda 3".
+- `_fusionar_muros_por_proximidad` gana un parámetro `mpx=None`. Si se pasa (el call site ya lo pasa: `mpx=mpx`), se agrega un tercer gate **después** de la proximidad punto-a-segmento y del bloqueo por puerta: `cuerpo_cerrado_fusiona(...)` sobre el par candidato, con `contexto_local` = todos los segmentos de todas las entradas de `muros_geo` de esa página (mismo pool, sirve de evidencia de ancho real y vértices de esquina) y `con_pares_precalculados` calculado una sola vez al entrar a la función. Si `cuerpo_cerrado_fusiona` dice `fusiona=False`, el par NO se une aunque estuviera cerca y sin puerta — se cuenta aparte (`n_bloqueados_por_cuerpo_cerrado`) y aparece en el print final junto a los bloqueados por puerta. Si `mpx` es `None` (llamador viejo sin actualizar), el gate se salta y el comportamiento es idéntico al de antes — no hay ningún llamador así hoy, pero se deja documentado por si aparece uno nuevo.
+- La proximidad por bucket espacial (existente) sigue siendo la que PROPONE candidatos — cuerpo cerrado no reemplaza esa etapa, solo la verifica antes de fusionar de verdad. Mismo patrón "proponer generoso + verificar cada uno" que ya funcionó para N2 (ver entrada 2026-08-21).
+
+**Sin correr en Colab todavía** (sin Python local disponible en esta sesión, igual que el port). Antes de confiar en esto: correr contra PdV N1/N2, comparar el número de muros resultante contra el actual (N1=25, N2=31) y mirar específicamente cuántos pares caen en `n_bloqueados_por_cuerpo_cerrado` — un número alto y plausible (ventanas/pilares que antes se fusionaban de más) sería la señal de que el gate está funcionando; si tira el conteo muy por debajo de 25/31 sin motivo visible, hay que revisar antes de aceptarlo. Verificación visual (`visualizar_muros.mjs` o el mapa ya usado en sesiones anteriores) sigue siendo obligatoria antes de dar el cambio por bueno, mismo criterio que toda esta sesión.
+
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)

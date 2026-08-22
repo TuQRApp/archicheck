@@ -482,7 +482,16 @@ def _grupo_toca_componente(segmentos, componente, box, paso_px=2):
     return False
 
 
-def _construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m=0.9):
+def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m=0.9):
+    """Precalcula, para cada segmento de contexto_local, su ancho real
+    emparejado (o None si es linea suelta). O(n^2) sobre contexto_local
+    -- mismo costo que hace cuerpo_cerrado_fusiona internamente, pero
+    NO depende del par (grupo_a, grupo_b) que se este evaluando. Si se
+    va a llamar cuerpo_cerrado_fusiona muchas veces sobre el mismo
+    contexto_local (ej. una pasada de fusion sobre todos los muros de
+    una pagina), calcular esto una sola vez y pasarlo via
+    con_pares_precalculados evita repetir el trabajo O(n^2) en cada
+    llamada -- ver _fusionar_muros_por_proximidad en la Celda 4."""
     con_pares = []
     for s in contexto_local:
         r = ancho_por_emparejamiento([s], contexto_local, mpx, tol_min_m, tol_max_m)
@@ -493,13 +502,18 @@ def _construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m
 
 
 # ── Funcion principal ────────────────────────────────────────────────────
-def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, piso_min_px=2):
+def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, piso_min_px=2, con_pares_precalculados=None):
     """Decide si grupo_a y grupo_b (2 grupos de segmentos candidatos a
     fusionarse en un solo muro) son en realidad el mismo cuerpo cerrado:
     ambos deben tener ancho real emparejado (no ser lineas sueltas tipo
     ventana/referencia) Y quedar conectados en el relleno solido tras
     cerrar micro-gaps con tolerancia proporcional al ancho minimo.
-    Devuelve dict con 'fusiona' (bool), 'motivo', y los anchos medidos."""
+    Devuelve dict con 'fusiona' (bool), 'motivo', y los anchos medidos.
+
+    `con_pares_precalculados`: opcional, resultado de
+    construir_contexto_con_pares(contexto_local, mpx) ya calculado por
+    el llamador -- evita recalcularlo en cada llamada cuando se evaluan
+    muchos pares sobre el mismo contexto_local (ver esa funcion)."""
     ancho_a = ancho_por_emparejamiento(grupo_a, contexto_local, mpx)
     ancho_b = ancho_por_emparejamiento(grupo_b, contexto_local, mpx)
 
@@ -516,7 +530,7 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
     margen_px = margen_m / mpx
     box = _bbox(list(grupo_a) + list(grupo_b), margen_px)
 
-    con_pares = _construir_contexto_con_pares(contexto_local, mpx)
+    con_pares = con_pares_precalculados if con_pares_precalculados is not None else construir_contexto_con_pares(contexto_local, mpx)
     bin_arr, w, h = _relleno_solido(con_pares, box, contexto_local, None, mpx)
     dil_bin = _dilatar(bin_arr, tol_px)
 
@@ -542,6 +556,6 @@ def relleno_solido_de_contexto(contexto_local, mpx, margen_m=0.6, objetivo=None)
     de vertices de union, nunca se pinta a si mismo."""
     box = _bbox(objetivo if objetivo else contexto_local, margen_m / mpx)
     objetivo_ids = {id(s) for s in objetivo} if objetivo else None
-    con_pares = _construir_contexto_con_pares(contexto_local, mpx)
+    con_pares = construir_contexto_con_pares(contexto_local, mpx)
     bin_arr, w, h = _relleno_solido(con_pares, box, contexto_local, objetivo_ids, mpx)
     return {'box': box, 'w': w, 'h': h, 'bin': bin_arr}
