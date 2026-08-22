@@ -2033,6 +2033,29 @@ Construido y portado a `ArchiCheck_Base 21aug_1445.ipynb` (el anterior, `21aug_1
 
 **Próximo paso**: implementar el test de cuerpo cerrado (diseño ya acordado en la entrada "Corrección de fondo... 2026-08-21" más arriba — rasterizar contexto local, cerrar micro-gaps con tolerancia, verificar componente conexo + grosor real vía `distanceTransform`, corre inline por par antes de cada `union(i,j)`).
 
+## ✅ 2026-08-21/22 (continuación) — Módulo cuerpo cerrado (`_tmp_cuerpo_cerrado.mjs`, Node.js) completo y validado; 3 bugs de fondo encontrados y corregidos antes del port a Python
+
+Sesión larga de implementación + depuración del prototipo Node.js de cuerpo cerrado, iterando con capturas marcadas a mano por el arquitecto (amarillo=eliminar, lila=agregar, rojo=inventado, cian=no debería pintarse, verde=confirmar cerrado) contra datos reales extraídos con `pdfjs` del PDV. Módulo vive en `Herramientas_CubiCasa5k/_tmp_cuerpo_cerrado.mjs`, todavía sin portar al notebook.
+
+**Decisión de fondo — cuerpo cerrado es generador Y confirmador, no solo lo segundo**: el arquitecto preguntó explícitamente si el rol era uno u otro. Resuelto con evidencia directa en ambos sentidos: Muro7-8 (Baño Universal) ya estaba completo como `MU13` — si el lado de EXTRACCIÓN (generador, decide qué segmentos entran como candidato a "muro") siguiera excluyendo por tipo `'re'`, el confirmador nunca vería el segmento. Muro2/Muro5 sí estaban ya extraídos pero sin fusionar — ahí el confirmador solo (validar fusión de 2 grupos ya candidatos) es suficiente. Conclusión: reemplaza tanto el filtro duro de inclusión (tipo/ángulo/capa) del Paso 4 como la fusión ciega por proximidad — dos usos del mismo test geométrico.
+
+**Regla permanente de ventana, cerrada esta sesión**: 2 líneas enfrentadas que parecen muro + 1 línea central (recta o curva) entre medio = ventana, **siempre** — aunque geométricamente cumplan cuerpo cerrado. La línea central nunca es el ancho real (la ventana real mide 2-3cm, las 2 líneas enfrentadas son solo convención de dibujo). Implementado como categoría propia (`identificarLineasCentrales`): una línea es central si tiene 2 vecinos paralelos en lados OPUESTOS (distancia con signo), a separación total dentro del rango de espesor de muro y aprox. simétrica — se identifica ANTES de emparejar caras, no por par (un primer intento por-par fallaba: la propia línea central terminaba aceptándose a sí misma como "cara", por estar más cerca de una cara que la cara opuesta real).
+
+**Regla permanente de anchos variables**: una pierna de muro puede tener un tramo localmente más ancho sin partirse en 2 muros, salvo que haya un vacío EXPLÍCITO con bordes propios (un hit genérico de OpenCV sin bordes declarados no es evidencia suficiente) — "nunca habrá un espacio dentro de un muro si no está explícito con bordes".
+
+**3 bugs de fondo encontrados y corregidos, en orden**:
+1. **Emparejamiento espurio a larga distancia**: una tapa corta de ancho encontraba "pareja" válida con un muro no relacionado 127px más lejos, solo por caer paralela dentro de la tolerancia — corregido exigiendo que el ancho medido nunca supere el largo propio del segmento (una cara real no puede ser más ancha que larga).
+2. **La línea central bloqueaba el emparejamiento pero el remate de esquinas puenteaba la ventana igual**: el relleno de vértices (pensado para cerrar el hueco visual de una L/T/+) rellenaba un cuadrado usando el ancho propio de cada pierna sin saber que ese vértice era la tapa de una ventana ya detectada — si el espesor del muro es comparable al ancho del vano, los 2 cuadrados (uno de cada lado) se tocan igual. Corregido: todo segmento con un candidato de pareja válido rechazado por línea central queda marcado "bloqueado por ventana", y el remate nunca rellena un vértice tocado por ese segmento.
+3. **🔴 Encontrado por el arquitecto, no por mí — el remate de esquinas asumía piernas del mismo ancho (cuadrado)**: "las piernas de un muro en L/E/U no necesariamente son del mismo ancho, por lo que no necesariamente se encuentran en un cuadrado". Correcto — el remate usaba un solo `maxHalfAncho` (el mayor entre todas las piernas del vértice) y pintaba un cuadrado isotrópico, sobre-engordando la pierna más delgada cuando difieren. Reescrito: cada pierna se extiende más allá del vértice usando el semi-ancho REAL de la OTRA pierna específica (no un máximo genérico), generando un remate rectangular del tamaño exacto — validado con un caso sintético L de 15cm+25cm (visualmente rectangular, sin engordar la pierna delgada).
+
+**Validado con suite de 11 casos de regresión** (curva real Baño MU01-pilarNE, cruce MU02, Muro2=MU03+MU26, Muro5, ventana recta MU06-MU07, pilar MU18 vs ventana, muro partido artificial, cruz sintética, ventana lateral sintética con/sin línea central, L asimétrica) — 11/11 OK. Renders N1 (Baño Universal, 3 muros) y N2 (13 ítems) re-verificados pixel-idénticos al último estado aprobado por el arquitecto tras los 2 últimos fixes.
+
+**Clasificación real de los 14 muros rojos/achurados escaneados en N2** (búsqueda sistemática con `_tmp_buscar_muros_rojos.mjs`, cruzada contra `muros_geo`): solo 2 genuinamente ausentes de la extracción (`op#5062`, `op#5710`/`op#5730`); el resto (7 casos) ya estaban extraídos pero sin fusionar — corrige a la baja la sobreestimación anterior de "17 muros rojos faltantes".
+
+**Pendiente conocido, no arreglado esta sesión**: el bug "esquina cian" (doble-L anidada en el marco de una puerta/closet, `MU13`) — documentado, deferred.
+
+**Próximo paso**: portar el módulo (validado, 11/11) a Python e integrarlo al notebook — reemplazando el filtro duro de tipo/ángulo/capa del Paso 4 (generador) y la fusión ciega por proximidad (confirmador) por este mismo test. Cambio de arquitectura considerable, no solo un fix puntual.
+
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
