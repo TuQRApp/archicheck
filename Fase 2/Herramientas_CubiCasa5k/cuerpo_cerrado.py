@@ -303,9 +303,21 @@ def diagnosticar_candidatos(s, contexto, mpx, top_n=5):
             'largo_m': round(largo_c * mpx, 3),
         })
     candidatos.sort(key=lambda x: x['distancia_m'])
+    # NUEVO (2026-08-23): separar los candidatos que SI solapan en proyeccion
+    # de los que no -- ordenar todo junto por distancia cruda esconde al
+    # candidato geometricamente relevante (con solape real) detras de
+    # coincidencias irrelevantes mas cercanas en distancia pura pero sin
+    # ninguna relacion real (duplicados del propio segmento, u otro muro
+    # no relacionado que pasa cerca sin solapar). Confirmado con datos
+    # reales de PdV (MU03, 3.6m de largo): los 3 candidatos mas cercanos
+    # por distancia cruda tenian los 3 solapa=False, incluyendo un
+    # duplicado exacto del propio segmento a 0m -- el candidato real
+    # (si existe) puede estar mas lejos en distancia pero SI solapar.
+    candidatos_con_solape = [c for c in candidatos if c['solapa_en_direccion']]
     return {
         's_p1': s['p1'], 's_p2': s['p2'], 's_largo_m': round(largo_s * mpx, 3),
         'top_candidatos': candidatos[:top_n],
+        'top_candidatos_con_solape': candidatos_con_solape[:top_n],
     }
 
 
@@ -333,15 +345,34 @@ def _fill_quad(bin_arr, box, p1, p2, p3, p4):
     cv2.fillPoly(bin_arr, [pts], 1)
 
 
-def _relleno_solido(contexto_con_pares, box, todos_los_segmentos, objetivo_ids, mpx, tol_min_m=0.08, tol_max_m=0.9):
+def _relleno_solido(contexto_con_pares, box, todos_los_segmentos, objetivo_ids, mpx, tol_min_m=0.08, tol_max_m=0.9, segmentos_ancho_forzado=None):
     """Rellena el AREA SOLIDA real de cada segmento con par -- el
     cuadrilatero entre el segmento y su cara enfrentada (equivale a
     "verter agua entre las 2 caras"), mas el remate de esquinas
     (exteriores E interiores) donde 2+ piernas de ancho real se juntan
     en un vertice -- ver docstring completo en _tmp_cuerpo_cerrado.mjs
-    (funcion rellenoSolido)."""
+    (funcion rellenoSolido).
+
+    `segmentos_ancho_forzado`: lista opcional de (segmento, ancho_px)
+    para CONECTORES de esquina/jog sin cara propia (ver
+    _ancho_heredado_de_conector) -- se dibujan como trazo grueso
+    directo (cv2.line, sin pasar por el calculo de cuadrilatero por
+    solape) usando el ancho heredado del vecino, porque el chequeo
+    normal `ancho_px > largo_s` (mas abajo) los rechazaria: un conector
+    corto puede heredar un ancho mayor que su propio largo (ej. un jog
+    de 15cm pegado a un muro de 30cm), y eso es legitimo para un
+    conector aunque seria inverosimil para una cara real."""
     w, h = _dims(box)
     bin_arr = np.zeros((h, w), dtype=np.uint8)
+
+    if segmentos_ancho_forzado:
+        for s, ancho_px in segmentos_ancho_forzado:
+            if objetivo_ids is not None and id(s) not in objetivo_ids:
+                continue
+            grosor = max(1, round(ancho_px))
+            p1 = (round(s['p1'][0] - box['x0']), round(s['p1'][1] - box['y0']))
+            p2 = (round(s['p2'][0] - box['x0']), round(s['p2'][1] - box['y0']))
+            cv2.line(bin_arr, p1, p2, 1, thickness=grosor)
 
     for item in contexto_con_pares:
         s, c, ancho_px = item['segmento'], item['par'], item['anchoPx']
@@ -520,6 +551,38 @@ def _grupo_toca_componente(segmentos, componente, box, paso_px=2):
     return False
 
 
+def _ancho_heredado_de_conector(grupo, con_pares, mpx, tol_vertice_m=0.03):
+    """Un grupo sin ancho propio (ver ancho_por_emparejamiento) puede
+    igual ser parte real de un muro si es un CONECTOR CORTO de esquina
+    o jog -- confirmado por el arquitecto con datos reales de PdV
+    (2026-08-23, casos MU02 y MU108): un tramo corto que remata un
+    giro o una esquina nunca tiene su propia cara enfrentada, por
+    definicion (es la pieza que UNE 2 caras, no una cara en si misma)
+    -- eso no lo vuelve una linea suelta tipo ventana/referencia. La
+    evidencia de que es un conector real (no una linea aislada) es que
+    al menos uno de sus extremos coincide, dentro de tol_vertice_m, con
+    el extremo de OTRO segmento del contexto local que SI tiene ancho
+    real -- estar fisicamente pegado a una cara de muro real.
+
+    Devuelve el ancho (px) heredado del vecino con ancho mas cercano
+    por vertice compartido, o None si ningun extremo del grupo toca a
+    un vecino con ancho real (en ese caso si es una linea suelta
+    genuina, sin relacion estructural con ningun muro)."""
+    tol_px = tol_vertice_m / mpx
+    mejor = None
+    for s in grupo:
+        for extremo in (s['p1'], s['p2']):
+            for item in con_pares:
+                c = item['segmento']
+                if c is s:
+                    continue
+                for extremo_c in (c['p1'], c['p2']):
+                    d = math.hypot(extremo[0] - extremo_c[0], extremo[1] - extremo_c[1])
+                    if d <= tol_px and (mejor is None or item['anchoPx'] < mejor):
+                        mejor = item['anchoPx']
+    return mejor
+
+
 def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m=0.9):
     """Precalcula, para cada segmento de contexto_local, su ancho real
     emparejado (o None si es linea suelta). O(n^2) sobre contexto_local
@@ -540,13 +603,26 @@ def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m=
 
 
 # ── Funcion principal ────────────────────────────────────────────────────
-def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, piso_min_px=2, con_pares_precalculados=None):
+def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, piso_min_px=2, con_pares_precalculados=None, tol_conector_esquina_m=0.03):
     """Decide si grupo_a y grupo_b (2 grupos de segmentos candidatos a
     fusionarse en un solo muro) son en realidad el mismo cuerpo cerrado:
-    ambos deben tener ancho real emparejado (no ser lineas sueltas tipo
-    ventana/referencia) Y quedar conectados en el relleno solido tras
-    cerrar micro-gaps con tolerancia proporcional al ancho minimo.
-    Devuelve dict con 'fusiona' (bool), 'motivo', y los anchos medidos.
+    ambos deben tener ancho real (propio o heredado de un conector, ver
+    abajo) Y quedar conectados en el relleno solido tras cerrar
+    micro-gaps con tolerancia proporcional al ancho minimo. Devuelve
+    dict con 'fusiona' (bool), 'motivo', y los anchos medidos.
+
+    CONECTORES DE ESQUINA/JOG (agregado 2026-08-23, confirmado por el
+    arquitecto con datos reales de PdV -- casos MU02 y MU108): un grupo
+    sin ancho propio no se rechaza automaticamente como linea suelta.
+    Si al menos uno de sus extremos toca (dentro de tol_conector_esquina_m)
+    el extremo de otro segmento del contexto local que SI tiene ancho
+    real, se trata como conector real -- hereda ese ancho para el
+    calculo de tolerancia, y se dibuja con trazo grueso propio en el
+    relleno (ver _relleno_solido, segmentos_ancho_forzado) para que la
+    conectividad se evalue correctamente a traves de el. Solo se
+    rechaza como "linea suelta" si NINGUN extremo toca a un vecino con
+    ancho real -- ahi si es una linea aislada genuina (ventana, cota,
+    referencia).
 
     `con_pares_precalculados`: opcional, resultado de
     construir_contexto_con_pares(contexto_local, mpx) ya calculado por
@@ -555,12 +631,23 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
     ancho_a = ancho_por_emparejamiento(grupo_a, contexto_local, mpx)
     ancho_b = ancho_por_emparejamiento(grupo_b, contexto_local, mpx)
 
+    con_pares = con_pares_precalculados if con_pares_precalculados is not None else construir_contexto_con_pares(contexto_local, mpx)
+    segmentos_ancho_forzado = []
+
     if ancho_a['anchoPx'] is None:
-        return {'fusiona': False, 'motivo': 'grupo A sin par paralelo -- linea suelta (ventana/ref), no muro',
-                'anchoA': ancho_a, 'anchoB': ancho_b}
+        heredado = _ancho_heredado_de_conector(grupo_a, con_pares, mpx, tol_conector_esquina_m)
+        if heredado is None:
+            return {'fusiona': False, 'motivo': 'grupo A sin par paralelo -- linea suelta (ventana/ref), no muro',
+                    'anchoA': ancho_a, 'anchoB': ancho_b}
+        ancho_a = {'anchoPx': heredado, 'anchoM': heredado * mpx, 'detalle': ancho_a['detalle'], 'esConectorEsquina': True}
+        segmentos_ancho_forzado.extend((s, heredado) for s in grupo_a)
     if ancho_b['anchoPx'] is None:
-        return {'fusiona': False, 'motivo': 'grupo B sin par paralelo -- linea suelta (ventana/ref), no muro',
-                'anchoA': ancho_a, 'anchoB': ancho_b}
+        heredado = _ancho_heredado_de_conector(grupo_b, con_pares, mpx, tol_conector_esquina_m)
+        if heredado is None:
+            return {'fusiona': False, 'motivo': 'grupo B sin par paralelo -- linea suelta (ventana/ref), no muro',
+                    'anchoA': ancho_a, 'anchoB': ancho_b}
+        ancho_b = {'anchoPx': heredado, 'anchoM': heredado * mpx, 'detalle': ancho_b['detalle'], 'esConectorEsquina': True}
+        segmentos_ancho_forzado.extend((s, heredado) for s in grupo_b)
 
     ancho_min_px = min(ancho_a['anchoPx'], ancho_b['anchoPx'])
     tol_px = max(0.10 * ancho_min_px, piso_min_px)
@@ -568,8 +655,7 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
     margen_px = margen_m / mpx
     box = _bbox(list(grupo_a) + list(grupo_b), margen_px)
 
-    con_pares = con_pares_precalculados if con_pares_precalculados is not None else construir_contexto_con_pares(contexto_local, mpx)
-    bin_arr, w, h = _relleno_solido(con_pares, box, contexto_local, None, mpx)
+    bin_arr, w, h = _relleno_solido(con_pares, box, contexto_local, None, mpx, segmentos_ancho_forzado=segmentos_ancho_forzado or None)
     dil_bin = _dilatar(bin_arr, tol_px)
 
     pax, pay = _punto_medio(grupo_a)
@@ -581,8 +667,10 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
         return {'fusiona': False, 'motivo': 'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)',
                 'anchoA': ancho_a, 'anchoB': ancho_b, 'tolPx': tol_px}
 
-    return {'fusiona': True, 'motivo': 'cuerpo cerrado: conectados + ambos con ancho real emparejado',
-            'anchoA': ancho_a, 'anchoB': ancho_b, 'tolPx': tol_px}
+    motivo = 'cuerpo cerrado: conectados + ambos con ancho real emparejado'
+    if ancho_a.get('esConectorEsquina') or ancho_b.get('esConectorEsquina'):
+        motivo = 'cuerpo cerrado: conectados (conector de esquina/jog sin cara propia, ancho heredado del vecino)'
+    return {'fusiona': True, 'motivo': motivo, 'anchoA': ancho_a, 'anchoB': ancho_b, 'tolPx': tol_px}
 
 
 def relleno_solido_de_contexto(contexto_local, mpx, margen_m=0.6, objetivo=None):

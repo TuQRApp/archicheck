@@ -2109,6 +2109,43 @@ Hallazgo: N2 tuvo 667 segmentos descartados por "ángulo no-ortogonal" en la ext
 
 **Sin correr todavía** — pendiente: correr en Colab, leer las líneas `DIAG PAREJA` del log, y recién con ese dato concreto (¿falla por ángulo? ¿por distancia fuera del rango 8-90cm? ¿por falta de solape de proyección?) diseñar el fix real en vez de seguir adivinando causas.
 
+## 🔴🔍 2026-08-23 — Diagnóstico real con datos concretos: 3 patrones distintos de "sin par paralelo", ninguno es un bug simple de tolerancia
+
+Corrida real con el diagnóstico de candidatos (`diagnosticar_candidatos`, top-3 por distancia cruda + top-3 con solape real por separado, agregado a `cuerpo_cerrado.py`). Datos concretos de 5 casos reales de PdV:
+
+- **`MU02`** (0.19m): 0 candidatos con solape real en todo el contexto local — solo un vecino perpendicular a 9.4cm.
+- **`MU108`** (0.15m): el único candidato con solape es la continuación de su propia cara (misma línea), no una cara opuesta — vecino perpendicular real a 7.6cm (una "pared" de 12.2m).
+- **`MU03`/`MU04`**: dos entradas separadas trazando exactamente la misma línea de 3.6m (coordenadas idénticas invertidas) — ninguna encuentra cara opuesta real en el contexto.
+- **`MU06`** (0.3m): candidatos más cercanos son 2 líneas perpendiculares delgadas (5-15cm), sin ningún par paralelo real.
+
+**Primera hipótesis (incorrecta, corregida más abajo con evidencia visual real)**: se interpretó `MU02` como tick de puerta, `MU108` como línea de deslinde colada en `muros_geo`, `MU03/MU04` como muro duplicado, `MU06` como marca de "Punto Aplicación Rasante" — todos "no son muro real", cuerpo cerrado rechazándolos sería correcto.
+
+## ✅ 2026-08-23 (continuación) — Verificación visual sobre el plano real: `MU02` y `MU108` SÍ son muro real, la hipótesis de "deslinde/símbolo" era incorrecta
+
+Se generó un diagnóstico visual nuevo en la Celda 4 (recorta `plano_full` — el raster real de la página, ya cargado en `paginas[]` desde la Celda 2 — alrededor de cada caso y dibuja el segmento en rojo + candidatos en azul/gris, sin redibujar el resto del plano) y se descargaron 4 PNG reales (`diag_contexto_MU02.png`, `_MU108.png`, `_MU03_MU04.png`, `_MU06.png`).
+
+**Corrección del arquitecto contra las imágenes reales**:
+- **`MU02`**: es un tramo real de muro con un jog/esquina cerca de una ventana (bordes enfrentados + línea central) — marcado en verde el path completo de 3 segmentos que debe tratarse como UN cuerpo cerrado, incluidas sus esquinas.
+- **`MU108`**: **es muro real** — coincide con la línea de "Límite Propiedad"/"Deslinde" (perímetro construido en el límite, situación común), pero eso no lo descalifica. **Criterio corregido**: coincidir con una etiqueta de deslinde NO es evidencia de que algo no sea muro — el único criterio válido sigue siendo geométrico (¿tiene borde opuesto consistente?). Error propio: salté a una conclusión por la etiqueta de texto cercana en vez de verificar solo la geometría.
+- **`MU03`/`MU04`**: el segmento rojo "no es nada" — el arquitecto sospecha que confundí una línea de proyección/construcción (invisible, no tinta real) que cae justo en esa ubicación. Categoría nueva a investigar, no confirmada todavía.
+- **`MU06`**: las 3 líneas no son muros, sin que el arquitecto identifique qué generó la confusión — pendiente de revisar con más contexto.
+
+**Conclusión**: 2 de 4 casos confirman la hipótesis original (conector de esquina/jog sin cara propia = muro real, rechazado incorrectamente); 2 quedan como investigación aparte (posible categoría "línea de proyección/construcción" sin excluir todavía, análoga a ejes/cotas).
+
+## ✅ 2026-08-23 (continuación) — Fix implementado: conector de esquina hereda ancho del vecino por vértice compartido
+
+**`cuerpo_cerrado.py`**: nueva función `_ancho_heredado_de_conector(grupo, con_pares, mpx, tol_vertice_m=0.03)` — si un grupo no tiene ancho propio, revisa si alguno de sus extremos toca (≤3cm) el extremo de otro segmento del contexto local que SÍ tiene ancho real; si lo encuentra, hereda ese ancho (confirma que es un conector real, no una línea suelta). `cuerpo_cerrado_fusiona()` usa este fallback antes de rechazar por "sin par paralelo" — el grupo se dibuja en el relleno con trazo grueso propio (`_relleno_solido` gana el parámetro `segmentos_ancho_forzado`, que evita el chequeo `ancho_px > largo_s` que rechazaría un conector corto con ancho heredado de un vecino más grueso). Agregados 2 casos nuevos al test de regresión (sintéticos, mpx elegido para representar 0.3m de espesor real): uno que reproduce el patrón MU02/MU108 (debe aceptar) y un control con línea realmente aislada sin vértice compartido (debe seguir rechazando). Verificado a mano paso a paso (sin Python local) — no debería romper los 5 casos anteriores, ninguno cae en la rama nueva.
+
+**Pendiente**: correr en Colab (reiniciar el entorno de ejecución primero, para evitar que Python cachee la versión vieja del módulo).
+
+## 🔧 2026-08-23 (continuación) — Generalización pedida por el arquitecto: cierre de vértice como polígono real, no ancho uniforme + línea recta
+
+El fix de arriba es una simplificación: un solo ancho heredado (el mínimo entre vecinos) dibujado como línea recta gruesa uniforme. El arquitecto señaló que esto no generaliza: los brazos que llegan a un conector/esquina/empalme pueden tener **anchos distintos entre sí**, el ángulo entre ellos **no necesariamente es recto**, y pueden converger **3 o más brazos** en el mismo punto — el cierre real puede ser un triángulo, cuadrilátero o (raro) pentágono, no necesariamente regular.
+
+**Diseño acordado, pendiente de implementar**: en vez de heredar un ancho único, construir el **polígono de cierre real** en cada vértice de unión — de cada brazo que converge ahí (cada uno con su propio ancho real medido de sus 2 caras), tomar el punto donde cada una de sus 2 caras termina cerca del vértice; ordenar esos puntos angularmente alrededor del vértice; rellenar el polígono que conectan (`cv2.fillPoly`), sin asumir rectángulo, ángulo recto, ni anchos iguales. El número de lados sale solo de cuántos brazos convergen y cuántas caras aporta cada uno. Este mecanismo reemplazaría también al remate de esquinas existente (`_extender_y_rellenar_esquina`, hoy limitado a pares de brazos con una regla de rectángulo), no solo al fallback de conector nuevo.
+
+**Sin implementar todavía** — sesión pausada a pedido del usuario para guardar todo lo hecho antes de seguir.
+
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)

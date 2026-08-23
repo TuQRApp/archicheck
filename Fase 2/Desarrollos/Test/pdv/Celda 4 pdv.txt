@@ -1,7 +1,7 @@
  cuerpo_cerrado.py no esta en este runtime -- selecciona el archivo (Fase 2/Herramientas_CubiCasa5k/cuerpo_cerrado.py):
 
      
-     cuerpo_cerrado.py(n/a) - 24790 bytes, last modified: 22/8/2026 - 100% done
+     cuerpo_cerrado.py(n/a) - 27379 bytes, last modified: 23/8/2026 - 100% done
       // Copyright 2017 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -187,7 +187,7 @@ scope.google.colab._files = {
 ========================================================
   2860x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 14 recintos, 5 incumplimientos
+  ✓ Claude: 16 recintos, 6 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
   ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 83 cota, 0 deslinde_terreno, 156 eje, 0 escalera, 977 ignorar, 1433 mobiliario, 362 muro, 9 puerta, 0 rampa, 9 ventana, 1 sin capa mapeada — de 3021 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
@@ -224,9 +224,29 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 1
   ✓ Muros exportados: 127 (de 8 grupos protegidos, 90 segmentos descartados por angulo no-ortogonal, 0 muros con estado agregado/eliminado detectado via leyenda -- el color ya NO excluye geometria, ver _detectar_leyenda_simbologia)
     DIAG bloqueado MU01 vs MU02: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.29986111111111113, anchoB=None)
+    DIAG PAREJA -- MU02 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [996, 1560]-[996, 1528] (largo=0.188m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [1001, 1083]-[1001, 947] (largo=0.8m): dist=0.029m, dif_angulo=0.0deg, solapa=False
+        candidato [1001, 505]-[1001, 369] (largo=0.8m): dist=0.029m, dif_angulo=0.0deg, solapa=False
+        candidato [996, 1560]-[919, 1560] (largo=0.453m): dist=0.094m, dif_angulo=90.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        (ninguno -- este segmento no solapa en proyeccion con NADA del contexto local)
     DIAG bloqueado MU05 vs MU108: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.15287037037037038, anchoB=None)
+    DIAG PAREJA -- MU108 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [2705, 1611]-[2679, 1611] (largo=0.153m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [2484, 1611]-[2335, 1611] (largo=0.876m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [2535, 1611]-[2705, 1611] (largo=1.0m): dist=0.0m, dif_angulo=0.0deg, solapa=True
+        candidato [2679, 1611]-[2679, 3694] (largo=12.247m): dist=0.076m, dif_angulo=90.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [2535, 1611]-[2705, 1611] (largo=1.0m): dist=0.0m, dif_angulo=0.0deg
+        candidato [2705, 327]-[2047, 327] (largo=3.869m): dist=7.549m, dif_angulo=0.0deg
+        candidato [2297, 3720]-[2705, 3720] (largo=2.399m): dist=12.4m, dif_angulo=0.0deg
     DIAG bloqueado MU08 vs MU39: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.1999074074074074, anchoB=0.8995833333333333)
+    DIAG CONECTIVIDAD -- MU08 (anchoA=0.1999074074074074m) vs MU39 (anchoB=0.8995833333333333m): tolPx=3.4000000000000004 (~0.02m de dilatacion)
     DIAG bloqueado MU11 vs MU48: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.29986111111111113, anchoB=0.29986111111111113)
+    DIAG CONECTIVIDAD -- MU11 (anchoA=0.29986111111111113m) vs MU48 (anchoB=0.29986111111111113m): tolPx=5.1000000000000005 (~0.03m de dilatacion)
     DIAG bloqueado MU12 vs MU13: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.29986111111111113, anchoB=None)
     DIAG bloqueado MU13 vs MU14: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.3998148148148148)
     DIAG bloqueado MU14 vs MU66: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.3998148148148148, anchoB=None)
@@ -240,10 +260,12 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     DIAG bloqueado MU29 vs MU30: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.3468981481481481, anchoB=0.1999074074074074)
   DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'grupo B sin par paralelo': 11, 'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 38, 'grupo A sin par paralelo': 12}
   ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 127 entradas -> 67 muros (60 fusionadas, 0 pares bloqueados por puerta intermedia, 61 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
+  DIAG VISUAL: guardado diag_contexto_MU02.png (517x472px)
+  DIAG VISUAL: guardado diag_contexto_MU108.png (610x2523px)
   ✓ Puertas exportadas (clasificador geometrico): 1
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 1561), ((0.87, 0.43, 0.43), 1044), ((1.0, 0.75, 0.0), 416)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 8 grupos protegidos como muro, top 25 por span (73 textos de cota disponibles para el chequeo de distancia):
-     span=26.77m  bbox=14.8x22.31m  n_seg=1168  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=2.7/13.7/43.7
+     span=26.77m  bbox=14.8x22.31m  n_seg=1168  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=3.3/13.3/41.3
      span=15.56m  bbox=15.37x2.41m  n_seg=107  ancho_linea(min/mediana/max)=0.12/0.54/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=107)=9.3/20.6/32.7
      span=9.21m  bbox=6.35x6.67m  n_seg=84  ancho_linea(min/mediana/max)=0.12/0.54/0.72  %cerca_cota(0.18m/0.35m/0.59m, n=84)=1.2/9.5/34.5
      span=3.63m  bbox=3.45x1.14m  n_seg=53  ancho_linea(min/mediana/max)=0.3/0.3/0.72  %cerca_cota(0.18m/0.35m/0.59m, n=53)=0.0/1.9/7.5
@@ -1634,7 +1656,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Limpieza pre-umbral: 73 textos, 139 líneas discontinuas, 2995 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
   ✓ OpenCV: 7 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 268.32m²
-  ✓ Cruce: 7/7 con nombre | 1 incumpl. geo
+  ✓ Cruce: 7/7 con nombre | 2 incumpl. geo
 
 ========================================================
   Página 2  —  escala 1:50
@@ -1642,7 +1664,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 ========================================================
   2790x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 8 recintos, 5 incumplimientos
+  ✓ Claude: 8 recintos, 4 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
   ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 83 cota, 0 deslinde_terreno, 156 eje, 0 escalera, 567 ignorar, 1006 mobiliario, 826 muro, 20 puerta, 0 rampa, 20 ventana, 1 sin capa mapeada — de 2659 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
@@ -1679,9 +1701,43 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 6
   ✓ Muros exportados: 112 (de 8 grupos protegidos, 667 segmentos descartados por angulo no-ortogonal, 0 muros con estado agregado/eliminado detectado via leyenda -- el color ya NO excluye geometria, ver _detectar_leyenda_simbologia)
     DIAG bloqueado MU03 vs MU04: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG PAREJA -- MU03 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [1557, 1586]-[945, 1586] (largo=3.598m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [945, 1586]-[1557, 1586] (largo=3.598m): dist=0.0m, dif_angulo=0.0deg, solapa=True
+        candidato [596, 1594]-[817, 1594] (largo=1.299m): dist=0.047m, dif_angulo=0.0deg, solapa=False
+        candidato [1685, 1560]-[1557, 1560] (largo=0.753m): dist=0.153m, dif_angulo=0.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [945, 1586]-[1557, 1586] (largo=3.598m): dist=0.0m, dif_angulo=0.0deg
     DIAG bloqueado MU03 vs MU75: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.29986111111111113)
+    DIAG PAREJA -- MU03 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [1557, 1586]-[945, 1586] (largo=3.598m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [945, 1586]-[1557, 1586] (largo=3.598m): dist=0.0m, dif_angulo=0.0deg, solapa=True
+        candidato [596, 1594]-[817, 1594] (largo=1.299m): dist=0.047m, dif_angulo=0.0deg, solapa=False
+        candidato [1685, 1560]-[1557, 1560] (largo=0.753m): dist=0.153m, dif_angulo=0.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [945, 1586]-[1557, 1586] (largo=3.598m): dist=0.0m, dif_angulo=0.0deg
     DIAG bloqueado MU04 vs MU75: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.29986111111111113)
+    DIAG PAREJA -- MU04 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [945, 1586]-[1557, 1586] (largo=3.598m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [1557, 1586]-[945, 1586] (largo=3.598m): dist=0.0m, dif_angulo=0.0deg, solapa=True
+        candidato [596, 1594]-[817, 1594] (largo=1.299m): dist=0.047m, dif_angulo=0.0deg, solapa=False
+        candidato [1685, 1560]-[1557, 1560] (largo=0.753m): dist=0.153m, dif_angulo=0.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [1557, 1586]-[945, 1586] (largo=3.598m): dist=0.0m, dif_angulo=0.0deg
     DIAG bloqueado MU05 vs MU06: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.29986111111111113, anchoB=None)
+    DIAG PAREJA -- MU06 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [562, 2530]-[613, 2530] (largo=0.3m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [562, 2530]-[613, 2530] (largo=0.3m): dist=0.0m, dif_angulo=0.0deg, solapa=True
+        candidato [596, 2241]-[596, 1612] (largo=3.698m): dist=0.05m, dif_angulo=90.0deg, solapa=False
+        candidato [562, 2241]-[562, 2530] (largo=1.699m): dist=0.15m, dif_angulo=90.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [562, 2530]-[613, 2530] (largo=0.3m): dist=0.0m, dif_angulo=0.0deg
+        candidato [613, 2785]-[562, 2785] (largo=0.3m): dist=1.499m, dif_angulo=0.0deg
+        candidato [613, 2785]-[562, 2785] (largo=0.3m): dist=1.499m, dif_angulo=0.0deg
     DIAG bloqueado MU05 vs MU07: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.29986111111111113, anchoB=None)
     DIAG bloqueado MU05 vs MU15: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.29986111111111113, anchoB=0.0999537037037037)
     DIAG bloqueado MU05 vs MU16: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.29986111111111113, anchoB=None)
@@ -1695,6 +1751,8 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     DIAG bloqueado MU12 vs MU13: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.29398148148148145)
   DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'grupo A sin par paralelo': 30, 'grupo B sin par paralelo': 35, 'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 2}
   ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 112 entradas -> 68 muros (44 fusionadas, 12 pares bloqueados por puerta intermedia, 67 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
+  DIAG VISUAL: guardado diag_contexto_MU03_MU04.png (1529x474px)
+  DIAG VISUAL: guardado diag_contexto_MU06.png (491x1358px)
   ✓ Puertas exportadas (clasificador geometrico): 6
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.87, 0.43, 0.43), 1258), ((0.0, 0.0, 0.0), 1074), ((1.0, 0.75, 0.0), 303), ((1.0, 0.0, 0.0), 24)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 8 grupos protegidos como muro, top 25 por span (46 textos de cota disponibles para el chequeo de distancia):
@@ -3352,4 +3410,4 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
 
 ========================================================
 ✓ Procesadas 2 / 2 páginas
-  Incumplimientos geométricos totales: 1
+  Incumplimientos geométricos totales: 2

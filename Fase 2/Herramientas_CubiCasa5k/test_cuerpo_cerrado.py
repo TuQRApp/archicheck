@@ -113,6 +113,30 @@ def main():
     r4b = cuerpo_cerrado_fusiona(grupo_a_mu06, [ventana_idx892], contexto4, MPX)
     resultados.append(_check('CASO 4b (control: MU06 vs la propia ventana, sin par)', False, r4b))
 
+    # === CASO 5 (debe ACEPTAR, NUEVO 2026-08-23) — conector de esquina/jog
+    # sin cara propia, hereda ancho del vecino por vertice compartido.
+    # Sintetico pero mpx elegido para que el ancho (30px) equivalga a 0.3m,
+    # espesor de muro plausible -- modela el caso real MU02/MU108 de PdV
+    # (confirmado por el arquitecto: un conector nunca tiene cara propia,
+    # eso no lo vuelve linea suelta si esta pegado a un muro real). ===
+    MPX5 = 0.01  # 1cm/px
+    face1 = seg((0, 0), (0, 100))
+    face2 = seg((30, 0), (30, 100))
+    conector = seg((0, 100), (0, 115))  # continua desde el vertice de face1, sin cara propia
+    grupo_a_muro = [face1, face2]
+    grupo_b_conector = [conector]
+    contexto5 = [face1, face2, conector]
+    r5 = cuerpo_cerrado_fusiona(grupo_a_muro, grupo_b_conector, contexto5, MPX5)
+    resultados.append(_check('CASO 5 (conector de esquina hereda ancho del vecino)', True, r5))
+
+    # === CASO 5b (control -- debe RECHAZAR) — misma situacion pero el
+    # "conector" esta lejos, sin compartir vertice con ningun muro real:
+    # debe seguir siendo linea suelta genuina. ===
+    conector_aislado = seg((200, 500), (200, 515))
+    contexto5b = [face1, face2, conector_aislado]
+    r5b = cuerpo_cerrado_fusiona(grupo_a_muro, [conector_aislado], contexto5b, MPX5)
+    resultados.append(_check('CASO 5b (control: linea aislada sin vertice compartido, sigue rechazando)', False, r5b))
+
     n_ok = sum(resultados)
     print(f"\n{n_ok}/{len(resultados)} casos OK")
     if n_ok != len(resultados):
