@@ -2083,6 +2083,32 @@ El arquitecto corrió `test_cuerpo_cerrado.py` en un notebook nuevo de Colab (su
 
 **Sin correr en Colab todavía** (sin Python local disponible en esta sesión, igual que el port). Antes de confiar en esto: correr contra PdV N1/N2, comparar el número de muros resultante contra el actual (N1=25, N2=31) y mirar específicamente cuántos pares caen en `n_bloqueados_por_cuerpo_cerrado` — un número alto y plausible (ventanas/pilares que antes se fusionaban de más) sería la señal de que el gate está funcionando; si tira el conteo muy por debajo de 25/31 sin motivo visible, hay que revisar antes de aceptarlo. Verificación visual (`visualizar_muros.mjs` o el mapa ya usado en sesiones anteriores) sigue siendo obligatoria antes de dar el cambio por bueno, mismo criterio que toda esta sesión.
 
+## 🔴🔍 2026-08-22 (continuación) — Primera corrida real: exceso de rechazo (N1 127→67, N2 112→68), causa raíz encontrada y corregida
+
+El arquitecto corrió la Celda 4 real contra PdV con el gate ya integrado. **Resultado real, sin traceback**: N1 127→**67** muros (60 fusionadas, 0 bloqueadas por puerta, **61 bloqueadas por cuerpo cerrado**); N2 112→**68** muros (44 fusionadas, 12 por puerta, **67 por cuerpo cerrado**). Muy por encima del target (28/33) y peor que el resultado de solo-proximidad que ya funcionaba bien (25/31) — el gate estaba rechazando de más, no de menos.
+
+**Causa raíz**: `contexto_local` para `cuerpo_cerrado_fusiona` se armó como el pool COMPLETO de segmentos de `muros_geo` de toda la página (todas las entradas, ~112-127 por nivel), no una vecindad local. Con ese alcance, `identificar_lineas_centrales` (la detección de "línea central = ventana" dentro de `cuerpo_cerrado.py`) se dispara a escala de página completa: con decenas de muros reales del mismo espesor típico repartidos por todo el plano, cualquier par de caras paralelas SIN relación real entre sí, pero a una separación parecida al espesor de muro (8-90cm), podía calificar como "línea central" o bloquear el emparejamiento de un muro que nada tenía que ver con ellas. El nombre `contexto_local` prometía una vecindad; la implementación pasaba la página entera.
+
+**Corregido**: `contexto_local` ahora se arma POR PAR evaluado — bbox de ambas entradas + `RADIO_CONTEXTO_M = 2.0` de margen, y solo entran las entradas de `muros_geo` cuyo propio bbox intersecta esa zona (reutilizando los `bboxes` ya calculados para el bucket espacial de proximidad, sin costo adicional de cómputo). Se cae la optimización de precalcular `con_pares` una sola vez por página (ya no aplica, el contexto cambia por par) — no es un problema de performance real porque cada contexto local ahora es chico (una vecindad, no la página completa), que es exactamente el tamaño para el que `cuerpo_cerrado_fusiona` se diseñó y validó (los casos de test tenían 10-25 segmentos de contexto, no 100+). Notebook renombrado `ArchiCheck_Base 22ago_1924.ipynb` (el `22ago_1904` con el bug movido a `Versiones anteriores/`).
+
+**Sin re-correr en Colab todavía** con el fix aplicado — es el paso inmediato siguiente, antes de confiar en el resultado.
+
+## 🔴🔍 2026-08-22 (continuación) — El fix de contexto local NO cambió nada; diagnóstico real muestra la causa dominante es "sin par paralelo", no conectividad
+
+Corrida real con el fix de contexto local (radio 2m) aplicado: **resultado idéntico, byte a byte**, a la corrida anterior sin el fix (N1 127→67, N2 112→68, mismos 61/67 bloqueados). Descarta el contexto global como causa — o al menos como causa única. Se agregó diagnóstico (`_diag_motivos`, muestras con motivo real) al notebook (renombrado `ArchiCheck_Base 22ago_1959.ipynb`) antes de seguir adivinando.
+
+**Distribución real de motivos de bloqueo**:
+- **N1** (61 bloqueados): 38 "no conectados tras cerrar micro-gaps", 23 "sin par paralelo" (11 grupo B + 12 grupo A).
+- **N2** (67 bloqueados): 65 "sin par paralelo" (30 grupo A + 35 grupo B), solo 2 "no conectados".
+
+Hallazgo: N2 tuvo 667 segmentos descartados por "ángulo no-ortogonal" en la extracción cruda, contra 90 en N1 — proporción que coincide con la diferencia en tasa de "sin par" entre ambos niveles, aunque no se confirmó todavía que sea la causa real (ver nota abajo).
+
+**Pregunta directa al arquitecto**: ¿los muros de PdV están siempre dibujados con 2 líneas paralelas (ambas caras), o hay tramos de una sola línea? **Respuesta: siempre 2 líneas.** Esto descarta la hipótesis de "muro de una sola línea mal clasificado como línea suelta" y confirma que "sin par paralelo" es un bug real de la lógica de emparejamiento (o de datos ya descartados aguas arriba), no una limitación esperada del dato.
+
+**Diagnóstico agregado** (`cuerpo_cerrado.py`, función nueva `diagnosticar_candidatos(s, contexto, mpx, top_n=5)`): para un segmento, calcula ángulo/distancia/solape contra TODOS los demás segmentos del contexto SIN aplicar ningún umbral, y devuelve los N más cercanos — para ver si el candidato real está ahí pero falla por muy poco (y por cuánto) en vez de asumir ausencia real. Integrado en `_fusionar_muros_por_proximidad`: para los primeros 2 casos "sin par paralelo" de la corrida, imprime cada segmento del lado vacío con sus 3 candidatos más cercanos (distancia, diferencia de ángulo, si hay solape de proyección). Notebook renombrado `ArchiCheck_Base 22ago_2025.ipynb`.
+
+**Sin correr todavía** — pendiente: correr en Colab, leer las líneas `DIAG PAREJA` del log, y recién con ese dato concreto (¿falla por ángulo? ¿por distancia fuera del rango 8-90cm? ¿por falta de solape de proyección?) diseñar el fix real en vez de seguir adivinando causas.
+
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)

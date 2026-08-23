@@ -271,6 +271,44 @@ def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=0.08, tol_max_m=0.9
     }
 
 
+def diagnosticar_candidatos(s, contexto, mpx, top_n=5):
+    """DIAGNOSTICO (no se usa en produccion): para un segmento `s` que
+    ancho_por_emparejamiento no logro emparejar, calcula para TODOS los
+    demas segmentos de `contexto` su angulo, distancia perpendicular y si
+    hay solape de proyeccion -- SIN aplicar ningun umbral -- y devuelve
+    los `top_n` mas cercanos por distancia. Sirve para ver si el
+    candidato real esta ahi pero falla por angulo/distancia/solape (y por
+    cuanto), en vez de asumir que "no hay nada cerca". Agregado 2026-08-22
+    para investigar por que muchas entradas reales de muros_geo (PdV)
+    salian 'sin par' pese a que el arquitecto confirmo que todos los
+    muros del plano tienen 2 caras paralelas."""
+    ang_s = math.degrees(_angulo(s)) % 180
+    largo_s = math.hypot(s['p2'][0] - s['p1'][0], s['p2'][1] - s['p1'][1])
+    candidatos = []
+    for c in contexto:
+        if c is s:
+            continue
+        ang_c = math.degrees(_angulo(c)) % 180
+        d_ang = abs(ang_s - ang_c)
+        if d_ang > 90:
+            d_ang = 180 - d_ang
+        d_px = _dist_perp_entre_paralelas(s, c)
+        solapa = _solapan_en_direccion(s, c)
+        largo_c = math.hypot(c['p2'][0] - c['p1'][0], c['p2'][1] - c['p1'][1])
+        candidatos.append({
+            'p1': c['p1'], 'p2': c['p2'],
+            'dif_angulo_deg': round(d_ang, 1),
+            'distancia_m': round(d_px * mpx, 3),
+            'solapa_en_direccion': solapa,
+            'largo_m': round(largo_c * mpx, 3),
+        })
+    candidatos.sort(key=lambda x: x['distancia_m'])
+    return {
+        's_p1': s['p1'], 's_p2': s['p2'], 's_largo_m': round(largo_s * mpx, 3),
+        'top_candidatos': candidatos[:top_n],
+    }
+
+
 # ── Paso B: rasterizar relleno solido + cerrar micro-gaps + conectividad ─
 def _bbox(segmentos, margen_px):
     xs = [p[0] for s in segmentos for p in (s['p1'], s['p2'])]
