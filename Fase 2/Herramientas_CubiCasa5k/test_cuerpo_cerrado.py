@@ -137,6 +137,17 @@ def main():
     r5b = cuerpo_cerrado_fusiona(grupo_a_muro, [conector_aislado], contexto5b, MPX5)
     resultados.append(_check('CASO 5b (control: linea aislada sin vertice compartido, sigue rechazando)', False, r5b))
 
+    # === CASO 6 (debe ACEPTAR, NUEVO 2026-08-23) — conector en angulo NO
+    # recto (45 grados) contra un brazo real -- ejercita el remate de
+    # esquinas generalizado (_extender_conector_sin_par) en vez del caso
+    # colineal de CASO 5 (angulo 0, donde el remate se salta por completo).
+    # Pedido explicito del arquitecto: el angulo entre segmentos que llegan
+    # a un conector no necesariamente es recto. ===
+    conector_diagonal = seg((0, 100), (50, 150))  # 45 grados desde el vertice de face1
+    contexto6 = [face1, face2, conector_diagonal]
+    r6 = cuerpo_cerrado_fusiona(grupo_a_muro, [conector_diagonal], contexto6, MPX5)
+    resultados.append(_check('CASO 6 (conector en angulo de 45 grados, no recto)', True, r6))
+
     n_ok = sum(resultados)
     print(f"\n{n_ok}/{len(resultados)} casos OK")
     if n_ok != len(resultados):

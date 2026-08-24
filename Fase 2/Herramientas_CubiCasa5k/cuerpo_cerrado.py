@@ -361,7 +361,14 @@ def _relleno_solido(contexto_con_pares, box, todos_los_segmentos, objetivo_ids, 
     normal `ancho_px > largo_s` (mas abajo) los rechazaria: un conector
     corto puede heredar un ancho mayor que su propio largo (ej. un jog
     de 15cm pegado a un muro de 30cm), y eso es legitimo para un
-    conector aunque seria inverosimil para una cara real."""
+    conector aunque seria inverosimil para una cara real. Ademas
+    participan del remate de esquinas (mas abajo) como cualquier otra
+    pierna -- ver GENERALIZADO 2026-08-23 en ese bloque: el cierre de un
+    vertice con anchos distintos, angulos no rectos, o 3+ piernas sale
+    de la UNION de las extensiones pareadas de cada pierna (real o
+    conector) contra cada una de las demas, sin asumir cuadrilatero
+    regular ni angulo recto -- el numero de lados del poligono
+    resultante depende solo de cuantas piernas convergen ahi."""
     w, h = _dims(box)
     bin_arr = np.zeros((h, w), dtype=np.uint8)
 
@@ -446,6 +453,23 @@ def _relleno_solido(contexto_con_pares, box, todos_los_segmentos, objetivo_ids, 
             if k in vertices:
                 vertices[k]['piernas'].append({'segmento': s, 'par': c, 'anchoPx': ancho_px, 'punta': p})
 
+    # NUEVO (2026-08-23): los conectores de esquina/jog (segmentos_ancho_forzado,
+    # ver cuerpo_cerrado_fusiona) tambien son "piernas" para el remate -- sin
+    # cara propia (par=None), pero con ancho heredado real. Sin esto, un
+    # conector nunca participa del remate de esquinas y el vertice donde se
+    # une a un brazo real queda sin cerrar. largo_seg NO se chequea aqui a
+    # proposito (a diferencia del loop de arriba): un conector corto con
+    # ancho heredado de un vecino mas grueso es legitimo, ver docstring de
+    # _ancho_heredado_de_conector.
+    if segmentos_ancho_forzado:
+        for s, ancho_px in segmentos_ancho_forzado:
+            if objetivo_ids is not None and id(s) not in objetivo_ids:
+                continue
+            for p in (s['p1'], s['p2']):
+                k = v_key(p)
+                if k in vertices:
+                    vertices[k]['piernas'].append({'segmento': s, 'par': None, 'anchoPx': ancho_px, 'punta': p})
+
     for v in vertices.values():
         if not v['tocaObjetivo']:
             continue  # no rellenar esquinas puramente del contexto
@@ -462,7 +486,21 @@ def _relleno_solido(contexto_con_pares, box, todos_los_segmentos, objetivo_ids, 
                     d_ang = 180 - d_ang
                 if d_ang < 20:
                     continue  # casi colineales -- continuacion recta, no esquina
-                _extender_y_rellenar_esquina(bin_arr, box, pi['segmento'], pi['par'], pi['punta'], pj['anchoPx'] / 2)
+                # GENERALIZADO (2026-08-23, pedido del arquitecto): cada
+                # pierna se extiende por el semi-ancho de la OTRA -- ya
+                # funciona para anchos distintos y angulos no rectos (ver
+                # _extender_y_rellenar_esquina) y para N piernas en el mismo
+                # vertice (este loop ya recorre TODOS los pares, no solo 2 --
+                # la union de las extensiones de a pares cubre el poligono de
+                # cierre real sin asumir forma regular, sea triangulo,
+                # cuadrilatero o mas lados segun cuantas piernas convergen).
+                # Si pi es un conector sin cara propia (par=None), no hay
+                # cuadrilatero que proyectar -- se extiende como trazo grueso
+                # propio en su misma direccion (ver _extender_conector_sin_par).
+                if pi['par'] is None:
+                    _extender_conector_sin_par(bin_arr, box, pi['segmento'], pi['punta'], pj['anchoPx'] / 2, pi['anchoPx'])
+                else:
+                    _extender_y_rellenar_esquina(bin_arr, box, pi['segmento'], pi['par'], pi['punta'], pj['anchoPx'] / 2)
 
     return bin_arr, w, h
 
@@ -497,6 +535,32 @@ def _extender_y_rellenar_esquina(bin_arr, box, s, c, v, ext_px):
     t_v_ext = max(0, min(clen, t_c(v_ext)))
     c_v, c_v_ext = punto_en_eje(t_v), punto_en_eje(t_v_ext)
     _fill_quad(bin_arr, box, v, v_ext, c_v_ext, c_v)
+
+
+def _extender_conector_sin_par(bin_arr, box, s, v, ext_px, ancho_propio_px):
+    """Equivalente a _extender_y_rellenar_esquina, pero para un CONECTOR
+    sin cara propia (par=None) -- no hay cuadrilatero que proyectar
+    (no existe una 'otra cara' real), asi que se extiende como trazo
+    grueso propio: continua la direccion del conector mas alla del
+    vertice por ext_px (semi-ancho de la OTRA pierna en el vertice),
+    dibujado con el ancho propio del conector (real o heredado, ver
+    _ancho_heredado_de_conector). Union de esto con el trazo grueso
+    principal (ver segmentos_ancho_forzado, cuerpo_cerrado_fusiona) es
+    lo que cierra el vertice sin asumir cuadrilatero ni angulo recto --
+    la union de todas las extensiones pareadas en un vertice con 3+
+    piernas es lo que forma el poligono de cierre real, sea cual sea su
+    forma."""
+    if ext_px <= 0:
+        return
+    otro_extremo = s['p2'] if (s['p1'][0] == v[0] and s['p1'][1] == v[1]) else s['p1']
+    dx, dy = v[0] - otro_extremo[0], v[1] - otro_extremo[1]
+    length = math.hypot(dx, dy) or 1
+    ux, uy = dx / length, dy / length
+    v_ext = (v[0] + ux * ext_px, v[1] + uy * ext_px)
+    grosor = max(1, round(ancho_propio_px))
+    p1 = (round(v[0] - box['x0']), round(v[1] - box['y0']))
+    p2 = (round(v_ext[0] - box['x0']), round(v_ext[1] - box['y0']))
+    cv2.line(bin_arr, p1, p2, 1, thickness=grosor)
 
 
 def _dilatar(bin_arr, radio_px):
@@ -567,19 +631,42 @@ def _ancho_heredado_de_conector(grupo, con_pares, mpx, tol_vertice_m=0.03):
     Devuelve el ancho (px) heredado del vecino con ancho mas cercano
     por vertice compartido, o None si ningun extremo del grupo toca a
     un vecino con ancho real (en ese caso si es una linea suelta
-    genuina, sin relacion estructural con ningun muro)."""
-    tol_px = tol_vertice_m / mpx
+    genuina, sin relacion estructural con ningun muro).
+
+    Este es el ancho REPRESENTATIVO del grupo completo (el minimo
+    encontrado en cualquiera de sus segmentos) -- usado para decidir si
+    el grupo califica como conector real y para el calculo de
+    tolerancia de dilatacion. El ancho de CADA segmento individual
+    (que puede ser distinto si cada extremo toca un vecino distinto,
+    ver _ancho_heredado_de_segmento) se resuelve aparte al armar
+    segmentos_ancho_forzado en cuerpo_cerrado_fusiona."""
     mejor = None
     for s in grupo:
-        for extremo in (s['p1'], s['p2']):
-            for item in con_pares:
-                c = item['segmento']
-                if c is s:
-                    continue
-                for extremo_c in (c['p1'], c['p2']):
-                    d = math.hypot(extremo[0] - extremo_c[0], extremo[1] - extremo_c[1])
-                    if d <= tol_px and (mejor is None or item['anchoPx'] < mejor):
-                        mejor = item['anchoPx']
+        candidato = _ancho_heredado_de_segmento(s, con_pares, mpx, tol_vertice_m)
+        if candidato is not None and (mejor is None or candidato < mejor):
+            mejor = candidato
+    return mejor
+
+
+def _ancho_heredado_de_segmento(s, con_pares, mpx, tol_vertice_m=0.03):
+    """Version por-segmento de _ancho_heredado_de_conector -- pedido
+    explicito del arquitecto (2026-08-23): los brazos que llegan a un
+    conector/esquina/empalme no necesariamente tienen el mismo ancho
+    entre si, asi que cada segmento del conector hereda el ancho de SU
+    PROPIO vecino mas cercano por vertice compartido, no un valor unico
+    para todo el grupo. Devuelve None si ningun extremo de `s` toca a
+    un vecino con ancho real."""
+    tol_px = tol_vertice_m / mpx
+    mejor = None
+    for extremo in (s['p1'], s['p2']):
+        for item in con_pares:
+            c = item['segmento']
+            if c is s:
+                continue
+            for extremo_c in (c['p1'], c['p2']):
+                d = math.hypot(extremo[0] - extremo_c[0], extremo[1] - extremo_c[1])
+                if d <= tol_px and (mejor is None or item['anchoPx'] < mejor):
+                    mejor = item['anchoPx']
     return mejor
 
 
@@ -619,7 +706,15 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
     real, se trata como conector real -- hereda ese ancho para el
     calculo de tolerancia, y se dibuja con trazo grueso propio en el
     relleno (ver _relleno_solido, segmentos_ancho_forzado) para que la
-    conectividad se evalue correctamente a traves de el. Solo se
+    conectividad se evalue correctamente a traves de el. Ademas
+    participa del remate de esquinas como cualquier pierna real (ver
+    GENERALIZADO 2026-08-23 en _relleno_solido) -- el cierre del vertice
+    donde el conector se une a uno o mas brazos reales sale de la UNION
+    de las extensiones pareadas entre todas las piernas que convergen
+    ahi (reales y conectores), sin asumir que tengan el mismo ancho, que
+    el angulo entre ellas sea recto, ni que sean solo 2 -- el poligono
+    resultante (triangulo, cuadrilatero, o mas lados si convergen 3+)
+    sale de esa union, no de una forma asumida de antemano. Solo se
     rechaza como "linea suelta" si NINGUN extremo toca a un vecino con
     ancho real -- ahi si es una linea aislada genuina (ventana, cota,
     referencia).
@@ -640,14 +735,25 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
             return {'fusiona': False, 'motivo': 'grupo A sin par paralelo -- linea suelta (ventana/ref), no muro',
                     'anchoA': ancho_a, 'anchoB': ancho_b}
         ancho_a = {'anchoPx': heredado, 'anchoM': heredado * mpx, 'detalle': ancho_a['detalle'], 'esConectorEsquina': True}
-        segmentos_ancho_forzado.extend((s, heredado) for s in grupo_a)
+        # cada segmento del grupo hereda el ancho de SU PROPIO vecino mas
+        # cercano (pueden ser distintos entre si, ver
+        # _ancho_heredado_de_segmento) -- el heredado del grupo completo
+        # (arriba) solo sirve de respaldo para un segmento interior de la
+        # cadena que no toca directamente a ningun vecino con ancho real.
+        segmentos_ancho_forzado.extend(
+            (s, _ancho_heredado_de_segmento(s, con_pares, mpx, tol_conector_esquina_m) or heredado)
+            for s in grupo_a
+        )
     if ancho_b['anchoPx'] is None:
         heredado = _ancho_heredado_de_conector(grupo_b, con_pares, mpx, tol_conector_esquina_m)
         if heredado is None:
             return {'fusiona': False, 'motivo': 'grupo B sin par paralelo -- linea suelta (ventana/ref), no muro',
                     'anchoA': ancho_a, 'anchoB': ancho_b}
         ancho_b = {'anchoPx': heredado, 'anchoM': heredado * mpx, 'detalle': ancho_b['detalle'], 'esConectorEsquina': True}
-        segmentos_ancho_forzado.extend((s, heredado) for s in grupo_b)
+        segmentos_ancho_forzado.extend(
+            (s, _ancho_heredado_de_segmento(s, con_pares, mpx, tol_conector_esquina_m) or heredado)
+            for s in grupo_b
+        )
 
     ancho_min_px = min(ancho_a['anchoPx'], ancho_b['anchoPx'])
     tol_px = max(0.10 * ancho_min_px, piso_min_px)

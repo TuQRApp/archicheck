@@ -2146,6 +2146,21 @@ El fix de arriba es una simplificación: un solo ancho heredado (el mínimo entr
 
 **Sin implementar todavía** — sesión pausada a pedido del usuario para guardar todo lo hecho antes de seguir.
 
+## ✅ 2026-08-23 (continuación) — Polígono de cierre general implementado
+
+**Decisión de diseño clave**: en vez de inventar una construcción geométrica nueva (se probó mentalmente una versión "offset perpendicular + orden angular" y dio un resultado geométricamente incorrecto para un corner en L simple — no reproducía el cuadrado de cierre esperado), se reutiliza el mecanismo YA VALIDADO `_extender_y_rellenar_esquina` (bug #3, sesión 2026-08-20/21: extiende cada pierna por el semi-ancho de la OTRA, ya soporta anchos distintos y cualquier ángulo) y se generaliza para que los conectores participen de él. El loop existente ya recorre TODOS los pares de piernas en un vértice (no solo 2) — la unión de esas extensiones pareadas es lo que forma el polígono de cierre real, sin necesidad de construir explícitamente un polígono de N lados.
+
+**Cambios en `cuerpo_cerrado.py`**:
+- `_ancho_heredado_de_segmento(s, con_pares, mpx, tol_vertice_m)` (nueva): ancho heredado de UN segmento específico, no de todo el grupo — pedido explícito del arquitecto ("los segmentos que llegan a un conector no tengan el mismo ancho entre ellos"). `_ancho_heredado_de_conector` ahora se apoya en esta (toma el mínimo entre todos los segmentos del grupo, sigue siendo el valor representativo para el gate y la tolerancia de dilatación).
+- `cuerpo_cerrado_fusiona`: al armar `segmentos_ancho_forzado`, cada segmento del conector usa SU PROPIO ancho heredado (con fallback al ancho representativo del grupo si un segmento interior de una cadena no toca directamente a ningún vecino).
+- `_relleno_solido`: los conectores (`segmentos_ancho_forzado`) ahora también se agregan como "piernas" en el remate de esquinas (antes solo participaban las entradas de `contexto_con_pares`, es decir, solo brazos con cara propia). `largo_seg` no se chequea para conectores (a propósito, mismo criterio que su relleno directo).
+- `_extender_conector_sin_par(bin_arr, box, s, v, ext_px, ancho_propio_px)` (nueva): equivalente a `_extender_y_rellenar_esquina` pero para un conector sin cara propia — no hay cuadrilátero que proyectar, así que extiende como trazo grueso en su propia dirección, con su propio ancho (heredado).
+- El loop de remate ahora decide entre `_extender_y_rellenar_esquina` (pierna real, tiene `par`) o `_extender_conector_sin_par` (conector, `par=None`) según corresponda, por cada par de piernas en cada vértice.
+
+**Test de regresión**: agregado CASO 6 (conector a 45°, ángulo no recto, contra un muro real de 30cm) — ejercita específicamente `_extender_conector_sin_par` (CASO 5 tenía ángulo 0°/colineal, que el remate salta por completo vía el chequeo `d_ang < 20`). Verificado a mano paso a paso (sin Python local): el CASO 5 original no debería cambiar de resultado (los cambios solo agregan cobertura extra al relleno, nunca la quitan — `cv2.fillPoly`/`cv2.line` con color=1 es unión, no reemplazo).
+
+**Sin correr en Colab todavía** — pendiente antes de confiar en esto: reiniciar el entorno de ejecución (para no cachear el módulo viejo), correr el test de regresión (ahora 7 casos), y recién después re-correr contra PdV N1/N2 real.
+
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
