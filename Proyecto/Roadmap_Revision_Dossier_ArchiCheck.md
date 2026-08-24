@@ -1864,7 +1864,7 @@ El usuario amplió las pruebas a 4 planos (agregó Campo Lindo, el PDF con capas
 
 ~~**PRIORIDAD ANTERIOR #2 (cumplida 2026-08-01)**: correr `01ago_0010` (diagnóstico de distancia a `cotas_texto`) contra los planos de referencia.~~ **✅ Hecho, ampliado a 4 planos.** Resultado: **hipótesis refutada** — el blob dominante no correlaciona con texto de cota en ningún proyecto (ver sección arriba, "Resultado del diagnóstico de cotas").
 
-**🎯 NUEVA PRIORIDAD INMEDIATA (2026-08-01), antes que cualquier otra cosa — probar Floor Plan API (floorplanapi.com) como comparación "comprar vs. seguir construyendo".**
+~~**🎯 NUEVA PRIORIDAD INMEDIATA (2026-08-01), antes que cualquier otra cosa — probar Floor Plan API (floorplanapi.com) como comparación "comprar vs. seguir construyendo".**~~ **⏸️ EN ESPERA (actualizado 2026-08-23), ya no es prioridad activa** — se deja de esperar el desbloqueo de registro como acción inmediata, pero no se descarta de forma permanente: revisión de literatura (5 IAs) confirmó que hoy es un segmentador raster (U-Net++) sin soporte documentado de PDF/CAD vectorial, y que su propia documentación admite estar "en desarrollo activo" sin procesamiento en vivo — es decir, el producto real todavía no está en el mercado. **Decisión del usuario (2026-08-23): retomar cuando Floor Plan API salga efectivamente a producción** (cuentas reales, procesamiento en vivo confirmado), no antes. Ver sección "Revisión de estado del arte (2 rondas...)" más abajo para el detalle completo.
 
 Contexto: tras 2 rondas de diagnóstico propio (ejes confirmado sin impacto real, cotas refutado) sobre el problema de fragmentación interna (60-80 recintos geométricos para ~20 reales), se evaluó si probar una herramienta comercial de segmentación de planos daría una señal más rápida que seguir iterando heurísticas propias.
 
@@ -2160,6 +2160,59 @@ El fix de arriba es una simplificación: un solo ancho heredado (el mínimo entr
 **Test de regresión**: agregado CASO 6 (conector a 45°, ángulo no recto, contra un muro real de 30cm) — ejercita específicamente `_extender_conector_sin_par` (CASO 5 tenía ángulo 0°/colineal, que el remate salta por completo vía el chequeo `d_ang < 20`). Verificado a mano paso a paso (sin Python local): el CASO 5 original no debería cambiar de resultado (los cambios solo agregan cobertura extra al relleno, nunca la quitan — `cv2.fillPoly`/`cv2.line` con color=1 es unión, no reemplazo).
 
 **Sin correr en Colab todavía** — pendiente antes de confiar en esto: reiniciar el entorno de ejecución (para no cachear el módulo viejo), correr el test de regresión (ahora 7 casos), y recién después re-correr contra PdV N1/N2 real.
+
+## ✅ 2026-08-23 (continuación) — Test de regresión 8/8 OK; corrida real muestra mejora grande
+
+Corrido en Colab: **8/8 casos OK** (5 originales + CASO 5, 5b, 6 nuevos — corrección de conteo: son 8 checks, no 7, había olvidado CASO 4b).
+
+Corrida real contra PdV con el fix aplicado:
+
+| | Antes del fix | Con el fix | Target |
+|---|---|---|---|
+| N1 | 127→67 (23 sin par + 38 no conectados) | 127→**57** (10 sin par + 39 no conectados) | 28 |
+| N2 | 112→68 (65 sin par + 2 no conectados) | 112→**38** (10 sin par + 3 no conectados) | 33 |
+
+N2 mejoró mucho (68→38, cerca del target 33) — "sin par paralelo" bajó de 65 a 10. N1 mejoró menos (67→57, target 28) porque su causa dominante es otra: "no conectados tras cerrar micro-gaps" (39, casi sin cambio) — la tolerancia de dilatación (10% del ancho, ~2-3cm) es más chica que la tolerancia de proximidad externa que ya propuso el par (~6cm), pendiente de subir.
+
+## ✅ 2026-08-23 (continuación) — Render visual completo agregado; BUG DE OFFSET encontrado y corregido en los diagnósticos visuales
+
+Se agregó un render de página completa (`diag_muros_<pagina>.png`, todos los muros post-fusión dibujados en rojo sobre el plano real) para verificación visual rápida, en vez de solo leer números del log.
+
+**El arquitecto reportó dos problemas** sobre las primeras imágenes:
+1. En `diag_muros_pag2-1` (N1): correcciones menores — marcó en verde 2-3 uniones que cuerpo cerrado todavía no cierra bien (cerca de un arco/vano y una esquina), y en amarillo un tramo achurado que se está dibujando como muro sin serlo.
+2. En `diag_muros_pag2-2` (N2): **"muy mal"** — las marcas de muro aparecían sobre la zona de N1 (izquierda), no sobre N2.
+
+**Causa raíz del problema 2, encontrada con datos concretos**: `muros_geo` guarda las coordenadas de cada segmento RELATIVAS al `crop_px` propio de esa entrada (vía `ajustar()` en el Paso 4 de `extraer_datos_vectoriales`), no absolutas de página completa. Para N1 (`crop_px` empieza en x=0) restar 0 no cambia nada, así que el bug pasó desapercibido por coincidencia. Para N2 (`crop_px` empieza en x=2860) el resultado quedaba corrido ~2860px a la izquierda, cayendo exactamente sobre la zona de N1 — el bug reportado. Diagnóstico añadido (`DIAG BBOX`, bbox relativo vs absoluto) lo confirmó con números: bbox relativo de N2 x=[68,2399] (parece "de N1"), bbox absoluto real x=[2928,5259] (correcto, dentro de su propio `crop_px`).
+
+**Importante — esto era un bug en el script de diagnóstico de esta sesión, no en el pipeline real**: la lógica de fusión de `cuerpo_cerrado` (los conteos 57/38) no se ve afectada, porque solo usa geometría relativa entre segmentos de una misma entrada — un corrimiento uniforme de coordenadas no cambia distancias/ángulos/solapes.
+
+**Consecuencia real que sí importa**: los crops individuales (`_CASOS_DIAG_VISUAL`) de `MU03_MU04` y `MU06` (ambos de N2) también estaban mal posicionados por el mismo bug — la conclusión de la sesión anterior ("MU03_MU04 no es nada, probablemente proyección"; "MU06 no son muros, sin identificar la confusión") **quedó invalidada, no confirmada**. Corregido sumando de vuelta el origen del crop (`_ox`, `_oy`) antes de dibujar sobre `plano_full`, tanto en el render completo como en los recortes individuales.
+
+**Re-verificación con las imágenes corregidas**: `MU03_MU04` ahora aparece exactamente en la parte superior de un vano/arco ancho entre 2 jambas — parece un dintel real, no una línea de proyección invisible. `MU06` aparece en un quiebre/hueco real del muro entre 2 baños — coincide con la hipótesis original de conector de esquina, no con una marca de "Punto Aplicación Rasante". El render completo de N2 (`diag_muros_pag2-2`, corregido) ahora muestra cobertura de muro mucho más completa y razonable en toda la planta.
+
+**Pendiente**: confirmación del arquitecto sobre el render corregido de N2 (qué agregar en verde / qué sobra en amarillo, mismo criterio que N1).
+
+---
+
+## ✅ 2026-08-23 — Revisión de estado del arte (2 rondas, 5 IAs, 9 informes) + Floor Plan API queda en espera hasta que salga al mercado
+
+**Contexto**: en paralelo al trabajo de `cuerpo_cerrado.py`, se pidió a 5 IAs (ChatGPT, Claude, Copilot, Gemini, Perplexity) que buscaran literatura 2021-2026 sobre vectorización, muros, puertas, ventanas, recintos y arquitectura híbrida geometría+VLM, evaluando cada hallazgo como CONFIRMA/CONTRASTA/COMPLEMENTA frente al pipeline propio. Ninguna de las 5 nombró herramientas comerciales conocidas, así que se lanzó una segunda ronda específica sobre **Floor Plan API** y **Floorplan.ai**. Todo el detalle, los 9 docx originales y los 2 prompts usados están en `Fase 2/Estado del arte y mejores practicas 23ago/`.
+
+**Primera ronda — confirma la arquitectura general, sin sorpresas de fondo**:
+- **Extracción vectorial nativa (PyMuPDF) sobre raster+CNN**: confirmado con fuerza por las 5 fuentes (FloorPlanCAD, VectorGraphNET, SymPoint, ResPlan). No es una apuesta rara, es la línea que la literatura reciente recomienda cuando hay geometría PDF limpia.
+- **Ancho de línea/dashes como discriminador muro-real vs. símbolo**: nadie en la literatura lo usa con éxito tampoco — confirma que descartarlo (ya se había hecho antes) fue correcto.
+- **Arquitectura híbrida (geometría determinista = autoridad, VLM solo semántica)**: confirmada con fuerza por múltiples fuentes independientes (VisOnlyQA, "How Well Does GPT-4o Understand Vision?", Blueprint-Bench, y sobre todo **AECV-Bench**: un VLM generalista detecta solo 26% de puertas y 14% de ventanas en planos reales — explica directamente por qué Grounding DINO+SAM2 dio 0% en las pruebas propias del 2026-08-09).
+- **Recomendación #1 unánime, sin excepción entre las 5**: evolucionar Union-Find hacia un **grafo tipado de primitivas + junctions** (nodos: líneas/arcos/Béziers/símbolos/junctions; aristas: comparte extremo, T-junction, cruce, colineal-con-gap, paralelo-cercano). Es exactamente la dirección en la que ya se movió `cuerpo_cerrado.py` esta misma semana (conectores de esquina con anchos distintos, polígono de cierre general) — la literatura confirma que no es un parche aislado, es el camino correcto documentado (paper más cercano al caso MU02/MU108: PolarSym, 2026, sin corroborar independientemente — ver advertencia abajo).
+- **Ventanas**: la heurística "muro recto + línea central paralela" (decisión del 2026-08-09) no está validada como algoritmo aislado en ningún paper — brecha real confirmada por las 5 —, pero es consistente con la convención de dibujo CAD. Recomendación concreta para cuando se implemente el clasificador: exigir que la línea candidata esté **estrictamente contenida en la extensión de un segmento de muro ya confirmado real**, para descartar cotas/ejes/muro doble.
+- **Recintos/cierre de polígono**: RoomFormer, PolyRoom y sobre todo **CAGE (sept. 2025)** describen exactamente los mismos fallos que se vienen resolviendo en `cuerpo_cerrado.py` (esquinas faltantes, conectores de 3+ brazos, ángulos no rectos) — confirma que es un problema activo y con nombre en el campo, no una limitación propia.
+- **Benchmark externo recomendado por unanimidad**: FloorPlanCAD (F1 puerta simple 0.885 / doble 0.796 / corrediza 0.874). Umbral de referencia Pizarro et al. 2023: **IoU ≥ 0.77** aceptable para extracción de muros — vara útil para autoevaluar `cuerpo_cerrado.py` cuando corra en Colab. Ningún dataset chileno/latam más allá del propio MLSTRUCT-FP — confirma que no hay atajo externo, hay que seguir construyendo el dataset propio.
+
+**Segunda ronda — Floor Plan API y Floorplan.ai, veredicto: CIERRA el pendiente del 2026-08-01**:
+- **Floor Plan API**: su método real y documentado es **U-Net++ de segmentación raster** (sube PNG/JPG/WEBP o PDF rasterizado, devuelve máscara binaria de muros) — **no procesa PDF/CAD vectorial, no expone paths/capas/arcos**, contrario a lo que su página de features insinúa. Su cifra de **85.31% IoU no tiene ninguna verificación independiente**: no aparece citada en ningún paper, ni en comparaciones de terceros, y ni siquiera la nombra un artículo de panorama de mercado de agosto 2026 ("Floor Plan APIs Compared", Roomagen) que sí nombra a sus competidores directos. Su propia documentación admite que el producto está "en desarrollo activo" sin cuentas ni procesamiento en vivo — coincide exactamente con el bloqueo de registro nunca resuelto desde el 2026-08-01. Veredicto de las 4 fuentes que la evaluaron: **CONTRASTA** (no es alternativa al pipeline vectorial en PDFs con geometría limpia), solo **COMPLEMENTA** como eventual *fallback* para escaneos/fotos sin geometría vectorial nativa — caso que hoy no está en el alcance del proyecto.
+- **Floorplan.ai**: resultó ser una herramienta de **generación** de planos desde texto/requisitos (con export DXF), no de extracción/reconocimiento desde un plano existente — problema inverso al del pipeline propio, sin base común de comparación.
+- **⏸️ Deja en espera (no cierra permanentemente) el pendiente "🎯 NUEVA PRIORIDAD INMEDIATA (2026-08-01) — probar Floor Plan API"** (más arriba, sección "Pendientes al retomar"): se deja de esperar el desbloqueo de registro como acción inmediata. No hay evidencia independiente de que rinda mejor que el pipeline propio en el caso de uso real (PDF vectorial de arquitecto), y su propio método (raster) sufriría previsiblemente la misma fragmentación que el caso "Isla de Pascua" ya documentado. **Decisión del usuario (2026-08-23): retomar la evaluación cuando Floor Plan API salga efectivamente al mercado** (hoy su propia documentación admite estar "en desarrollo activo", sin cuentas ni procesamiento en vivo real) — no vale la pena seguir invirtiendo tiempo en un producto que ni siquiera está en producción.
+
+**⚠️ Advertencia sobre las fuentes**: varias citas muy recientes de 2026 (PolarSym, HouseMind, Architect-Ant, FloorplanVLM) solo las nombra 1 de las 5 IAs cada una (salvo FloorplanVLM, corroborada por 3 y ya verificada independientemente el 2026-08-05 — ver más arriba) — arXiv IDs plausibles pero no corroborados cruzadamente, podrían estar alucinados por búsqueda web de una IA. Verificar el link directo antes de citarlas formalmente o basar una decisión de diseño en ellas, mismo criterio de rigor ya aplicado toda la sesión.
 
 ---
 

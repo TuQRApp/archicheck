@@ -187,7 +187,7 @@ scope.google.colab._files = {
 ========================================================
   2860x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 15 recintos, 5 incumplimientos
+  ✓ Claude: 14 recintos, 5 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
   DIAG PASO1 -- crop_px=(0, 0, 2860, 5052): 3021 segmentos_l, bbox x=[8,2800]
@@ -261,14 +261,15 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 39, 'grupo A sin par paralelo': 10}
   ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 127 entradas -> 57 muros (70 fusionadas, 0 pares bloqueados por puerta intermedia, 49 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
   DIAG BBOX -- PAGINA_PLANTA=2 crop_px=(0, 0, 2860, 5052) fname_tag=pag2-1 muros_geo=57
-    bbox real de segmentos: x=[259,2705] y=[327,4829] (plano_full shape=(5052, 7152, 3))
+    bbox RELATIVO al crop: x=[259,2705] y=[327,4829]
+    bbox ABSOLUTO (pagina completa): x=[259,2705] y=[327,4829] (plano_full shape=(5052, 7152, 3))
   DIAG VISUAL COMPLETO: guardado diag_muros_pag2-1.png (57 muros dibujados)
   DIAG VISUAL: guardado diag_contexto_MU02.png (517x472px)
   DIAG VISUAL: guardado diag_contexto_MU108.png (610x2523px)
   ✓ Puertas exportadas (clasificador geometrico): 1
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 1561), ((0.87, 0.43, 0.43), 1044), ((1.0, 0.75, 0.0), 416)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 8 grupos protegidos como muro, top 25 por span (73 textos de cota disponibles para el chequeo de distancia):
-     span=26.77m  bbox=14.8x22.31m  n_seg=1168  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=4.7/17.7/47.3
+     span=26.77m  bbox=14.8x22.31m  n_seg=1168  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=2.3/15.3/40.7
      span=15.56m  bbox=15.37x2.41m  n_seg=107  ancho_linea(min/mediana/max)=0.12/0.54/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=107)=9.3/20.6/32.7
      span=9.21m  bbox=6.35x6.67m  n_seg=84  ancho_linea(min/mediana/max)=0.12/0.54/0.72  %cerca_cota(0.18m/0.35m/0.59m, n=84)=1.2/9.5/34.5
      span=3.63m  bbox=3.45x1.14m  n_seg=53  ancho_linea(min/mediana/max)=0.3/0.3/0.72  %cerca_cota(0.18m/0.35m/0.59m, n=53)=0.0/1.9/7.5
@@ -1659,8 +1660,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Limpieza pre-umbral: 73 textos, 139 líneas discontinuas, 2995 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
   ✓ OpenCV: 7 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 268.32m²
-  ✓ Cruce: 6/7 con nombre | 1 incumpl. geo
-  ⚠ 1 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E07
+  ✓ Cruce: 7/7 con nombre | 1 incumpl. geo
 
 ========================================================
   Página 2  —  escala 1:50
@@ -1746,7 +1746,8 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'grupo A sin par paralelo': 10, 'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 3}
   ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 112 entradas -> 38 muros (74 fusionadas, 12 pares bloqueados por puerta intermedia, 13 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
   DIAG BBOX -- PAGINA_PLANTA=2 crop_px=(2860, 0, 5650, 5052) fname_tag=pag2-2 muros_geo=38
-    bbox real de segmentos: x=[68,2399] y=[1529,4829] (plano_full shape=(5052, 7152, 3))
+    bbox RELATIVO al crop: x=[68,2399] y=[1529,4829]
+    bbox ABSOLUTO (pagina completa): x=[2928,5259] y=[1529,4829] (plano_full shape=(5052, 7152, 3))
   DIAG VISUAL COMPLETO: guardado diag_muros_pag2-2.png (38 muros dibujados)
   DIAG VISUAL: guardado diag_contexto_MU03_MU04.png (1529x474px)
   DIAG VISUAL: guardado diag_contexto_MU06.png (491x1358px)
@@ -3402,9 +3403,9 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Limpieza pre-umbral: 46 textos, 22 líneas discontinuas, 2052 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
   ✓ OpenCV: 14 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 281.17m²
-  ✓ Cruce: 6/14 con nombre | 0 incumpl. geo
-  ⚠ 8 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E02, E01, E14, E06, E09, E10, E12, E08
+  ✓ Cruce: 6/14 con nombre | 1 incumpl. geo
+  ⚠ 8 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E01, E14, E06, E05, E09, E10, E12, E08
 
 ========================================================
 ✓ Procesadas 2 / 2 páginas
-  Incumplimientos geométricos totales: 1
+  Incumplimientos geométricos totales: 2
