@@ -187,9 +187,10 @@ scope.google.colab._files = {
 ========================================================
   2860x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 14 recintos, 5 incumplimientos
+  ✓ Claude: 15 recintos, 5 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
+  DIAG PASO1 -- crop_px=(0, 0, 2860, 5052): 3021 segmentos_l, bbox x=[8,2800]
   ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 83 cota, 0 deslinde_terreno, 156 eje, 0 escalera, 977 ignorar, 1433 mobiliario, 362 muro, 9 puerta, 0 rampa, 9 ventana, 1 sin capa mapeada — de 3021 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
   ✓ COTAS (linea): 101 segmentos identificados como linea/marca de cota (Paso 1.6)
   ✓ EJES/RASANTES: 259 segmentos identificados como referencia (Paso 1.5), 150 evitados de proteger como muro pese a superar el span minimo
@@ -267,7 +268,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Puertas exportadas (clasificador geometrico): 1
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 1561), ((0.87, 0.43, 0.43), 1044), ((1.0, 0.75, 0.0), 416)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 8 grupos protegidos como muro, top 25 por span (73 textos de cota disponibles para el chequeo de distancia):
-     span=26.77m  bbox=14.8x22.31m  n_seg=1168  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=1.7/11.7/43.3
+     span=26.77m  bbox=14.8x22.31m  n_seg=1168  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=4.7/17.7/47.3
      span=15.56m  bbox=15.37x2.41m  n_seg=107  ancho_linea(min/mediana/max)=0.12/0.54/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=107)=9.3/20.6/32.7
      span=9.21m  bbox=6.35x6.67m  n_seg=84  ancho_linea(min/mediana/max)=0.12/0.54/0.72  %cerca_cota(0.18m/0.35m/0.59m, n=84)=1.2/9.5/34.5
      span=3.63m  bbox=3.45x1.14m  n_seg=53  ancho_linea(min/mediana/max)=0.3/0.3/0.72  %cerca_cota(0.18m/0.35m/0.59m, n=53)=0.0/1.9/7.5
@@ -1658,7 +1659,8 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Limpieza pre-umbral: 73 textos, 139 líneas discontinuas, 2995 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
   ✓ OpenCV: 7 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 268.32m²
-  ✓ Cruce: 7/7 con nombre | 1 incumpl. geo
+  ✓ Cruce: 6/7 con nombre | 1 incumpl. geo
+  ⚠ 1 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E07
 
 ========================================================
   Página 2  —  escala 1:50
@@ -1669,6 +1671,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ Claude: 7 recintos, 4 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
+  DIAG PASO1 -- crop_px=(2860, 0, 5650, 5052): 2659 segmentos_l, bbox x=[2897,5614]
   ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 83 cota, 0 deslinde_terreno, 156 eje, 0 escalera, 567 ignorar, 1006 mobiliario, 826 muro, 20 puerta, 0 rampa, 20 ventana, 1 sin capa mapeada — de 2659 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
   ✓ COTAS (linea): 83 segmentos identificados como linea/marca de cota (Paso 1.6)
   ✓ EJES/RASANTES: 178 segmentos identificados como referencia (Paso 1.5), 77 evitados de proteger como muro pese a superar el span minimo
@@ -3400,7 +3403,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ OpenCV: 14 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 281.17m²
   ✓ Cruce: 6/14 con nombre | 0 incumpl. geo
-  ⚠ 8 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E01, E14, E06, E05, E09, E10, E12, E08
+  ⚠ 8 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E02, E01, E14, E06, E09, E10, E12, E08
 
 ========================================================
 ✓ Procesadas 2 / 2 páginas
