@@ -218,29 +218,35 @@ def _segmento_bloqueado_por_ventana(s, contexto, mpx, tol_min_m, tol_max_m, cent
 
 
 # ── Paso A: ancho por emparejamiento de lineas paralelas ────────────────
-def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=0.08, tol_max_m=0.9):
+def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=0.08, tol_max_m=0.9, hoja_ids=None):
     """Para cada segmento de `grupo`, busca en `contexto` (pool completo
     de segmentos cercanos, incluye el propio grupo) un segmento aprox.
     paralelo a distancia perpendicular entre tol_min_m y tol_max_m. Si lo
     encuentra, ese segmento tiene "ancho real" (viene de 2 caras). Si
     ninguno de los segmentos del grupo tiene par, el grupo entero es
-    linea suelta."""
+    linea suelta.
+
+    `hoja_ids`: set opcional de id(segmento) ya identificados como
+    hoja/vano de puerta (ver identificar_hojas_de_puerta, Tipologia B de
+    Convenciones_CAD D.2) -- se excluyen del pool de posibles "caras de
+    muro" con el mismo criterio que las lineas centrales de ventana."""
     tol_min_px = tol_min_m / mpx
     tol_max_px = tol_max_m / mpx
     # lineas centrales de ventana: se excluyen por completo del pool de
     # posibles "caras de muro" -- ni pueden ser s, ni pueden ser
     # aceptadas como c de otra linea.
     centrales_ids = identificar_lineas_centrales(contexto, mpx, tol_min_m, tol_max_m)
+    hoja_ids = hoja_ids or set()
     mejor_ancho = None
     detalle = []
     for s in grupo:
-        if id(s) in centrales_ids:
+        if id(s) in centrales_ids or id(s) in hoja_ids:
             detalle.append({'segmento': s, 'anchoPx': None, 'par': None})
             continue
         ang_s = math.degrees(_angulo(s)) % 180
         candidatos = []
         for c in contexto:
-            if c is s or id(c) in centrales_ids:
+            if c is s or id(c) in centrales_ids or id(c) in hoja_ids:
                 continue
             ang_c = math.degrees(_angulo(c)) % 180
             d_ang = abs(ang_s - ang_c)
@@ -269,6 +275,69 @@ def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=0.08, tol_max_m=0.9
         'anchoM': mejor_ancho * mpx if mejor_ancho is not None else None,
         'detalle': detalle,
     }
+
+
+def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=0.08, tol_max_m=0.9, tol_vertice_m=0.03):
+    """Tipologia B (Convenciones_CAD D.2, confirmado por el arquitecto
+    2026-08-24, revision visual de N2): un vano/hoja de puerta es un par
+    de bordes opuestos MAS FINOS (menor separacion entre caras) que el
+    muro/pilar real en sus extremos -- firma RELATIVA (se compara contra
+    el vecino real que toca sus extremos), a diferencia de la firma de
+    ventana (2 caras + linea central, ver identificar_lineas_centrales),
+    que es absoluta y NO se generaliza a otros elementos -- aclaracion
+    explicita del arquitecto: "la regla de 2 lineas centrales queda solo
+    para ventanas". Un muro real tiene una separacion entre caras
+    consistente con su propio espesor donde sea que se mida -- no deberia
+    existir un vecino con ancho mayor que lo contradiga justo en su
+    propio extremo; si existe, ese par mas fino es la hoja/vano de una
+    puerta, no un muro.
+
+    Calcula un ancho INGENUO por segmento primero (sin excluir hojas
+    todavia -- 2 pasadas, evita la dependencia circular con
+    ancho_por_emparejamiento, que a su vez necesita ESTE resultado via el
+    parametro hoja_ids). Devuelve un set de id(segmento): se marcan AMBOS
+    lados de cada par identificado como hoja (el segmento que toca al
+    vecino mas ancho, y su propia pareja), no solo uno."""
+    tol_px = tol_vertice_m / mpx
+    con_pares_ingenuo = []
+    for s in contexto:
+        r = ancho_por_emparejamiento([s], contexto, mpx, tol_min_m, tol_max_m)
+        if r['anchoPx'] is None:
+            continue
+        con_pares_ingenuo.append({'segmento': s, 'par': r['detalle'][0]['par'], 'anchoPx': r['anchoPx']})
+
+    hoja_ids = set()
+    for item in con_pares_ingenuo:
+        s, ancho_s = item['segmento'], item['anchoPx']
+        encontrado = False
+        for extremo in (s['p1'], s['p2']):
+            if encontrado:
+                break
+            for otro in con_pares_ingenuo:
+                vecino, ancho_v = otro['segmento'], otro['anchoPx']
+                if vecino is s:
+                    continue
+                # Guarda de plausibilidad (mismo criterio ya usado en
+                # _relleno_solido/remate de esquinas, "ancho_px > largo_s"):
+                # si el ancho ingenuo del vecino supera su propio largo, es
+                # un emparejamiento espurio a larga distancia (ver bug #1
+                # del roadmap, 2026-08-20/21), no una referencia real de
+                # espesor de muro -- no debe poder disparar la exclusion de
+                # una hoja de puerta real vecina.
+                largo_vecino = math.hypot(vecino['p2'][0] - vecino['p1'][0], vecino['p2'][1] - vecino['p1'][1])
+                if ancho_v > largo_vecino:
+                    continue
+                for extremo_v in (vecino['p1'], vecino['p2']):
+                    d = math.hypot(extremo[0] - extremo_v[0], extremo[1] - extremo_v[1])
+                    if d <= tol_px and ancho_v > ancho_s:
+                        hoja_ids.add(id(s))
+                        if item.get('par') is not None:
+                            hoja_ids.add(id(item['par']))
+                        encontrado = True
+                        break
+                if encontrado:
+                    break
+    return hoja_ids
 
 
 def diagnosticar_candidatos(s, contexto, mpx, top_n=5):
@@ -670,7 +739,7 @@ def _ancho_heredado_de_segmento(s, con_pares, mpx, tol_vertice_m=0.03):
     return mejor
 
 
-def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m=0.9):
+def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m=0.9, hoja_ids=None):
     """Precalcula, para cada segmento de contexto_local, su ancho real
     emparejado (o None si es linea suelta). O(n^2) sobre contexto_local
     -- mismo costo que hace cuerpo_cerrado_fusiona internamente, pero
@@ -679,10 +748,16 @@ def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m=
     contexto_local (ej. una pasada de fusion sobre todos los muros de
     una pagina), calcular esto una sola vez y pasarlo via
     con_pares_precalculados evita repetir el trabajo O(n^2) en cada
-    llamada -- ver _fusionar_muros_por_proximidad en la Celda 4."""
+    llamada -- ver _fusionar_muros_por_proximidad en la Celda 4.
+
+    `hoja_ids`: set opcional ya calculado por identificar_hojas_de_puerta
+    -- si no se pasa, se calcula aca mismo (Tipologia B, Convenciones_CAD
+    D.2)."""
+    if hoja_ids is None:
+        hoja_ids = identificar_hojas_de_puerta(contexto_local, mpx, tol_min_m, tol_max_m)
     con_pares = []
     for s in contexto_local:
-        r = ancho_por_emparejamiento([s], contexto_local, mpx, tol_min_m, tol_max_m)
+        r = ancho_por_emparejamiento([s], contexto_local, mpx, tol_min_m, tol_max_m, hoja_ids=hoja_ids)
         if r['anchoPx'] is None:
             continue
         con_pares.append({'segmento': s, 'par': r['detalle'][0]['par'], 'anchoPx': r['anchoPx']})
@@ -723,10 +798,16 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
     construir_contexto_con_pares(contexto_local, mpx) ya calculado por
     el llamador -- evita recalcularlo en cada llamada cuando se evaluan
     muchos pares sobre el mismo contexto_local (ver esa funcion)."""
-    ancho_a = ancho_por_emparejamiento(grupo_a, contexto_local, mpx)
-    ancho_b = ancho_por_emparejamiento(grupo_b, contexto_local, mpx)
+    # Tipologia B (Convenciones_CAD D.2): las hojas/vanos de puerta se
+    # calculan UNA vez para todo el contexto y se usan tanto para
+    # grupo_a/grupo_b como para construir_contexto_con_pares -- deben
+    # ser consistentes entre si (un segmento no puede ser "hoja" para un
+    # calculo y "muro" para otro dentro de la misma llamada).
+    hoja_ids = identificar_hojas_de_puerta(contexto_local, mpx)
+    ancho_a = ancho_por_emparejamiento(grupo_a, contexto_local, mpx, hoja_ids=hoja_ids)
+    ancho_b = ancho_por_emparejamiento(grupo_b, contexto_local, mpx, hoja_ids=hoja_ids)
 
-    con_pares = con_pares_precalculados if con_pares_precalculados is not None else construir_contexto_con_pares(contexto_local, mpx)
+    con_pares = con_pares_precalculados if con_pares_precalculados is not None else construir_contexto_con_pares(contexto_local, mpx, hoja_ids=hoja_ids)
     segmentos_ancho_forzado = []
 
     if ancho_a['anchoPx'] is None:

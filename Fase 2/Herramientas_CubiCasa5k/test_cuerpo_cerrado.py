@@ -9,7 +9,7 @@ equipo).
 
 Uso: python test_cuerpo_cerrado.py
 """
-from cuerpo_cerrado import cuerpo_cerrado_fusiona
+from cuerpo_cerrado import cuerpo_cerrado_fusiona, identificar_hojas_de_puerta, ancho_por_emparejamiento
 
 MPX = 0.00588  # metros/px, misma corrida real (log Celda 4 pdv.txt)
 
@@ -22,6 +22,13 @@ def _check(nombre, esperado_fusiona, resultado):
     ok = resultado['fusiona'] == esperado_fusiona
     estado = 'OK' if ok else 'FALLO'
     print(f"[{estado}] {nombre}: fusiona={resultado['fusiona']} (esperado {esperado_fusiona}) -- {resultado['motivo']}")
+    return ok
+
+
+def _check_bool(nombre, esperado, valor):
+    ok = valor == esperado
+    estado = 'OK' if ok else 'FALLO'
+    print(f"[{estado}] {nombre}: valor={valor} (esperado {esperado})")
     return ok
 
 
@@ -83,6 +90,17 @@ def main():
     contexto2 = grupo_a_mu13 + grupo_b_proyecciones
     r2 = cuerpo_cerrado_fusiona(grupo_a_mu13, grupo_b_proyecciones, contexto2, MPX)
     resultados.append(_check('CASO 2 (MU13 + fragmento Proyecciones)', True, r2))
+
+    # === CASO 2b (NUEVO 2026-08-24, regresion de Tipologia B) — idx1324
+    # (el "cap" de MU13) empareja de forma ingenua con idx96 a d=127px
+    # (ancho > su propio largo de 34px -- emparejamiento espurio ya
+    # conocido, ver bug #1 del roadmap). Sin la guarda de plausibilidad
+    # en identificar_hojas_de_puerta, ese ancho falso de 127px "mas ancho
+    # que idx1344" marcaria idx1344/idx1349 como hoja de puerta por
+    # error, rompiendo CASO 2. Verifica directamente que NO se marquen. ===
+    hoja_ids_2b = identificar_hojas_de_puerta(contexto2, MPX)
+    resultados.append(_check_bool('CASO 2b (idx1344/Proyecciones NO marcado como hoja pese al mispairing de idx1324)', False, id(grupo_b_proyecciones[0]) in hoja_ids_2b))
+    resultados.append(_check_bool('CASO 2b-control (idx1349/Proyecciones tampoco marcado)', False, id(grupo_b_proyecciones[2]) in hoja_ids_2b))
 
     # === CASO 3 (control, debe RECHAZAR) — MU13 vs ventana lejana idx484 (sin relacion real) ===
     grupo_a_mu13_corto = [
@@ -147,6 +165,30 @@ def main():
     contexto6 = [face1, face2, conector_diagonal]
     r6 = cuerpo_cerrado_fusiona(grupo_a_muro, [conector_diagonal], contexto6, MPX5)
     resultados.append(_check('CASO 6 (conector en angulo de 45 grados, no recto)', True, r6))
+
+    # === CASO 7 (NUEVO 2026-08-24) — Tipologia B: hoja/vano de puerta se
+    # excluye de candidato a muro. Confirmado por el arquitecto: un vano/
+    # hoja es un par de bordes MAS FINO (menor separacion) que el muro
+    # real en sus extremos -- firma relativa, distinta de la de ventana.
+    # Reusa face1/face2 (muro real, ancho 30px) del CASO 5. La hoja
+    # continua desde el vertice de face1 (0,100), mas angosta (10px). ===
+    hoja1 = seg((0, 100), (0, 150))
+    hoja2 = seg((10, 100), (10, 150))
+    # muro B real perpendicular, mismo ancho que face1/face2 (30px) --
+    # control negativo: no debe confundirse con hoja (ancho igual, no
+    # menor, al del vecino en su propio extremo).
+    faceB1 = seg((0, 100), (50, 100))
+    faceB2 = seg((0, 130), (50, 130))
+    contexto7 = [face1, face2, hoja1, hoja2, faceB1, faceB2]
+
+    hoja_ids_7 = identificar_hojas_de_puerta(contexto7, MPX5)
+    resultados.append(_check_bool('CASO 7a (hoja1 identificada como hoja de puerta)', True, id(hoja1) in hoja_ids_7))
+    resultados.append(_check_bool('CASO 7b (hoja2 identificada como hoja de puerta)', True, id(hoja2) in hoja_ids_7))
+    resultados.append(_check_bool('CASO 7c (control: face1 del muro real NO marcada como hoja)', False, id(face1) in hoja_ids_7))
+    resultados.append(_check_bool('CASO 7d (control: faceB1 del muro B real NO marcada como hoja, mismo ancho que su vecino)', False, id(faceB1) in hoja_ids_7))
+
+    r7 = ancho_por_emparejamiento([hoja1], contexto7, MPX5, hoja_ids=hoja_ids_7)
+    resultados.append(_check_bool('CASO 7e (hoja1 sin ancho real una vez excluida -- no cuenta como muro)', True, r7['anchoPx'] is None))
 
     n_ok = sum(resultados)
     print(f"\n{n_ok}/{len(resultados)} casos OK")

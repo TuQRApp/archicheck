@@ -2206,6 +2206,25 @@ El arquitecto revisó `diag_muros_pag2-2_corregido.png` marcando 7 puntos (numer
 
 **Contexto de proceso importante**: hay una memoria nueva del usuario, `project_archicheck_objetivo_etapa_aprendizaje.md` (2026-08-24, ver también línea 20 de `MEMORY.md`), que fija el criterio para abordar estas 4 tipologías de ahora en más: toda corrección debe (1) no regresionar casos ya confirmados (MU02/MU108 no se pueden romper), (2) generar tipologías nombradas persistentes para todo elemento/construcción topológica, (3) levantar a propósito los conflictos entre tipologías en vez de resolverlos en silencio. **El arquitecto confirmó explícitamente que todavía NO ejecutó esa memoria/proceso** — lo va a hacer después de esta ronda de feedback. Sesión pausada sin implementar nada de las 4 tipologías — el próximo paso es esperar a que el arquitecto aplique ese proceso antes de diseñar/codificar cualquier fix.
 
+## ✅ 2026-08-24 (continuación) — Memoria de tipologías ejecutada (`Convenciones_CAD.md` sección D, 58 comentarios de Excel + 3 rondas de refinamiento); implementadas Tipología B y C
+
+El arquitecto ejecutó el proceso de la memoria nueva — `Fase 2/Convenciones_CAD.md` ganó una sección D (tabla maestra D.1-D.10) construida en retrospectiva sobre todo el roadmap, revisada en 3 rondas el mismo día (58 comentarios en Excel, una ronda de simplificación eliminando tipologías redundantes, una tercera vía capturas del artifact publicado). Detalle completo en la memoria `project_archicheck_objetivo_etapa_aprendizaje` y en `Convenciones_CAD.md` mismo — no se duplica aquí.
+
+**Confirmaciones puntuales relevantes para las 4 tipologías de la revisión de N2**:
+- **Tipología A y D confirmadas por el arquitecto como errores de implementación pendientes**, no tipologías nuevas a definir — la definición general ya existe en D.1 ("Encuentro de brazos": cualquier red de brazos con anchos/ángulos distintos que cumple cuerpo cerrado es la misma tipología, sin importar cuántos brazos ni el ángulo). Sigue pendiente de implementar/depurar en esta sesión.
+- **Tipología B, confirmada y precisada por el arquitecto**: el vano/hoja de puerta se ha definido consistentemente como 2 bordes opuestos, **más finos y más cercanos** que los muros/pilares en sus extremos — firma relativa (compara contra el vecino real), distinta de la firma absoluta de ventana (2 caras + línea central), que queda **específica de ventana, no se generaliza**.
+- **Tipología C**: el arquitecto aclaró que no hace falta nada de su parte para avanzar — ya había suficiente información. Se formaliza aparte en `Convenciones_CAD.md` D.7 (estado de obra, "Se retira" = tratar como ausente).
+
+**Implementado — Tipología B (`cuerpo_cerrado.py`)**: nueva función `identificar_hojas_de_puerta(contexto, mpx)` — 2 pasadas para evitar dependencia circular con `ancho_por_emparejamiento` (que a su vez necesita este resultado vía el nuevo parámetro `hoja_ids`): primero calcula un ancho "ingenuo" por segmento (sin excluir hojas todavía), luego marca como hoja cualquier segmento cuyo extremo toque (≤3cm) a un vecino con ancho MAYOR — ambos lados del par quedan marcados, no solo el que toca al vecino. `ancho_por_emparejamiento`, `construir_contexto_con_pares` y `cuerpo_cerrado_fusiona` ahora reciben/propagan `hoja_ids` de forma consistente.
+
+**Riesgo real de regresión encontrado y corregido antes de dar el fix por bueno** (aplicando el principio 1 de la memoria — "no regresionar casos confirmados"): al trazar el nuevo código a mano contra CASO 2 (ya validado, MU13+fragmento Proyecciones), se encontró que `idx1324` (el "cap" de MU13) empareja de forma ingenua con `idx96` a 127px de distancia — un emparejamiento espurio ya documentado (bug #1 del roadmap, 20-ago: el ancho medido, 127px, supera el propio largo del segmento, 34px). Sin corrección, ese ancho falso de 127px habría marcado `idx1344`/`idx1349` (el fragmento real de Proyecciones) como "hoja de puerta" por error, rompiendo CASO 2. **Corregido**: se agregó la misma guarda de plausibilidad ya usada en el relleno/remate de esquinas (`ancho_px > largo_s` → descartar como referencia) al buscar un "vecino" para la comparación de hoja — un vecino cuyo ancho ingenuo supera su propio largo no puede servir de referencia. Agregado CASO 2b al test como guardia permanente de esta regresión específica.
+
+**Implementado — Tipología C (Celda 4, `_detectar_leyenda_simbologia`)**: nueva función `_es_contorno_cerrado_de_lineas` reconoce un swatch de leyenda dibujado como contorno cerrado de segmentos `'l'` (sin relleno sólido, solo achurado) — usa el color del TRAZO como color_key, con límite de tamaño (`LIMITE_SWATCH_PT=40`) para no confundir un contorno grande real (muro, recinto) con un ícono de leyenda. La fusión de resultados entre las 2 apariciones de la leyenda en páginas distintas ya funcionaba correctamente (el loop ya recorre todas las páginas del doc) — el bug real era solo la forma del swatch, no la consolidación entre páginas. Además: `muros_geo` ahora separa los muros con `estado == 'eliminado'` en una lista aparte (`muros_excluidos_por_demolicion`, mismo patrón que `muros_excluidos_por_referencia`) ANTES de la fusión — tratados como ausentes en el estado final, no solo etiquetados.
+
+**Test de regresión**: 8 casos de `identificar_hojas_de_puerta`/`ancho_por_emparejamiento` agregados (CASO 7a-e: hoja identificada correctamente en ambos lados del par, muro real y muro B real NO marcados por error, hoja sin ancho real una vez excluida; CASO 2b: guardia de regresión). Total del archivo ahora 16 checks. Verificado a mano paso a paso (sin Python local) — no debería romper ningún caso anterior.
+
+**Sin correr en Colab todavía** — pendiente antes de confiar en esto: reiniciar el entorno de ejecución, correr el test completo (16/16 esperado), y recién después re-correr contra PdV N1/N2 real para ver el efecto de ambos fixes.
+
 ---
 
 ## ✅ 2026-08-23 — Revisión de estado del arte (2 rondas, 5 IAs, 9 informes) + Floor Plan API queda en espera hasta que salga al mercado
@@ -2243,6 +2262,81 @@ Continuación directa del objetivo permanente definido el mismo día (ver `proje
 **2 reglas nuevas de puerta agregadas (usuario, 2026-08-24)**: el radio del arco Bézier debe ser prácticamente igual al ancho del vano, **tolerancia máxima 15%**; y por separado, el radio no debe variar en toda la extensión del arco más de un **20%** (si el trazo no es efectivamente circular dentro de ese margen, no debe aceptarse como puerta válida sin revisión). Ambas en `Convenciones_CAD.md` sección A (Puertas) y D.2.
 
 **Nota de proceso**: esta tabla es una primera versión para revisión del arquitecto, construida releyendo el roadmap completo — no garantiza cobertura 100% perfecta de cada matiz ya discutido; se corrige lo que el usuario señale, mismo criterio que rige el resto de este documento.
+
+---
+
+## ✅ 2026-08-24 (continuación) — Primera ronda de revisión del arquitecto sobre la tabla maestra: 58 comentarios en Excel, corrección real de fondo en gozne de puertas
+
+El arquitecto revisó la tabla maestra (vía el artifact "Catálogo de Tipologías") y devolvió comentarios estructurados en `Fase 2/Desarrollos/Test/Plan de proyecto/Comentarios Convenciones.xlsx` — 58 filas, extraídas y leídas completas (el Excel no es legible con Read directo; se extrajo con un script Node.js que parsea `xl/sharedStrings.xml` + `xl/worksheets/sheet1.xml`). Es exactamente el mecanismo que el objetivo permanente de aprendizaje predice: una duda/corrección de tipología se levanta, se resuelve a propósito, y la resolución se persiste — ver `project_archicheck_objetivo_etapa_aprendizaje` en memoria.
+
+**Corrección de fondo, no solo un matiz — Gozne de puertas**: la regla del 19-ago ("centro de la hoja, un segundo par de líneas más angosto dentro del espesor del muro") queda re-encuadrada como **pista visual** para un estilo de dibujo puntual, no como la definición general. La definición vigente ahora: **el gozne va en el extremo de la hoja/vano opuesto al arco — geométricamente, es el centro del círculo cuyo segmento dibuja el arco** (mismo punto que ya daba el ajuste de círculo por mínimos cuadrados). Reglas nuevas asociadas:
+- Una puerta puede ir de muro/pilar a **otra puerta** directamente (sin muro entre medio) — ambas mantienen gozne opuesto, cada una en su extremo exterior.
+- Puerta sin arco detectada → se marca como puerta, pero **sin gozne** (campo vacío, no se fabrica una posición). Distinto del caso "hoja obstruida pero con arco" (2026-08-19), donde el gozne sí se ancla al muro proyectado.
+- Puerta doble con gozne al centro: **solo válido si los arcos están efectivamente marcados** — sin esa evidencia, cada hoja va con gozne en su extremo exterior (corrige lo que decía la tabla).
+
+**Tolerancias de arco — resuelto el conflicto entre el valor dado en chat y el del Excel**: el usuario definió explícitamente **10% para ambas** (radio↔vano y constancia del radio a lo largo del arco), como parámetros configurables — reemplaza los valores previos (15%/20%) acordados unas horas antes en la misma sesión.
+
+**Otras correcciones aplicadas** (detalle completo en `Fase 2/Convenciones_CAD.md`, secciones A/B y D):
+- Muros: una sola línea nunca es muro salvo que coincida con el deslinde Y pase cuerpo cerrado; achurado de color aplica a borde y relleno; muro corto igual debe pasar cuerpo cerrado; filtro de ventana (par de bordes paralelos + línea central) excluye candidatos a muro — coincide con el hallazgo de revisión visual de N2 ya registrado en memoria; "CORTE A" generaliza a cualquier corte y puede ser guion-guion; **esquina, empalme y cruce son 3 tipologías topológicas distintas** — el polígono de cierre de esquina (23-ago) NO reemplaza el tratamiento de empalme/cruce en T o X, corrige una conclusión de esta misma sesión.
+- Ventanas: definición vigente pasa a ser "par de líneas opuestas + línea central en el lado largo" (el arquitecto la reafirmó como definición, no como idea futura) — el hallazgo `'qu'`/`'l'` de PyMuPDF del 09-ago queda como nota de implementación de un PDF puntual, no como la definición. Fila repetida de ventanas requiere pilares/parteluces identificados aparte y no valida medida. Se eliminaron 2 filas de la tabla a pedido explícito ("idea de diseño no implementada" y "punto ciego confirmado" — la primera quedó redundante, ya es la definición confirmada).
+- Escaleras: se fusionan "Estilo 1" y "Estilo 3" (misma forma, numeración incidental) en una sola tipología; se agregan 2 tipologías nuevas (Caracol, Mixta); nueva regla de consistencia entre plantas sucesivas (por pares), y una planta puede tener más de una escalera.
+- Ruido a excluir: ejes incluyen variante con puntos intermedios; cota también puede ser 2 diagonales cruzadas (X); rasante trae una línea discontinua asociada que también se ignora; corte/rasante puede ser guion-guion.
+
+**Vector de aprendizaje de fondo**: el `muro_asociado_id` no confiable y el bug de "fusión bloqueada por puerta" (puertas con 1 solo punto de unión) quedaron sin corrección nueva esta ronda — el arquitecto pidió solo explicación, ya documentada en la tabla, no encontró error ahí.
+
+**Cruce con la revisión visual de N2** (sección anterior, "Revisión visual de N2... 4 tipologías"): esta ronda de Excel **es** la ejecución del proceso que esa sección dejó pendiente ("el arquitecto todavía NO ejecutó esa memoria/proceso — lo va a hacer después de esta ronda"). Tipología C ("Se retira" = ausente) y parte de Tipología B (firma de ventana específica, no generalizable) quedaron incorporadas en `Convenciones_CAD.md` en esta misma pasada. Tipología A (cierre de esquina incompleto) y D (remate se extiende de más) siguen como pendientes de implementación técnica, no de definición — no se tocó código en esta ronda.
+
+**Artifact republicado** con la tabla corregida — mismo URL: https://claude.ai/code/artifact/17873f99-8e5d-4a57-8c23-ffda145ee43c.
+
+---
+
+## 🔴✅ 2026-08-24 (continuación, misma tarde) — Corrección sobre la corrección: cruce, empalme y esquina SÍ son la misma tipología
+
+A los pocos intercambios de haber registrado "esquina, empalme y cruce NO son la misma tipología" (sección anterior, basada en un comentario del Excel sobre la fila de "conector de esquina"), el usuario pidió confirmar la definición de muro en términos más generales y aclaró explícitamente que la conclusión anterior estaba mal: **todas las formas de encuentro de brazos (cruce, empalme, esquina, o cualquier nombre que se le dé) son LA MISMA tipología** — parte de un único criterio de cuerpo cerrado.
+
+**Definición amplia y definitiva de "muro" como entidad única**: un solo muro es cualquier red conectada de segmentos/brazos con bordes paralelos (cada brazo con su propio ancho, no necesariamente igual entre sí) que, en conjunto, cumple cuerpo cerrado — sin importar cuántos brazos la componen, en qué ángulo se encuentran (no necesariamente recto), ni si los anchos difieren entre brazos. "Muro simple" (2 trazos sin ningún encuentro) es solo el caso más chico de esta definición general, no una categoría aparte. La lógica de cierre debe soportar siempre brazos de anchos y ángulos distintos — no como caso especial, es la regla general.
+
+**Se deja visible el historial de la corrección revertida** (no se borra silenciosamente) — es exactamente el tipo de conflicto que el objetivo permanente de aprendizaje (`project_archicheck_objetivo_etapa_aprendizaje.md`) exige levantar a propósito en vez de resolver en silencio, aplicado ahora a una corrección propia de esta sesión, no solo a hallazgos del pipeline. `Convenciones_CAD.md` (sección A y D.1) y el artifact quedaron actualizados con la definición unificada, marcando explícitamente el error intermedio y su corrección.
+
+---
+
+## ✅ 2026-08-24 (continuación) — Segunda ronda de ajuste sobre la tabla maestra: simplificaciones y eliminaciones a pedido del arquitecto
+
+Tras la unificación de cruce/empalme/esquina, el arquitecto revisó de nuevo la tabla (vía diálogo directo, no Excel esta vez) y pidió una serie de simplificaciones — varias eliminan filas que habían quedado redundantes o mal explicadas, no solo corrigen texto.
+
+**Muros**:
+- **Eliminada "polígono complejo"** como tipología aparte — quedó redundante con la definición amplia de muro (un muro que cambia de dirección/sección es solo el caso general de brazos en distinto ángulo).
+- **"Línea única" corregida**: se había puesto una excepción de deslinde que no tenía sentido (si el deslinde tiene par paralelo, ya deja de ser "línea única"). Regla simple: una línea sin borde paralelo consistente siempre se ignora, sin excepción.
+- **"Fusión bloqueada por puerta" simplificada**: en vez de la explicación técnica de "1 vs. 2 puntos de unión" (que no terminó de aterrizar en la explicación), la regla general y definitiva: solo bloquea cuando se identifica una puerta **con certeza** — una detección incierta no bloquea.
+
+**Puertas**:
+- Eliminada la fila "Puerta-a-puerta (sin muro/pilar entre medio)" — a pedido explícito.
+- Eliminada la fila "Dato de origen no confiable (`muro_asociado_id`)" — quedó sin explicación que aterrizara bien, se elimina en vez de seguir intentando.
+- **Gozne simplificado dos veces más**: de "extremo de la hoja/vano opuesto al arco" a solo **"opuesto al arco"** — quita el calificador de hoja/vano, que ya no aporta. El caso de hoja obstruida (con arco) también se simplifica a "centro del segmento de círculo del arco", sin la mención de anclar a la línea del muro.
+- Arco discontinuo: reformulado a "se pinta de un extremo a otro considerando todos los segmentos" (más simple que la versión anterior).
+- Radio↔vano: se quita la frase sobre "radio ingenuo" (mitad exacta de cota) — quedaba fuera de lugar en esa fila.
+
+**Ventanas** — cambio de fondo, no solo simplificación:
+- La nota de implementación (`'qu'`/`'l'` de PyMuPDF) se funde en la definición principal — la regla (par de bordes opuestos + línea central) es siempre la misma sin importar cómo llegue el dato como objeto.
+- **Se elimina la categoría "fila de ventanas repetidas"/"ventanas seguidas" como tipología aparte, y con ella "tabique de vidrio completo".** La regla final, tras 2 rondas de precisión del arquitecto: **dos ventanas cualesquiera siempre se tratan de forma independiente**, sin validar dimensión entre ellas — no importa si hay un muro/pilar/parteluz separándolas o si están adyacentes sin nada entre medio, en línea recta o en ángulo, con largos iguales o distintos. "Ventanales en escuadra" queda solo como dato de convención gráfica (cómo se dibuja), sin ninguna regla de validación asociada — la independencia ya es universal.
+
+**Escaleras**: eliminada la tipología "líneas anidadas en L" — quedan 3 variantes (peldaños rectos paralelos, Caracol, Mixta).
+
+**🆕 Regla nueva de cálculo de superficies (usuario, 2026-08-24)**: solo muros, ventanas, puertas y vanos actúan como separadores/límites de recinto — **precisa** (no contradice) la regla general de 2026-07-31 ("solo elementos de la sección A separan espacios"), aclarando que dentro de la sección A no todos los elementos juegan el mismo rol. Escaleras NO cuentan como superficie (no aportan área de recinto); rampas SÍ cuentan como espacio (si aportan área) — a diferencia de las escaleras. Nueva sección D.10 en `Convenciones_CAD.md`.
+
+`Convenciones_CAD.md` (secciones A y D) y el artifact quedaron actualizados con todos estos cambios en la misma pasada.
+
+---
+
+## ✅ 2026-08-24 (continuación) — Tercera ronda de ajuste: vía capturas de pantalla del artifact
+
+El arquitecto siguió revisando el artifact directamente (capturas de pantalla de filas puntuales, no Excel) y pidió 4 ajustes más:
+
+- **Puertas**: para cuadrar "vano sin hoja, solo arco" (gozne opuesto al arco) con "puerta sin arco" (sin gozne), se precisa que puede existir una puerta **sin gozne NI arco** cuando ninguno de los dos existe — se marca simplemente como puerta, sin fabricar ninguno de los dos campos.
+- **Ventanas**: se elimina el contenido de la columna "Conflicto conocido ↔ resolución" para la fila "Ventana simple" (quedó como dato no aportaba valor ahí). Se elimina por completo la tipología "Ventanales en escuadra" — ya no queda ni como nota de convención gráfica.
+- **Ruido a excluir**: se uniforma que el criterio de línea discontinua (ejes, la línea asociada a rasante, y corte) cubra siempre **ambos patrones por igual — guion-guion y guion-punto-guion** — antes quedaba mencionado de forma inconsistente entre filas.
+
+`Convenciones_CAD.md` y el artifact actualizados en la misma pasada.
 
 ---
 

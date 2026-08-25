@@ -226,6 +226,47 @@
   </div>
 
   <div class="today-box win">
+    <h4>✅ 24 agosto (continuación) — Primera ronda de revisión del arquitecto: 58 comentarios en Excel, corrección de fondo en gozne de puertas</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li><strong>Gozne re-encuadrado</strong>: la regla del 19-ago ("2º par de líneas dentro del muro") pasa a ser pista visual, no definición. Vigente: gozne = extremo de la hoja/vano <em>opuesto al arco</em> = centro del círculo del arco.</li>
+      <li><strong>Casos nuevos</strong>: puerta-a-puerta (sin muro entre medio, goznes opuestos); puerta sin arco → se marca sin gozne; puerta doble con gozne al centro solo si los arcos están marcados.</li>
+      <li><strong>Tolerancias de arco resueltas: 10%/10%</strong> (ambas, como parámetro) — reemplaza el 15%/20% de unas horas antes.</li>
+      <li><strong>Esquina ≠ empalme ≠ cruce</strong> — corrige una conclusión propia de esta sesión (el polígono de cierre de esquina del 23-ago NO reemplaza el tratamiento de empalme/cruce).</li>
+      <li><strong>Ventana</strong>: definición vigente = "par de líneas opuestas + línea central" (confirmada, no idea futura); firma de ventana NO se generaliza a otros elementos no-estructurales.</li>
+      <li><strong>"Se retira" = tratar como ausente</strong> (no solo etiquetar) — coincide con la revisión visual de N2 de la misma fecha.</li>
+      <li>Escaleras: Caracol y Mixta agregadas; consistencia entre plantas sucesivas.</li>
+    </ul>
+  </div>
+
+  <div class="today-box warn">
+    <h4>🔴✅ 24 agosto (continuación) — Corrección de una corrección: cruce/empalme/esquina SÍ son la misma tipología</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>A pocos intercambios de registrar "esquina ≠ empalme/cruce" (ronda anterior), el arquitecto aclaró que es al revés: <strong>todas las formas de encuentro de brazos son la misma tipología</strong> — parte de un único cuerpo cerrado.</li>
+      <li><strong>Definición amplia de "muro"</strong>: cualquier red conectada de brazos con bordes paralelos que en conjunto cumple cuerpo cerrado, sin importar cuántos brazos, en qué ángulo se encuentran, ni si tienen anchos distintos. "Muro simple" es solo el caso más chico de esta definición general.</li>
+      <li>Se dejó visible el historial de la corrección revertida en <code>Convenciones_CAD.md</code> y el roadmap — no se borró en silencio.</li>
+    </ul>
+  </div>
+
+  <div class="today-box win">
+    <h4>✅ 24 agosto (continuación) — Segunda ronda: simplificaciones y eliminaciones en la tabla maestra</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li><strong>Eliminadas</strong>: "polígono complejo" (muros, redundante), "puerta-a-puerta" y "dato de origen no confiable" (puertas), "fila de ventanas repetidas"/"tabique de vidrio" (ventanas), "líneas anidadas en L" (escaleras).</li>
+      <li><strong>Ventanas — regla final</strong>: dos ventanas cualesquiera siempre se tratan de forma independiente, sin validar dimensión entre ellas — con o sin separador, en línea o en ángulo, mismo largo o no.</li>
+      <li><strong>Gozne</strong> simplificado a solo "opuesto al arco". <strong>Fusión bloqueada por puerta</strong> simplificada a "solo bloquea con certeza".</li>
+      <li><strong>Regla nueva de superficies</strong>: solo muros/ventanas/puertas/vanos separan; escaleras no cuentan como superficie; rampas sí cuentan como espacio. Nueva sección D.10.</li>
+    </ul>
+  </div>
+
+  <div class="today-box win">
+    <h4>✅ 24 agosto (continuación) — Tercera ronda: ajustes vía capturas del artifact</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Puerta sin gozne ni arco (ninguno existe) precisada para cuadrar con "vano sin hoja, solo arco".</li>
+      <li>Columna "Conflicto/resolución" vaciada solo para "Ventana simple"; "Ventanales en escuadra" eliminada por completo.</li>
+      <li>Línea discontinua (eje/rasante/corte) uniformada: siempre cubre guion-guion Y guion-punto-guion. Artifact republicado (Rev. E), mismo URL.</li>
+    </ul>
+  </div>
+
+  <div class="today-box win">
     <h4>✅ 28 julio — Confirmado en incógnito: los 3 fixes funcionan (era caché, no bug)</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
       <li>Una corrida mostraba "DS 50/2015 Art. N" intacto pese al fix ya desplegado. Se descartó paso a paso: Vercel "Ready · Latest" en el commit correcto, código fuente correcto, y la prueba definitiva — <strong>ventana de incógnito</strong> (sin caché posible) — confirmó los 3 fixes funcionando al 100%.</li>
@@ -1048,6 +1089,10 @@
       <p><strong>Tipología C — "Se retira" = elemento demolido, tratar como ausente.</strong> Aclaración semántica: "Se retira" significa que el elemento se va a demoler — para el análisis hay que tratarlo como ausente en el estado final, no solo etiquetarlo. La detección de leyenda sigue rota (bug ya documentado) — sin eso arreglado no hay ninguna regla activa hoy. La leyenda aparece 2 veces en páginas distintas, hay que consolidarlas. El arquitecto va a formalizar esta definición aparte en un documento "Convenciones_CAD" — no implementar todavía desde este lado.</p>
       <p><strong>Tipología D — extensiones falsas del remate en esquinas y extremos de muro</strong>: el remate generalizado (23-ago) se extiende de más, tanto en esquinas reales como en extremos sueltos de muro — coincide con el patrón ya visto de bordes marcados en el final de arcos de puerta.</p>
       <p><strong>Contexto de proceso</strong>: memoria nueva <code>project_archicheck_objetivo_etapa_aprendizaje.md</code> fija el criterio de ahora en más — no regresionar casos confirmados, generar tipologías nombradas persistentes, levantar conflictos entre tipologías a propósito. El arquitecto confirmó que todavía NO ejecutó esa memoria/proceso — lo hará después de esta ronda. Sesión pausada sin implementar ninguna de las 4 tipologías.</p>
+      <p><strong>✅ 2026-08-24 (continuación) — Memoria de tipologías ejecutada; implementadas Tipología B y C.</strong> El arquitecto ejecutó el proceso — <code>Convenciones_CAD.md</code> ganó una sección D (tabla maestra D.1-D.10), revisada en 3 rondas (58 comentarios Excel + 2 rondas de refinamiento). Confirmaciones clave: <strong>A y D son errores de implementación pendientes</strong>, no tipologías nuevas — la definición ya existe en D.1 ("Encuentro de brazos"). <strong>B precisada</strong>: vano/hoja de puerta = 2 bordes opuestos, más finos y más cercanos que los muros/pilares en sus extremos — firma relativa, distinta de la absoluta de ventana (que queda específica de ventana). <strong>C</strong>: no hacía falta nada del arquitecto, ya había info suficiente.</p>
+      <p><strong>Implementado B</strong> (<code>cuerpo_cerrado.py</code>): <code>identificar_hojas_de_puerta</code> — 2 pasadas (ancho ingenuo, luego marca como hoja cualquier segmento cuyo extremo toque a un vecino con ancho MAYOR) para evitar dependencia circular. <code>ancho_por_emparejamiento</code>/<code>construir_contexto_con_pares</code>/<code>cuerpo_cerrado_fusiona</code> propagan <code>hoja_ids</code>. <strong>Riesgo de regresión encontrado y corregido</strong>: <code>idx1324</code> (CASO 2 ya validado) empareja de forma ingenua a 127px (ancho > su propio largo, bug ya conocido) — sin guarda, eso habría marcado el fragmento real de Proyecciones como hoja por error. Corregido reusando la guarda de plausibilidad ya existente (<code>ancho_px > largo_s</code>). Agregado CASO 2b como guardia permanente.</p>
+      <p><strong>Implementado C</strong> (Celda 4): <code>_es_contorno_cerrado_de_lineas</code> reconoce swatch de leyenda sin relleno sólido (contorno de líneas + achurado), usa color de trazo, límite de tamaño 40pt para no confundir con muro/recinto real. La fusión entre páginas ya funcionaba, el bug era solo la forma del swatch. <code>muros_geo</code> ahora separa <code>estado=='eliminado'</code> en <code>muros_excluidos_por_demolicion</code> antes de fusionar — ausentes del estado final, no solo etiquetados.</p>
+      <p><strong>Test</strong>: 16 checks totales (8 nuevos: CASO 7a-e Tipología B + CASO 2b regresión). Verificado a mano, sin Python local. <strong>Sin correr en Colab todavía.</strong></p>
     </div>
   </details>
 
