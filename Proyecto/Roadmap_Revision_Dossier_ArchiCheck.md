@@ -2572,6 +2572,16 @@ El usuario copió el texto de la Celda 4 real (no un `.ipynb` nuevo — pidió t
 
 ---
 
+## ✅ 2026-08-25 (continuación) — "Se queda pegado bajando archivos": descarga automática desactivada por defecto, notebook `25aug_1315`
+
+El usuario reportó que la ejecución se traba durante las descargas. Causa real: la Celda 4 dispara **hasta 8 descargas automáticas** (`google.colab.files.download()`) en una corrida completa de 2 páginas — 2 `diag_muros_<página>.png` + 2 `diag_completo_<página>.png` + hasta 4 `diag_contexto_<caso>.png` (los casos MU02/MU108/MU03_MU04/MU06). El navegador bloquea o exige permiso explícito para "varios archivos" ante descargas automáticas seguidas — sin ese permiso, la celda queda esperando una confirmación que nadie ve, indistinguible de estar "pegada".
+
+**Arreglado**: nuevo flag `AUTO_DESCARGAR_DIAGNOSTICOS = False` (definido cerca del inicio de la celda, junto a `WORKER_URL`) — los 3 puntos que llamaban a `files.download()` (diag_muros, diag_completo, diag_contexto) ahora quedan condicionados a este flag. **Los PNG se siguen guardando siempre** en el disco de la sesión de Colab (`cv2.imwrite`, sin cambios) — visibles y descargables a mano desde el panel de Archivos (ícono de carpeta a la izquierda, clic derecho → Descargar) sin disparar el bloqueo del navegador. Poner el flag en `True` vuelve al comportamiento anterior si se prefiere.
+
+Notebook renombrado `ArchiCheck_Base 25aug_1315.ipynb` (anterior `25aug_1227` a `Versiones anteriores/`). Regenerado también `Celda 4 - copiar en Colab.py`. **Sin correr en Colab todavía.**
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
