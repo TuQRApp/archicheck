@@ -2453,8 +2453,26 @@ Tras cerrar Tipología B y C (entrada de arriba, `identificar_hojas_de_puerta` +
 
 **Qué falta para cerrar el ciclo** (próximo paso inmediato, pendiente de la corrida real):
 1. Subir `cuerpo_cerrado.py` + `catalogo_tipologias.py` (nuevo, debe subirse junto — `cuerpo_cerrado.py` ahora depende de él) + `test_cuerpo_cerrado.py` a Colab, correr el test (20/20 esperado).
-2. Re-correr el pipeline real contra PdV N1/N2 (notebook `ArchiCheck_Base 24aug_2116.ipynb`) para ver el efecto combinado de B, C y el refactor de parámetros (debería dar exactamente igual que antes del refactor — los valores no cambiaron, solo de dónde se leen — cualquier diferencia sería señal de un bug introducido en el refactor, no una mejora esperada).
+2. Re-correr el pipeline real contra PdV N1/N2 (notebook `ArchiCheck_Base 24aug_2258.ipynb`, ver entrada siguiente) para ver el efecto combinado de B, C y el refactor de parámetros (debería dar exactamente igual que antes del refactor — los valores no cambiaron, solo de dónde se leen — cualquier diferencia sería señal de un bug introducido en el refactor, no una mejora esperada).
 3. Recién después de (1) y (2): retomar Tipología A (esquina L faltante cerca de MU02/ventana) y D (falsas extensiones de remate en esquinas/finales sueltos) — ambas ya definidas en D.1 "Encuentro de brazos", pendientes como bug de implementación, no de definición.
+
+---
+
+## ✅ 2026-08-24 (continuación) — Diagnóstico visual completo: todos los tipos de elemento en su color, notebook `24aug_2258`
+
+Pedido explícito del arquitecto antes de la corrida real contra PdV: "quiero ver un test gráfico en el que marcas todo, cada cosa en su color: muros, puertas, ventanas, escaleras, etc, todo". Se agregó un nuevo bloque en la Celda 4, justo después del render `diag_muros_<página>.png` ya existente, que genera `diag_completo_<página>.png` sobre el plano real completo. Notebook renombrado `ArchiCheck_Base 24aug_2258.ipynb`; el anterior (`24aug_2116`) movido a `Versiones anteriores/`.
+
+**Cobertura real (con lo que el pipeline ya puede clasificar hoy)**:
+- **Muros** (`muros_geo`, post-fusión): verde = `estado` nuevo/agregado, gris oscuro = existente/sin estado, rojo = eliminado (dibujados también, aunque ya estén excluidos de `muros_geo` activo — vienen de `muros_excluidos_por_demolicion`, línea más fina, para verificar visualmente que la exclusión de Tipología C tomó los tramos correctos).
+- **Puertas** (`puertas_geo` — arcos ya extraídos por la detección de arco/Bézier existente, con `muro_asociado_id` y `puntos_union`): naranja.
+- **Ventana** (firma D.1/D.3, 2 caras + línea central) y **hoja/vano de puerta** (firma D.2, Tipología B): celeste y magenta respectivamente — calculadas de una sola pasada por página con la nueva `clasificar_no_muro()` (`catalogo_tipologias.py`/`cuerpo_cerrado.py`, ver entrada anterior) sobre el pool de segmentos `protegido[i]==True` de esa página (el mismo pool candidato del que salen `muros_geo`/`puertas_geo` — no se re-extrae nada, ni se agregan falsos candidatos de ruido ya descartado).
+- **Conflictos de tipología** (Principio 3): amarillo — hoy se espera que salga vacío (ventana y hoja son estructuralmente disjuntas por diseño, ver CASO 8d del test), pero el mecanismo corre igual sobre datos reales por primera vez.
+
+**Cobertura que NO existe todavía, marcada explícitamente en el print en vez de omitirse en silencio**: escaleras y rampas — `Convenciones_CAD.md` D.4/D.5 y `catalogo_tipologias.py` los tienen documentados con `estado='pendiente'`, sin ningún detector geométrico implementado. El print del diagnóstico dice esto textualmente para que no se lea como "el sistema no encontró ninguna" cuando en realidad "el sistema no las busca todavía".
+
+**Detalle técnico importante (evita repetir el bug de offset del 23-ago)**: `segmentos_l` (fuente de `_seg_pool_clasif`) guarda coordenadas ABSOLUTAS de página completa (salen de `to_px()`, antes de `ajustar()`) — se dibujan tal cual, SIN sumar `_ox/_oy`. `muros_geo`/`puertas_geo`/`muros_excluidos_por_demolicion` sí pasaron por `ajustar()` (relativas al crop de esa entrada) — a esos sí se les suma `_ox/_oy`, igual que el render `diag_muros_<página>.png` ya existente. Verificado a mano contra la definición real de `ajustar()`/`to_px()` en Paso 1 y Paso 4, no asumido — la fuente de este bug la última vez fue justamente asumir sin verificar.
+
+**Sin correr en Colab todavía.** Se sube junto con `cuerpo_cerrado.py` + `catalogo_tipologias.py` + `test_cuerpo_cerrado.py` (mismo runtime, mismo `files.upload()` — el bloque de import de la Celda 4 se actualizó para pedir también `catalogo_tipologias.py`, dependencia obligatoria nueva de `cuerpo_cerrado.py`).
 
 ---
 
