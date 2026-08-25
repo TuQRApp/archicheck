@@ -9,7 +9,7 @@ equipo).
 
 Uso: python test_cuerpo_cerrado.py
 """
-from cuerpo_cerrado import cuerpo_cerrado_fusiona, identificar_hojas_de_puerta, ancho_por_emparejamiento
+from cuerpo_cerrado import cuerpo_cerrado_fusiona, identificar_hojas_de_puerta, ancho_por_emparejamiento, clasificar_no_muro
 
 MPX = 0.00588  # metros/px, misma corrida real (log Celda 4 pdv.txt)
 
@@ -189,6 +189,34 @@ def main():
 
     r7 = ancho_por_emparejamiento([hoja1], contexto7, MPX5, hoja_ids=hoja_ids_7)
     resultados.append(_check_bool('CASO 7e (hoja1 sin ancho real una vez excluida -- no cuenta como muro)', True, r7['anchoPx'] is None))
+
+    # === CASO 8 (NUEVO 2026-08-24) — clasificar_no_muro: mecanismo de
+    # deteccion de conflictos entre tipologias (Principio 3, ver roadmap
+    # "auditoria de premisas 24-ago"). Ventana y hoja/vano de puerta son
+    # HOY estructuralmente disjuntos por diseno (ver docstring de
+    # clasificar_no_muro: ancho_por_emparejamiento ya excluye
+    # centrales_ids tanto de "s" como de "c" en cada llamada interna de
+    # identificar_hojas_de_puerta), asi que no se puede forzar un
+    # conflicto real solo con las 2 firmas nativas -- se prueba el
+    # MECANISMO con sets_externos ficticios, y se confirma por separado
+    # que un caso real (ventana de CASO 1) no genera conflicto espurio. ===
+    seg_conflicto = seg((0, 0), (100, 0))
+    r8a = clasificar_no_muro([seg_conflicto], MPX, sets_externos={
+        'firma_ficticia_1': {id(seg_conflicto)},
+        'firma_ficticia_2': {id(seg_conflicto)},
+    })
+    resultados.append(_check_bool('CASO 8a (2 firmas sobre el mismo segmento SI se detectan como conflicto)',
+                                   True, id(seg_conflicto) in r8a['conflictos']))
+    resultados.append(_check_bool('CASO 8b (el conflicto lista ambas tipologias, no elige una)',
+                                   {'firma_ficticia_1', 'firma_ficticia_2'}, set(r8a['conflictos'][id(seg_conflicto)])))
+
+    r8c = clasificar_no_muro([seg_conflicto], MPX, sets_externos={'firma_ficticia_1': {id(seg_conflicto)}})
+    resultados.append(_check_bool('CASO 8c (control: 1 sola firma NO genera conflicto)',
+                                   False, id(seg_conflicto) in r8c['conflictos']))
+
+    r8d = clasificar_no_muro(contexto_cap1, MPX)
+    resultados.append(_check_bool('CASO 8d (control real: ventana de CASO 1 no genera conflicto ventana<->hoja, disjuntos por diseno)',
+                                   0, len(r8d['conflictos'])))
 
     n_ok = sum(resultados)
     print(f"\n{n_ok}/{len(resultados)} casos OK")

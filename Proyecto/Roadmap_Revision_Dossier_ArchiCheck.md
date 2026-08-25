@@ -2340,6 +2340,109 @@ El arquitecto siguió revisando el artifact directamente (capturas de pantalla d
 
 ---
 
+## 🔲 2026-08-24 (continuación) — Decisión de arquitectura: ensamble semántico multi-modelo, sin implementar todavía
+
+A raíz de la pregunta "¿DeepSeek/GPT-4/otros podrían complementar el sistema?", se definió una nueva pieza de arquitectura para la capa semántica: usar el **desacuerdo entre 2+ modelos de IA** al clasificar un elemento ambiguo como señal de duda real, alimentando directamente la interfaz de dudas del portal (`TablaDudas`, D.9) — en vez de depender solo de la confianza de un único modelo. Documentado en detalle en `Fase 2/Convenciones_CAD.md`, nueva sección **D.11**.
+
+**Alcance, para que quede explícito**: esto es exclusivamente capa semántica (nombre/clasificación de elementos ambiguos) — **nunca** toca ni reemplaza la geometría determinista (`muros_geo`/`puertas_geo`/cuerpo cerrado), consistente con lo que ya validó la revisión de estado del arte del 23-ago (VLM generalistas rinden mal en geometría, bien en semántica).
+
+**Composición decidida**: arrancar con **Claude + GPT-4o** — retoma y formaliza algo que Fase 1 del proyecto ya hizo (Claude Sonnet 4.6 + GPT-4o en paralelo), no es territorio nuevo. Gemini queda como paso 2 explícito (futuro, no para el lanzamiento inicial) si se quiere pasar a votación de mayoría con 3 modelos.
+
+**Candidatos evaluados y descartados para este rol, con motivo registrado** (mismo criterio que los benchmarks de extracción geométrica — dejar la razón, no solo la conclusión, para no re-derivarla después):
+- **DeepSeek**: sin evidencia de capacidad de lectura de planos/símbolos CAD — no se asume sin verificar. Se deja como candidato posible para un rol **distinto y futuro**: síntesis normativa/RAG sobre OGUC-LGUC-PRC, redacción de citas, o asistente de desarrollo del pipeline (texto/código, no visión).
+- **Perplexity**: motor de búsqueda con síntesis, no clasificador de imágenes — ya cumplió su rol real en el proyecto (la investigación de estado del arte de agosto), no aplica aquí.
+- **Copilot**: interfaz sobre GPT-4/4o, no un modelo independiente — no aporta diversidad real como segunda opinión, y sin API práctica para integración automatizada.
+
+**Estado**: decisión de arquitectura tomada y documentada — **sin implementar**. Pendiente: diseñar el mecanismo concreto (segunda llamada al Worker hacia OpenAI, comparación de resultados, umbral de discrepancia que dispara la duda) antes de tocar código.
+
+## ✅ 2026-08-24 (continuación) — Mecanismo del ensamble semántico diseñado y confirmado por el arquitecto, sin implementar todavía
+
+**Primera decisión de fondo — alcance**: el ensamble NO corre sobre el análisis completo en paralelo (duplicaría costo/latencia de cada análisis y obligaría a resolver el problema de emparejar recintos/elementos entre 2 análisis independientes sin IDs compartidos). En cambio, **corre solo sobre el subconjunto que el pipeline YA marca como dudoso hoy** — el mismo universo que ya alimenta `TablaDudas` (`sin_nombre_confirmar`, `cumple_geo:false`, elemento puntual sin ubicar). Más barato, más simple de comparar (mismo recorte, misma pregunta puntual a los 2 modelos), y encaja directo en infraestructura que ya existe.
+
+**Flujo**:
+1. Claude corre el análisis completo como hoy y produce los casos dudosos de siempre.
+2. Por cada caso dudoso, se arma el mismo recorte/contexto acotado que hoy se le muestra al arquitecto en `TablaDudas`, y se manda una segunda llamada, a **GPT-4o**, pidiendo la misma clasificación puntual (mismo campo: nombre/tipo/categoría).
+3. Se compara la respuesta de GPT-4o contra la de Claude para ese mismo elemento:
+   - **Coinciden** → el caso sigue mostrándose en `TablaDudas` (sigue siendo duda, Claude ya no estaba seguro), pero con una marca de "2 modelos coinciden" — más señal para el arquitecto, no auto-confirmación todavía (decisión de producto a definir más adelante, no asumida aquí).
+   - **Discrepan** → se muestra al arquitecto **ambas respuestas explícitamente** ("Claude dice X, GPT-4o dice Y"), no solo "no estoy seguro" — duda reforzada.
+
+**Dónde vive en el código (ubicación, sin implementar)**:
+- **Worker** (`archicheck-worker`): hoy solo reenvía a Anthropic. Necesita una segunda ruta que reenvíe a OpenAI con el mismo patrón de proxy — la API key de OpenAI vive en el Worker (variable de entorno), nunca en el frontend, mismo criterio que la de Anthropic hoy.
+- **`App.jsx`** (donde vive `TablaDudas`/`calcularDudas`): cada entrada de duda pasa de 1 respuesta tentativa a 2 (`respuesta_claude`, `respuesta_gpt4o`) + un flag `coincide`.
+- El flujo de análisis principal (Capa 1 y 2, Claude) **no cambia** — esto es una segunda pasada acotada encima, no un reemplazo.
+
+**Evolución futura, explícitamente diferida**: correr el análisis completo en paralelo con GPT-4o (detectaría casos donde Claude está seguro pero equivocado, no solo lo que Claude ya duda) — más caro y con el problema de emparejamiento sin resolver. Se retoma solo si este mecanismo acotado ya demostró valor.
+
+**Estado**: diseño confirmado por el arquitecto ("Calza") — **sigue sin implementar**. Ver `Fase 2/Convenciones_CAD.md` sección D.11 para la decisión de composición de modelos (Claude+GPT-4o) y candidatos descartados.
+
+## ✅ 2026-08-24 (continuación) — Extensión del ensamble con Gemini como desempate, confirmada por el arquitecto ("Calza así")
+
+**Principio de diseño**: Gemini NO corre en cada caso dudoso junto a Claude+GPT-4o desde el inicio — eso triplicaría costo/latencia de algo que hoy es barato justamente por acotarse al subconjunto dudoso. El valor real de un tercer modelo está en el caso donde 2 modelos ya empataron (discreparon) — ahí un tercer voto aporta mucho; donde Claude+GPT-4o ya coinciden, agregar Gemini casi no cambia nada y solo suma costo.
+
+**Regla de activación**: **Gemini se llama SOLO cuando Claude y GPT-4o discrepan** en un caso ya dudoso — no en todos los casos dudosos, solo en el subconjunto (más chico) sin acuerdo entre los primeros 2.
+
+**Flujo extendido** (sobre el ya diseñado Claude+GPT-4o):
+1. Caso dudoso → Claude + GPT-4o.
+2. **Coinciden** → sigue igual que el diseño ya confirmado ("2 modelos coinciden"), Gemini nunca se llama — cero costo adicional en el caso común.
+3. **Discrepan** → se dispara una tercera llamada, a **Gemini**, mismo recorte/pregunta puntual. Interpretación como votación:
+   - Gemini coincide con Claude → mayoría 2/3 (Claude+Gemini), GPT-4o queda como outlier. Se muestra al arquitecto: "2 de 3 modelos dicen X (Claude, Gemini) — 1 dice Y (GPT-4o)".
+   - Gemini coincide con GPT-4o → mayoría 2/3 (GPT-4o+Gemini), Claude queda como outlier. Mismo formato, invertido.
+   - Gemini da una tercera respuesta distinta → sin mayoría, 3 respuestas distintas — señal de duda más fuerte posible, se muestra tal cual sin sugerir cuál es más probable.
+
+**Dato nuevo por caso dudoso**: `respuesta_gemini` (nula salvo que se dispare el desempate) + campo `veredicto`: `"unánime"` (reservado para si algún día se decide auto-confirmar unánimes — no decidido) | `"mayoría 2/3"` | `"sin mayoría"`.
+
+**Estado**: diseño confirmado ("Calza así") — **sigue sin implementar**. Extiende, no reemplaza, el mecanismo Claude+GPT-4o ya diseñado.
+
+## 🔴✅ 2026-08-24 (continuación) — Corrección de fondo: el diseño de arriba se basó en memoria desactualizada, no en el código real
+
+Al recibir la instrucción "Empecemos a implementar el ensamble Claude+GPT-4o", antes de escribir código se revisó `archicheck-worker/worker.js` y `archicheck/src/App.jsx` directamente. Resultado: **todo el diseño de las 2 secciones anteriores asumía un estado del sistema que ya no es el real** (la memoria del proyecto sobre esto tenía 7+ días y no reflejaba desarrollo reciente).
+
+**Lo que el código ya tiene, hoy, sin que hubiera que construirlo**:
+- `worker.js` ya soporta un tercer modo (`body.modelo === "gpt4o"`) que proxea a `api.openai.com/v1/chat/completions` (`model: "gpt-4o"`, `max_tokens: 32000`, `stream: true`) y normaliza el SSE al mismo formato `content_block_delta`/`text_delta` que usa Claude — el frontend puede leer ambos streams con el mismo parser (`readModelStream`).
+- El worker también ganó, en algún punto no documentado en memoria, un sistema de RAG normativo real (Supabase `match_normativa` + embeddings OpenAI `text-embedding-3-small`, con fallback específico para zonas PRC) y un bloque de "reglas aprendidas" (`reglas_aprendidas.js`) que se antepone siempre al system prompt — ninguno de los 2 estaba en la memoria del proyecto.
+- `App.jsx` **ya llama a Claude Y GPT-4o en paralelo, para cada análisis completo** (Fase 1 "Levantamiento geométrico" y Fase 2 "Evaluación normativa"), no solo en casos dudosos — exactamente el escenario que ambas secciones anteriores describían como "evolución futura, más cara, diferida a cuando se valide el mecanismo acotado". Ya está en producción.
+
+**Lo que SÍ falta, y es el hueco real** — `mergeResults(r1, r2)` (la función que combina ambas respuestas hoy):
+- Por cada sección (recintos, tablas de observaciones, etc.) se queda con el resultado del modelo cuyo array/texto sea **más largo** — un proxy de "más completo", no de "más correcto".
+- Las observaciones se deduplican por parecido de palabras (≥3 palabras significativas compartidas) — une lo distinto, no detecta contradicción sobre lo mismo.
+- Arrays simples (`alertas_especiales`, `documentos_faltantes`, `pasos_siguientes`) se unen sin duplicar — razonable, no pierde información.
+- `estado_global` sí toma el más severo de los 2 (RECHAZADO > OBSERVADO > APROBADO) — criterio de seguridad ya razonable, no requiere cambio.
+- **Ninguna discrepancia real entre Claude y GPT-4o se muestra jamás al arquitecto** — se resuelve en silencio eligiendo el resultado "más grande". Es exactamente el patrón que el objetivo permanente de aprendizaje (`project_archicheck_objetivo_etapa_aprendizaje.md`) define como lo que nunca debe pasar.
+
+**Implicancia práctica**: la justificación de diseño original ("GPT-4o solo en casos dudosos, para no duplicar costo") ya no aplica — el costo de la llamada doble ya se paga hoy, en cada análisis completo, sin que el mecanismo de desacuerdo exista todavía. El trabajo de mayor valor no es agregar una llamada nueva al Worker (ya existe) — es **agregar detección real de desacuerdo sobre datos que ya están en memoria** (`pC1`/`pG1` en Fase 1, `pC2`/`pG2` en Fase 2, disponibles justo antes de llamar a `mergeResults`) y conectar los casos de desacuerdo a `TablaDudas`, en vez de construir el flujo de llamadas acotado que se había diseñado.
+
+**La lógica de decisión ya diseñada (acuerdo → confirmado / desacuerdo → duda / Gemini como desempate si 2 discrepan) sigue siendo válida como criterio** — lo que cambia es el punto de enganche técnico: es una mejora a `mergeResults()` sobre datos ya obtenidos, no una segunda llamada nueva condicionada a casos dudosos.
+
+**Decisión del usuario sobre cómo seguir**: primero corregir la documentación (esta entrada + `Convenciones_CAD.md` D.11) para reflejar el estado real, **antes de rediseñar el mecanismo de detección de desacuerdo sobre esta base correcta** — todavía no se ha rediseñado ni implementado nada de código.
+
+---
+
+## ✅ 2026-08-24 (continuación) — Auditoría de la implementación de Tipología B/C contra las 3 premisas permanentes + infraestructura real: catálogo estructurado, parámetros movidos al catálogo, mecanismo de conflictos en 2 pasos
+
+Tras cerrar Tipología B y C (entrada de arriba, `identificar_hojas_de_puerta` + swatch de leyenda sin relleno + exclusión por demolición), el usuario pidió auditar esa implementación contra las 3 premisas permanentes de `project_archicheck_objetivo_etapa_aprendizaje.md` (persistencia, tipologías nombradas, conflictos explícitos) y decidir próximos pasos — no como ejercicio retórico, sino con la instrucción explícita de **construir la infraestructura que faltaba**, no solo documentar el hueco.
+
+**Principio 1 (persistencia / no regresión) — aclaración del usuario**: la validación contra PdV (N1=28/N2=33) **no es un requisito puntual "de esta etapa"**, es la disciplina permanente de este proyecto — hoy PdV es el único caso real confirmado, pero el conjunto crece (ej. futuro: puertas de Beauchef) y **todo cambio de lógica se re-corre contra TODO el conjunto acumulado, no solo el caso nuevo**. Esto no cambia nada de lo ya construido (el test suite + el re-run pendiente en Colab siguen siendo el mecanismo), pero sí fija que este chequeo no es opcional ni transitorio.
+
+**Principio 2 — se construyó el vínculo estructurado pedido**: nuevo archivo `Fase 2/Herramientas_CubiCasa5k/catalogo_tipologias.py` — una entrada por cada tipología/variante nombrada en `Convenciones_CAD.md` sección D (D.1 a D.10, ~45 entradas), con sección de origen, criterio resumido, parámetros con su valor real, estado (`implementado`/`parcial`/`pendiente`) e `implementado_en` (archivo:función real, verificado por grep contra el código, no inventado). D.11 (ensamble multi-modelo) queda deliberadamente fuera del catálogo de tipologías — es una decisión de arquitectura de clasificación semántica, no una tipología de elemento geométrico.
+- `cuerpo_cerrado.py` ahora **lee sus tolerancias desde el catálogo** (`from catalogo_tipologias import parametro`) en vez de tenerlas como literales repetidos en cada firma de función — `tol_min_m`/`tol_max_m` (D1-ancho-emparejamiento), `tol_simetria_m` (D1-D3-ventana-lineas-centrales), `tol_vertice_m` (D2-hoja-vano-firma-relativa), `margen_contexto_m`/`piso_min_px`/`tol_conector_esquina_m`/`tol_fusion_pct` (D1-encuentro-de-brazos). Un cambio de tolerancia ahora se hace en UN lugar rastreable contra el .md, no en 6 defaults de función distintos.
+- Confirmado que esto se puede (y se debe) extender a **todas** las secciones D.1-D.10 sin excepción — hoy la mayoría de las filas quedaron con `estado: 'pendiente'` como placeholder honesto (ej. D.2 radio arco↔vano, D.4 escaleras, D.5 rampas, D.10 superficies) porque el código real de esas variantes todavía no existe, no porque se haya decidido no catalogarlas. Disciplina hacia adelante: toda fila nueva o corregida en `Convenciones_CAD.md` (sesión paralela) se refleja en `catalogo_tipologias.py` en la misma pasada de trabajo — es la forma concreta de que el sistema "siga aprendiendo indefinidamente" sin depender de que Claude recuerde releer el .md manualmente cada vez: el código ya no puede desviarse del catálogo en silencio, porque literalmente lee el valor de ahí.
+
+**Principio 3 — generalizado a un mecanismo de 2 pasos explícito, no solo el caso ventana/hoja del ejemplo**: nueva función `clasificar_no_muro()` en `cuerpo_cerrado.py`. Antes, "no es candidato a muro" (paso 1, exclusión — ya existía en `ancho_por_emparejamiento`) y "qué es en realidad" (paso 2, clasificación en mérito propio) estaban fusionados: un segmento excluido por `centrales_ids` o `hoja_ids` simplemente desaparecía del pool, sin registrar por cuál firma ni si más de una lo reclamaba. Ahora:
+- Paso 1 se mantiene igual (sigue siendo la exclusión de candidato a muro).
+- Paso 2 corre **cada firma de elemento no-muro de forma independiente** (hoy: ventana D.1/D.3, hoja/vano de puerta D.2 — vía el registro `FIRMAS_NO_MURO`, extensible sin tocar la lógica de conflicto) y arma, por segmento, la lista completa de tipologías que lo aceptan.
+- Si 2+ firmas aceptan el mismo segmento, es un **conflicto real** — queda en `conflictos_tipologia` (expuesto en el resultado de `cuerpo_cerrado_fusiona`), listo para conectarse a `TablaDudas` (que ya tiene su definición formal en `Convenciones_CAD.md` D.9, construida por la sesión paralela) en vez de resolverse adivinando cuál tipología "vale más".
+- Verificado a mano: hoy `ventana` y `hoja_vano_puerta` son estructuralmente disjuntos por diseño (`ancho_por_emparejamiento` ya excluye `centrales_ids` tanto de `s` como de `c` dentro de `identificar_hojas_de_puerta`) — por eso no hay un conflicto real que forzar todavía con solo estas 2 firmas. El mecanismo se probó con `sets_externos` ficticios (CASO 8a-c) más un control real (CASO 8d, ventana de CASO 1 sin conflicto espurio) para confirmar que funciona antes de que exista un tercer detector real (eje/cota/corte, hoy en la Celda 4) que sí pueda competir por el mismo trazo.
+- Extensión explícitamente dejada pendiente, no implementada ahora: los detectores D.6 (eje/cota/corte-rasante) viven en la Celda 4 sobre índices de `segmentos_l`, no sobre `id(segmento)` — conectarlos a `clasificar_no_muro` vía `sets_externos` es directo pero no se tocó código de la Celda 4 sin poder probarlo en Colab en esta pasada.
+
+**Test suite**: `test_cuerpo_cerrado.py` pasó de 16 a **20 checks** (CASO 8a-d, mecanismo de conflicto). Todavía sin correr en Colab.
+
+**Qué falta para cerrar el ciclo** (próximo paso inmediato, pendiente de la corrida real):
+1. Subir `cuerpo_cerrado.py` + `catalogo_tipologias.py` (nuevo, debe subirse junto — `cuerpo_cerrado.py` ahora depende de él) + `test_cuerpo_cerrado.py` a Colab, correr el test (20/20 esperado).
+2. Re-correr el pipeline real contra PdV N1/N2 (notebook `ArchiCheck_Base 24aug_2116.ipynb`) para ver el efecto combinado de B, C y el refactor de parámetros (debería dar exactamente igual que antes del refactor — los valores no cambiaron, solo de dónde se leen — cualquier diferencia sería señal de un bug introducido en el refactor, no una mejora esperada).
+3. Recién después de (1) y (2): retomar Tipología A (esquina L faltante cerca de MU02/ventana) y D (falsas extensiones de remate en esquinas/finales sueltos) — ambas ya definidas en D.1 "Encuentro de brazos", pendientes como bug de implementación, no de definición.
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.

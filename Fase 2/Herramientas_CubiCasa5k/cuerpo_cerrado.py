@@ -24,10 +24,25 @@ clave adicional (color, fill, layer...) se ignora aqui.
 Sin validar contra Colab todavia -- ver test_cuerpo_cerrado.py (mismos 4
 casos de regresion, con sub-casos, que ya se corrieron contra el
 prototipo .mjs). Correr ese test antes de integrar a la Celda 4 real.
+
+Parametros (tolerancias) leidos desde catalogo_tipologias.py, no como
+constantes locales -- ver Principio 2 de project_archicheck_objetivo_etapa_
+aprendizaje.md (memoria permanente): un valor parametrico debe vivir en UN
+solo lugar rastreable contra Convenciones_CAD.md, nunca duplicado a mano
+en cada modulo que lo usa.
 """
 import math
 import numpy as np
 import cv2
+
+from catalogo_tipologias import parametro as _param
+
+_TOL_MIN_M = _param('D1-ancho-emparejamiento', 'tol_min_m', 0.08)
+_TOL_MAX_M = _param('D1-ancho-emparejamiento', 'tol_max_m', 0.9)
+_TOL_SIMETRIA_M = _param('D1-D3-ventana-lineas-centrales', 'tol_simetria_m', 0.05)
+_TOL_VERTICE_M = _param('D2-hoja-vano-firma-relativa', 'tol_vertice_m', 0.03)
+_MARGEN_CONTEXTO_M = _param('D1-encuentro-de-brazos', 'margen_contexto_m', 0.6)
+_TOL_CONECTOR_ESQUINA_M = _param('D1-encuentro-de-brazos', 'tol_conector_esquina_m', 0.03)
 
 
 # ── utilidades geometricas basicas ──────────────────────────────────────
@@ -101,7 +116,7 @@ def _sign(x):
     return 0
 
 
-def identificar_lineas_centrales(contexto, mpx, tol_min_m=0.08, tol_max_m=0.9, tol_simetria_m=0.05):
+def identificar_lineas_centrales(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, tol_simetria_m=_TOL_SIMETRIA_M):
     """Devuelve un set de id(segmento) -- identidad de objeto, no de
     valor, igual que el Set de objetos del prototipo .mjs."""
     tol_min_px = tol_min_m / mpx
@@ -218,7 +233,7 @@ def _segmento_bloqueado_por_ventana(s, contexto, mpx, tol_min_m, tol_max_m, cent
 
 
 # ── Paso A: ancho por emparejamiento de lineas paralelas ────────────────
-def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=0.08, tol_max_m=0.9, hoja_ids=None):
+def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, hoja_ids=None):
     """Para cada segmento de `grupo`, busca en `contexto` (pool completo
     de segmentos cercanos, incluye el propio grupo) un segmento aprox.
     paralelo a distancia perpendicular entre tol_min_m y tol_max_m. Si lo
@@ -277,7 +292,7 @@ def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=0.08, tol_max_m=0.9
     }
 
 
-def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=0.08, tol_max_m=0.9, tol_vertice_m=0.03):
+def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, tol_vertice_m=_TOL_VERTICE_M):
     """Tipologia B (Convenciones_CAD D.2, confirmado por el arquitecto
     2026-08-24, revision visual de N2): un vano/hoja de puerta es un par
     de bordes opuestos MAS FINOS (menor separacion entre caras) que el
@@ -338,6 +353,70 @@ def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=0.08, tol_max_m=0.9, to
                 if encontrado:
                     break
     return hoja_ids
+
+
+# ── Clasificacion en 2 pasos + deteccion de conflictos (Principio 3) ────
+# Convenciones_CAD D.9 + project_archicheck_objetivo_etapa_aprendizaje.md
+# (memoria permanente): un conflicto entre tipologias NUNCA se resuelve en
+# silencio por el orden en que corrio el codigo -- se levanta a proposito.
+#
+# El pipeline ya hacia esto en 2 pasos, pero solo el paso 1 era explicito:
+#   Paso 1 (exclusion -- "¿es candidato a muro?"): ancho_por_emparejamiento
+#   ya descarta un segmento del pool de caras de muro si esta en
+#   centrales_ids (ventana) O en hoja_ids (vano/puerta). Eso decide SOLO
+#   "no es muro", nunca decide QUE es.
+#   Paso 2 (clasificacion en merito propio -- "si no es muro, ¿que es?"):
+#   antes no existia como paso separado -- un segmento excluido quedaba
+#   simplemente "fuera", sin registro de por cual firma ni si mas de una
+#   firma lo reclamaba. clasificar_no_muro() corre CADA firma conocida de
+#   forma independiente (nunca se detiene en el primer match) y devuelve,
+#   por segmento, la lista completa de tipologias que lo aceptan. Si esa
+#   lista tiene 2+ elementos, es un CONFLICTO real -- se registra en
+#   'conflictos', listo para levantarse como pregunta en TablaDudas (D.9),
+#   nunca resuelto adivinando cual tipologia "vale mas".
+#
+# Extensible: hoy solo compone las 2 firmas que viven en este modulo
+# (ventana, hoja/vano de puerta). Los detectores de eje/cota/corte-
+# rasante (D.6) viven en la Celda 4 sobre `segmentos_l`/indices, no sobre
+# id(segmento) -- se pueden sumar via el parametro `sets_externos` sin
+# tocar esta funcion, convirtiendo esos indices a sets de id(segmento)
+# del lado del llamador.
+def _firma_ventana(contexto, mpx, tol_min_m, tol_max_m):
+    return identificar_lineas_centrales(contexto, mpx, tol_min_m, tol_max_m)
+
+
+def _firma_hoja_vano_puerta(contexto, mpx, tol_min_m, tol_max_m):
+    return identificar_hojas_de_puerta(contexto, mpx, tol_min_m, tol_max_m)
+
+
+FIRMAS_NO_MURO = {
+    'ventana': _firma_ventana,                 # Convenciones_CAD D.1/D.3
+    'hoja_vano_puerta': _firma_hoja_vano_puerta,  # Convenciones_CAD D.2
+}
+
+
+def clasificar_no_muro(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, sets_externos=None):
+    """Corre TODAS las firmas de FIRMAS_NO_MURO (mas las que el llamador
+    sume via `sets_externos`, dict nombre->set(id(segmento))) sobre el
+    contexto completo, de una sola vez. Devuelve:
+      'sets_por_tipologia': dict nombre -> set(id(segmento)) (por si el
+          llamador necesita reusar un set individual, ej. hoja_ids).
+      'clasificacion': dict id(segmento) -> lista de nombres de tipologia
+          que lo aceptaron (longitud 0, 1, o 2+).
+      'conflictos': dict id(segmento) -> lista de nombres, SOLO para los
+          que tienen 2+ tipologias -- estos son los que deben levantarse
+          como duda (Convenciones_CAD D.9), nunca resolverse eligiendo
+          una tipologia sobre otra por orden de ejecucion."""
+    sets_por_tipologia = {nombre: firma(contexto, mpx, tol_min_m, tol_max_m)
+                           for nombre, firma in FIRMAS_NO_MURO.items()}
+    if sets_externos:
+        sets_por_tipologia.update(sets_externos)
+    clasificacion = {}
+    for nombre, ids in sets_por_tipologia.items():
+        for sid in ids:
+            clasificacion.setdefault(sid, []).append(nombre)
+    conflictos = {sid: tipos for sid, tipos in clasificacion.items() if len(tipos) > 1}
+    return {'sets_por_tipologia': sets_por_tipologia, 'clasificacion': clasificacion, 'conflictos': conflictos}
 
 
 def diagnosticar_candidatos(s, contexto, mpx, top_n=5):
@@ -414,7 +493,7 @@ def _fill_quad(bin_arr, box, p1, p2, p3, p4):
     cv2.fillPoly(bin_arr, [pts], 1)
 
 
-def _relleno_solido(contexto_con_pares, box, todos_los_segmentos, objetivo_ids, mpx, tol_min_m=0.08, tol_max_m=0.9, segmentos_ancho_forzado=None):
+def _relleno_solido(contexto_con_pares, box, todos_los_segmentos, objetivo_ids, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, segmentos_ancho_forzado=None):
     """Rellena el AREA SOLIDA real de cada segmento con par -- el
     cuadrilatero entre el segmento y su cara enfrentada (equivale a
     "verter agua entre las 2 caras"), mas el remate de esquinas
@@ -684,7 +763,7 @@ def _grupo_toca_componente(segmentos, componente, box, paso_px=2):
     return False
 
 
-def _ancho_heredado_de_conector(grupo, con_pares, mpx, tol_vertice_m=0.03):
+def _ancho_heredado_de_conector(grupo, con_pares, mpx, tol_vertice_m=_TOL_CONECTOR_ESQUINA_M):
     """Un grupo sin ancho propio (ver ancho_por_emparejamiento) puede
     igual ser parte real de un muro si es un CONECTOR CORTO de esquina
     o jog -- confirmado por el arquitecto con datos reales de PdV
@@ -717,7 +796,7 @@ def _ancho_heredado_de_conector(grupo, con_pares, mpx, tol_vertice_m=0.03):
     return mejor
 
 
-def _ancho_heredado_de_segmento(s, con_pares, mpx, tol_vertice_m=0.03):
+def _ancho_heredado_de_segmento(s, con_pares, mpx, tol_vertice_m=_TOL_CONECTOR_ESQUINA_M):
     """Version por-segmento de _ancho_heredado_de_conector -- pedido
     explicito del arquitecto (2026-08-23): los brazos que llegan a un
     conector/esquina/empalme no necesariamente tienen el mismo ancho
@@ -739,7 +818,7 @@ def _ancho_heredado_de_segmento(s, con_pares, mpx, tol_vertice_m=0.03):
     return mejor
 
 
-def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m=0.9, hoja_ids=None):
+def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, hoja_ids=None):
     """Precalcula, para cada segmento de contexto_local, su ancho real
     emparejado (o None si es linea suelta). O(n^2) sobre contexto_local
     -- mismo costo que hace cuerpo_cerrado_fusiona internamente, pero
@@ -765,7 +844,7 @@ def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=0.08, tol_max_m=
 
 
 # ── Funcion principal ────────────────────────────────────────────────────
-def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, piso_min_px=2, con_pares_precalculados=None, tol_conector_esquina_m=0.03):
+def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=_MARGEN_CONTEXTO_M, piso_min_px=_param('D1-encuentro-de-brazos', 'piso_min_px', 2), con_pares_precalculados=None, tol_conector_esquina_m=_TOL_CONECTOR_ESQUINA_M):
     """Decide si grupo_a y grupo_b (2 grupos de segmentos candidatos a
     fusionarse en un solo muro) son en realidad el mismo cuerpo cerrado:
     ambos deben tener ancho real (propio o heredado de un conector, ver
@@ -803,7 +882,13 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
     # grupo_a/grupo_b como para construir_contexto_con_pares -- deben
     # ser consistentes entre si (un segmento no puede ser "hoja" para un
     # calculo y "muro" para otro dentro de la misma llamada).
-    hoja_ids = identificar_hojas_de_puerta(contexto_local, mpx)
+    #
+    # Se obtiene via clasificar_no_muro (Principio 3) en vez de llamar
+    # identificar_hojas_de_puerta directo -- asi el paso 2 (clasificacion
+    # en merito propio + deteccion de conflicto ventana<->hoja) corre
+    # siempre que se evalua un par, no solo cuando alguien lo pide aparte.
+    clasif_no_muro = clasificar_no_muro(contexto_local, mpx)
+    hoja_ids = clasif_no_muro['sets_por_tipologia']['hoja_vano_puerta']
     ancho_a = ancho_por_emparejamiento(grupo_a, contexto_local, mpx, hoja_ids=hoja_ids)
     ancho_b = ancho_por_emparejamiento(grupo_b, contexto_local, mpx, hoja_ids=hoja_ids)
 
@@ -814,7 +899,7 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
         heredado = _ancho_heredado_de_conector(grupo_a, con_pares, mpx, tol_conector_esquina_m)
         if heredado is None:
             return {'fusiona': False, 'motivo': 'grupo A sin par paralelo -- linea suelta (ventana/ref), no muro',
-                    'anchoA': ancho_a, 'anchoB': ancho_b}
+                    'anchoA': ancho_a, 'anchoB': ancho_b, 'conflictosTipologia': clasif_no_muro['conflictos']}
         ancho_a = {'anchoPx': heredado, 'anchoM': heredado * mpx, 'detalle': ancho_a['detalle'], 'esConectorEsquina': True}
         # cada segmento del grupo hereda el ancho de SU PROPIO vecino mas
         # cercano (pueden ser distintos entre si, ver
@@ -829,7 +914,7 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
         heredado = _ancho_heredado_de_conector(grupo_b, con_pares, mpx, tol_conector_esquina_m)
         if heredado is None:
             return {'fusiona': False, 'motivo': 'grupo B sin par paralelo -- linea suelta (ventana/ref), no muro',
-                    'anchoA': ancho_a, 'anchoB': ancho_b}
+                    'anchoA': ancho_a, 'anchoB': ancho_b, 'conflictosTipologia': clasif_no_muro['conflictos']}
         ancho_b = {'anchoPx': heredado, 'anchoM': heredado * mpx, 'detalle': ancho_b['detalle'], 'esConectorEsquina': True}
         segmentos_ancho_forzado.extend(
             (s, _ancho_heredado_de_segmento(s, con_pares, mpx, tol_conector_esquina_m) or heredado)
@@ -837,7 +922,8 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
         )
 
     ancho_min_px = min(ancho_a['anchoPx'], ancho_b['anchoPx'])
-    tol_px = max(0.10 * ancho_min_px, piso_min_px)
+    tol_fusion_pct = _param('D1-encuentro-de-brazos', 'tol_fusion_pct', 0.10)
+    tol_px = max(tol_fusion_pct * ancho_min_px, piso_min_px)
 
     margen_px = margen_m / mpx
     box = _bbox(list(grupo_a) + list(grupo_b), margen_px)
@@ -852,15 +938,16 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=0.6, 
 
     if not conectado:
         return {'fusiona': False, 'motivo': 'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)',
-                'anchoA': ancho_a, 'anchoB': ancho_b, 'tolPx': tol_px}
+                'anchoA': ancho_a, 'anchoB': ancho_b, 'tolPx': tol_px, 'conflictosTipologia': clasif_no_muro['conflictos']}
 
     motivo = 'cuerpo cerrado: conectados + ambos con ancho real emparejado'
     if ancho_a.get('esConectorEsquina') or ancho_b.get('esConectorEsquina'):
         motivo = 'cuerpo cerrado: conectados (conector de esquina/jog sin cara propia, ancho heredado del vecino)'
-    return {'fusiona': True, 'motivo': motivo, 'anchoA': ancho_a, 'anchoB': ancho_b, 'tolPx': tol_px}
+    return {'fusiona': True, 'motivo': motivo, 'anchoA': ancho_a, 'anchoB': ancho_b, 'tolPx': tol_px,
+            'conflictosTipologia': clasif_no_muro['conflictos']}
 
 
-def relleno_solido_de_contexto(contexto_local, mpx, margen_m=0.6, objetivo=None):
+def relleno_solido_de_contexto(contexto_local, mpx, margen_m=_MARGEN_CONTEXTO_M, objetivo=None):
     """Exporta el relleno solido real (sin dilatar) de un pool de
     segmentos, para dibujarlo directamente como prueba visual -- esto es
     lo que se debe mostrar como "cuerpo cerrado", no lineas de color

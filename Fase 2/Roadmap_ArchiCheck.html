@@ -266,6 +266,43 @@
     </ul>
   </div>
 
+  <div class="today-box">
+    <h4>🔲 24 agosto (continuación) — Decisión de arquitectura: ensamble semántico Claude + GPT-4o (sin implementar)</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Cuando Claude y GPT-4o <strong>discrepan</strong> clasificando un elemento ambiguo, eso se trata como duda real y se levanta en <code>TablaDudas</code> — retoma algo que Fase 1 ya hizo (Claude+GPT-4o en paralelo). Nunca toca la geometría determinista.</li>
+      <li><strong>Candidatos evaluados y descartados para este rol</strong>: DeepSeek (sin evidencia de lectura de planos — candidato a rol futuro de texto/RAG normativo, no visión), Perplexity (motor de búsqueda, no clasificador de imágenes), Copilot (interfaz sobre GPT-4/4o, sin diversidad real). Gemini queda como paso 2 futuro.</li>
+      <li>Detalle completo en <code>Convenciones_CAD.md</code> sección D.11.</li>
+    </ul>
+  </div>
+
+  <div class="today-box win">
+    <h4>✅ 24 agosto (continuación) — Mecanismo del ensamble diseñado y confirmado ("Calza"), sin implementar</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Corre solo sobre el subconjunto ya dudoso (mismo universo de <code>TablaDudas</code>) — NO sobre el análisis completo en paralelo (evita 2x costo/latencia y el problema de emparejar recintos sin IDs compartidos).</li>
+      <li>Por cada duda: mismo recorte → segunda llamada a GPT-4o → coincide = marca "2 modelos coinciden" (sigue como duda); discrepa = se muestran ambas respuestas al arquitecto explícitamente.</li>
+      <li>Vive en: Worker (nueva ruta a OpenAI) + <code>App.jsx</code>/<code>TablaDudas</code> (cada duda gana <code>respuesta_claude</code>/<code>respuesta_gpt4o</code>/<code>coincide</code>). Análisis completo en paralelo queda diferido a futuro.</li>
+    </ul>
+  </div>
+
+  <div class="today-box win">
+    <h4>✅ 24 agosto (continuación) — Gemini agregado como desempate ("Calza así")</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Gemini <strong>NO</strong> corre en cada caso dudoso desde el inicio (triplicaría costo donde no aporta) — se llama <strong>solo cuando Claude y GPT-4o ya discreparon</strong>.</li>
+      <li>Si Gemini coincide con uno de los 2 → mayoría 2/3, el otro queda como outlier ("2 de 3 dicen X, 1 dice Y"). Si da una tercera respuesta → "sin mayoría", señal de duda más fuerte, se muestran las 3 respuestas.</li>
+      <li>Dato nuevo: <code>respuesta_gemini</code> (nula salvo desempate) + <code>veredicto</code>: unánime/mayoría 2/3/sin mayoría. Extiende, no reemplaza, el mecanismo Claude+GPT-4o.</li>
+    </ul>
+  </div>
+
+  <div class="today-box warn">
+    <h4>🔴✅ 24 agosto (continuación) — Corrección de fondo: el diseño de arriba asumía un estado del sistema que ya no es real</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li>Al ir a implementar, se leyó <code>worker.js</code> y <code>App.jsx</code> reales (no memoria desactualizada): <strong>el Worker ya soporta GPT-4o</strong> (proxea a OpenAI, normaliza SSE), y <strong><code>App.jsx</code> ya llama a Claude+GPT-4o en paralelo en CADA análisis completo</strong> — no solo en casos dudosos. Ya está en producción, no hay que construirlo.</li>
+      <li>El worker también tiene RAG normativo real (Supabase) y "reglas aprendidas" — ninguno estaba en la memoria del proyecto.</li>
+      <li><strong>La falta real</strong>: <code>mergeResults()</code> hoy resuelve cada sección eligiendo el resultado "más largo" (no el más correcto) y nunca muestra al arquitecto que hubo discrepancia real entre modelos.</li>
+      <li>La lógica de decisión ya diseñada (acuerdo/desacuerdo/desempate con Gemini) sigue valiendo — cambia el punto de enganche: es mejorar <code>mergeResults()</code>, no una llamada nueva. Sin implementar todavía.</li>
+    </ul>
+  </div>
+
   <div class="today-box win">
     <h4>✅ 28 julio — Confirmado en incógnito: los 3 fixes funcionan (era caché, no bug)</h4>
     <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
@@ -1093,6 +1130,11 @@
       <p><strong>Implementado B</strong> (<code>cuerpo_cerrado.py</code>): <code>identificar_hojas_de_puerta</code> — 2 pasadas (ancho ingenuo, luego marca como hoja cualquier segmento cuyo extremo toque a un vecino con ancho MAYOR) para evitar dependencia circular. <code>ancho_por_emparejamiento</code>/<code>construir_contexto_con_pares</code>/<code>cuerpo_cerrado_fusiona</code> propagan <code>hoja_ids</code>. <strong>Riesgo de regresión encontrado y corregido</strong>: <code>idx1324</code> (CASO 2 ya validado) empareja de forma ingenua a 127px (ancho > su propio largo, bug ya conocido) — sin guarda, eso habría marcado el fragmento real de Proyecciones como hoja por error. Corregido reusando la guarda de plausibilidad ya existente (<code>ancho_px > largo_s</code>). Agregado CASO 2b como guardia permanente.</p>
       <p><strong>Implementado C</strong> (Celda 4): <code>_es_contorno_cerrado_de_lineas</code> reconoce swatch de leyenda sin relleno sólido (contorno de líneas + achurado), usa color de trazo, límite de tamaño 40pt para no confundir con muro/recinto real. La fusión entre páginas ya funcionaba, el bug era solo la forma del swatch. <code>muros_geo</code> ahora separa <code>estado=='eliminado'</code> en <code>muros_excluidos_por_demolicion</code> antes de fusionar — ausentes del estado final, no solo etiquetados.</p>
       <p><strong>Test</strong>: 16 checks totales (8 nuevos: CASO 7a-e Tipología B + CASO 2b regresión). Verificado a mano, sin Python local. <strong>Sin correr en Colab todavía.</strong></p>
+      <p><strong>✅ 2026-08-24 (continuación) — Auditoría de B/C contra las 3 premisas permanentes + infraestructura real construida: catálogo estructurado, parámetros movidos al catálogo, mecanismo de conflictos en 2 pasos.</strong> El usuario pidió auditar la implementación de arriba contra <code>project_archicheck_objetivo_etapa_aprendizaje.md</code> — no solo diagnosticar el hueco, sino construir la infraestructura que faltaba.</p>
+      <p><strong>Principio 1, aclaración del usuario</strong>: validar contra PdV (N1=28/N2=33) no es un requisito puntual de esta etapa — es disciplina permanente; hoy PdV es el único caso confirmado, pero el conjunto crece (ej. futuro: puertas de Beauchef) y todo cambio de lógica se re-corre contra TODO lo acumulado, no solo el caso nuevo.</p>
+      <p><strong>Principio 2 — vínculo estructurado construido</strong>: nuevo archivo <code>Herramientas_CubiCasa5k/catalogo_tipologias.py</code> — una entrada por cada tipología/variante de <code>Convenciones_CAD.md</code> sección D (D.1-D.10, ~45 entradas), con sección de origen, criterio, parámetros con valor real, estado (<code>implementado</code>/<code>parcial</code>/<code>pendiente</code>) e <code>implementado_en</code> verificado por grep contra el código real, no inventado. D.11 (ensamble multi-modelo) queda fuera a propósito — es arquitectura de clasificación semántica, no tipología de elemento geométrico. <code>cuerpo_cerrado.py</code> ahora lee sus tolerancias (<code>tol_min_m</code>, <code>tol_max_m</code>, <code>tol_simetria_m</code>, <code>tol_vertice_m</code>, <code>margen_contexto_m</code>, <code>piso_min_px</code>, <code>tol_conector_esquina_m</code>, <code>tol_fusion_pct</code>) desde el catálogo en vez de tenerlas repetidas como literales en cada firma de función. La mayoría de las filas D.2/D.4/D.5/D.10 quedan <code>pendiente</code> como placeholder honesto (código real todavía no existe), no como omisión — disciplina hacia adelante: toda fila nueva/corregida en <code>Convenciones_CAD.md</code> se refleja acá en la misma pasada.</p>
+      <p><strong>Principio 3 — generalizado a mecanismo de 2 pasos</strong>: nueva función <code>clasificar_no_muro()</code>. Paso 1 (exclusión, ya existía) decide si algo es candidato a muro. Paso 2 (nuevo) corre cada firma no-muro de forma independiente (<code>FIRMAS_NO_MURO</code>, hoy ventana + hoja/vano de puerta, extensible) y arma la lista completa de tipologías que aceptan cada segmento — 2+ firmas sobre el mismo segmento es <strong>conflicto real</strong> (<code>conflictos_tipologia</code> en el resultado de <code>cuerpo_cerrado_fusiona</code>), listo para <code>TablaDudas</code> (ya definida formalmente en <code>Convenciones_CAD.md</code> D.9) en vez de resolverse en silencio. Verificado a mano: ventana y hoja son hoy estructuralmente disjuntas por diseño, así que no hay conflicto real que forzar con solo estas 2 firmas todavía — el mecanismo se probó con <code>sets_externos</code> ficticios (CASO 8a-c) + control real (CASO 8d, ventana de CASO 1 sin conflicto espurio). Los detectores D.6 (eje/cota/corte, hoy en la Celda 4 sobre índices, no <code>id(segmento)</code>) quedan como extensión pendiente vía <code>sets_externos</code>, sin tocar código de Celda 4 sin poder probarlo.</p>
+      <p><strong>Test</strong>: 16→<strong>20 checks</strong> (CASO 8a-d). <strong>Sin correr en Colab todavía.</strong> Próximo paso: (1) subir <code>cuerpo_cerrado.py</code> + <code>catalogo_tipologias.py</code> (nuevo, dependencia obligatoria) + <code>test_cuerpo_cerrado.py</code>, correr test (20/20 esperado); (2) re-correr pipeline real contra PdV N1/N2 — el refactor de parámetros no debería cambiar ningún resultado (mismos valores, solo cambia de dónde se leen); (3) recién después, retomar Tipología A y D (bugs de implementación sobre D.1 "Encuentro de brazos", ya definida).</p>
     </div>
   </details>
 
