@@ -1,15 +1,203 @@
-   ✓ LEYENDA SIMBOLOGIA: 2 color(es) con texto asociado encontrados en el PDF completo:
+ cuerpo_cerrado.py y/o catalogo_tipologias.py no estan en este runtime -- selecciona AMBOS archivos juntos (Fase 2/Herramientas_CubiCasa5k/cuerpo_cerrado.py y catalogo_tipologias.py):
+
+     
+     
+      Upload widget is only available when the cell has been executed in the
+      current browser session. Please rerun this cell to enable.
+      
+      // Copyright 2017 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview Helpers for google.colab Python module.
+ */
+(function(scope) {
+function span(text, styleAttributes = {}) {
+  const element = document.createElement('span');
+  element.textContent = text;
+  for (const key of Object.keys(styleAttributes)) {
+    element.style[key] = styleAttributes[key];
+  }
+  return element;
+}
+
+// Max number of bytes which will be uploaded at a time.
+const MAX_PAYLOAD_SIZE = 100 * 1024;
+
+function _uploadFiles(inputId, outputId) {
+  const steps = uploadFilesStep(inputId, outputId);
+  const outputElement = document.getElementById(outputId);
+  // Cache steps on the outputElement to make it available for the next call
+  // to uploadFilesContinue from Python.
+  outputElement.steps = steps;
+
+  return _uploadFilesContinue(outputId);
+}
+
+// This is roughly an async generator (not supported in the browser yet),
+// where there are multiple asynchronous steps and the Python side is going
+// to poll for completion of each step.
+// This uses a Promise to block the python side on completion of each step,
+// then passes the result of the previous step as the input to the next step.
+function _uploadFilesContinue(outputId) {
+  const outputElement = document.getElementById(outputId);
+  const steps = outputElement.steps;
+
+  const next = steps.next(outputElement.lastPromiseValue);
+  return Promise.resolve(next.value.promise).then((value) => {
+    // Cache the last promise value to make it available to the next
+    // step of the generator.
+    outputElement.lastPromiseValue = value;
+    return next.value.response;
+  });
+}
+
+/**
+ * Generator function which is called between each async step of the upload
+ * process.
+ * @param {string} inputId Element ID of the input file picker element.
+ * @param {string} outputId Element ID of the output display.
+ * @return {!Iterable<!Object>} Iterable of next steps.
+ */
+function* uploadFilesStep(inputId, outputId) {
+  const inputElement = document.getElementById(inputId);
+  inputElement.disabled = false;
+
+  const outputElement = document.getElementById(outputId);
+  outputElement.innerHTML = '';
+
+  const pickedPromise = new Promise((resolve) => {
+    inputElement.addEventListener('change', (e) => {
+      resolve(e.target.files);
+    });
+  });
+
+  const cancel = document.createElement('button');
+  inputElement.parentElement.appendChild(cancel);
+  cancel.textContent = 'Cancel upload';
+  const cancelPromise = new Promise((resolve) => {
+    cancel.onclick = () => {
+      resolve(null);
+    };
+  });
+
+  // Wait for the user to pick the files.
+  const files = yield {
+    promise: Promise.race([pickedPromise, cancelPromise]),
+    response: {
+      action: 'starting',
+    }
+  };
+
+  cancel.remove();
+
+  // Disable the input element since further picks are not allowed.
+  inputElement.disabled = true;
+
+  if (!files) {
+    return {
+      response: {
+        action: 'complete',
+      }
+    };
+  }
+
+  for (const file of files) {
+    const li = document.createElement('li');
+    li.append(span(file.name, {fontWeight: 'bold'}));
+    li.append(span(
+        `(${file.type || 'n/a'}) - ${file.size} bytes, ` +
+        `last modified: ${
+            file.lastModifiedDate ? file.lastModifiedDate.toLocaleDateString() :
+                                    'n/a'} - `));
+    const percent = span('0% done');
+    li.appendChild(percent);
+
+    outputElement.appendChild(li);
+
+    const fileDataPromise = new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        resolve(e.target.result);
+      };
+      reader.readAsArrayBuffer(file);
+    });
+    // Wait for the data to be ready.
+    let fileData = yield {
+      promise: fileDataPromise,
+      response: {
+        action: 'continue',
+      }
+    };
+
+    // Use a chunked sending to avoid message size limits. See b/62115660.
+    let position = 0;
+    do {
+      const length = Math.min(fileData.byteLength - position, MAX_PAYLOAD_SIZE);
+      const chunk = new Uint8Array(fileData, position, length);
+      position += length;
+
+      const base64 = btoa(String.fromCharCode.apply(null, chunk));
+      yield {
+        response: {
+          action: 'append',
+          file: file.name,
+          data: base64,
+        },
+      };
+
+      let percentDone = fileData.byteLength === 0 ?
+          100 :
+          Math.round((position / fileData.byteLength) * 100);
+      percent.textContent = `${percentDone}% done`;
+
+    } while (position < fileData.byteLength);
+  }
+
+  // All done.
+  yield {
+    response: {
+      action: 'complete',
+    }
+  };
+}
+
+scope.google = scope.google || {};
+scope.google.colab = scope.google.colab || {};
+scope.google.colab._files = {
+  _uploadFiles,
+  _uploadFilesContinue,
+};
+})(self);
+ Saving test_cuerpo_cerrado.py to test_cuerpo_cerrado.py
+Saving cuerpo_cerrado.py to cuerpo_cerrado.py
+Saving catalogo_tipologias.py to catalogo_tipologias.py
+  ✓ LEYENDA SIMBOLOGIA: 2 color(es) con texto asociado encontrados en el PDF completo:
       color=(0.87, 0.43, 0.43) texto='Universal' -> ⚠ NO reconocido como agregado/eliminado (revisar palabras clave)
       color=(1.0, 0.0, 0.0) texto='0.8' -> ⚠ NO reconocido como agregado/eliminado (revisar palabras clave)
   ✓ Cuadro de superficies: 2156 caracteres extraidos de la pagina 1
+
+⏱ Celda 4 iniciada: 2026-08-25 16:14:57
 
 ========================================================
   Página 2  —  escala 1:50
   Recorte: (0%,0%) → (40%,100%)
 ========================================================
+  ⏱ Inicio página: 16:14:57
   2860x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
-  ✓ Claude: 15 recintos, 6 incumplimientos
+  ✓ Claude: 14 recintos, 5 incumplimientos
   → Extracción vectorial...
 DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
   DIAG PASO1 -- crop_px=(0, 0, 2860, 5052): 3021 segmentos_l, bbox x=[8,2800]
@@ -46,6 +234,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
         largo_m=0.25 p1=(2358, 2145) p2=(2327, 2114)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 1
   ✓ Muros exportados: 127 (de 8 grupos protegidos, 90 segmentos descartados por angulo no-ortogonal, 0 muros con estado agregado/eliminado detectado via leyenda -- el color ya NO excluye geometria, ver _detectar_leyenda_simbologia)
+  ⏱ Extracción + filtrado (Paso 1-4): 0:00:03
     DIAG bloqueado MU03 vs MU06: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.30574074074074076, anchoB=0.699675925925926)
     DIAG CONECTIVIDAD -- MU03 (anchoA=0.30574074074074076m) vs MU06 (anchoB=0.699675925925926m): tolPx=5.2 (~0.031m de dilatacion)
     DIAG bloqueado MU03 vs MU07: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.30574074074074076, anchoB=0.30574074074074076)
@@ -67,19 +256,20 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     DIAG bloqueado MU25 vs MU31: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.30574074074074076, anchoB=None)
   DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 44, 'grupo A sin par paralelo': 12, 'grupo B sin par paralelo': 3}
   ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 127 entradas -> 61 muros (66 fusionadas, 0 pares bloqueados por puerta intermedia, 59 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
+  ⏱ Fusión + cuerpo cerrado: 0:01:00
   DIAG BBOX -- PAGINA_PLANTA=2 crop_px=(0, 0, 2860, 5052) fname_tag=pag2-1 muros_geo=61
     bbox RELATIVO al crop: x=[259,2705] y=[327,4829]
     bbox ABSOLUTO (pagina completa): x=[259,2705] y=[327,4829] (plano_full shape=(5052, 7152, 3))
   DIAG VISUAL COMPLETO: guardado diag_muros_pag2-1.png (61 muros dibujados)
-  DIAG VISUAL COMPLETO (todos los tipos): guardado diag_completo_pag2-1.png
-    muros=61 (verde=nuevo, gris=existente, rojo=eliminado) | puertas(arcos)=1 (naranja) | ventana=83 segs (celeste) | hoja/vano=54 segs (magenta) | conflictos=0 (amarillo)
-    escaleras/rampas: NO marcadas -- sin detector geometrico implementado todavia (Convenciones_CAD D.4/D.5, catalogo_tipologias.py estado=pendiente)
+  ⏱ Diagnóstico muros (línea): 0:00:00
+  DIAG VISUAL COMPLETO (todos los tipos): omitido (name 'RADIO_CONTEXTO_PX' is not defined)
+  ⏱ Diagnóstico completo (relleno + clasificación local): 0:00:00
   DIAG VISUAL: guardado diag_contexto_MU02.png (517x472px)
   DIAG VISUAL: guardado diag_contexto_MU108.png (610x2523px)
   ✓ Puertas exportadas (clasificador geometrico): 1
   DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 1561), ((0.87, 0.43, 0.43), 1044), ((1.0, 0.75, 0.0), 416)]
   DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 8 grupos protegidos como muro, top 25 por span (73 textos de cota disponibles para el chequeo de distancia):
-     span=26.77m  bbox=14.8x22.31m  n_seg=1168  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=3.3/13.3/42.3
+     span=26.77m  bbox=14.8x22.31m  n_seg=1168  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=1.7/13.0/43.7
      span=15.56m  bbox=15.37x2.41m  n_seg=107  ancho_linea(min/mediana/max)=0.12/0.54/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=107)=9.3/20.6/32.7
      span=9.21m  bbox=6.35x6.67m  n_seg=84  ancho_linea(min/mediana/max)=0.12/0.54/0.72  %cerca_cota(0.18m/0.35m/0.59m, n=84)=1.2/9.5/34.5
      span=3.63m  bbox=3.45x1.14m  n_seg=53  ancho_linea(min/mediana/max)=0.3/0.3/0.72  %cerca_cota(0.18m/0.35m/0.59m, n=53)=0.0/1.9/7.5
@@ -1471,12 +1661,14 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ✓ OpenCV: 7 espacios >= 0.5 m²
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 268.32m²
   ✓ Cruce: 6/7 con nombre | 1 incumpl. geo
-  ⚠ 1 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E07
+  ⚠ 1 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E05
+  ⏱ Fin página: 16:17:49 (duración: 0:02:52)
 
 ========================================================
   Página 2  —  escala 1:50
   Recorte: (40%,0%) → (79%,100%)
 ========================================================
+  ⏱ Inicio página: 16:17:49
   2790x5052 px analizados  |  0.00588 m/px  |  1m = 170 px
   → Claude Vision...
   ✓ Claude: 7 recintos, 4 incumplimientos
@@ -1516,6 +1708,7 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
         largo_m=0.25 p1=(849, 2521) p2=(819, 2552)
   ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 6
   ✓ Muros exportados: 112 (de 8 grupos protegidos, 667 segmentos descartados por angulo no-ortogonal, 0 muros con estado agregado/eliminado detectado via leyenda -- el color ya NO excluye geometria, ver _detectar_leyenda_simbologia)
+  ⏱ Extracción + filtrado (Paso 1-4): 0:00:05
     DIAG bloqueado MU01 vs MU54: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.30574074074074076, anchoB=None)
     DIAG PAREJA -- MU54 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
       segmento [1761, 2003]-[1685, 2003] (largo=0.447m):
@@ -1568,13 +1761,14 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
     DIAG bloqueado MU55 vs MU72: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
   DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'grupo B sin par paralelo': 4, 'grupo A sin par paralelo': 17, 'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 4}
   ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 112 entradas -> 46 muros (66 fusionadas, 12 pares bloqueados por puerta intermedia, 25 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
+  ⏱ Fusión + cuerpo cerrado: 0:00:29
   DIAG BBOX -- PAGINA_PLANTA=2 crop_px=(2860, 0, 5650, 5052) fname_tag=pag2-2 muros_geo=46
     bbox RELATIVO al crop: x=[68,2399] y=[1529,4829]
     bbox ABSOLUTO (pagina completa): x=[2928,5259] y=[1529,4829] (plano_full shape=(5052, 7152, 3))
   DIAG VISUAL COMPLETO: guardado diag_muros_pag2-2.png (46 muros dibujados)
-  DIAG VISUAL COMPLETO (todos los tipos): guardado diag_completo_pag2-2.png
-    muros=46 (verde=nuevo, gris=existente, rojo=eliminado) | puertas(arcos)=6 (naranja) | ventana=629 segs (celeste) | hoja/vano=34 segs (magenta) | conflictos=0 (amarillo)
-    escaleras/rampas: NO marcadas -- sin detector geometrico implementado todavia (Convenciones_CAD D.4/D.5, catalogo_tipologias.py estado=pendiente)
+  ⏱ Diagnóstico muros (línea): 0:00:00
+  DIAG VISUAL COMPLETO (todos los tipos): omitido (name 'RADIO_CONTEXTO_PX' is not defined)
+  ⏱ Diagnóstico completo (relleno + clasificación local): 0:00:00
   DIAG VISUAL: guardado diag_contexto_MU03_MU04.png (1529x474px)
   DIAG VISUAL: guardado diag_contexto_MU06.png (491x1358px)
   ✓ Puertas exportadas (clasificador geometrico): 6
@@ -3231,6 +3425,8 @@ DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabo
   ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 281.17m²
   ✓ Cruce: 6/14 con nombre | 0 incumpl. geo
   ⚠ 8 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E01, E14, E06, E05, E09, E10, E12, E08
+  ⏱ Fin página: 16:19:26 (duración: 0:01:36)
+⏱ Celda 4 finalizada: 2026-08-25 16:19:26 (duración total: 0:04:28)
 
 ========================================================
 ✓ Procesadas 2 / 2 páginas

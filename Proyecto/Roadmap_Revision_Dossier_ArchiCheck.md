@@ -2553,6 +2553,25 @@ Con estos 5 prints + los 2 de página, la próxima corrida real va a decir con c
 
 ---
 
+## 🔴✅ 2026-08-25 (continuación) — Corrida real: bug propio (`NameError`) invalidó el diagnóstico visual, pero confirma con fuerza la causa raíz de los 30 minutos
+
+El usuario copió el texto de la Celda 4 real (no un `.ipynb` nuevo — pidió trabajar así: "extraje yo el texto de la celda 4 y te lo dejé en txt en la carpeta pdv") y compartió el log de una corrida real contra PdV (`pdv/Celda 4 pdv.txt`, corrida 16:14:57–16:19:26).
+
+**Bug real encontrado**: `RADIO_CONTEXTO_PX` (usado en el arreglo del Problema 1, entrada `25aug_1120`) está definido **dentro de** `_fusionar_muros_por_proximidad` — una función distinta de `extraer_datos_vectoriales`, donde vive el bloque `diag_completo`. No comparten variables locales. El bloque completo tiraba `NameError: name 'RADIO_CONTEXTO_PX' is not defined`, atrapado por el `except` genérico — el mensaje `"DIAG VISUAL COMPLETO (todos los tipos): omitido (...)"` lo disimulaba como un fallo esperado, no como un bug real. **Resultado: ni el relleno sólido ni la clasificación local corrieron ni una sola vez en esta corrida** — `diag_completo_pag2-1/2.png` no se generaron.
+
+**El lado bueno — confirma la hipótesis del Problema 1 con datos reales**: el tiempo total bajó de **30 minutos (anoche)** a **4:28** (hoy) — precisamente porque el bloque que hoy falló (y se saltó por completo) es el mismo que anoche corría la clasificación a escala de PÁGINA completa (la versión vieja, la que dio `ventana=629 segs`). Desglose real de esta corrida (marcas de tiempo por bloque, entrada anterior):
+- N1: extracción 0:03, **fusión + cuerpo cerrado 1:00**, diagnósticos ~0.
+- N2: extracción 0:05, **fusión + cuerpo cerrado 0:29**, diagnósticos ~0.
+- Total página N1: 2:52 — de eso, solo ~1:03 cubierto por las marcas internas; **~1:49 sin instrumentar** (probablemente Claude Vision + OpenCV + cruce semántico, fuera de `extraer_datos_vectoriales`, no medido en esta pasada).
+- Total página N2: 1:36 — ~0:34 instrumentado, ~1:02 sin instrumentar.
+- **Total Celda 4: 4:28.**
+
+**Arreglado**: `_radio_diag_px` ahora se calcula con una constante local (`_RADIO_CONTEXTO_DIAG_M = 2.0`, mismo valor que usa `_fusionar_muros_por_proximidad`) definida dentro de `extraer_datos_vectoriales`, en vez de referenciar una variable de otra función. Notebook renombrado `ArchiCheck_Base 25aug_1227.ipynb` (anterior `25aug_1201` a `Versiones anteriores/`). Se regeneró también `Fase 2/Desarrollos/Test/Celda 4 - copiar en Colab.py` (texto plano de la Celda 4 actual, para copiar/pegar directo en Colab sin subir un `.ipynb` nuevo — flujo de trabajo que pidió el usuario en esta misma entrada).
+
+**Pendiente real, ahora con más urgencia**: recién con esta corrección se va a poder medir de verdad cuánto cuesta el relleno sólido + la clasificación local (Problema 1 arreglado en teoría, nunca ejecutado todavía) — **puede seguir siendo lento** (loop por segmento con reclasificación local + relleno rasterizado por cada muro), solo que no tan catastrófico como la versión a escala de página. **Sin correr en Colab todavía.**
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
