@@ -247,27 +247,137 @@ async function readModelStream(resp) {
   return raw;
 }
 
-// ── Merge de resultados de dos modelos ──────────────────────────────────────
-function mergeResults(r1, r2) {
-  const STOP = new Set(["el","la","los","las","un","una","de","del","en","y","o","a","se","que","es","no","con","por","para","al","lo","su","sus"]);
+// ── Helpers de merge de texto/arrays (usados por mergeResults y por el ensamble semántico) ──
+const MERGE_STOP = new Set(["el","la","los","las","un","una","de","del","en","y","o","a","se","que","es","no","con","por","para","al","lo","su","sus"]);
+function mergeWordsOf(s) {
+  return new Set((s || "").toLowerCase().split(/\W+/).filter(w => w.length > 3 && !MERGE_STOP.has(w)));
+}
+function mergeObsSimilar(a, b) {
+  const wa = mergeWordsOf(a.descripcion), wb = mergeWordsOf(b.descripcion);
+  let n = 0; wb.forEach(w => { if (wa.has(w)) n++; });
+  return n >= 3;
+}
+function mergeObs(a = [], b = []) {
+  const out = [...a];
+  for (const obs of b) if (!out.some(ex => mergeObsSimilar(ex, obs))) out.push(obs);
+  return out;
+}
+function dedupeArr(a = [], b = []) {
+  const seen = new Set(a.map(s => String(s).trim().toLowerCase()));
+  return [...a, ...b.filter(s => !seen.has(String(s).trim().toLowerCase()))];
+}
 
-  function wordsOf(s) {
-    return new Set((s || "").toLowerCase().split(/\W+/).filter(w => w.length > 3 && !STOP.has(w)));
+// ── Ensamble semántico: comparación de tablas entre Claude y GPT-4o ─────────
+// Antes, mergeSection elegía la tabla "más larga" completa y descartaba la otra entera —
+// perdía filas que solo un modelo detectó y nunca mostraba cuando ambos SÍ emparejaban el
+// mismo recinto/elemento pero discrepaban en el veredicto (cumple/estado). Ver Convenciones_CAD.md
+// D.11 y roadmap (2026-08-24) para el diseño completo y la corrección de fondo que lo motivó.
+// Ningún modelo emite un ID estructurado por fila (el código [E##] solo se pide dentro del texto
+// libre de "descripcion") — el emparejamiento es por nombre normalizado con fuzzy match, no por ID.
+function normalizarNombreItem(s) {
+  return String(s || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+function nombresCoinciden(a, b) {
+  const na = normalizarNombreItem(a), nb = normalizarNombreItem(b);
+  if (!na || !nb) return false;
+  if (na === nb || na.includes(nb) || nb.includes(na)) return true;
+  const wa = na.split(" ").filter(w => w.length > 2);
+  const wb = nb.split(" ").filter(w => w.length > 2);
+  const [shorter, longer] = wa.length <= wb.length ? [wa, wb] : [wb, wa];
+  if (!shorter.length) return false;
+  return shorter.every(w => longer.includes(w));
+}
+// Empareja 2 tablas por keyField (nombre difuso, ej. "recinto"/"elemento"/"parametro").
+// - Fila emparejada, mismo veredicto → se fusiona en silencio (como antes).
+// - Fila emparejada, veredicto distinto → discrepancia real, NINGUNO se descarta.
+// - Fila sin par → se incluye igual en la tabla final (antes se perdía si su tabla
+//   completa era la más corta), marcada como detectada por un solo modelo.
+function compararTablas(t1 = [], t2 = [], keyField, verdictField, origen) {
+  const usados2 = new Array(t2.length).fill(false);
+  const merged = [];
+  const discrepancias = [];
+
+  for (const r1 of t1) {
+    let idxMatch = -1;
+    for (let i = 0; i < t2.length; i++) {
+      if (usados2[i]) continue;
+      if (nombresCoinciden(r1[keyField], t2[i][keyField])) { idxMatch = i; break; }
+    }
+    if (idxMatch >= 0) {
+      usados2[idxMatch] = true;
+      const r2 = t2[idxMatch];
+      if (verdictField && r1[verdictField] != null && r2[verdictField] != null
+          && String(r1[verdictField]).trim().toUpperCase() !== String(r2[verdictField]).trim().toUpperCase()) {
+        discrepancias.push({ tabla: origen, item: r1[keyField], campo: verdictField, valor_claude: r1[verdictField], valor_gpt4o: r2[verdictField] });
+      }
+      // Base = fila de Claude; completa con campos de GPT-4o que Claude dejó vacíos/nulos.
+      merged.push({ ...r1, ...Object.fromEntries(Object.entries(r2).filter(([k, v]) => (r1[k] == null || r1[k] === "") && v != null)) });
+    } else {
+      merged.push({ ...r1, _detectado_por: "claude" });
+      discrepancias.push({ tabla: origen, item: r1[keyField], campo: "_presencia", valor_claude: "detectado", valor_gpt4o: "no detectado" });
+    }
   }
-  function similar(a, b) {
-    const wa = wordsOf(a.descripcion), wb = wordsOf(b.descripcion);
-    let n = 0; wb.forEach(w => { if (wa.has(w)) n++; });
-    return n >= 3;
+  t2.forEach((r2, i) => {
+    if (usados2[i]) return;
+    merged.push({ ...r2, _detectado_por: "gpt4o" });
+    discrepancias.push({ tabla: origen, item: r2[keyField], campo: "_presencia", valor_claude: "no detectado", valor_gpt4o: "detectado" });
+  });
+
+  return { merged, discrepancias };
+}
+// Igual que mergeSection, pero para tablas con identidad de fila (recinto/elemento/parametro) —
+// usa compararTablas en vez de "gana el más largo" y acumula discrepancias en discAcc.
+function mergeSeccionConComparacion(s1 = {}, s2 = {}, tableKey, keyField, verdictField, origen, discAcc) {
+  const t1 = s1[tableKey] || [], t2 = s2[tableKey] || [];
+  const { merged, discrepancias } = compararTablas(t1, t2, keyField, verdictField, origen);
+  discAcc.push(...discrepancias);
+  const base = { ...(t1.length >= t2.length ? s1 : s2) };
+  base.observaciones = mergeObs(s1.observaciones, s2.observaciones);
+  base[tableKey] = merged;
+  return base;
+}
+// recintos_por_nivel es un array de niveles, cada uno con su propio array de recintos —
+// primero empareja niveles por nombre (ej. "Nivel 1" vs "Piso 1"), después compara los
+// recintos dentro de cada par de niveles emparejado con la misma lógica de compararTablas.
+function mergeRecintosPorNivel(r1Sec = {}, r2Sec = {}, discAcc) {
+  const niv1 = r1Sec.recintos_por_nivel || [];
+  const niv2 = r2Sec.recintos_por_nivel || [];
+  const usados2 = new Array(niv2.length).fill(false);
+  const nivelesMerged = [];
+
+  for (const n1 of niv1) {
+    let idxMatch = -1;
+    for (let i = 0; i < niv2.length; i++) {
+      if (usados2[i]) continue;
+      if (nombresCoinciden(n1.nivel, niv2[i].nivel)) { idxMatch = i; break; }
+    }
+    if (idxMatch >= 0) {
+      usados2[idxMatch] = true;
+      const n2 = niv2[idxMatch];
+      const { merged, discrepancias } = compararTablas(n1.recintos || [], n2.recintos || [], "nombre", "estado", `Recintos ${n1.nivel || ""}`.trim());
+      discAcc.push(...discrepancias);
+      nivelesMerged.push({ ...n1, recintos: merged });
+    } else {
+      nivelesMerged.push(n1);
+      discAcc.push({ tabla: "Recintos por nivel", item: n1.nivel, campo: "_presencia", valor_claude: "detectado", valor_gpt4o: "no detectado" });
+    }
   }
-  function mergeObs(a = [], b = []) {
-    const out = [...a];
-    for (const obs of b) if (!out.some(ex => similar(ex, obs))) out.push(obs);
-    return out;
-  }
-  function dedupeArr(a = [], b = []) {
-    const seen = new Set(a.map(s => String(s).trim().toLowerCase()));
-    return [...a, ...b.filter(s => !seen.has(String(s).trim().toLowerCase()))];
-  }
+  niv2.forEach((n2, i) => {
+    if (usados2[i]) return;
+    nivelesMerged.push(n2);
+    discAcc.push({ tabla: "Recintos por nivel", item: n2.nivel, campo: "_presencia", valor_claude: "no detectado", valor_gpt4o: "detectado" });
+  });
+  return nivelesMerged;
+}
+
+// ── Merge de resultados de dos modelos ──────────────────────────────────────
+// mergeWordsOf/mergeObs/dedupeArr viven a nivel de módulo (arriba) — las usan tanto esta función
+// como mergeSeccionConComparacion/mergeRecintosPorNivel del ensamble semántico.
+function mergeResults(r1, r2) {
   function mergeSection(s1 = {}, s2 = {}, tableKey) {
     const t1 = tableKey ? (s1[tableKey] || []) : [];
     const t2 = tableKey ? (s2[tableKey] || []) : [];
@@ -280,8 +390,14 @@ function mergeResults(r1, r2) {
   const RANK = { APROBADO: 0, OBSERVADO: 1, RECHAZADO: 2 };
   const estado = (RANK[r1.estado_global] ?? 1) >= (RANK[r2.estado_global] ?? 1) ? r1.estado_global : r2.estado_global;
 
+  // Acumula discrepancias reales (veredicto distinto o detectado por un solo modelo) de todas
+  // las tablas con identidad de fila — ver Convenciones_CAD.md D.11 para el diseño completo.
+  const discrepancias_ensamble = [];
+
   const rec1 = r1.capa1?.reconocimiento || {}, rec2 = r2.capa1?.reconocimiento || {};
-  const recSec = mergeSection(rec1, rec2, "recintos_por_nivel");
+  const recSec = { ...((rec1.recintos_por_nivel || []).length >= (rec2.recintos_por_nivel || []).length ? rec1 : rec2) };
+  recSec.observaciones = mergeObs(rec1.observaciones, rec2.observaciones);
+  recSec.recintos_por_nivel = mergeRecintosPorNivel(rec1, rec2, discrepancias_ensamble);
   recSec.stats = {
     recintos_total: Math.max(rec1.stats?.recintos_total || 0, rec2.stats?.recintos_total || 0),
     niveles:        Math.max(rec1.stats?.niveles        || 0, rec2.stats?.niveles        || 0),
@@ -296,6 +412,7 @@ function mergeResults(r1, r2) {
     documentos_faltantes: dedupeArr(r1.documentos_faltantes, r2.documentos_faltantes),
     alertas_especiales:   dedupeArr(r1.alertas_especiales,   r2.alertas_especiales),
     pasos_siguientes:     dedupeArr(r1.pasos_siguientes,     r2.pasos_siguientes).slice(0, 6),
+    discrepancias_ensamble,
     capa1: {
       separacion:     mergeSection(r1.capa1?.separacion     || {}, r2.capa1?.separacion     || {}, "capas"),
       reconocimiento: recSec,
@@ -303,10 +420,10 @@ function mergeResults(r1, r2) {
       modelo:         mergeSection(r1.capa1?.modelo         || {}, r2.capa1?.modelo         || {}, null),
     },
     capa2: {
-      recintos_superficies:   mergeSection(r1.capa2?.recintos_superficies   || {}, r2.capa2?.recintos_superficies   || {}, "tabla"),
-      circulaciones:           mergeSection(r1.capa2?.circulaciones           || {}, r2.capa2?.circulaciones           || {}, "tabla"),
-      iluminacion_ventilacion: mergeSection(r1.capa2?.iluminacion_ventilacion || {}, r2.capa2?.iluminacion_ventilacion || {}, "tabla"),
-      normativa_urbanistica:   mergeSection(r1.capa2?.normativa_urbanistica   || {}, r2.capa2?.normativa_urbanistica   || {}, "tabla"),
+      recintos_superficies:   mergeSeccionConComparacion(r1.capa2?.recintos_superficies   || {}, r2.capa2?.recintos_superficies   || {}, "tabla", "recinto",   "cumple", "Recintos y superficies",     discrepancias_ensamble),
+      circulaciones:           mergeSeccionConComparacion(r1.capa2?.circulaciones           || {}, r2.capa2?.circulaciones           || {}, "tabla", "elemento",  "cumple", "Circulaciones",              discrepancias_ensamble),
+      iluminacion_ventilacion: mergeSeccionConComparacion(r1.capa2?.iluminacion_ventilacion || {}, r2.capa2?.iluminacion_ventilacion || {}, "tabla", "recinto",   "cumple", "Iluminación y ventilación",  discrepancias_ensamble),
+      normativa_urbanistica:   mergeSeccionConComparacion(r1.capa2?.normativa_urbanistica   || {}, r2.capa2?.normativa_urbanistica   || {}, "tabla", "parametro", "estado", "Normativa urbanística",      discrepancias_ensamble),
     },
   };
 }
@@ -2183,6 +2300,24 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
               </table>
             </div>
           )}
+          {result.discrepancias_ensamble?.length > 0 && (
+            <div style={{ marginBottom:14 }}>
+              <div style={{ fontSize:9, fontWeight:700, color:"#7D3C98", letterSpacing:"1.5px", marginBottom:8 }}>DISCREPANCIAS ENTRE MODELOS — {result.discrepancias_ensamble.length}</div>
+              <div style={{ fontSize:9, color:"#6B7A99", marginBottom:8, lineHeight:1.4 }}>Claude y GPT-4o no coincidieron en estos casos — revisar antes de confiar en el veredicto automático.</div>
+              <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                <thead><tr>{["Tabla","Ítem","Campo","Claude","GPT-4o"].map(h => <th key={h} style={PTH}>{h}</th>)}</tr></thead>
+                <tbody>{result.discrepancias_ensamble.map((d, i) => (
+                  <tr key={i} style={{ background:i%2===0?"#fff":"#f8f9ff" }}>
+                    <td style={{ ...PTD, whiteSpace:"nowrap", color:"#6B7A99" }}>{d.tabla}</td>
+                    <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}>{d.item}</td>
+                    <td style={{ ...PTD, fontFamily:"monospace", fontSize:9 }}>{d.campo === "_presencia" ? "detección" : d.campo}</td>
+                    <td style={PTD}>{d.valor_claude}</td>
+                    <td style={PTD}>{d.valor_gpt4o}</td>
+                  </tr>
+                ))}</tbody>
+              </table>
+            </div>
+          )}
           {result.pasos_siguientes?.length > 0 && (
             <div style={{ marginBottom:14 }}>
               <div style={{ fontSize:9, fontWeight:700, color:"#1B3A8A", letterSpacing:"1.5px", marginBottom:8 }}>PLAN DE ACCIÓN PRIORITARIO</div>
@@ -2871,6 +3006,11 @@ ${printRef.current.innerHTML}
         analisis_por_archivo: cap1.analisis_por_archivo  || [],
         pasos_siguientes:     cap2.pasos_siguientes      || [],
         capa1:                cap1.capa1                 || {},
+        // Discrepancias reales entre Claude y GPT-4o (mismo recinto/elemento, veredicto distinto,
+        // o detectado por un solo modelo) — cap1 las junta en Fase 1 (recintos_por_nivel), cap2 en
+        // Fase 2 (las 4 tablas normativas). Ausente cuando solo un modelo respondió completo (no
+        // hay nada que comparar). Ver mergeResults/Convenciones_CAD.md D.11.
+        discrepancias_ensamble: [...(cap1.discrepancias_ensamble || []), ...(cap2.discrepancias_ensamble || [])],
       });
 
       const sinDatos = !merged.analisis_por_archivo?.length
