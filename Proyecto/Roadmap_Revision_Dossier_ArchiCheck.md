@@ -2449,10 +2449,10 @@ Tras cerrar Tipología B y C (entrada de arriba, `identificar_hojas_de_puerta` +
 - Verificado a mano: hoy `ventana` y `hoja_vano_puerta` son estructuralmente disjuntos por diseño (`ancho_por_emparejamiento` ya excluye `centrales_ids` tanto de `s` como de `c` dentro de `identificar_hojas_de_puerta`) — por eso no hay un conflicto real que forzar todavía con solo estas 2 firmas. El mecanismo se probó con `sets_externos` ficticios (CASO 8a-c) más un control real (CASO 8d, ventana de CASO 1 sin conflicto espurio) para confirmar que funciona antes de que exista un tercer detector real (eje/cota/corte, hoy en la Celda 4) que sí pueda competir por el mismo trazo.
 - Extensión explícitamente dejada pendiente, no implementada ahora: los detectores D.6 (eje/cota/corte-rasante) viven en la Celda 4 sobre índices de `segmentos_l`, no sobre `id(segmento)` — conectarlos a `clasificar_no_muro` vía `sets_externos` es directo pero no se tocó código de la Celda 4 sin poder probarlo en Colab en esta pasada.
 
-**Test suite**: `test_cuerpo_cerrado.py` pasó de 16 a **20 checks** (CASO 8a-d, mecanismo de conflicto). Todavía sin correr en Colab.
+**Test suite**: `test_cuerpo_cerrado.py` pasó de 16 a **19 checks** (CASO 8a-d, mecanismo de conflicto — corrección de conteo: se dijo "20" al escribirlo, el conteo real de `resultados.append()` en el archivo es 19, confirmado por grep). Todavía sin correr en Colab.
 
 **Qué falta para cerrar el ciclo** (próximo paso inmediato, pendiente de la corrida real):
-1. Subir `cuerpo_cerrado.py` + `catalogo_tipologias.py` (nuevo, debe subirse junto — `cuerpo_cerrado.py` ahora depende de él) + `test_cuerpo_cerrado.py` a Colab, correr el test (20/20 esperado).
+1. Subir `cuerpo_cerrado.py` + `catalogo_tipologias.py` (nuevo, debe subirse junto — `cuerpo_cerrado.py` ahora depende de él) + `test_cuerpo_cerrado.py` a Colab, correr el test (19/19 esperado).
 2. Re-correr el pipeline real contra PdV N1/N2 (notebook `ArchiCheck_Base 24aug_2258.ipynb`, ver entrada siguiente) para ver el efecto combinado de B, C y el refactor de parámetros (debería dar exactamente igual que antes del refactor — los valores no cambiaron, solo de dónde se leen — cualquier diferencia sería señal de un bug introducido en el refactor, no una mejora esperada).
 3. Recién después de (1) y (2): retomar Tipología A (esquina L faltante cerca de MU02/ventana) y D (falsas extensiones de remate en esquinas/finales sueltos) — ambas ya definidas en D.1 "Encuentro de brazos", pendientes como bug de implementación, no de definición.
 
@@ -2473,6 +2473,14 @@ Pedido explícito del arquitecto antes de la corrida real contra PdV: "quiero ve
 **Detalle técnico importante (evita repetir el bug de offset del 23-ago)**: `segmentos_l` (fuente de `_seg_pool_clasif`) guarda coordenadas ABSOLUTAS de página completa (salen de `to_px()`, antes de `ajustar()`) — se dibujan tal cual, SIN sumar `_ox/_oy`. `muros_geo`/`puertas_geo`/`muros_excluidos_por_demolicion` sí pasaron por `ajustar()` (relativas al crop de esa entrada) — a esos sí se les suma `_ox/_oy`, igual que el render `diag_muros_<página>.png` ya existente. Verificado a mano contra la definición real de `ajustar()`/`to_px()` en Paso 1 y Paso 4, no asumido — la fuente de este bug la última vez fue justamente asumir sin verificar.
 
 **Sin correr en Colab todavía.** Se sube junto con `cuerpo_cerrado.py` + `catalogo_tipologias.py` + `test_cuerpo_cerrado.py` (mismo runtime, mismo `files.upload()` — el bloque de import de la Celda 4 se actualizó para pedir también `catalogo_tipologias.py`, dependencia obligatoria nueva de `cuerpo_cerrado.py`).
+
+---
+
+## ✅ 2026-08-24 (continuación) — Test validado en Colab: 19/19 casos OK
+
+El arquitecto subió los 3 archivos (`cuerpo_cerrado.py`, `catalogo_tipologias.py`, `test_cuerpo_cerrado.py`) y corrió `test_cuerpo_cerrado.py` en Colab. Resultado real: **19/19 casos OK**, incluidos los 4 nuevos de CASO 8 (mecanismo de conflicto del Principio 3) — confirma que ventana y hoja/vano se detectan como conflicto real cuando 2 firmas ficticias coinciden en el mismo segmento (CASO 8a/8b), que 1 sola firma no dispara conflicto (8c), y que el caso real (ventana de CASO 1) no genera un falso conflicto ventana↔hoja (8d, disjuntos por diseño). El catálogo/parámetros/mecanismo de conflicto quedan validados end-to-end por primera vez en un runtime real, no solo verificados a mano.
+
+**Próximo paso**: correr el notebook real `ArchiCheck_Base 24aug_2258.ipynb` contra PdV N1/N2 — genera el diagnóstico visual completo (`diag_completo_<página>.png`, entrada anterior) además de los conteos de muros fusionados.
 
 ---
 
