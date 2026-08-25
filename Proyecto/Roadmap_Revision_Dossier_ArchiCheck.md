@@ -2506,6 +2506,24 @@ Ambos niveles se alejaron del target después de Tipología B, en vez de acercar
 
 ---
 
+## ✅ 2026-08-25 (continuación) — Diagnóstico visual corregido: relleno sólido real + contexto local (Problema 1 resuelto), notebook `25aug_1120`
+
+Al mostrarle al arquitecto `diag_completo_pag2-1 0126.png` y `diag_completo_pag2-2 0126.png`, reportó algo más de fondo que el Problema 1 ya identificado: **"Dónde están esas capturas? Para N-1 dime cuántos muros ves. Yo no veo ninguno con cuerpo cerrado. Solo hay bordes marcados."** — 2 hallazgos reales, distintos de Problema 1/2 de la entrada anterior:
+
+1. **Los 61 muros de N1 eran invisibles, no inexistentes**: los 61 salieron con `estado=None` (sin leyenda detectada en N1), por lo que TODOS caían en el color "existente" definido como gris `(60,60,60)` — casi idéntico a las líneas negras del plano CAD base, indistinguible a simple vista.
+2. **El render nunca mostró el cuerpo cerrado real, solo el trazo**: el código dibujaba únicamente las líneas de cada segmento (`cv2.line`), nunca el polígono relleno que `cuerpo_cerrado.py` calcula internamente (`_relleno_solido`/`relleno_solido_de_contexto`) para decidir si algo cierra. El arquitecto pidió ver el área rellena real, no solo el contorno — confirmó explícitamente ambas cosas: relleno sólido Y mejor color de línea ("ambos").
+
+**Arreglado, junto con el Problema 1 de la entrada anterior (mismo pase de trabajo, evita otra vuelta a Colab)**:
+- **Relleno sólido real**: nueva función interna `_pintar_relleno_solido()` — llama `relleno_solido_de_contexto(muro['segmentos'], mpx, objetivo=muro['segmentos'])` (el propio grupo ya fusionado como su propio contexto, no hace falta ampliar a otros muros de la página) y pinta el área resultante semi-transparente (alpha 0.45) sobre `diag_completo_<página>.png`, con el contorno de línea encima para nitidez. Aplica a `muros_geo` y a `muros_excluidos_por_demolicion`.
+- **Paleta de colores corregida**: `existente` pasa de gris `(60,60,60)` (casi negro) a slate `(170,140,90)`, claramente distinguible del trazo negro del plano base. Resto de colores sin cambio.
+- **Problema 1 (contexto global) resuelto de verdad**: la clasificación de ventana/hoja-vano ya NO corre `clasificar_no_muro()` sobre toda la página — ahora, por cada segmento, arma un contexto LOCAL usando bbox propio + margen `RADIO_CONTEXTO_M` (**la misma constante y el mismo criterio de bbox que ya usa `_fusionar_muros_por_proximidad`**, no un radio nuevo inventado para el diagnóstico) y clasifica solo ahí. Elimina el riesgo de que el render muestre falsos positivos que la fusión real nunca vio.
+
+**Notebook renombrado `ArchiCheck_Base 25aug_1120.ipynb`** (anterior `24aug_2258` movido a `Versiones anteriores/`). Import de Celda 4 actualizado para traer también `relleno_solido_de_contexto`.
+
+**Sin correr en Colab todavía.** El Problema 2 (posible falla real de `identificar_hojas_de_puerta` sin margen mínimo de ancho — MU54/MU55/MU72 de N2) sigue sin investigar, es el próximo paso después de validar este arreglo visual.
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
