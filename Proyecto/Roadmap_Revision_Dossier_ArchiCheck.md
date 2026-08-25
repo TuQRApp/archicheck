@@ -2538,6 +2538,21 @@ Notebook renombrado `ArchiCheck_Base 25aug_1133.ipynb` (anterior `25aug_1120` mo
 
 ---
 
+## ✅ 2026-08-25 (continuación) — Instrumentación por bloque (no solo por página), notebook `25aug_1201`
+
+El usuario compartió una captura de la sesión paralela (`Archicheck búsqueda de mejores prácticas técnicas`) donde ese Claude ya había analizado el mismo log y propuso: sin marcas de tiempo dentro del log no se puede aislar qué paso se demoró — 2 candidatos sin confirmar (generación de `diag_completo_*.png` en alta resolución con todos los tipos dibujados, o el O(n²) de las comparaciones de cuerpo cerrado sobre miles de segmentos crudos de fondo) — y recomendó agregar `time.time()` alrededor de cada bloque grande en vez de adivinar. El usuario pidió acá: "revisa las opciones".
+
+Las 4 marcas de la entrada anterior (inicio/fin de Celda 4, inicio/fin por página) dan el TOTAL por página pero no dicen CUÁL de los bloques internos es el costo real. Se agregaron 5 checkpoints nuevos, todos dentro de `extraer_datos_vectoriales` (con `datetime`, mismo patrón, sin dependencia nueva):
+1. Al entrar a la función (`_t_func_inicio`).
+2. Justo antes de la fusión → imprime **"Extracción + filtrado (Paso 1-4)"** (desde el inicio de la función).
+3. Justo después de la fusión → imprime **"Fusión + cuerpo cerrado"** (el candidato O(n²) de la sesión paralela).
+4. Al final del render `diag_muros_<página>.png` (solo líneas) → imprime **"Diagnóstico muros (línea)"**.
+5. Al final del render `diag_completo_<página>.png` (relleno sólido + clasificación local nueva) → imprime **"Diagnóstico completo (relleno + clasificación local)"** — el candidato más probable hoy, porque además de generar una imagen de 5052×7152px, esta versión (entrada de hoy, `25aug_1120`) agrega un loop de reclasificación local por segmento (contexto bbox+margen por cada segmento protegido) MÁS un relleno sólido rasterizado por cada uno de los ~46-61 muros — trabajo real nuevo que no existía en la corrida de anoche (esa corrida usó el diagnóstico viejo, a escala de página, antes del arreglo de hoy).
+
+Con estos 5 prints + los 2 de página, la próxima corrida real va a decir con certeza dónde se van los 30 minutos, sin necesidad de adivinar. Notebook renombrado `ArchiCheck_Base 25aug_1201.ipynb` (anterior `25aug_1133` a `Versiones anteriores/`). **Sin correr en Colab todavía.**
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
