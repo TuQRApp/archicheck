@@ -2524,6 +2524,20 @@ Al mostrarle al arquitecto `diag_completo_pag2-1 0126.png` y `diag_completo_pag2
 
 ---
 
+## ✅ 2026-08-25 (continuación) — Marcas de tiempo en la Celda 4, notebook `25aug_1133`
+
+Pedido del usuario, referenciando una conversación en la sesión paralela ("Agrega una marca de tiempo en el Colab como dijiste en la otra ventana. Anoche se ejecutó en 30 minutos.") — no se encontró registro escrito de esa conversación en `Convenciones_CAD.md` ni en `project_archicheck_objetivo_etapa_aprendizaje.md`, se interpretó de forma directa: visibilidad de cuánto demora cada corrida real, sin depender de mirar el reloj del sistema a mano.
+
+**4 marcas agregadas a la Celda 4** (usa `datetime` ya importado al inicio de la celda, sin dependencia nueva):
+1. Antes de arrancar el loop de páginas: `⏱ Celda 4 iniciada: <fecha y hora>`.
+2. Al inicio de cada página (justo después del encabezado `====`): `⏱ Inicio página: <hora>`.
+3. Al final de cada página (justo antes de `resultados_paginas.append(...)`): `⏱ Fin página: <hora> (duración: H:MM:SS)`.
+4. Al final de la celda (antes del resumen final): `⏱ Celda 4 finalizada: <fecha y hora> (duración total: H:MM:SS)`.
+
+Notebook renombrado `ArchiCheck_Base 25aug_1133.ipynb` (anterior `25aug_1120` movido a `Versiones anteriores/`). Cambio aislado, no toca ninguna lógica de extracción/fusión — no debería alterar ningún conteo. **Sin correr en Colab todavía.**
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
