@@ -2484,6 +2484,28 @@ El arquitecto subió los 3 archivos (`cuerpo_cerrado.py`, `catalogo_tipologias.p
 
 ---
 
+## 🔴🔍 2026-08-25 — Corrida real contra PdV: los conteos EMPEORARON tras Tipología B; 2 problemas distintos identificados (uno mío, uno del algoritmo), sin arreglar todavía
+
+Log real (`pdv/Celda 4 pdv.txt`, `diag_completo_pag2-1/2.png`, `diag_muros_pag2-1/2.png`, todos con timestamp `0126`, 25-ago):
+
+- **N1**: 127→**61** muros (antes de Tipología B, 23-ago: 127→**57**; target 28). Motivos de bloqueo: `{'no conectados': 44, 'grupo A sin par': 12, 'grupo B sin par': 3}`.
+- **N2**: 112→**46** muros (antes de Tipología B: 112→**38**, cerca del target 33; target 33). Motivos: `{'grupo B sin par': 4, 'grupo A sin par': 17, 'no conectados': 4}`.
+
+Ambos niveles se alejaron del target después de Tipología B, en vez de acercarse — **exactamente el patrón que Principio 1 (persistencia, `project_archicheck_objetivo_etapa_aprendizaje.md`) exige detectar y no dejar pasar como "costo aceptable de otra mejora"**.
+
+**Problema 1 (bug propio, contenido, no toca la fusión real)**: el diagnóstico visual nuevo (`diag_completo_<página>.png`, ver entrada 24-ago) llama `clasificar_no_muro()` sobre **todo el pool de segmentos de la página a la vez**, no por par local — el mismo error de "contexto global" ya diagnosticado y corregido el 22-ago para la fusión real (que sí usa `RADIO_CONTEXTO_M=2.0` por par). Efecto visible: `ventana=629 segs` en N2 (imposible para este plano), y en las imágenes el color celeste/magenta cubre la mayoría de los muros reales del edificio, no solo ventanas/puertas puntuales. **Este bug es solo del render de diagnóstico — no afecta los conteos de fusión real**, que usan contexto local correctamente.
+
+**Problema 2 (posible falla real del algoritmo, sin confirmar todavía con overlay)**: incluso la fusión real (contexto local) empeoró — en N2 el motivo "sin par paralelo" subió de 10 (23-ago) a 21 ahora. Hipótesis de causa raíz, sin verificar visualmente todavía: `identificar_hojas_de_puerta` marca un segmento como hoja si un vecino compartiendo vértice tiene *cualquier* ancho mayor (`ancho_v > ancho_s`, sin margen mínimo) — el ruido de medición entre 2 tramos de muro real de espesor similar podría alcanzar para disparar la exclusión, no solo una hoja de puerta genuina. **No confirmado — Convenciones_CAD dice "más finos", que podría implicar una diferencia real, no cualquier diferencia — pendiente de revisión visual de 1-2 casos concretos (candidatos: MU54, MU55, MU72 de N2, todos nuevos "sin par" que antes no lo eran) antes de tocar el código**, mismo método usado para MU02/MU108/MU03_MU04/MU06.
+
+**Sesión pausada a pedido del usuario ("mañana. Guarda todo") antes de investigar los casos concretos o tocar código.** Nada de `cuerpo_cerrado.py`/`catalogo_tipologias.py` se modificó en esta entrada — es diagnóstico puro sobre datos ya generados.
+
+**Próximos pasos, en orden, al retomar**:
+1. Arreglar el diagnóstico visual (Problema 1) para que reuse la clasificación que la fusión real ya calculó por par, en vez de recalcular a escala de página — elimina el riesgo de que el render muestre algo que la fusión no ve.
+2. Investigar MU54/MU55/MU72 (u otros "sin par" nuevos de N2) contra el plano real antes de decidir si Tipología B necesita un margen mínimo de diferencia de ancho.
+3. Recién con eso resuelto, re-evaluar si Tipología A y D siguen siendo la prioridad, o si esta regresión pasa a tener prioridad primero (probable, dado Principio 1).
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
