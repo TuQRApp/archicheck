@@ -299,7 +299,18 @@
       <li>Al ir a implementar, se leyó <code>worker.js</code> y <code>App.jsx</code> reales (no memoria desactualizada): <strong>el Worker ya soporta GPT-4o</strong> (proxea a OpenAI, normaliza SSE), y <strong><code>App.jsx</code> ya llama a Claude+GPT-4o en paralelo en CADA análisis completo</strong> — no solo en casos dudosos. Ya está en producción, no hay que construirlo.</li>
       <li>El worker también tiene RAG normativo real (Supabase) y "reglas aprendidas" — ninguno estaba en la memoria del proyecto.</li>
       <li><strong>La falta real</strong>: <code>mergeResults()</code> hoy resuelve cada sección eligiendo el resultado "más largo" (no el más correcto) y nunca muestra al arquitecto que hubo discrepancia real entre modelos.</li>
-      <li>La lógica de decisión ya diseñada (acuerdo/desacuerdo/desempate con Gemini) sigue valiendo — cambia el punto de enganche: es mejorar <code>mergeResults()</code>, no una llamada nueva. Sin implementar todavía.</li>
+      <li>La lógica de decisión ya diseñada (acuerdo/desacuerdo/desempate con Gemini) sigue valiendo — cambia el punto de enganche: es mejorar <code>mergeResults()</code>, no una llamada nueva.</li>
+    </ul>
+  </div>
+
+  <div class="today-box win">
+    <h4>✅ 24 agosto (continuación) — Implementado: detección de desacuerdo en mergeResults(), commit y push a producción</h4>
+    <ul style="margin:6px 0; padding-left:18px; font-size:0.86rem;">
+      <li><code>compararTablas()</code> nueva — empareja filas por nombre normalizado (fuzzy match) en las 4 tablas de Capa 2 y en <code>recintos_por_nivel</code>. Coinciden → fusiona en silencio. Discrepan → a <code>result.discrepancias_ensamble</code>, nunca se descarta. Solo un modelo detectó la fila → se incluye igual, marcada (antes se perdía si su tabla era la más corta).</li>
+      <li>Nueva sección "DISCREPANCIAS ENTRE MODELOS" en la pantalla de resultados.</li>
+      <li>Bug real encontrado y corregido en el camino: <code>mergeObs</code> quedó fuera de scope al mover la lógica a nivel de módulo — movida junto con <code>mergeWordsOf</code>/<code>dedupeArr</code>.</li>
+      <li>Verificado con <code>eslint</code> (sin errores nuevos) y <code>vite build</code> (compila limpio) — <strong>no probado en navegador con análisis real</strong>. Commit <code>b102a28</code>, pusheado a <code>main</code> — Vercel auto-deploy.</li>
+      <li>Gemini como desempate sigue sin implementar.</li>
     </ul>
   </div>
 

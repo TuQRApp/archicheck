@@ -2415,6 +2415,21 @@ Al recibir la instrucción "Empecemos a implementar el ensamble Claude+GPT-4o", 
 
 **Decisión del usuario sobre cómo seguir**: primero corregir la documentación (esta entrada + `Convenciones_CAD.md` D.11) para reflejar el estado real, **antes de rediseñar el mecanismo de detección de desacuerdo sobre esta base correcta** — todavía no se ha rediseñado ni implementado nada de código.
 
+## ✅ 2026-08-24 (continuación) — Mecanismo de desacuerdo implementado en `mergeResults()` (`src/App.jsx`)
+
+Con la documentación ya corregida, se implementó directamente sobre el código real:
+
+- **`compararTablas(t1, t2, keyField, verdictField, origen)`** (nueva, módulo): empareja filas de 2 tablas por nombre normalizado con fuzzy match (sin acentos, substring, o todas las palabras significativas de la más corta contenidas en la más larga — ningún modelo emite un ID estructurado por fila). Fila emparejada con mismo veredicto → fusiona en silencio. Veredicto distinto → discrepancia real, ninguna se descarta. Fila sin par → se incluye igual en la tabla final (antes se perdía entera si su tabla completa era la más corta) y se marca como detectada por un solo modelo.
+- **`mergeSeccionConComparacion`** aplica esto a las 4 tablas de Capa 2 (`recintos_superficies`→`recinto`/`cumple`, `circulaciones`→`elemento`/`cumple`, `iluminacion_ventilacion`→`recinto`/`cumple`, `normativa_urbanistica`→`parametro`/`estado`).
+- **`mergeRecintosPorNivel`** hace lo mismo para Capa 1, emparejando primero por nivel y después por recinto dentro de cada nivel emparejado.
+- Todas las discrepancias se acumulan en `result.discrepancias_ensamble` (union de lo encontrado en Fase 1 y Fase 2).
+- **`mergeObs`/`mergeWordsOf`/`dedupeArr`** se movieron de closure interno de `mergeResults` a nivel de módulo — las necesitan también las funciones nuevas (bug real encontrado y corregido durante la implementación: `mergeObs` no estaba definida donde `compararTablas`/`mergeSeccionConComparacion` la necesitaban).
+- **UI nueva**: sección "DISCREPANCIAS ENTRE MODELOS" en la pantalla de resultados (Capa 2, Etapa E — Consolidación), justo después de "OBSERVACIONES TÉCNICAS" — tabla con tabla de origen, ítem, campo, valor de Claude, valor de GPT-4o.
+
+**Verificación**: `npx eslint` no muestra errores nuevos en el código agregado (los errores/warnings presentes son preexistentes, no relacionados); `npx vite build` compila sin errores. **No se probó en navegador con un análisis real** — requiere subir un plano y ejecutar contra las API keys reales del Worker (Anthropic + OpenAI), no disponible en este entorno.
+
+**Pendiente, explícitamente diferido**: Gemini como desempate (paso 2, se dispara cuando `discrepancias_ensamble` no está vacío) — el array ya deja el punto de enganche listo, pero la llamada a Gemini no está implementada.
+
 ---
 
 ## ✅ 2026-08-24 (continuación) — Auditoría de la implementación de Tipología B/C contra las 3 premisas permanentes + infraestructura real: catálogo estructurado, parámetros movidos al catálogo, mecanismo de conflictos en 2 pasos
