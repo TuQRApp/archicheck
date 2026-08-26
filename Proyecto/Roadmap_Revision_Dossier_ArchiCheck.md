@@ -2616,6 +2616,20 @@ El usuario corrió `26aug_1030` (contexto global revertido). N1 terminó bien, p
 
 ---
 
+## ✅ 2026-08-26 (continuación) — Timestamp en archivos de diagnóstico + log completo descargable de Celda 4 y Celda 6, notebook `26aug_1445`
+
+Pedido del usuario mientras corría la validación del fix de performance. Tres mejoras de flujo de trabajo, sin tocar ninguna lógica de extracción/fusión/clasificación:
+
+**1. Timestamp en los PNG de diagnóstico**: `diag_muros_<página>.png`, `diag_completo_<página>.png` y `diag_contexto_<caso>.png` ahora llevan sufijo `_{_RUN_TS}` (`_RUN_TS` calculado una vez al inicio de la Celda 4, mismo formato `DDmmm_HHMM` que ya se usa para nombrar versiones del notebook — ej. `diag_completo_pag2-2_26aug_1445.png`). Evita que corridas sucesivas en la misma sesión de Colab se pisen entre sí.
+
+**2. Log completo de Celda 4 a `.txt` descargable**: nueva clase `_TeeLog` — espeja todo el `print()` de la celda (no solo algunas líneas puntuales, TODO lo que se imprime, sin tocar ninguno de los cientos de `print()` ya existentes) a un archivo `Celda4_log_{_RUN_TS}.txt`, además de mostrarlo en la consola de Colab como siempre. Reemplaza el flujo manual de "seleccionar todo el output y copiarlo a un .txt" que se venía usando. Se restaura `stdout` real al final de la celda (siempre, incluso si algo falla a mitad de camino — hay un chequeo al inicio que repara una redirección de una corrida anterior que no se cerró bien, en vez de anidarla). Respeta `AUTO_DESCARGAR_DIAGNOSTICOS`: si está en `False` (default), el `.txt` queda en el panel de Archivos para bajar a mano; si está en `True`, se descarga solo junto con los PNG.
+
+**3. Mismo mecanismo en Celda 6** (Informe en consola + guardar JSON): `_TeeLogC6` independiente — genera `Celda6_log_{_RUN_TS}.txt` (reusa el mismo `_RUN_TS` de la Celda 4 si ya corrió en la sesión, o calcula uno propio si Celda 6 se corre sola). Regenerado también `Fase 2/Desarrollos/Test/Celda 6 - copiar en Colab.py` (nuevo, mismo flujo de copiar/pegar que ya se usa para la Celda 4).
+
+Notebook renombrado `ArchiCheck_Base 26aug_1445.ipynb` (anterior `26aug_1030` a `Versiones anteriores/`). Regenerados `Celda 4 - copiar en Colab.py` y `Celda 6 - copiar en Colab.py`. **Sin correr en Colab todavía** — se valida junto con el fix de performance de la entrada anterior en la próxima corrida real.
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
