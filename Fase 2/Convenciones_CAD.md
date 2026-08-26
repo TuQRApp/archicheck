@@ -284,7 +284,7 @@ Cuando el pipeline tiene una duda real clasificando un elemento — no logra dec
 |---|---|---|
 | **GPT-4o** | ✅ Elegido, primer par junto a Claude | Visión probada y comparable, linaje de entrenamiento distinto (discrepancia = señal real), API REST simple de sumar al Worker existente, ya usado en Fase 1 |
 | **Gemini** (2.5 Pro o similar) | 🔲 Paso 2, futuro — no para el lanzamiento inicial | Visión probada (aparece en benchmark propio vía AECV-Bench), linaje distinto a Claude/GPT — aportaría diversidad real si se pasa a votación de mayoría (2 de 3), pero no es necesario para validar el mecanismo con 2 |
-| **DeepSeek** | ❌ No aplica a este rol — posible rol futuro distinto | Sin evidencia (ni en literatura revisada ni en benchmark propio) de capacidad de lectura de planos/símbolos CAD — no asumido sin verificar. Su fortaleza real (razonamiento de texto, código, costo bajísimo) no es la tarea de este ensamble (clasificación visual de un recorte ambiguo). Candidato a evaluar más adelante para: síntesis normativa (RAG sobre OGUC/LGUC/PRC, redacción de citas) o asistente de desarrollo del pipeline — roles de texto, no de visión |
+| **DeepSeek** | ❌ No aplica a este rol (ensamble semántico/visión) — **✅ rol activado por separado, ver abajo** | Sin evidencia (ni en literatura revisada ni en benchmark propio) de capacidad de lectura de planos/símbolos CAD — no asumido sin verificar. Su fortaleza real (razonamiento de texto, código, costo bajísimo) sí encaja como revisor de código — ver "Revisión de código con DeepSeek" más abajo |
 | **Perplexity** | ❌ No aplica | Motor de búsqueda con síntesis (RAG web), no clasificador de imágenes de propósito general — ya cumplió su rol real en el proyecto (investigación de estado del arte), no encaja en clasificación de elementos de plano |
 | **Copilot** | ❌ No aplica | Interfaz sobre modelos de OpenAI (GPT-4/4o) — no es un modelo entrenado de forma independiente; sumarlo junto a GPT-4o no aporta diversidad real, y no tiene API pensada para integración automatizada servidor-a-servidor como sí tienen OpenAI/Google/Anthropic |
 
@@ -297,6 +297,26 @@ Cuando el pipeline tiene una duda real clasificando un elemento — no logra dec
 **Implicancia real**: la justificación original ("llamar a GPT-4o solo en casos dudosos para no duplicar costo") ya no aplica — el costo de la doble llamada ya se paga hoy, en cada análisis. El trabajo de mayor valor no es agregar una llamada nueva — es **agregar detección de desacuerdo sobre datos que ya existen** (`pC1`/`pG1`/`pC2`/`pG2` ya están en memoria al momento de mergear en `App.jsx`) y conectar eso a `TablaDudas`, en vez del flujo de llamadas acotado que se había diseñado (Worker sin tocar, sin llamadas nuevas).
 
 **✅ IMPLEMENTADO (2026-08-24, misma tarde) — sin correr en producción todavía, sin probar en navegador con datos reales**: `mergeResults()` en `src/App.jsx` ahora usa `compararTablas()` (emparejamiento por nombre normalizado con fuzzy match, ningún modelo emite ID estructurado por fila) para las 4 tablas de Capa 2 (`recintos_superficies`, `circulaciones`, `iluminacion_ventilacion`, `normativa_urbanistica`) y para `recintos_por_nivel` (Capa 1) — reemplaza el "gana el más largo" de `mergeSection`. Cada fila emparejada con veredicto (`cumple`/`estado`) distinto, y cada fila detectada por un solo modelo, se acumula en `result.discrepancias_ensamble` — nunca se descarta información de ningún lado. Nueva sección en la pantalla de resultados ("DISCREPANCIAS ENTRE MODELOS") la muestra al arquitecto. Verificado con `npx vite build` (sin errores) — **no probado en vivo** (requiere análisis real con las API keys del Worker). Gemini como desempate (paso 2, cuando `discrepancias_ensamble` no está vacío) sigue sin implementar.
+
+### Revisión de código con DeepSeek (decisión de arquitectura, 2026-08-26)
+
+Rol distinto y separado del ensamble semántico de arriba — **no es sobre planos ni clasificación de elementos, es revisión de calidad de código**, la fortaleza real de DeepSeek (texto/razonamiento/código, no visión).
+
+**Mecánica acordada con el usuario**:
+1. **Disparo manual** — el usuario decide cuándo, no hay cadencia automática ni `/loop`.
+2. **Archivos completos cada vez**, no diffs incrementales.
+3. **Se filtra antes de mostrar** — mismo criterio que la revisión de literatura: no repetir un hallazgo solo porque un modelo lo dijo, solo se presenta lo que parezca un problema real tras verificarlo contra el código.
+
+**Alcance — qué SÍ entra** (código en producción/vigente, no historial ni diagnóstico puntual):
+- Frontend: `src/App.jsx`, `src/main.jsx`, `src/components/CropModal.jsx`, `src/components/SelectorComuna.jsx`, `src/normativa/estacionamientos.js`, `verificador.js` (+ su test)
+- Worker (repo separado): `archicheck-worker/worker.js`, `reglas_aprendidas.js`
+- Pipeline geométrico: `Fase 2/Herramientas_CubiCasa5k/cuerpo_cerrado.py`, `catalogo_tipologias.py` + sus tests (`test_cuerpo_cerrado.py`, `test_threshold_bajo.py`, `celda_test_cubicasa5k.py`)
+- Notebook vigente: `Fase 2/Desarrollos/Test/ArchiCheck_Base <fecha más reciente>.ipynb`
+- Indexación normativa: `normativa/indexar_normativa.mjs`, `extraer_ddu.mjs` y variantes por fuente
+
+**Qué NO entra** (confirmado por auditoría real del repo, 2026-08-26 — no es una lista supuesta): ~100 notebooks históricos en `Versiones anteriores/`, ~60 scripts `_tmp_`/`_celda4_*` de diagnóstico puntual en `Herramientas_CubiCasa5k/`, ~25 scripts `_*` de extracción/depuración ya ejecutados una vez en `normativa/`, y la carpeta `Startup Chile/` (proyecto no relacionado).
+
+**Estado**: mecanismo definido, **sin ejecutar todavía** — falta resolver cómo se invoca DeepSeek en la práctica (API key, integración) la primera vez que el usuario lo dispare.
 
 ---
 

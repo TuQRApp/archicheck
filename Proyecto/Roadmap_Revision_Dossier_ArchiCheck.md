@@ -2630,6 +2630,20 @@ Notebook renombrado `ArchiCheck_Base 26aug_1445.ipynb` (anterior `26aug_1030` a 
 
 ---
 
+## ✅ 2026-08-26 — Decisión de arquitectura: revisión de código periódica con DeepSeek (rol activado, distinto del ensamble semántico)
+
+A raíz de preguntar si valía la pena revisar código con DeepSeek, se definió esto como un rol **separado** del ensamble semántico Claude+GPT-4o (D.11) — no es sobre planos ni visión, es sobre calidad de código, la fortaleza real de DeepSeek ya identificada y diferida el 2026-08-24.
+
+**Mecánica confirmada por el usuario**: (1) disparo manual, sin cadencia automática; (2) archivos completos cada vez, no diffs; (3) las respuestas se filtran antes de mostrarse — mismo criterio que la revisión de literatura, no repetir un hallazgo solo porque el modelo lo dijo.
+
+**Auditoría real del repo hecha antes de fijar el alcance** (el usuario preguntó explícitamente "¿esos 3 archivos son todo el código construido?" — la respuesta, verificada con `find`, fue no): el repo tiene mucho más que los 3 archivos tocados en la implementación del ensamble — frontend completo, Worker separado, pipeline geométrico + tests, ~100 notebooks históricos, ~85 scripts de diagnóstico/extracción puntual (`_tmp_`/`_celda4_*`/`_*`), y una carpeta `Startup Chile/` sin relación con ArchiCheck.
+
+**Alcance final** (código vigente, no historial): `src/App.jsx`/`main.jsx`/componentes/`normativa/*.js` (frontend), `archicheck-worker/worker.js`+`reglas_aprendidas.js` (Worker), `cuerpo_cerrado.py`+`catalogo_tipologias.py`+tests (pipeline geométrico), el notebook `ArchiCheck_Base` más reciente, y los scripts de indexación normativa (`normativa/indexar_normativa.mjs`, `extraer_ddu.mjs`).
+
+Documentado en `Fase 2/Convenciones_CAD.md` D.11, nueva subsección "Revisión de código con DeepSeek". **Estado: mecanismo definido, sin ejecutar todavía** — falta resolver cómo se invoca DeepSeek en la práctica la primera vez.
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
