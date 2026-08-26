@@ -233,7 +233,7 @@ def _segmento_bloqueado_por_ventana(s, contexto, mpx, tol_min_m, tol_max_m, cent
 
 
 # ── Paso A: ancho por emparejamiento de lineas paralelas ────────────────
-def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, hoja_ids=None):
+def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, hoja_ids=None, centrales_ids=None):
     """Para cada segmento de `grupo`, busca en `contexto` (pool completo
     de segmentos cercanos, incluye el propio grupo) un segmento aprox.
     paralelo a distancia perpendicular entre tol_min_m y tol_max_m. Si lo
@@ -244,13 +244,26 @@ def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max
     `hoja_ids`: set opcional de id(segmento) ya identificados como
     hoja/vano de puerta (ver identificar_hojas_de_puerta, Tipologia B de
     Convenciones_CAD D.2) -- se excluyen del pool de posibles "caras de
-    muro" con el mismo criterio que las lineas centrales de ventana."""
+    muro" con el mismo criterio que las lineas centrales de ventana.
+
+    `centrales_ids`: set opcional ya calculado por identificar_lineas_
+    centrales(contexto, ...) -- BUG REAL encontrado 2026-08-26 (corrida
+    real contra PdV, N2 ~834 segmentos protegidos, no terminaba en mas
+    de 1 hora): sin este parametro, esta funcion recalculaba
+    identificar_lineas_centrales (ya O(n^2)) desde cero CADA VEZ que se
+    la llamaba -- identificar_hojas_de_puerta la llama una vez POR
+    SEGMENTO del contexto, multiplicando un O(n^2) por N, o sea O(n^3)
+    real. Si se pasa ya calculado (mismo contexto, no cambia entre
+    llamadas dentro de una misma pasada), se evita ese recalculo
+    redundante sin cambiar ningun resultado -- mismo criterio exacto,
+    solo se computa una vez en vez de N veces."""
     tol_min_px = tol_min_m / mpx
     tol_max_px = tol_max_m / mpx
     # lineas centrales de ventana: se excluyen por completo del pool de
     # posibles "caras de muro" -- ni pueden ser s, ni pueden ser
     # aceptadas como c de otra linea.
-    centrales_ids = identificar_lineas_centrales(contexto, mpx, tol_min_m, tol_max_m)
+    if centrales_ids is None:
+        centrales_ids = identificar_lineas_centrales(contexto, mpx, tol_min_m, tol_max_m)
     hoja_ids = hoja_ids or set()
     mejor_ancho = None
     detalle = []
@@ -312,11 +325,20 @@ def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_
     ancho_por_emparejamiento, que a su vez necesita ESTE resultado via el
     parametro hoja_ids). Devuelve un set de id(segmento): se marcan AMBOS
     lados de cada par identificado como hoja (el segmento que toca al
-    vecino mas ancho, y su propia pareja), no solo uno."""
+    vecino mas ancho, y su propia pareja), no solo uno.
+
+    PERFORMANCE (bug real encontrado 2026-08-26): `centrales_ids` se
+    calcula UNA sola vez aca y se pasa a cada llamada de
+    ancho_por_emparejamiento -- antes se recalculaba adentro de esa
+    funcion en cada una de las N iteraciones de este loop, multiplicando
+    un calculo ya O(n^2) por N (o sea O(n^3) real). Mismo contexto en
+    todo este loop, mismo resultado siempre -- no cambia nada del
+    criterio, solo evita el recalculo redundante."""
     tol_px = tol_vertice_m / mpx
+    _centrales_cache = identificar_lineas_centrales(contexto, mpx, tol_min_m, tol_max_m)
     con_pares_ingenuo = []
     for s in contexto:
-        r = ancho_por_emparejamiento([s], contexto, mpx, tol_min_m, tol_max_m)
+        r = ancho_por_emparejamiento([s], contexto, mpx, tol_min_m, tol_max_m, centrales_ids=_centrales_cache)
         if r['anchoPx'] is None:
             continue
         con_pares_ingenuo.append({'segmento': s, 'par': r['detalle'][0]['par'], 'anchoPx': r['anchoPx']})
@@ -831,12 +853,18 @@ def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=_TOL_MIN_M, tol_
 
     `hoja_ids`: set opcional ya calculado por identificar_hojas_de_puerta
     -- si no se pasa, se calcula aca mismo (Tipologia B, Convenciones_CAD
-    D.2)."""
+    D.2).
+
+    PERFORMANCE (mismo bug real de identificar_hojas_de_puerta, 2026-08-26):
+    `centrales_ids` tambien se calcula UNA vez aca y se pasa al loop, en
+    vez de dejar que cada llamada de ancho_por_emparejamiento la
+    recalcule -- mismo motivo, evita convertir un O(n^2) en O(n^3)."""
     if hoja_ids is None:
         hoja_ids = identificar_hojas_de_puerta(contexto_local, mpx, tol_min_m, tol_max_m)
+    _centrales_cache = identificar_lineas_centrales(contexto_local, mpx, tol_min_m, tol_max_m)
     con_pares = []
     for s in contexto_local:
-        r = ancho_por_emparejamiento([s], contexto_local, mpx, tol_min_m, tol_max_m, hoja_ids=hoja_ids)
+        r = ancho_por_emparejamiento([s], contexto_local, mpx, tol_min_m, tol_max_m, hoja_ids=hoja_ids, centrales_ids=_centrales_cache)
         if r['anchoPx'] is None:
             continue
         con_pares.append({'segmento': s, 'par': r['detalle'][0]['par'], 'anchoPx': r['anchoPx']})

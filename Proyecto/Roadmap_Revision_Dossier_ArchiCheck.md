@@ -2598,6 +2598,24 @@ Notebook renombrado `ArchiCheck_Base 26aug_1030.ipynb` (anterior `25aug_1315` a 
 
 ---
 
+## 🔴✅ 2026-08-26 (continuación) — Segunda corrida, sigue pegada; bug real de complejidad algorítmica en `cuerpo_cerrado.py`, no de alcance
+
+El usuario corrió `26aug_1030` (contexto global revertido). N1 terminó bien, pero **N2 volvió a quedar pegado más de 10 minutos** en el mismo paso (diagnóstico completo) — pantalla mostrando el log detenido justo después de `⏱ Diagnóstico muros (línea): 0:00:00`.
+
+**Causa raíz real, esta vez dentro de `cuerpo_cerrado.py` mismo, no de la Celda 4**: `ancho_por_emparejamiento()` recalculaba `identificar_lineas_centrales()` (ya O(n²)) **desde cero cada vez que se la llamaba**. `identificar_hojas_de_puerta()` la llama **una vez por cada segmento** del contexto — para N2 (~834 segmentos protegidos), eso multiplica un O(n²) por N, es decir **O(n³) real** (~580 millones de operaciones en vez de ~700 mil). Este bug existía desde que se escribió `identificar_hojas_de_puerta` (24-ago) pero nunca se había expuesto: la fusión real siempre trabaja con contextos chicos (un par de muros + vecindad), nunca con el pool completo de la página — el diagnóstico visual es la primera vez que se llama esta función con un contexto grande.
+
+**Arreglado en `cuerpo_cerrado.py`** (no en la Celda 4 esta vez):
+- `ancho_por_emparejamiento()` gana un parámetro opcional `centrales_ids` — si se pasa, lo usa directo en vez de recalcularlo.
+- `identificar_hojas_de_puerta()` calcula `identificar_lineas_centrales()` **una sola vez** antes de su loop, y lo pasa a cada llamada de `ancho_por_emparejamiento` — vuelve de O(n³) a O(n²).
+- `construir_contexto_con_pares()` tenía el mismo patrón (no usada hoy por la fusión real, pero sí es API pública del módulo) — arreglada igual, mismo criterio.
+- Cambio backward-compatible: el parámetro es opcional (`None` por defecto = recalcula como antes), no cambia ningún resultado de los 19 casos de test ya validados — solo evita el recálculo redundante.
+
+**No se tocó la Celda 4 en este paso** — el fix vive enteramente en `cuerpo_cerrado.py`. El usuario necesita **volver a subir `cuerpo_cerrado.py`** a Colab (reemplazando el que ya tiene en la sesión) — y como Python cachea el módulo una vez importado, conviene **reiniciar el entorno de ejecución primero** para no correr la versión vieja pese a haber subido el archivo nuevo (mismo gotcha ya documentado el 23-ago).
+
+**Sin validar en Colab todavía** — estimación (no medida) de que esto debería bajar el tiempo de "Diagnóstico completo" en N2 de "no termina en 1h+" a un rango de segundos a pocos minutos, pero sigue siendo un análisis teórico hasta la próxima corrida real.
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
