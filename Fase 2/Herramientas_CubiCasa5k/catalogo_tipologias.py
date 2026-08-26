@@ -126,11 +126,11 @@ TIPOLOGIAS = {
     "D2-hoja-vano-firma-relativa": {
         "seccion": "D.2", "elemento": "Puertas",
         "nombre": "Vano/hoja de puerta (Tipologia B -- firma RELATIVA)",
-        "criterio": "Par de bordes opuestos mas finos y mas cercanos que el muro/pilar real en sus propios extremos -- puede ser 1 sola linea, nunca mas de 2. A cada lado del vano puede haber muro corto, muro largo, o un pilar",
-        "parametros": {"tol_vertice_m": 0.03},
+        "criterio": "Par de bordes opuestos mas finos y mas cercanos que el muro/pilar real en sus propios extremos -- puede ser 1 sola linea, nunca mas de 2. A cada lado del vano puede haber muro corto, muro largo, o un pilar. LIMITACION CONOCIDA (26-ago, sin resolver): los vertices de una hoja de puerta no necesariamente coinciden con un vertice del muro/pilar adyacente -- la deteccion actual por coincidencia de vertice (tol_vertice_m) puede fallar en ambas direcciones por esto, pendiente de revision futura.",
+        "parametros": {"tol_vertice_m": 0.03, "ancho_max_hoja_confirmada_m": 0.10},
         "estado": "implementado",
-        "implementado_en": ["cuerpo_cerrado.py:identificar_hojas_de_puerta"],
-        "fuente": "2026-08-02, precisado y confirmado 🆕 24-ago (revision visual N2)",
+        "implementado_en": ["cuerpo_cerrado.py:identificar_hojas_de_puerta", "cuerpo_cerrado.py:_firma_hoja_vano_puerta_duda"],
+        "fuente": "2026-08-02, precisado y confirmado 🆕 24-ago (revision visual N2), umbral de duda 🆕 26-ago (caso real MU54/MU55 PdV N2 -- muro de 0.20m junto a muro de 0.30m se excluia mal como hoja; candidatos >10cm ya no se excluyen, quedan como hoja_dudosa_ids para confirmar, no se asume ninguna de las 2 en silencio)",
     },
     "D2-vano-sin-hoja-solo-arco": {
         "seccion": "D.2", "elemento": "Puertas",
@@ -348,8 +348,11 @@ TIPOLOGIAS = {
         "criterio": "Cuando el pipeline no logra decidir con confianza a que tipologia pertenece un trazo, o 2 tipologias compiten por el mismo trazo, se levanta como pregunta puntual (TablaDudas/calcularDudas), nunca se resuelve en silencio ni se pregunta 'en general'",
         "parametros": {},
         "estado": "parcial",
-        "implementado_en": ["cuerpo_cerrado.py:clasificar_no_muro (deteccion de conflicto -- todavia no conectado a TablaDudas real en la webapp)"],
-        "fuente": "2026-08-24",
+        "implementado_en": [
+            "cuerpo_cerrado.py:clasificar_no_muro (deteccion de conflicto -- todavia no conectado a TablaDudas real en la webapp)",
+            "cuerpo_cerrado.py:identificar_hojas_de_puerta (hoja_dudosa_ids -- 26-ago, primer caso real concreto: candidato a hoja/vano mas ancho que 10cm no se resuelve en silencio ni como hoja ni como muro, se separa para confirmar)",
+        ],
+        "fuente": "2026-08-24, primer caso concreto 🆕 26-ago (D.2 hoja/vano)",
     },
 
     # ── D.10 Superficies ─────────────────────────────────────────────────

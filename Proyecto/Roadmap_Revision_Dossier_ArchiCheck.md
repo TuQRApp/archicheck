@@ -2644,6 +2644,28 @@ Documentado en `Fase 2/Convenciones_CAD.md` D.11, nueva subsección "Revisión d
 
 ---
 
+## ✅ 2026-08-26 (continuación) — Investigación real de MU54/MU55: confirma Problema 2, nuevo umbral de "duda" en vez de margen inventado
+
+Con el fix de performance validado (2:58 total), se retomó la investigación pendiente: MU54/MU55 de N2, casos reales que dan "sin par paralelo" y no deberían.
+
+**Investigación visual** (recorte con `sharp` vía Node, mismo método que MU02/MU108 semanas atrás, sobre `diag_completo_pag2-2.png`): MU54 y MU55 son 2 caras reales de un tramo de muro de **0.447m de largo, 0.20m de espesor**, en la pared que separa las 2 Bodegas de N2, junto a un arco de puerta. Confirmado con el log: el candidato de emparejamiento de cada uno es exactamente el otro (dist=0.2m, mismo largo, solape real) — geometría de muro real, no de hoja de puerta.
+
+**Mecanismo confirmado como causa raíz**: `identificar_hojas_de_puerta` compara el ancho de MU54 (≈0.20m) contra CUALQUIER vecino que toque su mismo vértice — y este edificio tiene muros perimetrales reales de ~0.30m dominando el resto del plano. "0.30 > 0.20" dispara la exclusión aunque ambos sean muros reales de espesor legítimamente distinto (D.1 "Encuentro de brazos" ya reconoce esto como caso normal). Root cause confirmado con datos reales, no solo hipótesis.
+
+**Corrección del enfoque, a pedido del arquitecto, antes de implementar**: en vez de un margen/ratio inventado sin dato real que lo respalde, y considerando que **los vértices de una hoja de puerta real no necesariamente coinciden con un vértice del muro/pilar adyacente** (limitación conocida de la detección actual por coincidencia de vértice, documentada pero sin resolver todavía — separado de este fix) — la regla queda: todo candidato a hoja/vano con **ancho propio > 10cm** (`X=10` fijado explícitamente por el arquitecto) **no se excluye como muro**, pero tampoco se asume confirmado como hoja — se separa en un tercer set, `hoja_dudosa_ids`, para levantarse como duda real (Principio 3 / D.9 / TablaDudas) en vez de decidirse en silencio en cualquier dirección. Solo lo más fino (≤10cm, tamaño real de una hoja) se sigue excluyendo con confianza, igual que antes.
+
+**Implementado en `cuerpo_cerrado.py`**:
+- `identificar_hojas_de_puerta()` ahora devuelve `{'hoja_ids': ..., 'hoja_dudosa_ids': ...}` en vez de un solo set — actualizados los 3 call sites internos (`construir_contexto_con_pares`, `_firma_hoja_vano_puerta`) y agregada `_firma_hoja_vano_puerta_duda`, registrada en `FIRMAS_NO_MURO` junto a `ventana` y `hoja_vano_puerta` — se integra directo al mecanismo de conflictos de Principio 3 ya existente, sin lógica nueva aparte.
+- Nuevo parámetro `ancho_max_hoja_confirmada_m` (catálogo, `D2-hoja-vano-firma-relativa`, default 0.10m).
+- `cuerpo_cerrado_fusiona`/la fusión real quedan sin cambios de comportamiento — solo excluyen la CONFIRMADA (`hoja_vano_puerta`), nunca la duda, así que MU54/MU55 y casos similares ahora deberían poder fusionarse como muro real.
+- Test suite: 19→**24 checks** (CASO 9a-e, reproduce sintéticamente el caso MU54/MU55 — hoja "gruesa" de 0.20m NO se excluye, sí queda en duda, y sigue teniendo ancho real para la fusión).
+
+**Celda 4**: nuevo color `_COLOR_HOJA_DUDA` (naranja-rosado) en `diag_completo_<página>.png`, distinto de la hoja confirmada (magenta) — separa visualmente "excluido con confianza" de "excluido no, pero dudoso". Notebook renombrado `ArchiCheck_Base 26aug_1835.ipynb` (anterior `26aug_1445` a `Versiones anteriores/`). Regenerados `Celda 4 - copiar en Colab.py` y `Celda 6 - copiar en Colab.py`.
+
+**Sin correr en Colab todavía** — pendiente: (1) correr el test (24/24 esperado), (2) re-correr contra PdV N1/N2 para ver si el conteo de muros mejora (se espera que sí, dado que casos como MU54/MU55 dejan de perderse), (3) revisar cuántos segmentos quedan en `hoja_dudosa_ids` en la corrida real — si son muchos, puede ser señal de que el umbral de 10cm necesita ajuste, o de que la limitación de vértices mencionada por el arquitecto sí hay que resolverla pronto.
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.

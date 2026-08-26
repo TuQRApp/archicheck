@@ -98,7 +98,7 @@ def main():
     # en identificar_hojas_de_puerta, ese ancho falso de 127px "mas ancho
     # que idx1344" marcaria idx1344/idx1349 como hoja de puerta por
     # error, rompiendo CASO 2. Verifica directamente que NO se marquen. ===
-    hoja_ids_2b = identificar_hojas_de_puerta(contexto2, MPX)
+    hoja_ids_2b = identificar_hojas_de_puerta(contexto2, MPX)['hoja_ids']
     resultados.append(_check_bool('CASO 2b (idx1344/Proyecciones NO marcado como hoja pese al mispairing de idx1324)', False, id(grupo_b_proyecciones[0]) in hoja_ids_2b))
     resultados.append(_check_bool('CASO 2b-control (idx1349/Proyecciones tampoco marcado)', False, id(grupo_b_proyecciones[2]) in hoja_ids_2b))
 
@@ -181,7 +181,7 @@ def main():
     faceB2 = seg((0, 130), (50, 130))
     contexto7 = [face1, face2, hoja1, hoja2, faceB1, faceB2]
 
-    hoja_ids_7 = identificar_hojas_de_puerta(contexto7, MPX5)
+    hoja_ids_7 = identificar_hojas_de_puerta(contexto7, MPX5)['hoja_ids']
     resultados.append(_check_bool('CASO 7a (hoja1 identificada como hoja de puerta)', True, id(hoja1) in hoja_ids_7))
     resultados.append(_check_bool('CASO 7b (hoja2 identificada como hoja de puerta)', True, id(hoja2) in hoja_ids_7))
     resultados.append(_check_bool('CASO 7c (control: face1 del muro real NO marcada como hoja)', False, id(face1) in hoja_ids_7))
@@ -217,6 +217,37 @@ def main():
     r8d = clasificar_no_muro(contexto_cap1, MPX)
     resultados.append(_check_bool('CASO 8d (control real: ventana de CASO 1 no genera conflicto ventana<->hoja, disjuntos por diseno)',
                                    0, len(r8d['conflictos'])))
+
+    # === CASO 9 (NUEVO 2026-08-26) — hoja "gruesa" (>10cm) NO se excluye
+    # como muro, queda marcada como DUDA para confirmar con el arquitecto
+    # -- caso real MU54/MU55 de PdV N2 (muro real de 0.20m junto a un
+    # vecino real de 0.30m, se excluia mal como hoja de puerta antes de
+    # este umbral). Aclaracion del arquitecto: los vertices de una hoja
+    # real no necesariamente coinciden con los del muro/pilar adyacente
+    # (limitacion conocida, sin resolver todavia) -- mientras tanto, en
+    # vez de inventar un margen/ratio sin dato real, todo candidato mas
+    # ancho que ancho_max_hoja_confirmada_m (0.10m) se separa como duda
+    # en vez de decidirse en silencio. Reusa face1/face2 (muro real
+    # 30px=0.30m) del CASO 5. ===
+    hoja_gruesa1 = seg((0, 100), (0, 150))   # ancho 20px = 0.20m a MPX5 -- > 10cm, no es hoja fina
+    hoja_gruesa2 = seg((20, 100), (20, 150))
+    contexto9 = [face1, face2, hoja_gruesa1, hoja_gruesa2]
+
+    resultado9 = identificar_hojas_de_puerta(contexto9, MPX5)
+    resultados.append(_check_bool('CASO 9a (hoja gruesa de 0.20m NO se excluye como hoja confirmada)',
+                                   False, id(hoja_gruesa1) in resultado9['hoja_ids']))
+    resultados.append(_check_bool('CASO 9b (hoja gruesa de 0.20m SI queda marcada como duda)',
+                                   True, id(hoja_gruesa1) in resultado9['hoja_dudosa_ids']))
+    resultados.append(_check_bool('CASO 9c (control: hoja1 fina de CASO 7, 0.10m exacto, sigue confirmada -- limite inclusive)',
+                                   True, id(hoja1) in identificar_hojas_de_puerta(contexto7, MPX5)['hoja_ids']))
+
+    r9 = ancho_por_emparejamiento([hoja_gruesa1], contexto9, MPX5, hoja_ids=resultado9['hoja_ids'])
+    resultados.append(_check_bool('CASO 9d (hoja gruesa SIGUE teniendo ancho real -- no se descarta como muro pese a la duda)',
+                                   True, r9['anchoPx'] is not None))
+
+    clasif9 = clasificar_no_muro(contexto9, MPX5)
+    resultados.append(_check_bool('CASO 9e (clasificar_no_muro tambien expone hoja_vano_puerta_duda)',
+                                   True, id(hoja_gruesa1) in clasif9['sets_por_tipologia']['hoja_vano_puerta_duda']))
 
     n_ok = sum(resultados)
     print(f"\n{n_ok}/{len(resultados)} casos OK")

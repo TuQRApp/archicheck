@@ -41,6 +41,7 @@ _TOL_MIN_M = _param('D1-ancho-emparejamiento', 'tol_min_m', 0.08)
 _TOL_MAX_M = _param('D1-ancho-emparejamiento', 'tol_max_m', 0.9)
 _TOL_SIMETRIA_M = _param('D1-D3-ventana-lineas-centrales', 'tol_simetria_m', 0.05)
 _TOL_VERTICE_M = _param('D2-hoja-vano-firma-relativa', 'tol_vertice_m', 0.03)
+_ANCHO_MAX_HOJA_CONFIRMADA_M = _param('D2-hoja-vano-firma-relativa', 'ancho_max_hoja_confirmada_m', 0.10)
 _MARGEN_CONTEXTO_M = _param('D1-encuentro-de-brazos', 'margen_contexto_m', 0.6)
 _TOL_CONECTOR_ESQUINA_M = _param('D1-encuentro-de-brazos', 'tol_conector_esquina_m', 0.03)
 
@@ -305,7 +306,7 @@ def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max
     }
 
 
-def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, tol_vertice_m=_TOL_VERTICE_M):
+def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, tol_vertice_m=_TOL_VERTICE_M, ancho_max_confirmado_m=_ANCHO_MAX_HOJA_CONFIRMADA_M):
     """Tipologia B (Convenciones_CAD D.2, confirmado por el arquitecto
     2026-08-24, revision visual de N2): un vano/hoja de puerta es un par
     de bordes opuestos MAS FINOS (menor separacion entre caras) que el
@@ -323,9 +324,30 @@ def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_
     Calcula un ancho INGENUO por segmento primero (sin excluir hojas
     todavia -- 2 pasadas, evita la dependencia circular con
     ancho_por_emparejamiento, que a su vez necesita ESTE resultado via el
-    parametro hoja_ids). Devuelve un set de id(segmento): se marcan AMBOS
-    lados de cada par identificado como hoja (el segmento que toca al
-    vecino mas ancho, y su propia pareja), no solo uno.
+    parametro hoja_ids).
+
+    UMBRAL DE CONFIRMACION (2026-08-26, corrida real PdV N2 -- caso
+    MU54/MU55): un muro real de 0.20m junto a un muro real de 0.30m
+    quedaba excluido como "hoja de puerta" -- la regla de arriba
+    ("cualquier vecino mas ancho") no distingue "es una hoja real" de
+    "es un muro real mas angosto que su vecino", que Convenciones_CAD
+    D.1 ya reconoce como caso normal (anchos distintos entre brazos).
+    Aclaracion del arquitecto: los vertices de una hoja de puerta NO
+    necesariamente coinciden con un vertice del muro/pilar adyacente
+    (limitacion conocida de esta deteccion por coincidencia de vertice,
+    sin resolver todavia -- ver roadmap 26-ago). Mientras tanto, en vez
+    de inventar un margen/ratio sin dato real que lo respalde: todo
+    candidato con ancho propio > ancho_max_confirmado_m (0.10m = 10cm
+    por defecto, pedido explicito del arquitecto) NO se excluye como
+    muro (sigue siendo candidato real) pero se separa en
+    `hoja_dudosa_ids` para levantarse como duda (Principio 3, D.9 /
+    TablaDudas) en vez de asumir en silencio que es hoja o que es muro.
+    Solo lo mas fino (<=10cm, tamaño real de una hoja de puerta) se
+    excluye con confianza como antes.
+
+    Devuelve {'hoja_ids': set, 'hoja_dudosa_ids': set} -- en ambos casos
+    se marcan AMBOS lados del par (el segmento que toca al vecino mas
+    ancho, y su propia pareja), no solo uno.
 
     PERFORMANCE (bug real encontrado 2026-08-26): `centrales_ids` se
     calcula UNA sola vez aca y se pasa a cada llamada de
@@ -344,6 +366,7 @@ def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_
         con_pares_ingenuo.append({'segmento': s, 'par': r['detalle'][0]['par'], 'anchoPx': r['anchoPx']})
 
     hoja_ids = set()
+    hoja_dudosa_ids = set()
     for item in con_pares_ingenuo:
         s, ancho_s = item['segmento'], item['anchoPx']
         encontrado = False
@@ -367,14 +390,15 @@ def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_
                 for extremo_v in (vecino['p1'], vecino['p2']):
                     d = math.hypot(extremo[0] - extremo_v[0], extremo[1] - extremo_v[1])
                     if d <= tol_px and ancho_v > ancho_s:
-                        hoja_ids.add(id(s))
+                        _destino = hoja_ids if (ancho_s * mpx) <= ancho_max_confirmado_m else hoja_dudosa_ids
+                        _destino.add(id(s))
                         if item.get('par') is not None:
-                            hoja_ids.add(id(item['par']))
+                            _destino.add(id(item['par']))
                         encontrado = True
                         break
                 if encontrado:
                     break
-    return hoja_ids
+    return {'hoja_ids': hoja_ids, 'hoja_dudosa_ids': hoja_dudosa_ids}
 
 
 # ── Clasificacion en 2 pasos + deteccion de conflictos (Principio 3) ────
@@ -397,8 +421,9 @@ def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_
 #   'conflictos', listo para levantarse como pregunta en TablaDudas (D.9),
 #   nunca resuelto adivinando cual tipologia "vale mas".
 #
-# Extensible: hoy solo compone las 2 firmas que viven en este modulo
-# (ventana, hoja/vano de puerta). Los detectores de eje/cota/corte-
+# Extensible: hoy compone las 3 firmas que viven en este modulo (ventana,
+# hoja/vano de puerta confirmada, hoja/vano de puerta duda -- ver umbral
+# 26-ago en identificar_hojas_de_puerta). Los detectores de eje/cota/corte-
 # rasante (D.6) viven en la Celda 4 sobre `segmentos_l`/indices, no sobre
 # id(segmento) -- se pueden sumar via el parametro `sets_externos` sin
 # tocar esta funcion, convirtiendo esos indices a sets de id(segmento)
@@ -408,12 +433,21 @@ def _firma_ventana(contexto, mpx, tol_min_m, tol_max_m):
 
 
 def _firma_hoja_vano_puerta(contexto, mpx, tol_min_m, tol_max_m):
-    return identificar_hojas_de_puerta(contexto, mpx, tol_min_m, tol_max_m)
+    return identificar_hojas_de_puerta(contexto, mpx, tol_min_m, tol_max_m)['hoja_ids']
+
+
+def _firma_hoja_vano_puerta_duda(contexto, mpx, tol_min_m, tol_max_m):
+    # Candidatos a hoja/vano mas anchos que ancho_max_hoja_confirmada_m
+    # (2026-08-26, caso real MU54/MU55 PdV N2) -- NO se excluyen como
+    # muro (ver identificar_hojas_de_puerta), pero se levantan aca como
+    # duda real para TablaDudas (D.9) en vez de decidirse en silencio.
+    return identificar_hojas_de_puerta(contexto, mpx, tol_min_m, tol_max_m)['hoja_dudosa_ids']
 
 
 FIRMAS_NO_MURO = {
     'ventana': _firma_ventana,                 # Convenciones_CAD D.1/D.3
     'hoja_vano_puerta': _firma_hoja_vano_puerta,  # Convenciones_CAD D.2
+    'hoja_vano_puerta_duda': _firma_hoja_vano_puerta_duda,  # Convenciones_CAD D.2, umbral 26-ago
 }
 
 
@@ -860,7 +894,7 @@ def construir_contexto_con_pares(contexto_local, mpx, tol_min_m=_TOL_MIN_M, tol_
     vez de dejar que cada llamada de ancho_por_emparejamiento la
     recalcule -- mismo motivo, evita convertir un O(n^2) en O(n^3)."""
     if hoja_ids is None:
-        hoja_ids = identificar_hojas_de_puerta(contexto_local, mpx, tol_min_m, tol_max_m)
+        hoja_ids = identificar_hojas_de_puerta(contexto_local, mpx, tol_min_m, tol_max_m)['hoja_ids']
     _centrales_cache = identificar_lineas_centrales(contexto_local, mpx, tol_min_m, tol_max_m)
     con_pares = []
     for s in contexto_local:
