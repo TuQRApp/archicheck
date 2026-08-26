@@ -2582,6 +2582,22 @@ Notebook renombrado `ArchiCheck_Base 25aug_1315.ipynb` (anterior `25aug_1227` a 
 
 ---
 
+## 🔴✅ 2026-08-26 — Corrida real: la "corrección" del contexto local resultó ser una regresión de performance grave, sin mejorar la corrección; revertida
+
+El usuario corrió `25aug_1315` contra PdV real. N1 (pool chico de segmentos protegidos) terminó bien — `⏱ Diagnóstico completo: 0:00:49`. Pero **N2 (~834 segmentos protegidos) llevaba más de 1 hora sin terminar ese mismo bloque** cuando el usuario interrumpió para avisar. Session pausada, arreglo urgente.
+
+**Causa raíz — error propio de diseño, no un bug de sintaxis**: el arreglo de "Problema 1" (25-ago, contexto local por segmento) cambió la clasificación de ventana/hoja de **1 sola llamada global** (`clasificar_no_muro(_seg_pool_clasif, mpx)`, O(n²) una vez) a **1 llamada POR CADA segmento**, cada una re-recorriendo TODO el pool para armar su propio contexto local antes de clasificar. Eso sigue siendo O(n²) por cada segmento — es decir, mucho peor, no mejor. Con n≈834 en N2, la explosión combinatoria hizo que nunca terminara en un tiempo razonable.
+
+**Y no valía la pena ni por corrección**: el log de la corrida mostró que N1 dio `ventana=83` — **exactamente el mismo número** con contexto local que con contexto global (corrida del día anterior). Esto confirma algo importante: **el problema real de fondo nunca fue "contexto global vs. local"** — es que `identificar_hojas_de_puerta()` marca a un segmento como hoja de puerta ante **cualquier** vecino con ancho mayor, sin exigir un margen mínimo real de diferencia. Eso pasa igual de mal a escala local que a escala global, porque en un edificio real casi cualquier segmento tiene ALGÚN vecino apenas más ancho por ruido de medición. Enfocarse en "local vs. global" fue una desviación del problema real — el mismo `identificar_hojas_de_puerta` sin margen mínimo (candidatos MU54/MU55/MU72 de N2, ya identificados el 25-ago, nunca investigados) sigue siendo la causa de fondo.
+
+**Revertido**: la clasificación de ventana/hoja/conflicto para el diagnóstico visual vuelve a 1 sola llamada global (`clasificar_no_muro(_seg_pool_clasif, mpx)`), igual que la versión original del 24-ago — rápida y ya validada en tiempo, aunque siga siendo sobre-inclusiva (eso es un problema aparte, de fondo, no de alcance). Comentarios del bloque actualizados para no dejar la explicación vieja (que decía "corregido con contexto local") contradiciendo el código real.
+
+Notebook renombrado `ArchiCheck_Base 26aug_1030.ipynb` (anterior `25aug_1315` a `Versiones anteriores/`). Regenerado `Celda 4 - copiar en Colab.py`.
+
+**Próximo paso, ahora sin desvíos**: investigar MU54/MU55/MU72 de N2 contra el plano real (mismo método que MU02/MU108/MU03_MU04/MU06) para confirmar si `identificar_hojas_de_puerta` necesita un margen mínimo de diferencia de ancho (ej. "el vecino debe ser al menos X% más ancho, no solo distinto") antes de excluir un segmento como hoja de puerta — recién ahí el resultado visual (y probablemente los conteos de fusión) debería mejorar de verdad. **Sin correr en Colab todavía.**
+
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
