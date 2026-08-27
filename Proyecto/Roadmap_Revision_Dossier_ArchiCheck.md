@@ -2727,6 +2727,18 @@ Con el mecanismo ya definido el 26-ago pero sin ejecutar todavía, el usuario di
 Documentado en `Fase 2/Convenciones_CAD.md` D.11, subsección renombrada "Revisión de código con modelos de IA".
 
 ---
+
+## 🔲 2026-08-27 (continuación) — Cursor: 2 caminos identificados, decisión pendiente del usuario
+
+Investigado con más detalle a raíz de la pregunta "¿para Cursor no tenemos todo en GitHub?" — cambia la evaluación anterior (que asumía que Bugbot no aplicaba por trabajar solo sobre GitHub, sin notar que los repos SÍ están en GitHub).
+
+**Camino A — Bugbot vía GitHub**: confirmado que `archicheck` es público (`TuQRApp/archicheck`) → probablemente tier gratuito de Bugbot para repos públicos/uso individual; `archicheck-worker` da 404 sin autenticación → parece privado → ahí se cobra por corrida (~US$1-1.50 desde jun-2026) más asiento de Cursor (US$20-40/usuario). Pero Bugbot solo revisa Pull Requests, no commits directos a `main` — y todo el trabajo de esta semana (ambas ventanas de Claude) fue commit+push directo a `main`, nunca se abrió un PR. Adoptar este camino implica trabajar en ramas + abrir PR para lo que se quiera revisar (el contenido del PR define el alcance exacto de la revisión — control total). Requiere que el usuario instale la GitHub App de Cursor en el repo (acción de cuenta, no delegable a Claude). Automatizar la apertura de PRs necesitaría el CLI `gh` de GitHub — **no está instalado en esta máquina**.
+
+**Camino B — `cursor-agent` CLI headless**: mismo flujo manual de hoy (sin PRs) — el CLI opera como agente que lee el repo directamente (no se le pega el contenido en el prompt como a DeepSeek/Codex), autenticado con `CURSOR_API_KEY`. Tampoco instalado.
+
+**Pendiente**: el usuario debe elegir A, B, o ambos, antes de instalar/configurar nada. Documentado en `Fase 2/Convenciones_CAD.md` D.11.
+
+---
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
