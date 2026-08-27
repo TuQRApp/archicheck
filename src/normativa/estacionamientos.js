@@ -3,6 +3,11 @@ import reglasNunoa from "../../normativa/nunoa/estacionamientos.json";
 // Índice de reglas por comunaId
 const REGLAS_POR_COMUNA = { nunoa: reglasNunoa.reglas };
 
+// Única fuente de verdad de qué comunas tienen reglas de estacionamiento cargadas —
+// deriva de REGLAS_POR_COMUNA en vez de repetirse como literal en quien la consuma
+// (mismo patrón que COMUNAS_CON_VERIFICACION en verificador.js).
+export const COMUNAS_CON_ESTACIONAMIENTOS = Object.keys(REGLAS_POR_COMUNA);
+
 const c = Math.ceil;
 const mx = Math.max;
 

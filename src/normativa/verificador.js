@@ -3,6 +3,7 @@ import patrimonioNunoa    from "../../normativa/nunoa/patrimonio.json";
 import normasProvidencia   from "../../normativa/providencia/normas_edificacion.json";
 import patrimonioProvidencia from "../../normativa/providencia/patrimonio.json";
 import reglasNacionales   from "../../normativa/nacional/reglas_verificacion.json";
+import restriccionesNunoa from "../../normativa/nunoa/restricciones_condicionales.json";
 
 // ── Índices por comunaId ────────────────────────────────────────────────────
 const NORMAS = {
@@ -14,6 +15,18 @@ const PATRIMONIO = {
   nunoa:       patrimonioNunoa.reduce((acc, p)       => { acc[p.id] = p; return acc; }, {}),
   providencia: patrimonioProvidencia.reduce((acc, p) => { acc[p.id] = p; return acc; }, {}),
 };
+
+// Única fuente de verdad de qué comunas tienen verificación cuantitativa determinista
+// (COS/CC/altura/subdivisión) — deriva de NORMAS en vez de repetirse como literal en
+// otros archivos (ver App.jsx, panel "Parámetros cuantitativos").
+export const COMUNAS_CON_VERIFICACION = Object.keys(NORMAS);
+
+// Restricciones condicionales por comuna (reglas del tipo "si <condición del proyecto>,
+// entonces límites más estrictos que los de la zona" — ej. Art. 18 PRC Ñuñoa para calle
+// frentera angosta). Viven en un JSON aparte por comuna en vez de un if/else por comunaId
+// en verificarProyecto: agregar la misma restricción a otra comuna es agregar un JSON,
+// no tocar este archivo. Comunas sin el JSON simplemente no tienen restricciones (`[]`).
+const RESTRICCIONES_CONDICIONALES = { nunoa: restriccionesNunoa };
 
 // Prioridad de instrumentos (mayor índice = mayor prioridad)
 const PRIORIDAD = { zona: 0, ZT: 1, ZCH: 2, MH: 3, ICH: 4, restriccion: 5 };
@@ -76,6 +89,37 @@ function resolverNormas(zonaId, patriId, comunaId) {
 
 // ── Verificador principal ───────────────────────────────────────────────────
 
+/** Evalúa un límite de una restricción condicional contra el proyecto. null si el campo no viene. */
+function evaluarLimite(proyecto, lim) {
+  const valor = proyecto[lim.campo];
+  if (valor == null) return null;
+  const cumple = lim.operador === ">=" ? valor >= lim.valor : valor <= lim.valor;
+  const valorFmt = fmt(valor, lim.decimales ?? 0);
+  return {
+    cumple,
+    propuesto: (lim.propuestoTexto || "{valor}").replace("{valor}", valorFmt),
+    mensaje: (cumple ? lim.mensajeCumple : lim.mensajeIncumple).replace("{valor}", valorFmt),
+  };
+}
+
+/** Restricciones condicionales de una comuna cuya condición de activación cumple el proyecto. */
+function evaluarRestriccionesCondicionales(proyecto, comunaId) {
+  const restricciones = RESTRICCIONES_CONDICIONALES[comunaId] || [];
+  const resultados = [];
+  for (const r of restricciones) {
+    const valorCondicion = proyecto[r.condicion.campo];
+    if (valorCondicion == null) continue;
+    const activa = r.condicion.operador === ">=" ? valorCondicion >= r.condicion.valor : valorCondicion <= r.condicion.valor;
+    if (!activa) continue;
+    for (const lim of r.limites) {
+      const ev = evaluarLimite(proyecto, lim);
+      if (!ev) continue;
+      resultados.push(resultado(lim.parametro, ev.propuesto, lim.limiteTexto, ev.cumple, ev.mensaje, r.referencia));
+    }
+  }
+  return resultados;
+}
+
 /**
  * Verifica las reglas de normativa nacional que aplican al tipo de proyecto.
  * @param {string[]} tiposProyecto - ej: ['obra_nueva', 'residencial']
@@ -132,7 +176,6 @@ export function verificarProyecto(proyecto, zonaId, comunaId = "nunoa", patriId 
     pisosProyectados,
     antejardínProyectado,
     densidadProyectada,
-    anchoCalleFrentera,
   } = proyecto;
 
   // 1. Subdivisión predial mínima
@@ -233,43 +276,10 @@ export function verificarProyecto(proyecto, zonaId, comunaId = "nunoa", patriId 
     ));
   }
 
-  // 8. Regla calle ≤ 12m (Art. 18 PRC Ñuñoa — solo aplica a Ñuñoa)
-  if (comunaId === "nunoa" && anchoCalleFrentera != null && anchoCalleFrentera <= 12) {
-    const refArt18 = "Art. 18 PRC Ñuñoa — Calle frentera ≤ 12m";
-    if (pisosProyectados != null) {
-      const cumple = pisosProyectados <= 3;
-      resultados.push(resultado(
-        "Art. 18 — Pisos (calle ≤ 12m)",
-        `${pisosProyectados} pisos`,
-        "≤ 3 pisos",
-        cumple,
-        cumple ? "Cumple restricción Art. 18 en número de pisos." : `Frente a calle ≤ 12m: máximo 3 pisos. Proyectado: ${pisosProyectados}.`,
-        refArt18,
-      ));
-    }
-    if (alturaM != null) {
-      const cumple = alturaM <= 8;
-      resultados.push(resultado(
-        "Art. 18 — Altura en metros (calle ≤ 12m)",
-        `${fmt(alturaM, 1)} m`,
-        "≤ 8 m",
-        cumple,
-        cumple ? "Cumple restricción Art. 18 en altura." : `Frente a calle ≤ 12m: máximo 8 m. Proyectado: ${fmt(alturaM, 1)} m.`,
-        refArt18,
-      ));
-    }
-    if (ccProyectado != null) {
-      const cumple = ccProyectado <= 1.0;
-      resultados.push(resultado(
-        "Art. 18 — CC (calle ≤ 12m)",
-        fmt(ccProyectado, 2),
-        "≤ 1.00",
-        cumple,
-        cumple ? "Cumple restricción Art. 18 en CC." : `Frente a calle ≤ 12m: CC máximo 1.0. Proyectado: ${fmt(ccProyectado, 2)}.`,
-        refArt18,
-      ));
-    }
-  }
+  // 8. Restricciones condicionales de la comuna (ej. Art. 18 PRC Ñuñoa — calle ≤ 12m).
+  // La condición y los límites viven en restricciones_condicionales.json de cada comuna,
+  // no acá — este bloque es genérico para cualquier comuna que tenga ese archivo.
+  resultados.push(...evaluarRestriccionesCondicionales(proyecto, comunaId));
 
   // Agregar alertas de normativa nacional según tipo de proyecto
   const tiposProyecto = proyecto.tiposProyecto ?? ["todos"];

@@ -2,7 +2,7 @@
 import { createPortal } from "react-dom";
 import * as pdfjsLib from "pdfjs-dist";
 import SelectorComuna from './components/SelectorComuna.jsx';
-import { verificarProyecto, listarZonas } from './normativa/verificador.js';
+import { verificarProyecto, listarZonas, COMUNAS_CON_VERIFICACION } from './normativa/verificador.js';
 import ogucArticulos from "../normativa/nacional/oguc_articulos.json";
 import lgucArticulos from "../normativa/nacional/lguc_articulos.json";
 import ley19300Articulos from "../normativa/nacional/ley19300_articulos.json";
@@ -3506,7 +3506,7 @@ ${printRef.current.innerHTML}
             )}
 
             {/* Parámetros cuantitativos — verificación determinista (opcional) */}
-            {(comuna === "nunoa" || comuna === "providencia") && (
+            {COMUNAS_CON_VERIFICACION.includes(comuna) && (
               <div style={{ marginBottom: 14, border: "1px solid #D1D9EE", borderRadius: 10, overflow: "hidden" }}>
                 <button
                   onClick={() => setFichaExpanded(p => !p)}

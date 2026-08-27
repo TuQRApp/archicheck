@@ -1,0 +1,42 @@
+[
+  {
+    "id": "art18-calle-12m",
+    "referencia": "Art. 18 PRC Ñuñoa — Calle frentera ≤ 12m",
+    "condicion": { "campo": "anchoCalleFrentera", "operador": "<=", "valor": 12 },
+    "limites": [
+      {
+        "campo": "pisosProyectados",
+        "operador": "<=",
+        "valor": 3,
+        "decimales": 0,
+        "parametro": "Art. 18 — Pisos (calle ≤ 12m)",
+        "propuestoTexto": "{valor} pisos",
+        "limiteTexto": "≤ 3 pisos",
+        "mensajeCumple": "Cumple restricción Art. 18 en número de pisos.",
+        "mensajeIncumple": "Frente a calle ≤ 12m: máximo 3 pisos. Proyectado: {valor}."
+      },
+      {
+        "campo": "alturaM",
+        "operador": "<=",
+        "valor": 8,
+        "decimales": 1,
+        "parametro": "Art. 18 — Altura en metros (calle ≤ 12m)",
+        "propuestoTexto": "{valor} m",
+        "limiteTexto": "≤ 8 m",
+        "mensajeCumple": "Cumple restricción Art. 18 en altura.",
+        "mensajeIncumple": "Frente a calle ≤ 12m: máximo 8 m. Proyectado: {valor} m."
+      },
+      {
+        "campo": "ccProyectado",
+        "operador": "<=",
+        "valor": 1.0,
+        "decimales": 2,
+        "parametro": "Art. 18 — CC (calle ≤ 12m)",
+        "propuestoTexto": "{valor}",
+        "limiteTexto": "≤ 1.00",
+        "mensajeCumple": "Cumple restricción Art. 18 en CC.",
+        "mensajeIncumple": "Frente a calle ≤ 12m: CC máximo 1.0. Proyectado: {valor}."
+      }
+    ]
+  }
+]
