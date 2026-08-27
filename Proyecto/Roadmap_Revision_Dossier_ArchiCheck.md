@@ -2689,6 +2689,26 @@ Primera corrida completa del pipeline (con todos los arreglos de esta semana) co
 Notebook renombrado `ArchiCheck_Base 27aug_0930.ipynb` (anterior `26aug_1835` a `Versiones anteriores/`). Regenerados `Celda 4 - copiar en Colab.py` y `Celda 6 - copiar en Colab.py`. **Sin correr en Colab todavía** — el usuario no bajó el `Celda4_log_*.txt` de la corrida de Beauchef que sí se hizo, así que no hay conteos numéricos de esa corrida para esta entrada — solo el hallazgo visual (PNG) que motivó el fix.
 
 ---
+
+## 🔴✅ 2026-08-27 (continuación) — La corrida de Beauchef de la noche anterior quedó truncada por otro bug real de performance: `cuerpo_cerrado_fusiona()` recalculaba `clasificar_no_muro()` completo en cada par evaluado
+
+El usuario reportó que la corrida de Beauchef de la noche del 26-27 (`Celda 4 beauchef.txt`, log que arranca 02:17:43) "se demoró muchísimo tiempo" y que en Colab se veía truncada — compartió captura (`Screenshot_515.jpg`).
+
+**Confirmado con 2 evidencias independientes, no solo apariencia de UI:**
+1. El `.txt` guardado a disco (vía `_TeeLog`, independiente del panel de output del navegador) tiene 2827 líneas y termina en medio de un bloque `DIAG bloqueado`/`DIAG PAREJA` de la página 4 (S. de Basura, la más ruidosa: 944 muros exportados, 729 descartados por ángulo no-ortogonal) — sin ninguna línea `⏱ Fin página`, `⏱ Celda 4 finalizada` ni `Procesadas X/Y páginas`.
+2. La captura de pantalla de Colab muestra el mismo tipo de corte — output terminando en medio de un bloque `DIAG bloqueado`/`DIAG PAREJA`, sin resumen de cierre.
+
+Como el archivo en disco (no solo el panel del navegador) también corta ahí, **no es truncamiento de UI — la ejecución de Python real se interrumpió** (desconexión de runtime de Colab tras correr toda la noche, lo más probable dado el volumen de trabajo real encontrado, ver abajo).
+
+**Causa raíz real, confirmada leyendo el código (no supuesta):** `cuerpo_cerrado_fusiona()` (la función que decide, para cada par candidato de la fusión real — no solo el diagnóstico visual — si son el mismo cuerpo cerrado) llama a `clasificar_no_muro(contexto_local, mpx)` **sin cachear, en cada una de las evaluaciones de pares** del loop principal de `_fusionar_muros_por_proximidad` (Celda 4). Eso corre las 3 firmas (`ventana`, `hoja_vano_puerta`, `hoja_vano_puerta_duda`) desde cero cada vez — y dentro de una sola llamada a `cuerpo_cerrado_fusiona()`, `identificar_lineas_centrales()` (O(n²)) se recalculaba en la práctica ~4 veces (una por la firma ventana, una cada una de las 2 firmas de hoja vía su propia llamada interna a `identificar_hojas_de_puerta()`, y una más en `construir_contexto_con_pares()`) y `identificar_hojas_de_puerta()` (también O(n²)) se recalculaba 2 veces (una por cada firma de hoja, con los mismos argumentos). Página 4, con 944 entradas, genera muchos pares candidatos vía el bucketing espacial ya existente — cada uno pagando ese trabajo redundante completo. Es la misma familia de bug que el O(n³) ya corregido el 26-ago (recálculo no cacheado de una función O(n²) dentro de un loop), pero en un punto más arriba y más caliente: el loop real de fusión, no solo el bloque de diagnóstico/duda.
+
+**Arreglado**: cache de 1 slot por identidad de objeto (no por valor, evita cualquier riesgo de servir un resultado obsoleto) agregado directamente dentro de `identificar_lineas_centrales()` y `identificar_hojas_de_puerta()` en `cuerpo_cerrado.py` — se invalida automáticamente en cuanto llega un `contexto` distinto (una lista nueva, como pasa en cada par `i,j` del loop de fusión) o cambian los parámetros. Elimina la redundancia *dentro* de cada llamada a `cuerpo_cerrado_fusiona()` sin tocar ningún criterio de clasificación ni de fusión — mismo resultado, menos recálculo. No requiere cambios en el notebook (Celdas 4/6): el fix vive enteramente en `cuerpo_cerrado.py`, uno de los 3 `.py` que el usuario sube directo a Colab.
+
+**Advertencia honesta, no resuelta todavía**: este fix reduce el trabajo redundante *por par evaluado*, pero no cambia que la página 4 sigue siendo la más pesada del proyecto (944 entradas, más del doble que cualquier otra página de Beauchef) — no está confirmado que esto sea suficiente para que termine en tiempo razonable. Si sigue lento tras este fix, el siguiente sospechoso es el tamaño del contexto local (`contexto_par`, filtrado por bbox + `RADIO_CONTEXTO_PX`) en esa página específica, no la redundancia ya corregida.
+
+**Pendiente inmediato**: el usuario debe volver a subir el `cuerpo_cerrado.py` actualizado a Colab (mismo flujo ya usado para los 3 `.py`) y re-correr Beauchef completo, bajando el `Celda4_log_*.txt` nuevo para confirmar (a) que termina, (b) cuánto demora, y (c) si el bug del relleno sólido silencioso (entrada anterior) ya no reaparece en Taller/Casino/Camarín.
+
+---
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)

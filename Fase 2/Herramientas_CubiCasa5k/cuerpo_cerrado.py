@@ -117,9 +117,28 @@ def _sign(x):
     return 0
 
 
+_CACHE_CENTRALES = {'contexto': None, 'params': None, 'resultado': None}
+
+
 def identificar_lineas_centrales(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, tol_simetria_m=_TOL_SIMETRIA_M):
     """Devuelve un set de id(segmento) -- identidad de objeto, no de
-    valor, igual que el Set de objetos del prototipo .mjs."""
+    valor, igual que el Set de objetos del prototipo .mjs.
+
+    CACHE de 1 slot (bug real encontrado 2026-08-27, corrida Beauchef
+    truncada por lentitud): cuerpo_cerrado_fusiona llama a
+    clasificar_no_muro en CADA una de las O(n^2) evaluaciones de pares
+    del loop de fusion (Celda 4) -- y clasificar_no_muro, mas
+    identificar_hojas_de_puerta y construir_contexto_con_pares mas abajo
+    en la MISMA llamada, recalculaban esta funcion (O(n^2) cada vez)
+    varias veces sobre el MISMO `contexto_local`. Un cache de 1 slot,
+    valido solo mientras `contexto` sea el mismo objeto (identidad, no
+    valor) y los parametros no cambien, elimina esa redundancia sin
+    cambiar el resultado -- se invalida solo con que llegue un
+    `contexto` distinto (list nueva por cada par i,j en el loop de
+    fusion), asi que nunca sirve un resultado stale."""
+    _params = (mpx, tol_min_m, tol_max_m, tol_simetria_m)
+    if _CACHE_CENTRALES['contexto'] is contexto and _CACHE_CENTRALES['params'] == _params:
+        return _CACHE_CENTRALES['resultado']
     tol_min_px = tol_min_m / mpx
     tol_max_px = tol_max_m / mpx
     tol_sim_px = tol_simetria_m / mpx
@@ -155,6 +174,9 @@ def identificar_lineas_centrales(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=
                 centrales.add(id(l))
                 encontrado = True
                 break
+    _CACHE_CENTRALES['contexto'] = contexto
+    _CACHE_CENTRALES['params'] = _params
+    _CACHE_CENTRALES['resultado'] = centrales
     return centrales
 
 
@@ -306,6 +328,9 @@ def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max
     }
 
 
+_CACHE_HOJAS = {'contexto': None, 'params': None, 'resultado': None}
+
+
 def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_TOL_MAX_M, tol_vertice_m=_TOL_VERTICE_M, ancho_max_confirmado_m=_ANCHO_MAX_HOJA_CONFIRMADA_M):
     """Tipologia B (Convenciones_CAD D.2, confirmado por el arquitecto
     2026-08-24, revision visual de N2): un vano/hoja de puerta es un par
@@ -355,7 +380,19 @@ def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_
     funcion en cada una de las N iteraciones de este loop, multiplicando
     un calculo ya O(n^2) por N (o sea O(n^3) real). Mismo contexto en
     todo este loop, mismo resultado siempre -- no cambia nada del
-    criterio, solo evita el recalculo redundante."""
+    criterio, solo evita el recalculo redundante.
+
+    CACHE de 1 slot adicional (2026-08-27, mismo bug de fondo que arriba
+    pero un nivel mas afuera): _firma_hoja_vano_puerta y
+    _firma_hoja_vano_puerta_duda (FIRMAS_NO_MURO) llaman a ESTA funcion
+    completa cada una, con los mismos argumentos, dentro de la MISMA
+    llamada a clasificar_no_muro -- duplicando el O(n^2) de este loop
+    sin necesidad. Igual criterio de invalidacion que
+    identificar_lineas_centrales: solo sirve si `contexto` es el MISMO
+    objeto y los parametros no cambiaron."""
+    _params = (mpx, tol_min_m, tol_max_m, tol_vertice_m, ancho_max_confirmado_m)
+    if _CACHE_HOJAS['contexto'] is contexto and _CACHE_HOJAS['params'] == _params:
+        return _CACHE_HOJAS['resultado']
     tol_px = tol_vertice_m / mpx
     _centrales_cache = identificar_lineas_centrales(contexto, mpx, tol_min_m, tol_max_m)
     con_pares_ingenuo = []
@@ -398,7 +435,11 @@ def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_
                         break
                 if encontrado:
                     break
-    return {'hoja_ids': hoja_ids, 'hoja_dudosa_ids': hoja_dudosa_ids}
+    _resultado = {'hoja_ids': hoja_ids, 'hoja_dudosa_ids': hoja_dudosa_ids}
+    _CACHE_HOJAS['contexto'] = contexto
+    _CACHE_HOJAS['params'] = _params
+    _CACHE_HOJAS['resultado'] = _resultado
+    return _resultado
 
 
 # ── Clasificacion en 2 pasos + deteccion de conflictos (Principio 3) ────
