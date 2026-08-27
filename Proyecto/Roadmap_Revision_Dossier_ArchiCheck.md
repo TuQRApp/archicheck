@@ -2666,6 +2666,31 @@ Con el fix de performance validado (2:58 total), se retomó la investigación pe
 
 ---
 
+## ✅ 2026-08-27 — Corrida real PdV con el umbral de duda: mejora chica en conteos, revela patrón de duda muy amplio en N1
+
+El usuario corrió el test (resultado no confirmado explícitamente, se asume 24/24 dado que no se reportó ningún fallo) y después la Celda 4 contra PdV real.
+
+**Resultado**: N1 61→**58** muros (target 28), N2 46→**42** muros (target 33) — mejora en ambos, pero chica. `hoja/vano CONFIRMADA (<=10cm)`: 2 en N1, 4 en N2. `hoja/vano DUDA (>10cm, no excluida)`: **52 en N1, 30 en N2** — 82 segmentos en duda entre las 2 páginas, número alto.
+
+**Hallazgo visual** (comparando `diag_completo_pag2-1_27aug_0120.png` contra la corrida anterior): el relleno sólido azul-slate de los muros ya es claramente visible (el magenta que antes tapaba todo desapareció en su mayor parte) — mejora real de legibilidad. Pero el color naranja-rosado (duda) traza **casi todo el perímetro de N1**, mientras que en N2 aparece mucho más localizado (cerca de arcos de puerta, zona de baños/pasillo) — asimetría real entre páginas, no ruido: sugiere que en N1 el mecanismo "vértice + cualquier vecino más ancho" dispara de forma generalizada (compatible con la limitación de vértices ya señalada por el arquitecto, sin resolver), mientras que en N2 el patrón se parece más a ambigüedad real puntual.
+
+**Decisión del usuario**: queda pendiente investigar por qué N1 da duda tan generalizada — no se investiga ahora, se prioriza probar el pipeline contra un proyecto real distinto (Beauchef) primero, como validación cruzada (Principio 1: cualquier cambio de lógica debe probarse contra todos los casos de referencia acumulados, no solo el que lo motivó).
+
+---
+
+## 🔴✅ 2026-08-27 (continuación) — Corrida real Beauchef: bug real de "error en silencio" encontrado y corregido en el relleno sólido
+
+Primera corrida completa del pipeline (con todos los arreglos de esta semana) contra un proyecto real distinto de PdV — Centro Recreacional Beaucheff (Beaucheff n°3500, Pedro Aguirre Cerda), lámina con Planta de Acceso (Guardia/Taller/Casino/Camarín), Kiosco/Enfermería, S. de Basura, Camarines.
+
+**Bug real encontrado**: en `diag_muros_pag3-1` (solo líneas, render simple) los muros de Taller/Casino/Camarín aparecen correctamente en rojo — `cuerpo_cerrado`/la fusión SÍ los reconoce como muros reales. Pero en `diag_completo_pag3-1` (relleno sólido + colores) **el relleno solo aparece para Guardia** — Taller/Casino/Camarín quedan sin ningún color, como si no existieran. Causa: `_pintar_relleno_solido()` tenía `except Exception: return` — cualquier falla (o un resultado vacío sin excepción, ej. el propio grupo de un muro no alcanza para auto-emparejar sus caras cuando se usa como su propio contexto) desaparecía sin avisar. Va directo en contra de la regla permanente del proyecto ("nunca errores en silencio, para toda funcionalidad, desde ahora en adelante") — no se había notado hasta ahora porque en PdV este caso no se dio (o no se notó visualmente).
+
+**Arreglado**: `_pintar_relleno_solido()` ahora imprime un aviso explícito con el id del muro en 3 casos que antes desaparecían callados: (1) excepción real al calcular el relleno, (2) bbox resultante fuera de rango de la imagen, (3) relleno calculado pero con 0 píxeles (probable falta de emparejamiento al usar solo el propio grupo como contexto — hipótesis más probable para el caso de Beauchef, a confirmar con el log de la próxima corrida). No cambia ninguna lógica de fusión/clasificación — es puramente diagnóstico, para dejar de adivinar por qué falta relleno.
+
+Notebook renombrado `ArchiCheck_Base 27aug_0930.ipynb` (anterior `26aug_1835` a `Versiones anteriores/`). Regenerados `Celda 4 - copiar en Colab.py` y `Celda 6 - copiar en Colab.py`. **Sin correr en Colab todavía** — el usuario no bajó el `Celda4_log_*.txt` de la corrida de Beauchef que sí se hizo, así que no hay conteos numéricos de esa corrida para esta entrada — solo el hallazgo visual (PNG) que motivó el fix.
+
+---
+---
+
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
 
 Mapa completo de qué existe, qué funciona y qué falta, por tipo. Se actualiza a medida que avanza P1.
