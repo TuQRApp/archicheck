@@ -136,6 +136,13 @@ ${textoCompleto.substring(0, 60000)}`;
 // ── Dividir en chunks (para PDFs grandes) ─────────────────────────────────────
 
 function dividirEnChunks(paginas, numero) {
+  // Deliberadamente más chico que el MAX_CHARS/SOLAP de indexar_normativa.mjs
+  // (6500/400): esto es el fallback SIN estructurar (por circular o por página),
+  // se busca granularidad más fina para compensar la falta de secciones reales.
+  // indexar_normativa.mjs igual vuelve a pasar estos chunks por su propio
+  // fragmentar() al indexar, pero como ya vienen más chicos no los vuelve a
+  // partir — no son la misma constante a propósito, no unificar sin remedir
+  // la calidad de retrieval de ambos casos.
   const MAX_CHARS = 3000;
   const SOLAPAMIENTO = 300;
   const chunks = [];

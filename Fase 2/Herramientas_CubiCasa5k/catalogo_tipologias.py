@@ -101,7 +101,7 @@ TIPOLOGIAS = {
             "cuerpo_cerrado.py:_extender_conector_sin_par",
             "cuerpo_cerrado.py:_ancho_heredado_de_segmento",
         ],
-        "fuente": "2026-08-20/23 (implementacion), unificacion 🆕 24-ago",
+        "fuente": "2026-08-20/23 (implementacion), unificacion 🆕 24-ago. NOTA 🆕 27-ago: tol_conector_esquina_m coincide en valor (0.03) con tol_vertice_m de D2-hoja-vano-firma-relativa -- son tolerancias de vertice para conceptos distintos (conector de esquina en fusion de muros vs coincidencia de vertice de hoja de puerta), NO unificadas a proposito por falta de evidencia de que deban moverse siempre juntas; si se recalibra una, revisar si la otra tambien corresponde.",
     },
     "D1-corte-rasante-exclusion": {
         "seccion": "D.1 / D.6", "elemento": "Muros",
@@ -130,7 +130,7 @@ TIPOLOGIAS = {
         "parametros": {"tol_vertice_m": 0.03, "ancho_max_hoja_confirmada_m": 0.10},
         "estado": "implementado",
         "implementado_en": ["cuerpo_cerrado.py:identificar_hojas_de_puerta", "cuerpo_cerrado.py:_firma_hoja_vano_puerta_duda"],
-        "fuente": "2026-08-02, precisado y confirmado 🆕 24-ago (revision visual N2), umbral de duda 🆕 26-ago (caso real MU54/MU55 PdV N2 -- muro de 0.20m junto a muro de 0.30m se excluia mal como hoja; candidatos >10cm ya no se excluyen, quedan como hoja_dudosa_ids para confirmar, no se asume ninguna de las 2 en silencio)",
+        "fuente": "2026-08-02, precisado y confirmado 🆕 24-ago (revision visual N2), umbral de duda 🆕 26-ago (caso real MU54/MU55 PdV N2 -- muro de 0.20m junto a muro de 0.30m se excluia mal como hoja; candidatos >10cm ya no se excluyen, quedan como hoja_dudosa_ids para confirmar, no se asume ninguna de las 2 en silencio). NOTA 🆕 27-ago: tol_vertice_m coincide en valor (0.03) con tol_conector_esquina_m de D1-encuentro-de-brazos -- ver nota cruzada ahi, no unificadas a proposito.",
     },
     "D2-vano-sin-hoja-solo-arco": {
         "seccion": "D.2", "elemento": "Puertas",

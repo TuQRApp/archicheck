@@ -33,7 +33,10 @@ const SUPABASE_KEY    = process.env.SUPABASE_KEY    || '';   // service_role
 const EMBEDDING_MODEL  = 'text-embedding-3-small';
 const BATCH_EMBED      = 100;   // textos por llamada a OpenAI
 const BATCH_UPSERT     = 50;    // filas por upsert a Supabase
-const MAX_CHARS        = 6500;  // ~8k tokens; cortar si el artículo es más largo
+const MAX_CHARS        = 6500;  // ~8k tokens; fragmentar (no cortar) si el artículo es más largo
+// NOTA: extraer_ddu.mjs tiene su propio MAX_CHARS/SOLAPAMIENTO (3000/300), más
+// chico a propósito para su fallback sin estructurar — no es la misma
+// constante duplicada por descuido, ver comentario en dividirEnChunks().
 
 // ── Utilidades ─────────────────────────────────────────────────────────────────
 
@@ -93,13 +96,24 @@ function chunksLey(json, fuente, prefijo) {
 
 function chunksDDU(json) {
   if (!json?.secciones) return [];
-  return json.secciones.map(s => ({
-    fuente:   'DDU',
-    codigo:   s.codigo,
-    titulo:   s.titulo || '',
-    texto:    (s.texto || '').trim().substring(0, MAX_CHARS),
-    metadata: { ddu: json.numero, titulo_doc: json.titulo },
-  })).filter(c => c.texto.length > 20);
+  const chunks = [];
+  for (const s of json.secciones) {
+    const texto = (s.texto || '').trim();
+    if (texto.length <= 20) continue;
+    // Antes truncaba con .substring(0, MAX_CHARS) — perdía el resto de secciones
+    // largas en silencio. Usa fragmentar() como chunksLey/chunksPRC, misma
+    // constante MAX_CHARS/SOLAP para las 4 fuentes en vez de una regla aparte.
+    for (const frag of fragmentar(texto, s.codigo)) {
+      chunks.push({
+        fuente:   'DDU',
+        codigo:   frag.codigo,
+        titulo:   s.titulo || '',
+        texto:    frag.texto,
+        metadata: { ddu: json.numero, titulo_doc: json.titulo },
+      });
+    }
+  }
+  return chunks;
 }
 
 function chunksPRC(comunaDir) {
