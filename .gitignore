@@ -29,3 +29,7 @@ dist-ssr
 
 # Archivos temporales de Word/Office (se crean solos al tener un .docx abierto)
 ~$*
+
+# Salida cruda de revisiones con DeepSeek/Codex (D.11) — sin filtrar, no se commitea tal cual
+/Fase 2/Herramientas_CubiCasa5k/_deepseek_reviews/
+/Fase 2/Herramientas_CubiCasa5k/_codex_reviews/

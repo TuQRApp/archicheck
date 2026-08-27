@@ -298,9 +298,9 @@ Cuando el pipeline tiene una duda real clasificando un elemento — no logra dec
 
 **✅ IMPLEMENTADO (2026-08-24, misma tarde) — sin correr en producción todavía, sin probar en navegador con datos reales**: `mergeResults()` en `src/App.jsx` ahora usa `compararTablas()` (emparejamiento por nombre normalizado con fuzzy match, ningún modelo emite ID estructurado por fila) para las 4 tablas de Capa 2 (`recintos_superficies`, `circulaciones`, `iluminacion_ventilacion`, `normativa_urbanistica`) y para `recintos_por_nivel` (Capa 1) — reemplaza el "gana el más largo" de `mergeSection`. Cada fila emparejada con veredicto (`cumple`/`estado`) distinto, y cada fila detectada por un solo modelo, se acumula en `result.discrepancias_ensamble` — nunca se descarta información de ningún lado. Nueva sección en la pantalla de resultados ("DISCREPANCIAS ENTRE MODELOS") la muestra al arquitecto. Verificado con `npx vite build` (sin errores) — **no probado en vivo** (requiere análisis real con las API keys del Worker). Gemini como desempate (paso 2, cuando `discrepancias_ensamble` no está vacío) sigue sin implementar.
 
-### Revisión de código con DeepSeek (decisión de arquitectura, 2026-08-26)
+### Revisión de código con modelos de IA (decisión de arquitectura, 2026-08-26, ampliada 27-ago)
 
-Rol distinto y separado del ensamble semántico de arriba — **no es sobre planos ni clasificación de elementos, es revisión de calidad de código**, la fortaleza real de DeepSeek (texto/razonamiento/código, no visión).
+Rol distinto y separado del ensamble semántico de arriba — **no es sobre planos ni clasificación de elementos, es revisión de calidad de código**. El mecanismo es agnóstico al modelo — cualquier reviewer nuevo se suma con su propio script siguiendo la misma mecánica, no un mecanismo por modelo.
 
 **Mecánica acordada con el usuario**:
 1. **Disparo manual** — el usuario decide cuándo, no hay cadencia automática ni `/loop`.
@@ -316,7 +316,13 @@ Rol distinto y separado del ensamble semántico de arriba — **no es sobre plan
 
 **Qué NO entra** (confirmado por auditoría real del repo, 2026-08-26 — no es una lista supuesta): ~100 notebooks históricos en `Versiones anteriores/`, ~60 scripts `_tmp_`/`_celda4_*` de diagnóstico puntual en `Herramientas_CubiCasa5k/`, ~25 scripts `_*` de extracción/depuración ya ejecutados una vez en `normativa/`, y la carpeta `Startup Chile/` (proyecto no relacionado).
 
-**Estado**: mecanismo definido, **sin ejecutar todavía** — falta resolver cómo se invoca DeepSeek en la práctica (API key, integración) la primera vez que el usuario lo dispare.
+**Reviewers activos**:
+- **DeepSeek** (`Fase 2/Herramientas_CubiCasa5k/revisar_con_deepseek.mjs`) — implementado y ejecutado 2 veces (26-ago): bugs generales y, por separado, un pase enfocado solo en hardcoding indebido (`revisar_hardcode_con_deepseek.mjs`, mismo mecanismo, prompt distinto). De los ~96 hallazgos crudos entre ambos pases, se filtraron y verificaron contra el código real ~11 reales (7 de bugs + 4 de hardcoding consolidados en A/B/C/D) — el resto eran falsos positivos (DeepSeek no siempre lee el código completo con precisión, ej. no vio un `.filter()` que ya cubría el caso que reportaba) o sugerencias de sobre-ingeniería (env vars para constantes que no lo ameritan a esta escala). Los 4 hallazgos reales de hardcoding (A: comunas inconsistentes entre 3 archivos, B: coordenadas de PdV hardcodeadas en diagnóstico del notebook, C: umbrales de fragmentación duplicados con valores distintos, D: nombre de proyecto de prueba filtrándose al system prompt de producción) ya están arreglados y comiteados.
+- **Codex (OpenAI)** (`Fase 2/Herramientas_CubiCasa5k/revisar_con_codex.mjs`, 🆕 27-ago) — mismo mecanismo, mismo prompt base que DeepSeek. Usa la Responses API (`/v1/responses`, no `/v1/chat/completions`) con `gpt-5-codex` — API distinta a la que ya usa el Worker para GPT-4o, ver comentario en el script. **Escrito, sin ejecutar todavía** — falta que el usuario provea `OPENAI_API_KEY` en `.env.openai.local` (mismo patrón que `.env.deepseek.local`).
+- **Cursor** (🆕 27-ago, evaluado, no implementado) — no tiene API de "mandar código, recibir revisión" como servicio; su producto de revisión de PRs (Bugbot) trabaja sobre GitHub, no archivos locales. Sí existe `cursor-agent`, CLI headless (`agent -p "prompt" --output-format json`, autenticado con `CURSOR_API_KEY`) que opera como agente sobre el repo directamente (lee archivos él mismo, no se le pega el contenido en el prompt como a DeepSeek/Codex) — mecanismo distinto, requiere instalar el CLI (no está instalado localmente) y una API key nueva. Pendiente de que el usuario confirme si quiere proceder.
+- **Kiuwan** (🆕 27-ago, evaluado, no implementado) — no es un modelo de lenguaje, es un escáner SAST (análisis estático de seguridad/calidad) con su propio motor (Kiuwan Local Analyzer, CLI) o plataforma cloud — mecanismo completamente distinto (correr un scan y leer su reporte, no "prompt + texto"). Herramienta enterprise paga — el usuario todavía no tiene cuenta/licencia, queda pendiente de evaluar contratación antes de diseñar la integración.
+
+**Estado**: DeepSeek ejecutado y con hallazgos ya corregidos; Codex listo para correr en cuanto haya API key; Cursor y Kiuwan en evaluación, sin key/cuenta ni CLI instalados todavía.
 
 ---
 

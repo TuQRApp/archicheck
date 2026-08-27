@@ -2709,6 +2709,24 @@ Como el archivo en disco (no solo el panel del navegador) también corta ahí, *
 **Pendiente inmediato**: el usuario debe volver a subir el `cuerpo_cerrado.py` actualizado a Colab (mismo flujo ya usado para los 3 `.py`) y re-correr Beauchef completo, bajando el `Celda4_log_*.txt` nuevo para confirmar (a) que termina, (b) cuánto demora, y (c) si el bug del relleno sólido silencioso (entrada anterior) ya no reaparece en Taller/Casino/Camarín.
 
 ---
+
+## ✅ 2026-08-27 (continuación) — Primera ejecución real de la revisión de código con DeepSeek (bugs + hardcoding), 4 hallazgos corregidos; se suma Codex, se evalúan Cursor y Kiuwan
+
+Con el mecanismo ya definido el 26-ago pero sin ejecutar todavía, el usuario dio la orden real de correrlo. Se ejecutó dos veces: un pase de bugs generales y, por separado, un pase enfocado solo en "qué está hardcodeado y no debería" (`revisar_hardcode_con_deepseek.mjs`, mismo mecanismo, prompt distinto). Entre ambos pases, ~96 hallazgos crudos — filtrados y verificados uno por uno contra el código real (no aceptados por default), quedaron ~11 reales; el resto eran falsos positivos (ej. DeepSeek no vio que un `.filter()` ya cubría el caso que reportaba como bug) o sugerencias de sobre-ingeniería para la escala actual del proyecto (env vars para constantes que no lo ameritan).
+
+**4 hallazgos de hardcoding, todos corregidos y comiteados**:
+- **A — comunas inconsistentes entre 3 archivos** (`77eb29f`): `App.jsx` registraba nunoa+santiago para PRC, pero el panel de "Parámetros cuantitativos" gateaba con un literal `nunoa||providencia` aparte que coincidía con `verificador.js` por casualidad, no por diseño. `verificador.js` ahora expone `COMUNAS_CON_VERIFICACION` (deriva de `NORMAS`), `estacionamientos.js` expone `COMUNAS_CON_ESTACIONAMIENTOS`. El Art. 18 PRC Ñuñoa dejó de ser un bloque JS con `comunaId==="nunoa"` hardcodeado — ahora es `normativa/nunoa/restricciones_condicionales.json` + un evaluador genérico reusable por cualquier comuna. 27/27 tests siguen pasando, mismo comportamiento exacto.
+- **B — coordenadas de PdV hardcodeadas en diagnóstico del notebook** (`b0136ed`): `_CASOS_DIAG_VISUAL`, `ZONAS_DIAGNOSTICO_MURO_PERDIDO` y `_zona_ventana_centro` (Celda 4) corrían igual contra cualquier proyecto sin gate — ya estaban dibujando overlays sin sentido contra Beauchef. Ahora los 3 se saltan si `NOMBRE_PROYECTO != 'pdv'`. `UMBRAL_AREA_SOSPECHOSA_M2=60` y `TOL_EJE_MURO_DEG=8` quedaron sin tocar a propósito (decisión explícita del usuario / ya documentados como supuestos a revisar) — siguen calibrados solo contra PdV.
+- **C — umbrales de fragmentación duplicados con valores distintos** (`e264a72`): `chunksDDU` en `indexar_normativa.mjs` truncaba secciones DDU largas en vez de fragmentar con solapamiento como OGUC/LGUC — pérdida real de contenido, no solo un umbral duplicado, ya corregido (usa `fragmentar()` igual que las demás fuentes). `MAX_CHARS`/`SOLAP` de `indexar_normativa.mjs` vs `extraer_ddu.mjs`, y `tol_conector_esquina_m`/`tol_vertice_m` en `catalogo_tipologias.py`, quedaron documentados con nota cruzada como intencionalmente distintos — no unificados sin evidencia de que deban moverse siempre juntos.
+- **D — nombre de proyecto de prueba filtrándose a producción** (repo `archicheck-worker`, `9e3d3f5`): `reglas_aprendidas.js` inyectaba literalmente "Plaza Pedro de Valdivia" en el system prompt de TODO análisis vía el campo `origen`. Ahora `origen`/`fecha` quedan solo como metadata de trazabilidad, no viajan al prompt.
+
+**Se suma Codex como segundo reviewer** (`revisar_con_codex.mjs`, mismo mecanismo/prompt que DeepSeek): usa la Responses API de OpenAI (`/v1/responses`, no `/v1/chat/completions` — API distinta a la que ya usa el Worker para GPT-4o) con `gpt-5-codex`. Escrito, **sin ejecutar todavía** — falta que el usuario provea `OPENAI_API_KEY` en `.env.openai.local`.
+
+**Cursor y Kiuwan evaluados, no implementados**: Cursor no tiene API de "mandar código, recibir revisión" como servicio — su Bugbot trabaja sobre PRs de GitHub, no archivos locales; sí existe `cursor-agent` (CLI headless, `agent -p "prompt" --output-format json`, autenticado con `CURSOR_API_KEY`) que opera como agente leyendo el repo él mismo — mecanismo distinto al de DeepSeek/Codex, requiere instalar el CLI (no instalado localmente) y una key nueva, pendiente de confirmación del usuario. Kiuwan no es un modelo de lenguaje — es un escáner SAST con su propio motor/CLI o plataforma cloud, herramienta enterprise paga; el usuario todavía no tiene cuenta/licencia, queda pendiente de evaluar contratación antes de diseñar la integración.
+
+Documentado en `Fase 2/Convenciones_CAD.md` D.11, subsección renombrada "Revisión de código con modelos de IA".
+
+---
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
