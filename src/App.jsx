@@ -529,6 +529,11 @@ const CORRECCIONES_VACIAS = {
   // motivo opcional por elemento eliminado (id -> texto), separado de elementosPuntualesEliminados
   // para no tocar los .includes(id) ya usados en varios lugares — ver eliminarElemento().
   motivosEliminacion: {},
+  // id -> nueva categoria (Reclasificar, 2026-08-29): cambia la categoría de un elemento ya
+  // detectado (ej. un muro que en realidad es una ventana) preservando su geometría real
+  // (segmentos) tal cual la midió Colab — sin re-clickear nada, a diferencia de Eliminar + volver
+  // a marcar a mano. Ver aplicación en getElementosPuntualesPorPagina.
+  reclasificaciones: {},
 };
 
 // "campo" apunta a analisis_semantico[campo] (detección vía Claude Vision) para las categorías
@@ -645,7 +650,14 @@ function getElementosPuntualesPorPagina(colabJson, correcciones, entryIdx) {
     out.push(...arr.map(e => ({ ...e, categoria: cat.id })));
   }
   out.push(...correcciones.elementosPuntualesNuevos.filter(n => n.entryIdx === entryIdx && !correcciones.elementosPuntualesEliminados.includes(n.id)));
-  return out;
+  // Reclasificar (2026-08-29): se aplica al final, sobre el resultado ya combinado (detectados +
+  // nuevos), para que sea un único punto de override sin importar el origen del elemento — el
+  // loop de arriba fuerza `categoria: cat.id` según de qué bucket vino cada uno (pag.muros_geo,
+  // pag.puertas_geo, analisis_semantico[campo]), así que sin este paso una reclasificación quedaría
+  // pisada de vuelta a su categoría original. construirColabJsonCorregido ya reagrupa por
+  // `.categoria` al armar el JSON final, así que sobreescribirla acá es suficiente — no hace falta
+  // tocar esa función.
+  return out.map(e => correcciones.reclasificaciones?.[e.id] ? { ...e, categoria: correcciones.reclasificaciones[e.id] } : e);
 }
 
 // Subconjunto de getElementosPuntualesPorPagina con posición real (cx_relativo/cy_relativo
@@ -1329,6 +1341,25 @@ function dibujarOverlayEnCanvas(ctx, img, {
       ctx.fillText(label, p2.x + 8, p2.y - 8);
     }
   }
+
+  // Snap (2026-08-29): "ilumina" el vértice/cruce/punto-sobre-trazo más cercano al cursor antes de
+  // clickear — dibujado último, encima de todo lo demás, para que siempre sea visible. Ver
+  // RevisionGeometricaCanvas.handleMouseMove (calcula qué punto mostrar según la herramienta activa)
+  // y calcularPuntosSnap/buscarProyeccionMasCercana (de dónde sale ese punto).
+  if (preview?.snapHighlight) {
+    const { x, y } = preview.snapHighlight;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, Math.max(7, img.width * 0.007), 0, Math.PI * 2);
+    ctx.strokeStyle = "#FFD700";
+    ctx.lineWidth = Math.max(2, img.width * 0.002);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = "#FFD700";
+    ctx.fill();
+    ctx.restore();
+  }
 }
 
 // Rasteriza un PNG corregido fuera de pantalla (nunca insertado en el DOM visible) usando la
@@ -1381,11 +1412,25 @@ function hitTestRecinto(mediciones, x, y) {
   return best;
 }
 
-function distanciaPuntoASegmento(px, py, x1, y1, x2, y2) {
+// Punto más cercano a (px,py) sobre el segmento (x1,y1)-(x2,y2), con t (0-1) clamp incluido —
+// misma base matemática que antes usaba distanciaPuntoASegmento (que ahora es un wrapper de
+// esta), pero expone también el punto proyectado y el t, necesarios para Snap (2026-08-29) y
+// Recortar tramo (2026-08-29): ambos necesitan el punto EXACTO sobre la línea, no solo la
+// distancia hasta ella.
+function proyeccionEnSegmento(px, py, x1, y1, x2, y2) {
   const dx = x2 - x1, dy = y2 - y1;
-  if (dx === 0 && dy === 0) return Math.hypot(px - x1, py - y1);
+  if (dx === 0 && dy === 0) return { dist: Math.hypot(px - x1, py - y1), t: 0, point: { x: x1, y: y1 } };
   const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)));
-  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+  const point = { x: x1 + t * dx, y: y1 + t * dy };
+  return { dist: Math.hypot(px - point.x, py - point.y), t, point };
+}
+
+function distanciaPuntoASegmento(px, py, x1, y1, x2, y2) {
+  return proyeccionEnSegmento(px, py, x1, y1, x2, y2).dist;
+}
+
+function puntoEnSegmento(seg, t) {
+  return { x: seg.p1.x + t * (seg.p2.x - seg.p1.x), y: seg.p1.y + t * (seg.p2.y - seg.p1.y) };
 }
 
 // segmentos: [{p1:{x,y}, p2:{x,y}}, ...] — sin asumir que encadenan en un solo camino (un muro
@@ -1396,6 +1441,72 @@ function distanciaMinimaASegmentos(px, py, segmentos) {
     min = Math.min(min, distanciaPuntoASegmento(px, py, s.p1.x, s.p1.y, s.p2.x, s.p2.y));
   }
   return min;
+}
+
+// Intersección real entre 2 segmentos (no solo sus rectas) — null si son paralelos/colineales o
+// si se cruzan fuera del rango de alguno de los 2. Usada por calcularPuntosSnap para detectar
+// "cruces" (2 trazos que se cortan sin compartir un vértice declarado), a pedido explícito del
+// arquitecto (2026-08-29): "iluminar cruces y vértices entre líneas del plano".
+function interseccionDeSegmentos(p1, p2, p3, p4) {
+  const d1x = p2.x - p1.x, d1y = p2.y - p1.y;
+  const d2x = p4.x - p3.x, d2y = p4.y - p3.y;
+  const denom = d1x * d2y - d1y * d2x;
+  if (Math.abs(denom) < 1e-9) return null;
+  const t = ((p3.x - p1.x) * d2y - (p3.y - p1.y) * d2x) / denom;
+  const u = ((p3.x - p1.x) * d1y - (p3.y - p1.y) * d1x) / denom;
+  if (t < 0 || t > 1 || u < 0 || u > 1) return null;
+  return { x: p1.x + t * d1x, y: p1.y + t * d1y };
+}
+
+// Todos los vértices (extremos de segmento) + cruces reales entre trazos de la página — candidatos
+// de "enganche" (Snap, 2026-08-29) para cuando el arquitecto marca un elemento nuevo desde cero.
+// Solo considera elementos con geometría real de segmentos (muro, puerta-geo) — los detectados por
+// Claude Vision (punto/línea sintética) no son una referencia geométrica confiable para enganchar
+// (ver limitación ya documentada en dibujarOverlayEnCanvas). O(n²) en cruces: aceptable para el
+// tamaño real de páginas de este proyecto (decenas a un par de cientos de segmentos). Se recalcula
+// en cada render de RevisionModal (acciones del arquitecto: cambiar herramienta/página/corrección),
+// nunca en cada mousemove -- eso vive en un ref dentro de RevisionGeometricaCanvas, sin
+// re-renderizar el padre.
+function calcularPuntosSnap(elementosPuntuales) {
+  const segs = [];
+  for (const e of elementosPuntuales) {
+    if (Array.isArray(e.segmentos)) for (const s of e.segmentos) segs.push(s);
+  }
+  const puntos = [];
+  for (const s of segs) { puntos.push(s.p1); puntos.push(s.p2); }
+  for (let i = 0; i < segs.length; i++) {
+    for (let j = i + 1; j < segs.length; j++) {
+      const pt = interseccionDeSegmentos(segs[i].p1, segs[i].p2, segs[j].p1, segs[j].p2);
+      if (pt) puntos.push(pt);
+    }
+  }
+  return puntos;
+}
+
+function buscarSnapMasCercano(pt, snapPoints, radiusPx) {
+  let best = null, bestDist = radiusPx;
+  for (const s of snapPoints) {
+    const d = Math.hypot(pt.x - s.x, pt.y - s.y);
+    if (d < bestDist) { bestDist = d; best = s; }
+  }
+  return best;
+}
+
+// Para la herramienta "Recortar tramo": punto más cercano sobre CUALQUIER segmento de CUALQUIER
+// elemento con geometría real, más el id del elemento y el índice del segmento dentro de él (para
+// poder exigir que los 2 clics caigan en el mismo tramo antes de recortar, ver
+// ejecutarRecorteTramo). Mismo criterio de "solo elementos con segmentos reales" que
+// calcularPuntosSnap.
+function buscarProyeccionMasCercana(pt, elementosPuntuales, radiusPx) {
+  let best = null, bestDist = radiusPx;
+  for (const e of elementosPuntuales) {
+    if (!Array.isArray(e.segmentos)) continue;
+    e.segmentos.forEach((s, idx) => {
+      const r = proyeccionEnSegmento(pt.x, pt.y, s.p1.x, s.p1.y, s.p2.x, s.p2.y);
+      if (r.dist < bestDist) { bestDist = r.dist; best = { elementoId: e.id, segIndex: idx, point: r.point, t: r.t, dist: r.dist }; }
+    });
+  }
+  return best;
 }
 
 function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, mpp, radiusPx = 16) {
@@ -1427,11 +1538,23 @@ function hitTestElemento(elementosPuntuales, x, y, imagenWPx, imagenHPx, mpp, ra
 
 // Herramientas cuyo click se interpreta como el 1º/2º punto de una línea o caja (2 clics),
 // en vez de una selección directa — mismo mecanismo, distinto significado según la herramienta.
-const HERRAMIENTAS_DOS_CLICS = new Set(["puerta", "ventana", "escalera", "rampa", "muro", "cortar", "excluir_area"]);
+const HERRAMIENTAS_DOS_CLICS = new Set(["puerta", "ventana", "escalera", "rampa", "muro", "cortar", "excluir_area", "recortar_tramo"]);
+
+// Herramientas que AGREGAN un elemento nuevo desde cero (2 o N clics) — a estas se les aplica Snap
+// a vértices/cruces existentes (2026-08-29). Cortar/Excluir área operan sobre el bbox de un
+// recinto, no sobre geometría de muro/puerta, así que no se les aplica este snap. Recortar tramo
+// usa su propio snap (proyección sobre el trazo más cercano, no vértices) — ver handleMouseMove.
+const HERRAMIENTAS_AGREGAR_ELEMENTO = new Set(CATEGORIAS_ELEMENTO.map(c => c.id));
+
+// Tolerancia de enganche en píxeles de PANTALLA (no de imagen) — se divide por `zoom` en cada uso
+// para que el radio real sobre el plano se sienta igual de "generoso" sin importar el nivel de
+// zoom: más ajustado en píxeles de imagen cuando el arquitecto está bien acercado (más precisión
+// disponible), más laxo cuando está alejado (no hay forma de apuntar fino de todos modos).
+const SNAP_RADIO_PANTALLA_PX = 10;
 
 function RevisionGeometricaCanvas({
   png, mediciones, elementosPuntuales, imagenWPx, imagenHPx, mpp,
-  tool, selectedId, linePoints = [], zoom = 1,
+  tool, selectedId, linePoints = [], zoom = 1, snapPoints = [],
   onSeleccionar, onLinePoint, onMoverDestino, onToggleFusion,
 }) {
   const canvasRef = useRef();
@@ -1471,6 +1594,21 @@ function RevisionGeometricaCanvas({
     return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
   }
 
+  // Punto de snap más cercano a `pt` para la herramienta activa, o null si no aplica/no hay nada
+  // cerca — único lugar donde se decide QUÉ candidatos usar según la herramienta (vértices/cruces
+  // para agregar elemento nuevo, proyección sobre el trazo más cercano para Recortar tramo).
+  function snapParaHerramienta(pt) {
+    const radiusPx = SNAP_RADIO_PANTALLA_PX / (zoom || 1);
+    if (HERRAMIENTAS_AGREGAR_ELEMENTO.has(tool) && snapPoints.length) {
+      return buscarSnapMasCercano(pt, snapPoints, radiusPx);
+    }
+    if (tool === "recortar_tramo") {
+      const hit = buscarProyeccionMasCercana(pt, elementosPuntuales, radiusPx);
+      return hit ? hit.point : null;
+    }
+    return null;
+  }
+
   function handleClick(e) {
     const pt = puntoDesdeEvento(e);
     if (tool === "seleccionar") {
@@ -1489,24 +1627,42 @@ function RevisionGeometricaCanvas({
       if (r) onToggleFusion?.(r.id);
       return;
     }
-    if (HERRAMIENTAS_DOS_CLICS.has(tool)) { onLinePoint?.(pt); }
+    if (HERRAMIENTAS_DOS_CLICS.has(tool)) {
+      // Recortar tramo también engancha (proyección sobre el trazo más cercano) — así el punto que
+      // llega a ejecutarRecorteTramo ya está exactamente SOBRE la línea, sin depender de un radio
+      // de tolerancia separado allá (que no tiene acceso a `zoom` para ajustarlo igual que acá).
+      onLinePoint?.(snapParaHerramienta(pt) || pt);
+    }
   }
 
   function handleMouseMove(e) {
+    const ptRaw = puntoDesdeEvento(e);
+    const snapHighlight = snapParaHerramienta(ptRaw);
+    const ptEfectivo = snapHighlight || ptRaw;
+
     // Muro: sigue acumulando trazos hasta que el arquitecto confirme (botón aparte), no se
     // dispara solo al segundo clic como el resto de las herramientas de 2 clics.
     if (tool === "muro" && linePoints.length >= 1) {
-      const pt = puntoDesdeEvento(e);
-      previewRef.current = { tipo: "polilinea", puntos: linePoints, cursor: pt };
+      previewRef.current = { tipo: "polilinea", puntos: linePoints, cursor: ptEfectivo, snapHighlight };
       redibujar(previewRef.current);
       return;
     }
-    if (linePoints.length !== 1) return;
-    const pt = puntoDesdeEvento(e);
-    const esRectangulo = CATEGORIAS_ELEMENTO.find(c => c.id === tool)?.forma === "rectangulo" || tool === "excluir_area";
-    const tipo = esRectangulo ? "rect" : "linea";
-    previewRef.current = { p1: linePoints[0], p2: pt, tipo };
-    redibujar(previewRef.current);
+    if (linePoints.length === 1) {
+      const esRectangulo = CATEGORIAS_ELEMENTO.find(c => c.id === tool)?.forma === "rectangulo" || tool === "excluir_area";
+      const tipo = esRectangulo ? "rect" : "linea";
+      previewRef.current = { p1: linePoints[0], p2: ptEfectivo, tipo, snapHighlight };
+      redibujar(previewRef.current);
+      return;
+    }
+    // Sin puntos acumulados todavía: solo muestra (o quita) el aro de snap bajo el cursor, para
+    // que el arquitecto vea ANTES del primer clic dónde va a enganchar.
+    if (snapHighlight) {
+      previewRef.current = { snapHighlight };
+      redibujar(previewRef.current);
+    } else if (previewRef.current) {
+      previewRef.current = null;
+      redibujar(null);
+    }
   }
 
   function handleMouseLeave() {
@@ -1529,7 +1685,7 @@ function RevisionGeometricaCanvas({
 }
 
 // ── Panel de edición de un recinto o elemento puntual seleccionado ─────────
-function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onCerrar }) {
+function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onReclasificar, onCerrar }) {
   const [nombre, setNombre] = useState("");
   const [tipoRecinto, setTipoRecinto] = useState("");
   const [areaM2, setAreaM2] = useState("");
@@ -1604,6 +1760,27 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onCerrar }) {
           )}
         </>
       )}
+      {/* Reclasificar (2026-08-29): cambia la categoría del elemento preservando su geometría real
+          (segmentos) tal cual la midió Colab — sin re-clickear nada, a diferencia de Eliminar +
+          volver a marcar a mano, que depende de la precisión del clic. Solo tiene sentido si el
+          elemento ya tiene una geometría real que preservar (segmentos) — para un punto/línea
+          sintética de Claude Vision no hay nada geométrico que valga la pena conservar, mejor
+          eliminar y marcar de nuevo con la herramienta correcta. */}
+      {!esRecinto && esPoligono && onReclasificar && (
+        <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid #D1D9EE" }}>
+          <div style={{ fontSize: 10, color: "#6B7A99", marginBottom: 5 }}>
+            Reclasificar como (conserva la geometría exacta, sin volver a marcar):
+          </div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {CATEGORIAS_ELEMENTO.filter(c => c.id !== item.categoria).map(c => (
+              <button key={c.id} style={{ ...btnStyle(COLORES_ELEMENTO_PUNTUAL[c.id]), padding: "5px 9px", fontSize: 10 }}
+                onClick={() => onReclasificar(c.id)}>
+                → {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1658,6 +1835,7 @@ function LeyendaHerramientas({
     { id: "cortar", label: "✂ Cortar recinto" },
     { id: "fusionar", label: "⛓ Fusionar recintos" },
     { id: "excluir_area", label: "▭ Excluir área" },
+    { id: "recortar_tramo", label: "🗑 Recortar tramo" },
   ];
   const btnStyle = (activo, col) => ({
     border: `1px solid ${activo ? col : "#D1D9EE"}`, borderRadius: 6, padding: "6px 11px", fontSize: 11,
@@ -1666,7 +1844,7 @@ function LeyendaHerramientas({
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", marginBottom: 10 }}>
       {base.map(b => {
-        const col = b.id === "cortar" ? "#C0392B" : b.id === "fusionar" ? "#B8860B" : b.id === "excluir_area" ? "#7D3C98" : "#2952A3";
+        const col = b.id === "cortar" ? "#C0392B" : b.id === "fusionar" ? "#B8860B" : b.id === "excluir_area" ? "#7D3C98" : b.id === "recortar_tramo" ? "#943126" : "#2952A3";
         return <button key={b.id} style={btnStyle(tool === b.id, col)} onClick={() => onChangeTool(b.id)}>{b.label}</button>;
       })}
       <span style={{ width: 1, height: 18, background: "#D1D9EE", margin: "0 4px" }} />
@@ -1707,6 +1885,11 @@ function LeyendaHerramientas({
         <span style={{ fontSize: 10, color: "#6B7A99" }}>
           Excluyendo área de <strong>{recintoSeleccionado}</strong> — marca 2 esquinas del rectángulo a restar
           {areasExcluidasCount > 0 ? ` (${areasExcluidasCount} zona${areasExcluidasCount > 1 ? "s" : ""} ya excluida${areasExcluidasCount > 1 ? "s" : ""} en este recinto — podés marcar más)` : ""}
+        </span>
+      )}
+      {tool === "recortar_tramo" && (
+        <span style={{ fontSize: 10, color: "#6B7A99" }}>
+          Marca 2 puntos sobre el MISMO tramo (muro/puerta ya detectados) para borrar lo que queda entre ellos — el punto se engancha solo a la línea más cercana. Solo funciona dentro de un mismo segmento; si el tramo a borrar cruza una esquina, hacelo en 2 pasos.
         </span>
       )}
     </div>
@@ -1762,7 +1945,8 @@ function RevisionModal({
   entriesConPng, stepIndex, setStepIndex,
   tool, setTool, selectedId, selectedTipo, linePoints, fusionSet = [],
   onSeleccionar, onLinePoint, onMoverDestino, onConfirmarMuro, onToggleFusion, onConfirmarFusion,
-  onGuardarRecinto, onEliminarRecinto, onGuardarElemento, onEliminarElemento, onMoverElemento, onCerrarPanel,
+  onGuardarRecinto, onEliminarRecinto, onGuardarElemento, onEliminarElemento, onMoverElemento,
+  onReclasificarElemento, onCerrarPanel,
   onFinalizar, onCerrarModal,
 }) {
   const containerRef = useRef();
@@ -1774,6 +1958,12 @@ function RevisionModal({
   const pagJson = colabJson?.paginas?.find(p => p.entry_idx === entryIdx);
   const mediciones = entryIdx != null ? getMedicionesPorPagina(colabJson, correcciones, entryIdx) : [];
   const elementosPuntuales = entryIdx != null ? getElementosPuntualesConPosicion(colabJson, correcciones, entryIdx) : [];
+  // Candidatos de Snap (2026-08-29): se recalcula en cada render de RevisionModal (no hay useMemo
+  // real posible — elementosPuntuales ya se recalcula sin memoizar en cada render, así que memoizar
+  // esto encima no ahorra nada) — pero eso está acotado a acciones del arquitecto (cambiar de
+  // herramienta, aplicar una corrección, cambiar de página), NO a cada mousemove: ese vive dentro
+  // de RevisionGeometricaCanvas via un ref, sin re-renderizar este componente.
+  const snapPoints = calcularPuntosSnap(elementosPuntuales);
   const elementosDetectados = entryIdx != null ? calcularElementosDetectadosResumen(colabJson, correcciones, entryIdx) : {};
   const dudas = calcularDudas(mediciones, elementosDetectados);
   const areasExcluidasCount = selectedTipo === "recinto" && selectedId
@@ -1845,7 +2035,7 @@ function RevisionModal({
           <RevisionGeometricaCanvas
             png={png} mediciones={mediciones} elementosPuntuales={elementosPuntuales}
             imagenWPx={pagJson.imagen_w_px} imagenHPx={pagJson.imagen_h_px} mpp={pagJson.mpp}
-            tool={tool} selectedId={selectedId} linePoints={linePoints} zoom={zoom}
+            tool={tool} selectedId={selectedId} linePoints={linePoints} zoom={zoom} snapPoints={snapPoints}
             onSeleccionar={onSeleccionar} onLinePoint={onLinePoint} onMoverDestino={onMoverDestino}
             onToggleFusion={onToggleFusion}
           />
@@ -1860,6 +2050,7 @@ function RevisionModal({
               onGuardar={patch => recintoSel ? onGuardarRecinto(patch) : onGuardarElemento(elementoSel, patch)}
               onEliminar={motivo => recintoSel ? onEliminarRecinto() : onEliminarElemento(elementoSel, motivo)}
               onMover={onMoverElemento}
+              onReclasificar={recintoSel ? null : cat => onReclasificarElemento(elementoSel, cat)}
               onCerrar={onCerrarPanel}
             />
           )}
@@ -2674,6 +2865,15 @@ ${printRef.current.innerHTML}
     });
   }
 
+  // Reclasificar (2026-08-29): cambia solo `categoria` — la geometría real (segmentos) del
+  // elemento no se toca, ver getElementosPuntualesPorPagina (donde se aplica el override) y
+  // PanelRetag (de dónde sale la lista de categorías destino).
+  function reclasificarElemento(item, nuevaCategoria) {
+    setColabCorrecciones(prev => ({ ...prev, reclasificaciones: { ...prev.reclasificaciones, [item.id]: nuevaCategoria } }));
+    setToast(`Reclasificado como ${nuevaCategoria}`);
+    setReviewSelectedId(null); setReviewSelectedTipo(null);
+  }
+
   function moverElemento(item, pt, imagenWPx, imagenHPx) {
     const iw = imagenWPx || 1, ih = imagenHPx || 1;
     const cx_relativo = pt.x / iw, cy_relativo = pt.y / ih;
@@ -2741,10 +2941,47 @@ ${printRef.current.innerHTML}
   // roadmap. Excluir área sigue sin reactivar (paso siguiente, no este). La lógica de datos
   // (ejecutarCorte y su reintegración en getMedicionesPorPagina/construirColabJsonCorregido)
   // nunca se tocó desde que se apagó — solo faltaba esta rama para poder dispararla.
+  // Recortar tramo (2026-08-29): borra el pedazo de un segmento entre 2 clics — exige que AMBOS
+  // clics caigan sobre el MISMO segmento del MISMO elemento (v1, alcance acotado a propósito: un
+  // muro/puerta de Colab es una lista de segmentos SIN orden de encadenamiento garantizado, así
+  // que "el tramo entre 2 puntos de segmentos distintos" no tiene una única respuesta correcta sin
+  // resolver conectividad de grafo — mejor negarse con un mensaje claro que adivinar mal en
+  // silencio). p1/p2 llegan ya proyectados sobre el trazo por RevisionGeometricaCanvas.handleClick
+  // (mismo snapParaHerramienta que usa el highlight visual) — acá solo hace falta identificar de
+  // nuevo a qué elemento/segmento pertenece cada uno, con una tolerancia chica (ya deberían estar
+  // prácticamente ENCIMA de la línea, no hace falta el radio completo de Snap).
+  function ejecutarRecorteTramo(p1, p2) {
+    const elementos = getElementosPuntualesConPosicion(colabJson, colabCorrecciones, reviewActiveEntry)
+      .filter(e => Array.isArray(e.segmentos) && e.segmentos.length);
+    const hitA = buscarProyeccionMasCercana(p1, elementos, 6);
+    const hitB = buscarProyeccionMasCercana(p2, elementos, 6);
+    if (!hitA || !hitB) { setToast("No se detectó ningún trazo cerca de uno de los 2 clics"); return; }
+    if (hitA.elementoId !== hitB.elementoId || hitA.segIndex !== hitB.segIndex) {
+      setToast("Los 2 puntos deben caer sobre el mismo tramo — si cruza una esquina, hacelo en 2 pasos");
+      return;
+    }
+    const item = elementos.find(e => e.id === hitA.elementoId);
+    const seg = item.segmentos[hitA.segIndex];
+    const [tLo, tHi] = [hitA.t, hitB.t].sort((a, b) => a - b);
+    const EPS = 0.02;
+    const piezas = [];
+    if (tLo > EPS) piezas.push({ p1: seg.p1, p2: puntoEnSegmento(seg, tLo) });
+    if (tHi < 1 - EPS) piezas.push({ p1: puntoEnSegmento(seg, tHi), p2: seg.p2 });
+    if (piezas.length === 0 && item.segmentos.length <= 1) {
+      setToast("Eso borraría el trazo completo — usa 'Eliminar' en el panel, no esta herramienta");
+      return;
+    }
+    const nuevosSegmentos = [...item.segmentos.slice(0, hitA.segIndex), ...piezas, ...item.segmentos.slice(hitA.segIndex + 1)];
+    aplicarCorreccionElemento(item, { segmentos: nuevosSegmentos });
+    setToast("Tramo recortado");
+  }
+
   function ejecutarAccionDosClicks(p1, p2) {
     const pag = colabJson?.paginas?.find(p => p.entry_idx === reviewActiveEntry);
     if (!pag) return;
     const mpp = pag.mpp || 0;
+
+    if (reviewTool === "recortar_tramo") { ejecutarRecorteTramo(p1, p2); return; }
 
     if (CATEGORIAS_ELEMENTO.some(c => c.id === reviewTool)) {
       agregarElementoNuevo(reviewTool, reviewActiveEntry, p1, p2, mpp, pag.imagen_w_px, pag.imagen_h_px);
@@ -3499,6 +3736,7 @@ ${printRef.current.innerHTML}
                 onGuardarElemento={(item, patch) => { aplicarCorreccionElemento(item, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
                 onEliminarElemento={(item, motivo) => eliminarElemento(item, motivo)}
                 onMoverElemento={() => setReviewTool("mover")}
+                onReclasificarElemento={reclasificarElemento}
                 onCerrarPanel={() => { setReviewSelectedId(null); setReviewSelectedTipo(null); }}
                 onFinalizar={handleFinalizarModal}
                 onCerrarModal={() => setReviewModalOpen(false)}
@@ -4247,8 +4485,12 @@ ${printRef.current.innerHTML}
 
       {/* Toast de confirmación */}
       {toast && (
-        <div style={{ position: "fixed", bottom: 24, right: 24, background: toast === "aceptada" ? "#1E8449" : toast === "comentada" ? "#2952A3" : toast === "modificada" ? "#D68910" : "#6B7A99", color: "#fff", borderRadius: 10, padding: "12px 20px", fontSize: 13, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 9999, display: "flex", alignItems: "center", gap: 8 }}>
-          {toast === "aceptada" ? "✅ Observación aceptada" : toast === "comentada" ? "💬 Comentario guardado" : toast === "modificada" ? "✏️ Marcada para modificar" : "🗑️ Observación descartada"}
+        <div style={{ position: "fixed", bottom: 24, right: 24, background: toast === "aceptada" ? "#1E8449" : toast === "comentada" ? "#2952A3" : toast === "modificada" ? "#D68910" : toast === "descartada" ? "#6B7A99" : "#2952A3", color: "#fff", borderRadius: 10, padding: "12px 20px", fontSize: 13, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 9999, display: "flex", alignItems: "center", gap: 8 }}>
+          {/* Los 4 estados de obsStatus (aceptada/comentada/modificada/descartada) tienen texto+ícono
+              fijo; cualquier otro valor (ej. "Geometría confirmada", mensajes de Reclasificar/Recortar
+              tramo) se muestra tal cual — antes caía al else de "descartada" sin importar el mensaje
+              real, bug preexistente encontrado al agregar los toasts nuevos de esta sesión. */}
+          {toast === "aceptada" ? "✅ Observación aceptada" : toast === "comentada" ? "💬 Comentario guardado" : toast === "modificada" ? "✏️ Marcada para modificar" : toast === "descartada" ? "🗑️ Observación descartada" : toast}
         </div>
       )}
 
