@@ -1086,16 +1086,6 @@ async function renderPdfPagesFullRes(file, pageNumbers) {
   }
 }
 
-// ── Imagen a base64 ────────────────────────────────────────────────────────
-async function toBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = e => resolve(e.target.result.split(",")[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
 // ── Comprimir imagen a JPEG (max 2000px, evita límite 5MB Anthropic) ────────
 async function compressImage(file, maxPx = 2000, quality = 0.80) {
   return new Promise((resolve, reject) => {
@@ -2592,7 +2582,6 @@ export default function ArchiCheck() {
   const [expandido,  setExpandido]  = useState({});
   const [dragOver,   setDragOver]   = useState(false);
   const [modalDwg, setModalDwg] = useState(false);
-  const [dwgBloqueado, setDwgBloqueado] = useState(false);
   const [preguntas, setPreguntas] = useState({ situacion: "", analizarSituacion: "", niveles: "" });
   const [obsStatus, setObsStatus] = useState({});
   const [sinTipo, setSinTipo] = useState(false);
@@ -2712,7 +2701,6 @@ ${printRef.current.innerHTML}
     );
     if (tieneDwg) {
       setModalDwg(true);
-      setDwgBloqueado(true);
       return;
     }
     const validos = Array.from(files).filter(f =>

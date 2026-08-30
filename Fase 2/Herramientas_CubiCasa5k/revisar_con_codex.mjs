@@ -21,7 +21,11 @@ const envPath = path.join(ARCHICHECK_ROOT, ".env.openai.local");
 const envContent = fs.readFileSync(envPath, "utf8");
 const API_KEY = envContent.match(/OPENAI_API_KEY=(.+)/)[1].trim();
 
-const MODEL = "gpt-5-codex"; // ajustar aquí si OpenAI renombra/deprecia -- único lugar que lo declara
+// "gpt-5-codex" aparece listado en /v1/models pero responde 404 "Model not found" al
+// invocarlo de verdad (probado 2026-08-30) -- parece legacy/retirado aunque siga listado.
+// gpt-5.3-codex es el codex vigente que sí responde 200. Ajustar aquí si OpenAI renombra/
+// deprecia -- único lugar que lo declara.
+const MODEL = "gpt-5.3-codex";
 
 const OUT_DIR = path.join(__dirname, "_codex_reviews");
 fs.mkdirSync(OUT_DIR, { recursive: true });
