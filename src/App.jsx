@@ -3335,7 +3335,7 @@ ${printRef.current.innerHTML}
         for (const r of (merged.capa2?.iluminacion_ventilacion?.tabla || []))
           if (!r._colab_id) r._colab_id = findColabId(r.recinto);
         for (const r of (merged.capa2?.recintos_superficies?.tabla || []))
-          if (!r._colab_id) r._colab_id = findColabId(r.nombre);
+          if (!r._colab_id) r._colab_id = findColabId(r.recinto);
       }
       assignObsCodes(merged);
       setAnalysisTimestamp(new Date());
