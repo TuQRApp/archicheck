@@ -46,6 +46,22 @@ _MARGEN_CONTEXTO_M = _param('D1-encuentro-de-brazos', 'margen_contexto_m', 0.6)
 _TOL_CONECTOR_ESQUINA_M = _param('D1-encuentro-de-brazos', 'tol_conector_esquina_m', 0.03)
 
 
+def _validar_mpx(mpx, nombre_fn):
+    """mpx (metros/pixel) se usa como divisor en todas las conversiones de
+    tolerancia a pixeles de este modulo -- confirmado por ejecucion real
+    (2026-08-30) que mpx=0/None revienta con ZeroDivisionError/TypeError
+    poco claros en identificar_lineas_centrales, ancho_por_emparejamiento e
+    identificar_hojas_de_puerta. Si mpx llega invalido (ej. fallo de
+    parseo de la escala en la Celda 4), esto falla rapido con un mensaje
+    que apunta a la causa real en vez de un traceback generico."""
+    if not isinstance(mpx, (int, float)) or isinstance(mpx, bool) or mpx <= 0:
+        raise ValueError(
+            f"{nombre_fn}: mpx invalido ({mpx!r}) -- debe ser un numero positivo "
+            f"(metros/pixel). Revisa que la escala del plano (ESCALA_MANUAL / "
+            f"Celda 3) se haya parseado correctamente antes de llamar a este pipeline."
+        )
+
+
 # ── utilidades geometricas basicas ──────────────────────────────────────
 def _angulo(s):
     return math.atan2(s['p2'][1] - s['p1'][1], s['p2'][0] - s['p1'][0])
@@ -136,6 +152,7 @@ def identificar_lineas_centrales(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=
     cambiar el resultado -- se invalida solo con que llegue un
     `contexto` distinto (list nueva por cada par i,j en el loop de
     fusion), asi que nunca sirve un resultado stale."""
+    _validar_mpx(mpx, 'identificar_lineas_centrales')
     _params = (mpx, tol_min_m, tol_max_m, tol_simetria_m)
     if _CACHE_CENTRALES['contexto'] is contexto and _CACHE_CENTRALES['params'] == _params:
         return _CACHE_CENTRALES['resultado']
@@ -280,6 +297,7 @@ def ancho_por_emparejamiento(grupo, contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max
     llamadas dentro de una misma pasada), se evita ese recalculo
     redundante sin cambiar ningun resultado -- mismo criterio exacto,
     solo se computa una vez en vez de N veces."""
+    _validar_mpx(mpx, 'ancho_por_emparejamiento')
     tol_min_px = tol_min_m / mpx
     tol_max_px = tol_max_m / mpx
     # lineas centrales de ventana: se excluyen por completo del pool de
@@ -390,6 +408,7 @@ def identificar_hojas_de_puerta(contexto, mpx, tol_min_m=_TOL_MIN_M, tol_max_m=_
     sin necesidad. Igual criterio de invalidacion que
     identificar_lineas_centrales: solo sirve si `contexto` es el MISMO
     objeto y los parametros no cambiaron."""
+    _validar_mpx(mpx, 'identificar_hojas_de_puerta')
     _params = (mpx, tol_min_m, tol_max_m, tol_vertice_m, ancho_max_confirmado_m)
     if _CACHE_HOJAS['contexto'] is contexto and _CACHE_HOJAS['params'] == _params:
         return _CACHE_HOJAS['resultado']
@@ -1057,7 +1076,15 @@ def relleno_solido_de_contexto(contexto_local, mpx, margen_m=_MARGEN_CONTEXTO_M,
     sobre el trazo original. `objetivo`: subconjunto de contexto_local
     que se PINTA de verdad -- el resto solo aporta ancho real y evidencia
     de vertices de union, nunca se pinta a si mismo."""
-    box = _bbox(objetivo if objetivo else contexto_local, margen_m / mpx)
+    _validar_mpx(mpx, 'relleno_solido_de_contexto')
+    _pool_bbox = objetivo if objetivo else contexto_local
+    if not _pool_bbox:
+        raise ValueError(
+            "relleno_solido_de_contexto: objetivo y contexto_local estan ambos "
+            "vacios -- no hay nada que rellenar (antes esto rompia con "
+            "ValueError de _bbox sobre lista vacia, mensaje confuso)."
+        )
+    box = _bbox(_pool_bbox, margen_m / mpx)
     objetivo_ids = {id(s) for s in objetivo} if objetivo else None
     con_pares = construir_contexto_con_pares(contexto_local, mpx)
     bin_arr, w, h = _relleno_solido(con_pares, box, contexto_local, objetivo_ids, mpx)
