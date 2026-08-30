@@ -2738,6 +2738,9 @@ Investigado con más detalle a raíz de la pregunta "¿para Cursor no tenemos to
 
 **Pendiente**: el usuario debe elegir A, B, o ambos, antes de instalar/configurar nada. Documentado en `Fase 2/Convenciones_CAD.md` D.11.
 
+**✅ 2026-08-29 (continuación) — Decisión del usuario: Camino B (`cursor-agent` CLI) descartado, se sigue solo con Camino A (Bugbot).** El usuario tenía otra ventana intentando instalar el CLI de `cursor-agent` que se le cerró a mitad de instalación — decidió no retomarlo: se elimina esa alternativa. Queda **solo Camino A (Bugbot vía PR de GitHub)** como plan vigente para Cursor, pendiente de retomar más adelante (requiere pasar a trabajar con ramas+PR e instalar la GitHub App de Cursor, acción de cuenta del usuario, no delegable). Ningún archivo/config de `cursor-agent` llegó a instalarse en esta máquina — nada que limpiar.
+
+
 ---
 
 ## ✅ 2026-08-29 — Portal: Reclasificar elemento, Snap a vértices/cruces y Recortar tramo en la revisión gráfica de geometría
