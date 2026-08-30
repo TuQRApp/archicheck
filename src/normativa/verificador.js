@@ -32,8 +32,14 @@ const RESTRICCIONES_CONDICIONALES = { nunoa: restriccionesNunoa };
 const PRIORIDAD = { zona: 0, ZT: 1, ZCH: 2, MH: 3, ICH: 4, restriccion: 5 };
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
-const fmt = (n, decimals = 2) =>
-  n == null ? "—" : Number(n).toFixed(decimals).replace(/\.?0+$/, "");
+const fmt = (n, decimals = 2) => {
+  if (n == null) return "—";
+  // El regex viejo (/\.?0+$/) quitaba ceros finales de CUALQUIER string, no solo de la parte
+  // decimal — fmt(500, 0) daba "5", fmt(1800, 0) daba "18". Ahora solo recorta ceros si el
+  // número realmente tiene punto decimal (toFixed(0) nunca lo tiene).
+  const s = Number(n).toFixed(decimals);
+  return s.includes(".") ? s.replace(/0+$/, "").replace(/\.$/, "") : s;
+};
 
 function resultado(parametro, propuesto, limiteNormativo, cumple, observacion, referencia) {
   return { parametro, propuesto: String(propuesto), limiteNormativo: String(limiteNormativo), cumple, observacion, referencia };

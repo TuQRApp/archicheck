@@ -387,7 +387,7 @@ function mergeResults(r1, r2) {
     return base;
   }
 
-  const RANK = { APROBADO: 0, OBSERVADO: 1, RECHAZADO: 2 };
+  const RANK = { APROBABLE: 0, OBSERVADO: 1, RECHAZABLE: 2 };
   const estado = (RANK[r1.estado_global] ?? 1) >= (RANK[r2.estado_global] ?? 1) ? r1.estado_global : r2.estado_global;
 
   // Acumula discrepancias reales (veredicto distinto o detectado por un solo modelo) de todas
