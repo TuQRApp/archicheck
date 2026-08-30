@@ -3334,9 +3334,8 @@ ${printRef.current.innerHTML}
           if (!r._colab_id) r._colab_id = findColabId(r.elemento);
         for (const r of (merged.capa2?.iluminacion_ventilacion?.tabla || []))
           if (!r._colab_id) r._colab_id = findColabId(r.recinto);
-        for (const nivel of (merged.capa2?.recintos_superficies?.por_nivel || []))
-          for (const r of (nivel.recintos || []))
-            if (!r._colab_id) r._colab_id = findColabId(r.nombre);
+        for (const r of (merged.capa2?.recintos_superficies?.tabla || []))
+          if (!r._colab_id) r._colab_id = findColabId(r.nombre);
       }
       assignObsCodes(merged);
       setAnalysisTimestamp(new Date());

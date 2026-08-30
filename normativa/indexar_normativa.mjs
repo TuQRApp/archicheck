@@ -293,7 +293,7 @@ async function main() {
       .map(d => d.name);
 
     for (const comuna of subcarpetas) {
-      const prcChunks = chunksPRC(join(comunasDir, comuna));
+      const prcChunks = deduplicar(chunksPRC(join(comunasDir, comuna)));
       if (prcChunks.length > 0) {
         await procesarChunks(prcChunks, `PRC ${comuna}`);
       }
