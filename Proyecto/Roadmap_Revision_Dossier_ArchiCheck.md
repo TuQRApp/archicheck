@@ -2781,6 +2781,27 @@ Pedido explícito del arquitecto, motivado por una pregunta suya sobre precisió
 `git` — commit `d88a921`, pusheado a `main`.
 
 ---
+
+## ✅ 2026-08-30 — Beauchef seguía colgado >1h incluso con el fix del 27-ago: causa real confirmada (zona con geometría patológica, no un bug de código) + red de seguridad general implementada y validada empíricamente
+
+El usuario re-corrió Beauchef con el fix de cache del 27-ago aplicado y volvió a quedar >1 hora sin avanzar, en el mismo punto que antes (captura `Screenshot_518.jpg`). Pidió usar DeepSeek y Codex para revisar el código con todo el contexto real.
+
+**Revisión dirigida (no el scan general)**: nuevo script `revisar_performance_beauchef.mjs`, con el código completo de `cuerpo_cerrado.py` + la función `_fusionar_muros_por_proximidad` de Celda 4, y contexto explícito real (no hipotético): "Muros exportados: 944 (de 2 grupos protegidos, 729 descartados por ángulo)" — confirmado en el log viejo que a los 5 segundos de terminar la extracción ya está dentro del loop de fusión, imprimiendo decenas de `DIAG bloqueado`/`DIAG PAREJA`. DeepSeek y Codex coincidieron de forma independiente: el cache de 1 slot del 27-ago solo sirve DENTRO de una misma llamada a `cuerpo_cerrado_fusiona` — `contexto_par` es una lista NUEVA en cada par evaluado (identidad de objeto distinta), nunca puede pegar entre pares. El cuello real: reconstruir `contexto_par` es un scan `O(n)` de las n=944 entradas en CADA uno de los P pares candidatos evaluados. Ambos propusieron reemplazar el scan por los buckets espaciales ya existentes.
+
+**Validado empíricamente antes de aplicar nada — y la propuesta resultó NO servir.** Con Python real (instalado localmente por la sesión paralela) se armó un script de correctitud (11.000 consultas aleatorias en 5 escenarios, incluido uno que imita la densidad real de Beauchef) que confirmó el fix propuesto es matemáticamente correcto (100% resultados idénticos al scan viejo) — pero un benchmark de velocidad real dio **0.9x, sin mejora**. Motivo: en una zona TAN densa (944 fragmentos de solo 2 grupos en un área chica), la "vecindad local" de 2m ya incluye a casi todos los fragmentos de todas formas — local ≈ global en este caso puntual, así que evitar el scan no evita el trabajo real. Este hallazgo corrige (con evidencia propia, no solo aceptando lo que dijeron los modelos) las estimaciones optimistas de DeepSeek ("100x más rápido, <1 minuto") y de Codex, que no habían considerado este caso límite.
+
+**Causa raíz real, confirmada por el arquitecto viendo el plano**: la cuadrícula densa de esa zona ("shaft de basura"/S. de Basura) **no corresponde a trazos reales de la planta** — es ruido/geometría espuria, no una pared real fragmentada. Decisión: excluir esa página/crop del proyecto Beauchef desde ahora en Celda 3 (`PAGINAS_Y_ESCALAS`, configuración propia del usuario, Claude no la toca) — la causa real es un problema de datos de esa zona puntual, no un bug del algoritmo de fusión.
+
+**Aun así, se pidió una red de seguridad general** (para cualquier proyecto futuro con una zona igual de densa/con ruido, no solo Beauchef) — implementada y medida con el código real, no solo propuesta:
+
+- Medí el costo real de una sola llamada a `cuerpo_cerrado_fusiona` según tamaño de contexto, con `cuerpo_cerrado.py` importado directo (Python local): 50 segs≈1ms, 300≈37ms, 500≈163ms, **900≈478ms**. Con miles de pares candidatos en una zona tan densa, eso solo explica sobradamente el cuelgue de >1 hora observado.
+- **Nueva constante `MAX_CONTEXTO_PAR_SEGMENTOS = 250`** en `_fusionar_muros_por_proximidad` (Celda 4): si `contexto_par` de un par supera ese umbral, se salta el gate de cuerpo cerrado para ESE par puntual (cae de vuelta al criterio pre-22-ago: proximidad + sin puerta ya alcanza para fusionar) en vez de pagar el costo geométrico completo — nunca en silencio, se cuenta (`n_saltados_por_contexto_enorme`) y se avisa con hasta 5 muestras reales más un resumen final, mismo criterio que `n_bloqueados_por_puerta`/`n_bloqueados_por_cuerpo_cerrado` ya usan. 250 queda cómodo por encima de cualquier esquina real densa vista hasta ahora (varios muros+puertas+ventanas convergiendo) y muy por debajo del caso patológico (900+).
+- **Validado con una prueba funcional real** (no solo sintaxis): un caso normal (2 muros en L) fusiona exactamente igual que antes, sin activar la red; un caso patológico sintético de 900 fragmentos (imitando la densidad real del shaft) que antes habría corrido según la misma lógica que colgó Beauchef, **terminó en 0.1 segundos** con la red activa, mostrando los avisos y el resumen esperados.
+- Propagado al notebook: `ArchiCheck_Base 30aug_0400.ipynb` (anterior `27aug_0930` a `Versiones anteriores/`) — confirmado byte a byte que solo Celda 4 cambió, las otras 7 celdas (incluida la Celda 3 del usuario) quedaron idénticas. `Celda 4 - copiar en Colab.py` regenerado y verificado idéntico al contenido real de la celda.
+
+**Pendiente inmediato del usuario**: (1) excluir la página/crop del shaft de basura en su propia Celda 3 de Beauchef; (2) volver a subir `cuerpo_cerrado.py`/`catalogo_tipologias.py` (sin cambios esta vez, pero el runtime de Colab hay que reiniciarlo igual) y la Celda 4 actualizada; (3) re-correr Beauchef completo y confirmar que termina en tiempo razonable.
+
+---
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)

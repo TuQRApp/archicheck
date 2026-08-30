@@ -828,6 +828,37 @@ def _fusionar_muros_por_proximidad(muros_geo, puertas_geo, tol_fusion_px=10, tol
         tol_union_puerta_px = tol_fusion_px * 2
     RADIO_CONTEXTO_M = 2.0
     RADIO_CONTEXTO_PX = RADIO_CONTEXTO_M / mpx if mpx else None
+    # RED DE SEGURIDAD DE PERFORMANCE (2026-08-30, caso real Beauchef "S. de
+    # Basura"): si una zona del plano queda con geometria patologicamente
+    # fragmentada/densa (ese caso real: 944 "muros" desde solo 2 grupos
+    # protegidos -- confirmado por el arquitecto que esa cuadricula NO
+    # corresponde a trazos reales de la planta, y ya se excluye esa pagina a
+    # nivel de configuracion del proyecto en Celda 3), contexto_par puede
+    # crecer a cientos de segmentos. Medido con el codigo real de
+    # cuerpo_cerrado.py (revisar_performance_beauchef.mjs +
+    # _verificar_fix_contexto_par.py, ver roadmap): a partir de ~300
+    # segmentos en el contexto local, UNA SOLA llamada a
+    # cuerpo_cerrado_fusiona ya cuesta decenas a cientos de milisegundos
+    # (37ms a 300, 163ms a 500, 478ms a 900) -- con miles de pares
+    # candidatos en una zona asi, eso es exactamente lo que explica un
+    # cuelgue de mas de una hora. NO es un bug de complejidad evitable sin
+    # aproximar (validado empiricamente: reemplazar el scan O(n) de
+    # contexto_par por un indice espacial mas grueso da el MISMO resultado
+    # pero NO es mas rapido en este caso -- cuando el area es tan densa, la
+    # vecindad local YA incluye casi todo, no hay nada que filtrar).
+    #
+    # Este umbral es la ultima linea de defensa, no la solucion de fondo
+    # (la solucion de fondo es no alimentar geometria basura al pipeline,
+    # ver Celda 3): si contexto_par para un par supera esto, se SALTA el
+    # gate de cuerpo cerrado para ESE par puntual (vuelve al criterio
+    # anterior al 22-ago: proximidad + ausencia de puerta ya es suficiente
+    # para fusionar) en vez de pagar el costo geometrico completo -- nunca
+    # en silencio, se cuenta y se avisa con un resumen al final (mismo
+    # criterio que n_bloqueados_por_puerta/n_bloqueados_por_cuerpo_cerrado).
+    # 250 queda comodo por encima de cualquier esquina real densa (varios
+    # muros+puertas+ventanas convergiendo) vista hasta ahora en PdV/Beauchef,
+    # y muy por debajo del caso patologico (900+).
+    MAX_CONTEXTO_PAR_SEGMENTOS = 250
     n = len(muros_geo)
     if n == 0:
         return muros_geo, {}
@@ -863,6 +894,8 @@ def _fusionar_muros_por_proximidad(muros_geo, puertas_geo, tol_fusion_px=10, tol
     evaluados = set()
     n_bloqueados_por_puerta = 0
     n_bloqueados_por_cuerpo_cerrado = 0
+    n_saltados_por_contexto_enorme = 0
+    _muestras_contexto_enorme = 0
     # DIAGNOSTICO (2026-08-22): la primera corrida con el gate dio 61/67
     # bloqueados en N1/N2; acotar contexto_local a una vecindad de 2m NO
     # cambio ese numero ni un poco (identico antes/despues), lo que
@@ -921,6 +954,22 @@ def _fusionar_muros_por_proximidad(muros_geo, puertas_geo, tol_fusion_px=10, tol
                     if bboxes[k][0] <= bx1 and bboxes[k][1] >= bx0 and bboxes[k][2] <= by1 and bboxes[k][3] >= by0
                     for s in muros_geo[k]['segmentos']
                 ]
+                # RED DE SEGURIDAD (ver docstring/constante mas arriba): un
+                # contexto_par patologicamente grande hace que UNA SOLA
+                # llamada a cuerpo_cerrado_fusiona cueste cientos de ms --
+                # con miles de pares candidatos en una zona asi de densa,
+                # eso es lo que cuelga la corrida por horas. Nunca en
+                # silencio: se cuenta, se avisa con muestras reales, y este
+                # par puntual cae de vuelta al criterio pre-22-ago
+                # (proximidad + sin puerta ya alcanza para fusionar) en vez
+                # de pagar el costo geometrico completo.
+                if len(contexto_par) > MAX_CONTEXTO_PAR_SEGMENTOS:
+                    n_saltados_por_contexto_enorme += 1
+                    if _muestras_contexto_enorme < 5:
+                        _muestras_contexto_enorme += 1
+                        print(f'    ⚠ CONTEXTO ENORME -- {muros_geo[i]["id"]} vs {muros_geo[j]["id"]}: contexto_par tiene {len(contexto_par)} segmentos (> {MAX_CONTEXTO_PAR_SEGMENTOS}), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho')
+                    union(i, j)
+                    continue
                 resultado_cc = cuerpo_cerrado_fusiona(
                     muros_geo[i]['segmentos'], muros_geo[j]['segmentos'],
                     contexto_par, mpx,
@@ -999,6 +1048,8 @@ def _fusionar_muros_por_proximidad(muros_geo, puertas_geo, tol_fusion_px=10, tol
         })
 
     print(f'  ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= {tol_fusion_px:.1f}px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): {n} entradas -> {len(muros_fusionados)} muros ({n - len(muros_fusionados)} fusionadas, {n_bloqueados_por_puerta} pares bloqueados por puerta intermedia, {n_bloqueados_por_cuerpo_cerrado} pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)')
+    if n_saltados_por_contexto_enorme:
+        print(f'  ⚠ RED DE SEGURIDAD: {n_saltados_por_contexto_enorme} par(es) saltaron el gate de cuerpo cerrado por contexto_par > {MAX_CONTEXTO_PAR_SEGMENTOS} segmentos (fusionados solo por proximidad+sin puerta, sin la verificacion geometrica completa) -- si este numero es alto, probablemente hay una zona con geometria patologica/ruido que conviene excluir en Celda 3, ver muestras arriba')
     return muros_fusionados, mapa_id_viejo_a_nuevo
 
 def extraer_datos_vectoriales(pdf_page, zoom, mpx, crop_px=None, max_largo_trazo_m=3.0, mapeo_capas=None, mapa_estado_por_color=None):
