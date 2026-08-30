@@ -1209,6 +1209,18 @@
   </details>
 
   <details class="item">
+    <summary>🔍 2026-08-30 (continuación) — Revisión real del portal contra Beauchef Camarín/Baño: hallazgos reales, investigación de ventanas pausada <span class="badge progress">En curso</span></summary>
+    <div class="item-body">
+      <p>El usuario revisó la primera página de Beauchef en el portal: "muchísimos muros, cosas que no deberían ser muros". Auditado con datos reales (JSON + overlay + base sin procesar), no a ojo.</p>
+      <p><strong>Confirmado, NO es un bug</strong>: <code>MU01</code> (142 segmentos, 118 fragmentos originales, bbox 20m×8.8m) sigue el perímetro estructural real de Camarín+Baño+Guardaropa — verificado con zoom, cero casilleros incluidos. Coincide con la regla ya dada por el arquitecto (19-ago): "sin separación explícita, un solo muro".</p>
+      <p><strong>Bug real confirmado, sin implementar todavía</strong>: 18 de 63 "muros" (≈29%) son puntos de largo cero (<code>p1==p2</code>) sobre marcas de cota — ruido, no geometría. Fix propuesto: filtrar segmentos de largo ~0 antes del pool de candidatos.</p>
+      <p><strong>Ventanas — investigación en curso</strong>: de las 5 ventanas del muro superior del Camarín, 4 (<code>MU18-21</code>) YA se detectan bien geométricamente (línea central real) pero quedan mal etiquetadas como "muro" en la exportación final en vez de "ventana" — fix de bajo riesgo identificado, sin implementar. La 5ª (vertical, entre Camarín y Baño, confirmada por el usuario con zoom real como el mismo patrón "2 líneas + 1 central") nunca llega a <code>muros_geo</code>: el "Paso 1.6 COTAS" clasificó 2.809/3.738 segmentos (75%) como cota en esta página, y se traga la línea central de esta ventana por estar pegada a cotas reales cercanas. Sin tocar el filtro de cotas todavía (ya causó la falla catastrófica de Isla de Pascua, requiere diseño cuidadoso).</p>
+      <p><strong>🆕 Nueva variante de dibujo documentada en Convenciones_CAD.md</strong> (Ventanas y Puertas): la firma "2 líneas + 1 central" puede dibujarse como cambio de grosor de línea (grueso→fino) en vez de un símbolo rectangular — confirmado con zoom real. Si el tramo fino trae 2 líneas SIN central, es puerta (regla nueva del usuario).</p>
+      <p><strong>Pausado a pedido del usuario ("mañana")</strong>, sin conclusión: 2 zonas más marcadas por el usuario (pared izquierda del Camarín, base de ambos Baños) investigadas pero sin confirmar — <code>MU14-17</code> parece la misma fragmentación por cota ya diagnosticada; <code>MU03-13</code> (11 trazos cortos) terminan todos exactamente en el límite máximo de extracción del crop, sospechoso pero sin confirmar. La correlación captura-de-pantalla↔JSON se hizo a ojo — para la próxima sesión, pedir al usuario el ID exacto (clic + "Seleccionar" en el portal) en vez de adivinar coordenadas.</p>
+    </div>
+  </details>
+
+  <details class="item">
     <summary>P2 — Normativa: OGUC completo + RAG <span class="badge pending">Pendiente</span></summary>
     <div class="item-body">
       <p>Segunda prioridad. OGUC completo vía RAG (pgvector), +15-20 circulares DDU adicionales.</p>

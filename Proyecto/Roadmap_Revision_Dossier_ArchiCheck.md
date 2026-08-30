@@ -2802,6 +2802,28 @@ El usuario re-corrió Beauchef con el fix de cache del 27-ago aplicado y volvió
 **Pendiente inmediato del usuario**: (1) excluir la página/crop del shaft de basura en su propia Celda 3 de Beauchef; (2) volver a subir `cuerpo_cerrado.py`/`catalogo_tipologias.py` (sin cambios esta vez, pero el runtime de Colab hay que reiniciarlo igual) y la Celda 4 actualizada; (3) re-correr Beauchef completo y confirmar que termina en tiempo razonable.
 
 ---
+
+## 🔍 2026-08-30 (continuación) — Revisión real del portal contra Beauchef pag3-3 (Camarín/Baño): 63 "muros" auditados uno por uno, varios hallazgos reales, investigación de ventanas en curso (pausada, retoma mañana)
+
+El usuario revisó la primera página de Beauchef en el portal y reportó "muchísimos muros, cosas que no deberían ser muros" — se auditó con datos reales (JSON + overlay + base sin procesar), no a ojo.
+
+**Confirmado, no es un bug — `MU01` (142 segmentos, 118 fragmentos originales, bbox 20m×8.8m) es correcto**: el trazo sigue el perímetro estructural real de Camarín+Baño+Guardaropa, verificado con zoom sobre el overlay — cero casilleros/mobiliario incluidos (verificado aparte, correctamente excluidos). Coincide exactamente con la regla ya dada por el arquitecto para Beauchef (19-ago): "sin separación explícita, un solo muro" — un perímetro real con muchos cruces en T se fragmenta en la extracción y se reúne correctamente acá.
+
+**Bug real confirmado**: 18 de 63 "muros" (≈29%) son ruido — puntos de largo cero (`p1==p2`) sentados exactamente sobre marcas/ticks de líneas de cota. Fix propuesto (filtrar segmentos de largo ~0 antes de que entren al pool de candidatos a muro) — **pendiente de implementar**, no se hizo hoy.
+
+**Hallazgo real sobre ventanas — investigación en curso, iniciada a pedido del usuario ("las 5 ventanas que marco en rojo en el camarín"):**
+- **4 de 5 ventanas horizontales del muro superior del Camarín (correspondientes a `MU18/MU19/MU20/MU21`) YA se detectan geométricamente bien** — cada una es la línea central real (2 caras + 1 línea central, patrón documentado) y por eso nunca se fusionan con MU01. **Pero quedan mal etiquetadas en la exportación final**: `muros_geo` las nombra "MUxx" (categoría muro) en vez de "ventana", porque la clasificación que corre durante la fusión nunca se propaga de vuelta a la exportación. Fix de bajo riesgo identificado (usar la clasificación ya calculada al exportar, en vez de la geometría cruda) — **pendiente de implementar**.
+- **La 5ª ventana (vertical, en el muro entre Camarín y Baño, confirmada por el usuario con zoom real — Screenshot_526.jpg — como el mismo patrón "2 líneas + 1 central") nunca llega a `muros_geo` en absoluto.** Causa raíz confirmada leyendo el log real: en esta página, el "Paso 1.6 COTAS" clasificó **2.809 de 3.738 segmentos (75%)** como línea/marca de cota — la línea central de esta ventana, al ser fina y estar pegada a las cotas reales "1.03"/"0.92" cercanas, se está tragando ahí, antes de llegar siquiera a evaluarse como candidata. **No se tocó el filtro de cotas todavía** — ya causó una falla catastrófica antes (Isla de Pascua) y sus criterios se afinaron con mucho cuidado; cualquier ajuste necesita diseñarse con cuidado (candidato: distinguir por orientación — una cota real corre en cadena alineada con otras marcas paralelas al acotado; la línea central de una ventana corre paralela al muro, perpendicular a las líneas de extensión de cota).
+- **🆕 Nueva variante de dibujo confirmada y documentada en `Convenciones_CAD.md`** (sección Ventanas y Puertas): la firma "2 líneas + 1 central" puede dibujarse con **cambio de grosor de línea** (grueso→fino) en vez de/además de un símbolo rectangular explícito — confirmado con zoom real sobre la ventana vertical. Regla nueva del usuario: si el tramo de línea fina trae **2 líneas sin central**, se marca como **puerta**, no ventana.
+
+**Sin resolver, pausado a pedido del usuario ("mañana")**: el usuario señaló más marcas rojas en el portal (pared izquierda del Camarín cerca del texto, y la base de ambos Baños) pidiendo revisarlas también. Investigadas con datos reales pero **sin conclusión clara todavía**:
+- Pared izquierda (`MU14/MU15/MU16/MU17`): parecen fragmentación de una sola línea por la misma cota ya diagnosticada (y=1148, mismo y que los 18 ceros) — no un patrón de ventana. Sin confirmar.
+- Base de ambos Baños (`MU03` a `MU13`, 11 trazos verticales cortos de ~0.13-0.17m): todos terminan exactamente en y=1986, el límite máximo de TODO lo extraído en este crop — sospechoso en sí mismo (posible corte del área de extracción, no necesariamente ventanas). Sin confirmar.
+- La correlación entre las capturas del portal que comparte el usuario y las coordenadas del JSON se está haciendo a ojo (cropeando la imagen base y comparando visualmente) — **no es 100% confiable**. Para la próxima sesión: pedirle al usuario que seleccione el elemento en el portal (herramienta "Seleccionar") y dé el ID exacto (ej. "MU05"), en vez de tratar de correlacionar coordenadas de captura de pantalla a mano.
+
+**Nada de esto se implementó todavía** — toda la sesión de hoy fue diagnóstico/investigación real (JSON + overlay + base sin procesar + log), sin tocar código. Pendientes para retomar, en orden sugerido: (1) filtro de segmentos de largo cero, (2) relabeling ventana/puerta en la exportación usando la clasificación ya calculada, (3) confirmar los 2 casos pendientes con IDs exactos del usuario, (4) recién después, diseñar con cuidado el ajuste al filtro de cotas para la ventana vertical.
+
+---
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
