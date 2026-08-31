@@ -1,0 +1,94 @@
+{
+  "id": "resp_08a890a59babf201006a950507a72487d198bdc70d6d1a1989",
+  "object": "response",
+  "created_at": 1788151047,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1788151057,
+  "error": null,
+  "frequency_penalty": 0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5.3-codex",
+  "moderation": null,
+  "output": [
+    {
+      "id": "msg_08a890a59babf201006a9505088f9087d1a9d0bb78bad0302e",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "Sí: **tu diagnóstico de causa raíz es sólido** y está bien delimitado.  \nNo parece un bug del detector, sino un **gap de integración end-to-end** (arquitectura/wiring + contrato de salida).\n\n## 1) Evaluación crítica de causa raíz\n\n### Lo que está bien en tu diagnóstico\n- Mostrás evidencia de que `muros_geo` se construye por reglas geométricas locales (span/ángulo/conectividad) sin consultar `clasificar_no_muro()`.\n- Mostrás que `clasificar_no_muro()` sí corre, pero en canales **laterales** (gate de fusión + PNG diagnóstico), no en export.\n- Confirmás que el schema no tiene `ventanas_geo`; por diseño histórico, ventana iba por semántica vision.\n- Confirmás recurrencia histórica del mismo síntoma (MU18), o sea no es regresión accidental sino deuda estructural.\n\nCon eso, la hipótesis “función existe pero no está conectada al contrato de salida” es la más parsimoniosa.\n\n### Posibles huecos / riesgos que conviene explicitar\nNo invalidan tu tesis, pero sí faltan como “condiciones de diseño”:\n\n1. **Riesgo de doble fuente de verdad**  \n   Si agregás `ventanas_geo`, convivirá con ventanas de `analisis_semantico`. Hay que definir precedencia/fusión/conflictos.\n\n2. **Riesgo de falsa precisión normativa**  \n   Ventanas geométricas parciales (solo ciertos símbolos CAD) pueden dar sensación de cobertura completa. Debe salir con `confidence/origen/cobertura`.\n\n3. **Compatibilidad hacia atrás**  \n   Consumidores actuales quizás asumen ausencia de `ventanas_geo`. Hay que versionar schema o agregar campo opcional explícito.\n\n4. **Dependencia de estilo de dibujo**  \n   El patrón D1-D3 puede variar por oficina/proyecto. Si exportás ventanas_geo sin flags de calidad, podés introducir nuevos falsos negativos/positivos regulatorios.\n\nEn resumen: **no hay motivo técnico fuerte para mantenerlo fuera del export**; sí hay motivos de gobernanza de datos para introducirlo bien.\n\n---\n\n## 2) Dónde documentarlo para no redescubrirlo\n\nTu separación de documentos es correcta. Yo lo dejaría en **combinación obligatoria**:\n\n### A) `Diseno_Funcional_ArchiCheck.md` (principal, arquitectura vigente)\nAquí debe quedar:\n- **Causa raíz explícita**: “criterio implementado pero no cableado al schema”.\n- **Estado actual**: ventanas geométricas usadas solo para fusión/diagnóstico.\n- **Decisión** (ADR breve):  \n  - Opción 1: mantener sin export (y por qué).  \n  - Opción 2: incorporar `ventanas_geo` (plan, riesgos, compatibilidad).\n- **Sección de “Known gaps” viva** con ID estable (ej. `GAP-GEO-VENT-001`), no solo narrativa.\n\n> Este es el lugar correcto para “sigue sin resolverse”.\n\n### B) `catalogo_tipologias.py` (ajuste mínimo, sin romper propósito)\nNo lo inflaría con arquitectura, pero sí le agregaría metadato de integración para evitar interpretación errónea de “implementado”.\n\nEjemplo:\n- `estado_criterio: implementado`\n- `estado_pipeline: parcial`\n- `usa_en: [\"fusion\", \"diagnostico_png\"]`\n- `exporta_a_schema: false`\n- `gap_id: \"GAP-GEO-VENT-001\"`\n\nAsí mantenés su grano (“existe código del criterio”), pero evitás falso cierre.\n\n### C) `Convenciones_CAD.md`\nSolo una nota breve de frontera, tipo:\n- “La firma D1/D3 describe reconocimiento geométrico; su presencia aquí **no implica** export end-to-end.”\nNada más. No meter estado de implementación ahí.\n\n---\n\n## Recomendación concreta\nTu hallazgo debería cerrarse como **issue arquitectónico**, no como bug algorítmico.  \nTítulo sugerido:  \n**“Desacople entre detección geométrica de ventanas y contrato de salida (sin `ventanas_geo`)”**.\n\nY si querés evitar tercera redescubierta, agregá un test de contrato:\n- Si `clasificar_no_muro()` detecta N ventanas en página sintética, entonces:\n  - o bien existen en `ventanas_geo`,\n  - o bien existe flag explícito `ventanas_geo_disabled_by_design=true`.\nAsí el estado queda verificable y no implícito."
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "current_turn",
+    "effort": "none",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1610,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 968,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 2578
+  },
+  "user": null,
+  "metadata": {}
+}

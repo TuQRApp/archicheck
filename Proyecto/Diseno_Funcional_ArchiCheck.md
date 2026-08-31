@@ -211,27 +211,23 @@ Diseño acordado para la implementación:
 
 Por qué esto y no otra cosa: el mecanismo que sí funcionó a mano fue **proponer candidatos de forma generosa (paso barato, puede fallar) + verificar cada uno antes de aceptarlo (paso confiable)**. El pipeline automático tiene hoy solo el paso 1. El cuerpo cerrado es el intento de automatizar el paso 2.
 
-### 2.9 Clasificador "línea sola = ventana" — validado en Node, **no portado a Python**
+### 2.9 Clasificador geométrico de ventana (firma D1-D3) — implementado, pero sin conectar al export (**GAP-GEO-VENT-001**)
 
-**Convención permanente confirmada por el arquitecto: una línea central sin par paralelo enfrentado es una ventana, siempre.**
+**Sección reescrita 2026-08-31 — estaba congelada desde 21-ago y ya no reflejaba el código real** (seguía describiendo el prototipo Node "no portado a Python"; el port ocurrió 22-ago).
 
-Regla operacional: para cada segmento largo candidato, buscar si existe otro segmento **paralelo cercano** a distancia de espesor de muro típico (**0.08–0.9 m**) — en cualquier otra entrada de `muros_geo`, **o dentro de la misma entrada fusionada**. Si no tiene par, es una línea suelta (ventana, línea de pavimento, subrayado de título), no un muro.
+**Convención permanente confirmada por el arquitecto: par de bordes paralelos + 1 línea central simétrica entre ambos, en rango de espesor de muro plausible (0.08–0.9 m), es una ventana.** (Firma D1-D3 de `Convenciones_CAD.md`; complementaria a la de puerta — "2 líneas sin línea central" — confirmada 30-ago en Beauchef.)
 
-La evaluación es **por segmento individual**, no a nivel de la entrada `muros_geo` completa: una sola entrada puede mezclar muro real + ventana ya fusionados, y evaluar la entrada entera los trata como una sola cosa.
+**Estado real del código**: portado e implementado en `cuerpo_cerrado.py:identificar_lineas_centrales` (catalogado como `D1-D3-ventana-lineas-centrales` en `catalogo_tipologias.py`), corre dentro de `clasificar_no_muro()`. Confirmado correcto contra 2 proyectos reales distintos (PdV, Beauchef) — no es una hipótesis sin probar.
 
-Probado contra PdV Niveles 1 y 2 con **0 falsos rechazos**: rechaza correctamente una ventana con parteluz y las líneas de pavimento/subrayado, y deja pasar todos los muros reales grandes (incluido el bloque de 50 m). Evidencia visual en `Fase 2/Desarrollos/Test/pdv/test_linea_sola_n1.png`, `test_linea_sola_n2.png` y `test_linea_sola_v2_n1.png`.
+**El gap real, sin resolver desde que se detectó por primera vez**: el resultado de esta clasificación solo se usa en 2 canales laterales — (a) como gate dentro de `cuerpo_cerrado_fusiona` para bloquear que las 2 caras de una ventana se fusionen entre sí como si fueran un muro continuo, y (b) para colorear el PNG de diagnóstico (`diag_completo_*`). **Ninguno de los dos escribe de vuelta al export real.** No existe un campo `ventanas_geo` en el schema de salida (ver §2.16) — el diseño original (línea 79 de este documento) asumía que las ventanas siempre vendrían de `analisis_semantico` (Claude Vision), nunca de geometría determinista, y ese supuesto nunca se revisó cuando el clasificador geométrico se construyó después (22–24 ago).
 
-El render v2 distingue **tres** estados, pero solo dos son parte del diseño permanente:
+**Consecuencia real, observada 2 veces en 2 proyectos, mismo mecanismo**: la línea central de una ventana, bloqueada de fusionarse con el muro real, queda como su propio grupo de conectividad chico — pasa igual el filtro de span/ángulo de `muros_geo.append()` (Celda 4, ~línea 1700) y se exporta como su propio `MU##`, visualmente correcto en el diagnóstico pero mal etiquetado como muro real en la salida. Primera vez: bug `MU18` (PdV, 21-ago). Segunda vez: `MU18-21` (Beauchef Camarín, 30-ago).
 
-| Color | Significado | Estado |
-|---|---|---|
-| Verde | segmento con par paralelo → muro real | Diseño confirmado |
-| Rojo | segmento sin par paralelo → ventana / pavimento / texto | Diseño confirmado |
-| Gris | segmento corto (≤ 0.5 × espesor máximo de búsqueda = 0.9 m × 0.5 = **0.45 m**) → queda **sin veredicto**, no evaluado | **Gap conocido, no diseño final** (ver abajo) |
+**Segunda opinión pedida (DeepSeek + Codex, 30/31-ago — ver `Herramientas_CubiCasa5k/_consultas/`)**: ambos confirmaron el diagnóstico de causa raíz (gap de arquitectura/wiring, no bug de clasificación) y advirtieron, con razón, que construir un `ventanas_geo` genérico e inmediato arriesga (a) doble fuente de verdad contra `analisis_semantico` sin regla de precedencia, y (b) falsos positivos si la firma se generalizara mal a otros elementos. **Verificado contra el código que ese riesgo no aplica al fix puntual**: la firma D1-D3 es específica (no un filtro genérico) y ya está validada en 2 proyectos — el fix acotado real es excluir del export los segmentos ya confirmados en `_ventana_ids` (no los `_hoja_dudosa_ids`, que siguen siendo duda real), no construir el inventario completo de ventanas.
 
-**El gris no es una tercera categoría permanente** — es un hueco identificado el 2026-08-21 a partir del feedback del arquitecto sobre las capturas Cap7/8/10: hoy esos segmentos cortos simplemente no se clasifican. El diseño correcto, **todavía no implementado**, es evaluarlos con el mismo criterio de cuerpo cerrado (§2.8) — ¿forman un cuadrilátero cerrado real? — para clasificarlos activamente como pilar/parteluz en vez de dejarlos en limbo.
+**Pendiente, sin implementar**: (1) fix acotado — excluir de `muros_geo` los segmentos de línea central ya confirmados como ventana, sin tocar `analisis_semantico` ni la lógica de fusión — secuenciado después de cerrar la revisión de Beauchef Camarín/Baño en curso (MU14-17/MU03-13); (2) diseñar `ventanas_geo` como campo de export propio (origen/confianza/cobertura, regla de precedencia contra Vision) queda fuera de este gap puntual — decisión de arquitectura más grande, sin decidir todavía.
 
-Está escrito en Node a propósito, para poder validarlo contra datos reales antes de portarlo a Python, donde no se puede probar sin correr Colab. **No está en el notebook.**
+El render de diagnóstico sigue distinguiendo corredores cortos sin veredicto (segmento ≤ 0.45 m no evaluado) como gap aparte, sin cambios en esta pasada.
 
 ### 2.10 Pilar / parteluz — definición permanente
 

@@ -29,6 +29,14 @@ el .md -- nunca se deja el codigo con un numero que el catalogo no conoce.
 'parcial' (algo de logica existe pero no cubre todas las variantes de la
 fila), 'pendiente' (fila documentada en Convenciones_CAD, sin codigo
 todavia -- placeholder deliberado, no un olvido).
+
+`usa_en` / `exporta_a_schema` (opcionales, 🆕 2026-08-31): 'estado' responde
+"¿existe el codigo del criterio?", no "¿su resultado llega al export final?"
+-- una entrada puede estar 'implementado' y aun asi quedar enchufada solo a
+canales laterales (fusion, diagnostico visual) sin tocar el JSON exportado
+(ver GAP-GEO-VENT-001 en Diseno_Funcional_ArchiCheck.md §2.9). Cuando eso
+pase, se agregan estos 2 campos en vez de degradar 'estado' -- el criterio en
+si no es parcial, es el wiring al pipeline el que falta.
 """
 
 TIPOLOGIAS = {
@@ -86,7 +94,14 @@ TIPOLOGIAS = {
         "parametros": {"tol_simetria_m": 0.05},
         "estado": "implementado",
         "implementado_en": ["cuerpo_cerrado.py:identificar_lineas_centrales"],
-        "fuente": "2026-08-20, advertencia de no-generalizacion 🆕 24-ago",
+        # 🆕 2026-08-31 (GAP-GEO-VENT-001, ver Diseno_Funcional_ArchiCheck.md §2.9):
+        # 'estado':'implementado' es correcto para el CRITERIO (la funcion existe y
+        # clasifica bien), pero no dice si el resultado llega al export -- no lo dice.
+        # Campo separado a proposito (no se sube 'estado' a 'parcial': el criterio en
+        # si mismo no es parcial, es el wiring al pipeline el que falta).
+        "usa_en": ["cuerpo_cerrado_fusiona (gate de fusion)", "diag_completo_*.png (diagnostico visual)"],
+        "exporta_a_schema": False,  # no existe 'ventanas_geo'; NO llega a muros_geo -- ver gap
+        "fuente": "2026-08-20, advertencia de no-generalizacion 🆕 24-ago, campo usa_en/exporta_a_schema 🆕 31-ago",
     },
     "D1-encuentro-de-brazos": {
         "seccion": "D.1", "elemento": "Muros",
