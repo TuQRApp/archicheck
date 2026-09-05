@@ -1,0 +1,94 @@
+{
+  "id": "resp_0f25505e67734c8c006a9b8af0748487d180e1466fdc46b801",
+  "object": "response",
+  "created_at": 1788578544,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1788578553,
+  "error": null,
+  "frequency_penalty": 0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5.3-codex",
+  "moderation": null,
+  "output": [
+    {
+      "id": "msg_0f25505e67734c8c006a9b8af1694487d18d27d24fe89a3cf5",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "Excelente fix y muy bien documentado. Voy directo y crítico por pregunta:\n\n## 1) Regla “exactamente 3 líneas” (estricta vs laxa)\n\n**Sí, es estricta**, y eso parece **intencionalmente correcto** para esta etapa (priorizar precisión sobre cobertura).  \nPero tiene dos riesgos reales:\n\n- **Falso negativo**: ventana dibujada con **2 líneas** (top+bottom, sin central) → hoy se pierde.  \n- **Falso negativo**: una de las 3 líneas se partió en dos por ruido/split y el grupo queda con 4+ → se pierde.\n\n¿Es raro? Depende del estándar CAD de cada oficina. En Chile, **2 líneas para vano simplificado** no es exótico en plantas esquemáticas o municipales. O sea: **riesgo real**, no teórico.\n\n**Recomendación práctica:** mantener “3 exactas” como modo conservador, pero agregar:\n- `modo_estricto=True` (actual),\n- `modo_flexible` que acepte 2 o 3 con reglas extra (p.ej. paralelismo + espesor/offset esperable + contexto de muro).\nAsí no contaminas el flujo actual y preparas generalización.\n\n---\n\n## 2) `max_spread_vertical_m=2.0` y riesgo de fusión cruzada\n\nEste filtro ayuda, pero **solo no basta** para evitar todas las fusiones espurias.  \nCaso posible: tres líneas de distintos elementos en una fachada, mismo x0/x1 por casualidad, separadas <2m.\n\nTe falta (recomendable) al menos **un chequeo estructural adicional**:\n\n- **Consistencia de separación vertical interna**: para 3 líneas, ordenar y verificar patrón tipo borde-centro-borde (p.ej. distancias razonables y no degeneradas).\n- **Compatibilidad con muro soporte** (si disponible): que el centro del grupo interseque/colinde con un muro candidato.\n- O mínimo: exigir que las 3 líneas tengan **longitudes similares** (evita mezclar trazos heterogéneos).\n\nNo diría que el riesgo sea enorme, pero **no despreciable** cuando escales a planos más sucios.\n\n---\n\n## 3) Calibración de tolerancias\n\nA priori:\n\n- `tol_jamba_m=0.03` → **razonable**, pero puede ser **apretado** en PDFs vectoriales degradados/escala rara.  \n  Sugiero volverlo híbrido: `max(0.03m, k * ancho_medio_trazo_en_px * mpx)` o al menos medir sensibilidad.\n- `ancho_min_m=0.15` → **muy bajo** para ventana real; puede abrir falsos positivos. Yo subiría a **0.30–0.40m** salvo que tengas lucarnas mínimas reales en dataset.\n- `ancho_max_m=3.0` → **ok** como techo inicial.\n- `max_spread_vertical_m=2.0` → **algo laxo** para “tripleta de una sola ventana”; usualmente el paquete de 3 líneas está bastante más compacto. Podrías bajar a **1.2–1.5m** y observar recall.\n\n---\n\n## 4) Riesgo de sesgo Beauchef (hardcode implícito)\n\nNo veo hardcode de coordenadas (bien), pero sí hay **hardcode de convención gráfica**:\n\n- Asumes firma universal D1-D3 (3 líneas horizontales).  \n- Asumes orientación casi horizontal (<10°). Planos rotados o ventanas en muros no ortogonales podrían perderse.\n- Asumes que `_detectar_lineas_referencia_periodicas` mete ahí las ventanas; en otros proyectos puede no pasar igual.\n\nO sea: no está “beauchef-codeado”, pero sí **convención-codeado**. Es aceptable si lo declaras explícitamente como detector de tipología, no detector universal de ventanas.\n\n---\n\n## Recomendación corta de siguiente paso (antes de merge definitivo)\n\n1. Correr E2E en 3–4 proyectos distintos.  \n2. Loggear métricas por página: candidatos horizontales, grupos UF, grupos de 3, descartes por ancho/spread.  \n3. Guardar “motivo de descarte” por grupo (debug).  \n4. Evaluar un modo flexible (2 o 3 líneas) detrás de flag.\n\nSi querés, te propongo una versión V2 mínima de la función con **scoring y motivos de descarte**, sin romper tu contrato actual."
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "current_turn",
+    "effort": "none",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 2710,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 971,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 3681
+  },
+  "user": null,
+  "metadata": {}
+}

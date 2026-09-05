@@ -229,6 +229,8 @@ Por qué esto y no otra cosa: el mecanismo que sí funcionó a mano fue **propon
 
 El render de diagnóstico sigue distinguiendo corredores cortos sin veredicto (segmento ≤ 0.45 m no evaluado) como gap aparte, sin cambios en esta pasada.
 
+**Segundo mecanismo relacionado, distinto del clasificador D1-D3 de arriba — implementado y portado 2026-09-04 (`D3-ventana-reconstruccion-por-jamba`, ver `catalogo_tipologias.py`)**: la zona `MU03-13` de Beauchef (Camarín/Baño) no era un caso de línea central mal etiquetada — eran fragmentos de marco (ancho de línea ~1.44 m, fuera del rango plausible de muro/ventana, largo individual 0.13–0.17 m) que el filtro de span/ángulo exportaba igual como `MU##` sueltos. El método: reconstruir cada ventana real por su **par de jambas** (borde izquierdo/derecho en x), agrupando por Union-Find las líneas horizontales de `muros_excluidos_por_referencia` (§2.11) que comparten el mismo par de jamba casi idéntico — un grupo de exactamente 3 líneas (firma D1-D3) es una ventana; nunca agrupando por cercanía de fragmentos (ese enfoque, probado antes a mano en `_reconstruir_ventanas.py` con coordenadas hardcodeadas, dio una agrupación asimétrica confirmada como incorrecta por el arquitecto). Generalizado sin coordenadas fijas (`cuerpo_cerrado.py:reconstruir_ventanas_por_jamba`, tolerancias en metros vía `catalogo_tipologias.py`), validado reproduciendo exactamente las mismas 6 ventanas de Beauchef y verificado con overlay real. **Portado a la Celda 4**: corre justo después de `_detectar_lineas_referencia_periodicas`, exporta a un campo propio **`ventanas_reconstruidas_por_jamba`** (§2.16), separado a propósito de `muros_geo` y de la decisión de arquitectura mayor —todavía sin tomar— de un `ventanas_geo` general con regla de precedencia contra `analisis_semantico`. **Sin verificar contra una corrida nueva de Colab end-to-end** (solo se validó contra el JSON ya generado el 30-ago) y sin mostrarse todavía en el portal.
+
 ### 2.10 Pilar / parteluz — definición permanente
 
 **Todo cuerpo cerrado que sea un cuadrilátero que no sea hoja de puerta ni ventana es un pilar (o parteluz).**
@@ -321,7 +323,7 @@ Su rol vigente es **semántico, no geométrico**. `rampas` no tiene conteo semá
 
 ### 2.16 Salida
 
-Por página (`resultados_paginas[i]`): `entry_idx`, `fname_tag`, `pagina`, `escala`, `mpp`, `imagen_w_px`/`imagen_h_px`, `mediciones_geometricas`, `incumplimientos_geo`, `analisis_semantico`, **`muros_geo`**, **`puertas_geo`**, `muros_excluidos_por_referencia`.
+Por página (`resultados_paginas[i]`): `entry_idx`, `fname_tag`, `pagina`, `escala`, `mpp`, `imagen_w_px`/`imagen_h_px`, `mediciones_geometricas`, `incumplimientos_geo`, `analisis_semantico`, **`muros_geo`**, **`puertas_geo`**, `muros_excluidos_por_referencia`, `muros_excluidos_por_demolicion`, **`ventanas_reconstruidas_por_jamba`** (🆕 2026-09-04 — ventanas recuperadas de `muros_excluidos_por_referencia` por par de jamba, ver §2.9; campo acotado, no es el `ventanas_geo` general).
 
 Archivo final: `archicheck_geometrico_{slug}_{DDmes_HHMM}.json` con `resumen_global` (páginas, área total, recintos, incumplimientos, conteo de elementos y su fuente) + un PNG anotado por página. Ambos se suben al portal.
 
@@ -399,6 +401,16 @@ Ante una decisión real A vs. B, pausar y presentar las opciones. Para lo demás
 - Toda actualización de roadmap se refleja también en la memoria del proyecto, en la misma pasada.
 - **Este documento** debe mantenerse sincronizado con el mismo criterio: cuando un diseño acordado pasa a implementado, se actualiza acá, no solo en el roadmap.
 
+### 3.13 Segundas opiniones de DeepSeek/Codex: exclusivamente para revisar código, nunca para hechos de dominio — y siempre reportadas por separado
+Regla del usuario, 2026-09-04, a raíz de un caso real: al pedir segunda opinión sobre `reconstruir_ventanas_por_jamba` (ver Roadmap), DeepSeek afirmó que "en Chile es común dibujar ventanas con solo 2 líneas" — afirmación que **contradice directamente** una convención ya confirmada por el arquitecto en este mismo documento/`Convenciones_CAD.md` (2026-08-30): 2 líneas sin línea central es la firma de **puerta**, no de ventana. Señal adicional de que estaban adivinando, no citando datos: DeepSeek y Codex se contradijeron entre sí en el valor de `ancho_min_m` (uno pidió subirlo, el otro bajarlo), sin evidencia real de ningún proyecto detrás de ninguno de los dos números.
+
+- **Alcance permitido**: revisión de código real — bugs, hardcoding, riesgos de un algoritmo o cambio concreto, lectura crítica de lógica ya escrita. Ahí sí tienen algo verificable que aportar, igual que cualquier lector del código.
+- **Fuera de alcance, no confiar sin verificar contra datos reales del proyecto**: cualquier afirmación sobre convenciones de dibujo CAD, normativa chilena, valores numéricos de dimensiones típicas ("ventanas suelen medir X"), o "cómo se hace en la práctica" — ninguno de los dos tiene acceso a los planos reales de este proyecto ni a `Convenciones_CAD.md`; generalizan de memoria genérica de entrenamiento, con la misma confianza aparente acierten o no. Para calibrar cualquier umbral numérico (anchos, tolerancias), la fuente correcta es la evidencia ya confirmada dentro del propio proyecto (`Convenciones_CAD.md`, JSONs de corridas reales, ground truth de PdV/Beauchef/Isla de Pascua/Campo Lindo) — nunca la estimación de un modelo externo sin esa evidencia.
+- **Presentación obligatoria, sin excepción**: reportar siempre el texto completo de la respuesta de DeepSeek y de Codex **por separado**, más la conclusión propia de Claude como una tercera pieza aparte — nunca solo una síntesis ya fusionada. El usuario necesita poder juzgar cada fuente por su cuenta, en vez de heredar una mezcla donde una observación válida de código y una afirmación de dominio sin base quedan con el mismo peso aparente.
+
+### 3.14 Documentar en la bitácora y guardar en memoria de forma automática — nunca esperar a que el usuario lo pida
+Regla del usuario, 2026-09-04. Cualquier hallazgo, decisión, fix, cambio de rumbo o pausa relevante de una sesión se registra en la bitácora del proyecto (roadmap `.md` + `.html`, mismo criterio de sincronización de §3.12) **de forma proactiva y automática**, no como una acción bajo pedido ("documenta esto"). Mismo criterio para la memoria persistente de Claude entre sesiones: lo relevante para trabajar mejor en este proyecto a futuro (contexto de máquina/entorno, preferencias confirmadas, reglas nuevas como esta misma) se guarda sin que el usuario tenga que pedirlo explícitamente cada vez.
+
 ---
 
 ## 4. Lo que NO está implementado
@@ -418,6 +430,7 @@ Lista explícita de lo que está diseñado, acordado o detectado pero **no** exi
 | **Interfaz de confirmación de leyenda por página** | Pendiente de producto, agregado 2026-08-21 (§2.12) | El sistema debe proponer las leyendas detectadas (color+texto) y el arquitecto confirma/descarta/agrega, en vez de confiar 100% en la detección automática |
 | **Causa raíz del gap de extracción (Baño Universal)** | ✅ Identificada 2026-08-21 (§2.11) — capa `'Proyecciones'` reusada para obra nueva | No es un caso aislado: el mismo patrón aparece en varios tramos de N1 y N2 (`mapeo_muros_n1/n2_21ago1921.png`). Fix = override de arriba, no implementado |
 | **`ventanas_geo` — clasificador geométrico de ventanas** | No existe | Hoy las ventanas dependen de la estimación de Claude Vision, con la misma imprecisión que muros y puertas tenían antes de tener clasificador propio (hay casos documentados de ventana alucinada). Punto de partida acordado: un rectángulo cuyo lado más largo tiene una tercera línea paralela al medio — *"como un muro recto con una línea al centro"*. Más simple que el arco de puerta: no requiere ajuste de curva |
+| **Reconstrucción de ventana por par de jambas contra `muros_excluidos_por_referencia`** | ✅ Implementado y portado a Celda 4, 2026-09-04 (`cuerpo_cerrado.py:reconstruir_ventanas_por_jamba`, catálogo `D3-ventana-reconstruccion-por-jamba`) | Resuelve el caso donde una ventana se exporta como varios fragmentos de marco (`MU##` sueltos con ancho de línea implausible) en vez de una sola línea central mal etiquetada — mecanismo distinto al D1-D3 de arriba. Exporta a `ventanas_reconstruidas_por_jamba` (§2.16). Sin verificar contra una corrida nueva de Colab end-to-end todavía. Ver §2.9, párrafo final |
 | **Filtro de clasificación upstream completo** | Parcial | El clasificador de línea sola cubre un caso. Falta excluir pilares y otros elementos que hoy entran a la lista de candidatos a muro |
 | **Puertas dibujadas como rectángulo sin arco** | Sin resolver (§2.7) | El clasificador da 0 candidatos por diseño; no hay forma confiable de ubicar esos rectángulos todavía |
 | **Relajar el filtro angular de muros** | Acordado, secuenciado después del cuerpo cerrado | El ángulo debe pasar de filtro excluyente a prioridad (§2.4d) |
@@ -466,6 +479,8 @@ Lista explícita de lo que está diseñado, acordado o detectado pero **no** exi
 7. **Celda 5** — visualización con detecciones superpuestas.
 8. **Celda 6** — informe en consola + guarda `archicheck_geometrico_{slug}_{timestamp}.json`.
 9. **Celda 7** — descarga el JSON y los PNG al PC.
+
+**🆕 Python local disponible (2026-09-04)**: además de Colab, hay un Python 3.13.15 local (paquete embebido portátil, `pymupdf`/`opencv-python-headless`/`pillow`/`numpy` instalados) para correr scripts de diagnóstico y probar cambios de `cuerpo_cerrado.py`/`catalogo_tipologias.py` sin round-trip a Colab — así se validó `reconstruir_ventanas_por_jamba` antes de portarlo. El pipeline completo (Celda 1-7, con Vision LLM) sigue corriendo en Colab; el local es para iteración rápida sobre JSON ya generados, no reemplaza la corrida real.
 
 Notas prácticas:
 - El PDF de prueba principal es PdV (restaurante Plaza Pedro de Valdivia, Providencia), con Nivel 1 y Nivel 2 en la página 2. Otros planos de referencia con datos ya generados: Beauchef, Isla de Pascua, Campo Lindo, cada uno en su subcarpeta de `Fase 2/Desarrollos/Test/`.

@@ -1,0 +1,84 @@
+## Evaluación crítica del fix `reconstruir_ventanas_por_jamba`
+
+### Respuesta a pregunta 1: Condición "exactamente 3 líneas"
+
+**Es demasiado estricta para casos reales de dibujo simplificado.** 
+
+En la práctica de planos arquitectónicos chilenos, es muy común que las ventanas se dibujen simplificadas con solo 2 líneas (marcos superior e inferior) sin línea central, especialmente en vistas en planta a escalas pequeñas (1:50 o menores). Las convenciones CAD varían entre oficinas:
+
+- Si el plano muestra ventana con 3 líneas (D1-D3), es porque hay un detalle de antepecho o parteluz.
+- Con 2 líneas, la firma es indistinguible de una puerta según tus propias convenciones (`Convenciones_CAD.md`), lo que crea una **ambigüedad fundamental** que no puedes resolver solo con geometría.
+
+```python
+# Riesgo concreto no cubierto:
+# - Línea superior de ventana: y=5000, x=(100, 250)
+# - Línea inferior de ventana: y=4960, x=(100, 250)  
+# (misma jamba, 2 líneas solamente) → **queda sin reconstruir**
+# vs. puerta legítima con el mismo patrón geométrico
+```
+
+**Recomendación**: No deberías intentar resolver esto con `len(idxs) == 3` estricto. En su lugar, para grupos de 2 líneas con jamba idéntica, deberías delegar al cruce con `analisis_semantico` (el módulo de visión) para decidir si es puerta o ventana — precisamente el punto de integración que mencionas como "decisión de arquitectura mayor todavía sin tomar". El riesgo de falsos positivos (fusionar 2 elementos distintos) es bajo porque el par de jamba es muy específico, pero el riesgo de falsos negativos (perder ventanas reales) es alto en planos simplificados.
+
+---
+
+### Respuesta a pregunta 2: Chequeo `max_spread_vertical_m=2.0` — ¿suficiente?
+
+**Es insuficiente para descartar elementos de contextos distintos.** El spread vertical de 2m no impide que dos ventanas de pisos diferentes (en un corte, por ejemplo) o de alas opuestas de un edificio, **alineadas en X por casualidad**, se fusionen si sus coordenadas Y están dentro de 2m. En un plano de planta, dos ventanas en habitaciones distintas pero adyacentes podrían tener:
+
+- Habitación A: ventana en y=2400, x=(500, 750) — completa con 3 líneas
+- Habitación B: fragmentos de muro excluidos en y=2560, x=(505, 748) — coincidencia de ancho
+
+Tu `_union` las fusionaría porque `abs(bboxes[i][0]-bboxes[k][0]) <= tol_jamba_px` (27px a escala 0.03m) y lo mismo para `x1`, y el spread vertical (160mm) es < 2m.
+
+**Chequeo que falta — distancia lineal entre miembros del grupo**: La firma D1-D3 de una ventana real tiene las 3 líneas **contenidas en un rectángulo compacto** (la ventana misma). Debes verificar que la **distancia entre líneas consecutivas** sea razonable (ej. espaciado vertical uniforme esperado para marcos de ventana: 50-300mm entre líneas). Con `max_spread=2.0` estás permitiendo que el "centro" esté arbitrariamente lejos de los bordes.
+
+```python
+# Fix sugerido - reemplazar max_spread por chequeo de regularidad interna:
+for idxs in grupos.values():
+    if len(idxs) != 3: continue
+    ys = sorted(_y_extremos(horizontales[i]) for i in idxs)
+    # ys = [(y_sup, y_inf), ...] de cada una de las 3 líneas
+    # Verificar que el spread de los CENTROS de línea es proporcional al ancho
+    centros_y = [(a+b)/2 for a,b in ys]
+    spread_centros = max(centros_y) - min(centros_y)
+    # Ventana real: spread_centros < min(ancho_ventana, 2.0m)
+    # (en ventanas reales, la altura suele ser menor que el ancho)
+    if spread_centros > min(x1 - x0, 2.0):
+        continue  # líneas demasiado dispersas verticalmente → no es ventana real
+```
+
+---
+
+### Respuesta a pregunta 3: Valores de tolerancia
+
+| Parámetro | Valor | Evaluación crítica |
+|-----------|-------|-------------------|
+| `tol_jamba_m=0.03` | **Bien calibrado** — a escala típica 1:100, representa 3mm reales; suficiente para distorsiones de PDF pero estricto contra coincidencias espurias. En planos 1:50, 3mm es aún aceptable. |
+| `ancho_min_m=0.15` | **Razonable** — ventanas menores a 15cm reales son inusuales en Chile. Sin embargo, si el plano incluye vanos de ventilación o ventanas de baño/cocina angostas (0.10m), las perderías. Sugiero bajarlo a 0.10. |
+| `ancho_max_m=3.0` | **Potencialmente restrictivo** — en proyectos comerciales/institucionales, ventanas de 4-5m son comunes. Beauchef es un edificio educacional con ventanas modulares; en un proyecto de laboratorio o gimnasio, las ventanas corridas superan 3m. **Recomiendo 6.0m** o incluso un umbral relativo (ej. > 1.5× a altura de muro típica). |
+| `max_spread_vertical_m=2.0` | **Demasiado laxo** — como viste en pregunta 2; para ventanas estándar con altura de 1.0-1.8m (las más comunes), el spread entre top y bottom no debería exceder 2.0. **Pero combinarlo con la condición de 3 líneas significa que permites que el "centro" esté hasta 1.0m fuera de los bordes** — claramente no puede ser una ventana con la línea central, así que el control real debe estar en el spread de las 3 líneas entre sí. |
+
+---
+
+### Respuesta a pregunta 4: Reglas "reusables" vs. datos implícitos calibrados a Beauchef
+
+**Sí — hay 3 patrones calibrados implícitamente, que no son "datos hardcodeados" pero que arrastran supuestos de Beauchef**:
+
+1. **Solo considera líneas horizontales para reconstruir ventanas.** Las ventanas en planos pueden dibujarse verticales (si la fachada se dibujó rotada, o en detalle de corte de muro). Tu `_es_horizontal` filtra con `ang < 10 o > 170`, descartando ventanas verticales legítimas en caso de que el plano tenga alguna rotada. **Deberías reconstruir en ambas orientaciones**, o al menos verificar si el proyecto tiene convención exclusivamente horizontal.
+
+2. **Asume que las ventanas tienen TODAS sus líneas excluidas en el mismo lote de `muros_excluidos_por_referencia`.** Si el PDF tiene texto/dimensiones superpuestas que interrumpen una línea antes de que sea reconocida como segmento, esa línea no estará en el excluido y el grupo quedaría incompleto. En Beauchef las líneas eran limpias; pero si en otro plano la línea top de una ventana se dividió en 2 segmentos por una cota dibujada encima, tendrías 2 líneas para top + 1 centro + 1 bottom = 4 → **descartado silenciosamente** sin adjuntar diagnóstico más claro.
+
+3. **El requerimiento de que las 3 líneas compartan el MISMO par de jamba (x0, x1)** es el patrón D1-D3 de Beauchef. En otro plano, las ventanas pueden dibujarse con profundidad de derrame o marco exterior ligeramente distinto entre top/bottom (ej. top con x=(100,250), bottom con x=(103,247)). Con `tol_jamba_m=0.03` cubrirías esto, pero **¿hay convenciones de dibujo que usan el mismo x0/x1 exacto?** Las normas chilenas (NCh 433, NCh 3171) no especifican esto, así que es convención de oficina — **deberías documentar que este supuesto se basa en la observación de los planos de Beauchef y que, si un nuevo plano no reconstruye ventanas esperadas, el primer sospechoso es este requisito**.
+
+---
+
+### Veredicto final
+
+El fix **es correcto para el caso Beauchef** y bien implementado: Union-Find con par de jamba es la abstracción correcta (no cercanía), y la trazabilidad en `segmentos_origen` es un buen patrón.
+
+**Pero no está listo para producción** contra un corpus variado. Tiene un riesgo no despreciable de falsos negativos (ventanas con 2 líneas por simplificación) y necesita refinar los umbrales (`ancho_max`, `max_spread`, y agregar chequeo de regularidad interna). Deberías:
+
+1. Agregar manejo de grupos de **2 líneas** que delega al cruce semántico posterior.
+2. Reemplazar `max_spread_vertical_m` por un chequeo de proporcionalidad entre ancho y spread vertical.
+3. Ampliar `ancho_max_m` a 6.0m o hacerlo relativo al contexto.
+4. Documentar explícitamente que el algoritmo supone dibujo de ventanas como **3 líneas horizontales con par de jamba idéntico** y que este supuesto se deriva de la observación de Beauchef — no de una norma chilena.

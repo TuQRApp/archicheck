@@ -1244,6 +1244,37 @@
     </div>
   </details>
 
+  <details class="item" open>
+    <summary>✅ 2026-08-31 (continuación) — MU03-13 resuelto: reconstrucción por jambas, 6 ventanas confirmadas visualmente <span class="badge done">Resuelto, sin portar al pipeline</span></summary>
+    <div class="item-body">
+      <p><strong>Sesión continuada la misma madrugada — nunca quedó documentada hasta ahora.</strong> Encontrada el 2026-09-04 al auditar archivos del proyecto en el equipo nuevo (timestamps reales 31-ago 08:56–10:23, posteriores a la pausa de 01:41 de arriba). El "problema serio con los muros" mencionado en la pausa <strong>sigue sin detallar</strong> — solo se resolvió el hilo de ventanas.</p>
+      <p><strong>Causa real del intento v2 fallido</strong>: el fragmento individual nunca fue la unidad correcta de agrupación — cada uno de los 11 fragmentos de <code>MU03-13</code> es un resto/remate de marco, no una ventana. La cota <code>0.14</code>/<code>0.16</code> que quedó sin explicar corresponde al <strong>espesor de jamba</strong>, no a una ventana completa.</p>
+      <p><strong>Método correcto</strong> (<code>_reconstruir_ventanas.py</code>): cada ventana real se reconstruye por su <strong>par de jambas</strong> (borde izq/der en x), usando las líneas horizontales top/centro/bottom que el pipeline calculó pero excluyó del export vía <code>muros_excluidos_por_referencia</code> (§2.11) — no agrupando los fragmentos ya exportados. Jambas verificadas a mano contra las coordenadas x reales de <code>archicheck_geometrico_beauchef_30ago_0356.json</code>.</p>
+      <p><strong>Resultado</strong> (<code>plano_ventanas_v3_final.png</code>): 11 fragmentos → <strong>6 ventanas reales</strong> (jambas x=1651-1745, 1756-1838, 2061-2153, 2551-2646, 2860-2949, 2959-3052), coincidiendo exacto con el patrón simétrico esperado — 2 juntas en cada borde exterior + 1 en cada lado interior. La jamba izquierda de la primera (x=1651) es la esquina de <code>MU01</code>, no un <code>MU</code> suelto — dato relevante para cuando se retome el tema de muros pendiente. Verificado visualmente contra el PNG real de <code>pag3-3</code>.</p>
+      <p><strong>Sin avanzar desde entonces</strong>: sigue siendo un script de diagnóstico puntual sobre un JSON ya generado — <strong>no está portado a <code>cuerpo_cerrado.py</code>/Celda 4</strong>. Próximo paso acordado: portar esta lógica (par de jambas contra <code>muros_excluidos_por_referencia</code>) al pipeline real, y <code>GAP-GEO-VENT-001</code> (§2.9 del Diseño Funcional) ya se actualizó para reflejar que existe un método verificado, aunque no generalizado.</p>
+    </div>
+  </details>
+
+  <details class="item" open>
+    <summary>✅ 2026-09-04 — Python local instalado; reconstrucción de ventanas por jamba generalizada y portada a la Celda 4 <span class="badge done">Portado, sin verificar en Colab end-to-end</span></summary>
+    <div class="item-body">
+      <p><strong>Entorno</strong>: Python 3.13.15 instalado en el equipo nuevo (paquete embebido portátil oficial — el instalador MSI falló repetido con <code>0x80070003</code>, causa no aislada, se abandonó esa vía). <code>pymupdf</code>/<code>opencv-python-headless</code>/<code>pillow</code>/<code>numpy</code> instalados y verificados con import real (faltaba el Visual C++ Redistributable a nivel de sistema, causaba <code>ImportError</code> en pymupdf — instalado y confirmado). Verificado corriendo <code>_reconstruir_ventanas.py</code> de verdad: mismo resultado exacto de antes.</p>
+      <p><strong>Algoritmo generalizado, sin coordenadas hardcodeadas</strong>: agrupa las líneas horizontales de <code>muros_excluidos_por_referencia</code> por su <strong>par de jamba real</strong> (x0,x1) casi idéntico (Union-Find, tolerancia en metros vía <code>mpx</code>) — un grupo de <strong>exactamente 3 líneas</strong> con el mismo par de jamba es una ventana (firma D1-D3: 2 bordes + 1 central). Validado reproduciendo exacto las mismas 6 ventanas de Beauchef ya confirmadas a mano, sin ningún falso positivo entre las otras 19 cadenas excluidas de esa página. Verificado con overlay real contra el plano (<code>plano_ventanas_GENERALIZADO_verificacion.png</code>).</p>
+      <p><strong>Portado</strong>: función <code>reconstruir_ventanas_por_jamba()</code> en <code>cuerpo_cerrado.py</code> (tolerancias vía <code>catalogo_tipologias.py</code>, entrada nueva <code>D3-ventana-reconstruccion-por-jamba</code>), llamada en Celda 4 justo después de <code>_detectar_lineas_referencia_periodicas</code>. Exporta a campo propio <strong><code>ventanas_reconstruidas_por_jamba</code></strong>, separado a propósito de <code>muros_geo</code> y de la decisión de arquitectura mayor (sin tomar) de un <code>ventanas_geo</code> general. Notebook vivo: <code>ArchiCheck_Base 04sep_2306.ipynb</code>.</p>
+      <p><strong>Sin verificar todavía</strong>: correr el notebook completo en Colab contra un PDF real end-to-end (lo validado corrió sobre el JSON ya generado el 30-ago, no sobre una corrida nueva). Sin decidir si se muestra en el portal.</p>
+    </div>
+  </details>
+
+  <details class="item" open>
+    <summary>🔴✅ 2026-09-04 (continuación) — Segunda opinión de DeepSeek+Codex incluyó afirmaciones de dominio no verificables; nueva regla permanente §3.13 <span class="badge done">Regla agregada</span></summary>
+    <div class="item-body">
+      <p>Se corrió <code>consultar_reconstruccion_ventanas_jamba.mjs</code> pidiendo segunda opinión sobre el fix de arriba. <strong>Aporte real (crítica de código)</strong>: ambos coincidieron en que <code>max_spread_vertical_m=2.0</code> es débil solo, falta chequeo de consistencia interna entre las 3 líneas — y en que la función es "convención-codeada" (asume horizontal, asume que la ventana cae en <code>muros_excluidos_por_referencia</code>) sin ser Beauchef-hardcodeada.</p>
+      <p><strong>🔴 Lo que no se debió tomar en serio</strong>: DeepSeek afirmó que "en Chile es común dibujar ventanas con 2 líneas" — <strong>contradice directamente</strong> una convención ya confirmada por el arquitecto el 30-ago (<code>Convenciones_CAD.md</code>): 2 líneas sin central es la firma de <strong>puerta</strong>, no ventana. Implementar esa sugerencia habría metido un bug real. Además, DeepSeek y Codex se contradijeron entre sí sobre <code>ancho_min_m</code> (uno pidió subirlo, el otro bajarlo) sin citar ningún dato real — señal de que estaban adivinando.</p>
+      <p><strong>Nueva regla permanente (§3.13 Diseño Funcional)</strong>: DeepSeek/Codex se usan exclusivamente para revisar código, nunca para afirmaciones de dominio/convenciones sin verificar contra evidencia real del proyecto; sus reportes se presentan siempre <strong>por separado</strong>, más la conclusión de Claude aparte — nunca una síntesis ya fusionada.</p>
+      <p><strong>Regla adicional (§3.14)</strong>: documentar en la bitácora y guardar en memoria persistente de forma <strong>automática y proactiva</strong>, sin esperar a que el usuario lo pida cada vez — este mismo hallazgo ya se había documentado sin pedido explícito; la regla lo deja como comportamiento por defecto.</p>
+    </div>
+  </details>
+
   <details class="item">
     <summary>P2 — Normativa: OGUC completo + RAG <span class="badge pending">Pendiente</span></summary>
     <div class="item-body">

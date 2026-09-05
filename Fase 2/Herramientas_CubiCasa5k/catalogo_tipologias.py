@@ -103,6 +103,29 @@ TIPOLOGIAS = {
         "exporta_a_schema": False,  # no existe 'ventanas_geo'; NO llega a muros_geo -- ver gap
         "fuente": "2026-08-20, advertencia de no-generalizacion 🆕 24-ago, campo usa_en/exporta_a_schema 🆕 31-ago",
     },
+    "D3-ventana-reconstruccion-por-jamba": {
+        "seccion": "D.3", "elemento": "Ventanas",
+        "nombre": "Reconstruccion de ventana por par de jambas (desde lineas excluidas por referencia periodica)",
+        "criterio": "Misma firma D1-D3 (2 bordes paralelos + 1 linea central), aplicada a lineas que "
+                    "_detectar_lineas_referencia_periodicas saco a muros_excluidos_por_referencia por "
+                    "coincidir en el mismo patron geometrico de deslinde/rasante (colineales, gap acotado, "
+                    "span largo) sin serlo -- una fila de ventanas repetidas cae en ese mismo patron. Se "
+                    "agrupan las lineas horizontales excluidas por su par de jamba (x0,x1) casi identico; "
+                    "un grupo de exactamente 3 lineas con ese mismo par de jamba es una ventana. NO agrupa "
+                    "por cercania de fragmentos (ese metodo si dio una agrupacion asimetrica incorrecta, "
+                    "ver Roadmap 2026-08-31/09-04, caso MU03-13 Beauchef).",
+        "parametros": {"tol_jamba_m": 0.03, "ancho_min_m": 0.15, "ancho_max_m": 3.0, "max_spread_vertical_m": 2.0},
+        "estado": "implementado",
+        "implementado_en": ["cuerpo_cerrado.py:reconstruir_ventanas_por_jamba"],
+        "usa_en": ["Celda 4 (post _detectar_lineas_referencia_periodicas)"],
+        # Campo de export propio y acotado -- 'ventanas_reconstruidas_por_jamba', distinto de
+        # 'ventanas_geo' (esa decision de arquitectura general sigue sin tomarse, ver Diseno_
+        # Funcional_ArchiCheck.md §2.9/§4.1: doble fuente de verdad contra analisis_semantico
+        # sin regla de precedencia todavia).
+        "exporta_a_schema": True,
+        "fuente": "Validado a mano 2026-08-31 (_reconstruir_ventanas.py, coordenadas hardcodeadas), "
+                  "generalizado 2026-09-04 (sin coordenadas, agrupando por jamba real)",
+    },
     "D1-encuentro-de-brazos": {
         "seccion": "D.1", "elemento": "Muros",
         "nombre": "Encuentro de brazos (esquina, empalme y cruce -- misma tipologia)",

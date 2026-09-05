@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "archicheck-dev",
+      "runtimeExecutable": "C:\\Users\\dell\\AppData\\Local\\Programs\\node-v20.19.2-win-x64\\npm.cmd",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5174
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+Excelente fix y muy bien documentado. Voy directo y crítico por pregunta:
+
+## 1) Regla “exactamente 3 líneas” (estricta vs laxa)
+
+**Sí, es estricta**, y eso parece **intencionalmente correcto** para esta etapa (priorizar precisión sobre cobertura).  
+Pero tiene dos riesgos reales:
+
+- **Falso negativo**: ventana dibujada con **2 líneas** (top+bottom, sin central) → hoy se pierde.  
+- **Falso negativo**: una de las 3 líneas se partió en dos por ruido/split y el grupo queda con 4+ → se pierde.
+
+¿Es raro? Depende del estándar CAD de cada oficina. En Chile, **2 líneas para vano simplificado** no es exótico en plantas esquemáticas o municipales. O sea: **riesgo real**, no teórico.
+
+**Recomendación práctica:** mantener “3 exactas” como modo conservador, pero agregar:
+- `modo_estricto=True` (actual),
+- `modo_flexible` que acepte 2 o 3 con reglas extra (p.ej. paralelismo + espesor/offset esperable + contexto de muro).
+Así no contaminas el flujo actual y preparas generalización.
+
+---
+
+## 2) `max_spread_vertical_m=2.0` y riesgo de fusión cruzada
+
+Este filtro ayuda, pero **solo no basta** para evitar todas las fusiones espurias.  
+Caso posible: tres líneas de distintos elementos en una fachada, mismo x0/x1 por casualidad, separadas <2m.
+
+Te falta (recomendable) al menos **un chequeo estructural adicional**:
+
+- **Consistencia de separación vertical interna**: para 3 líneas, ordenar y verificar patrón tipo borde-centro-borde (p.ej. distancias razonables y no degeneradas).
+- **Compatibilidad con muro soporte** (si disponible): que el centro del grupo interseque/colinde con un muro candidato.
+- O mínimo: exigir que las 3 líneas tengan **longitudes similares** (evita mezclar trazos heterogéneos).
+
+No diría que el riesgo sea enorme, pero **no despreciable** cuando escales a planos más sucios.
+
+---
+
+## 3) Calibración de tolerancias
+
+A priori:
+
+- `tol_jamba_m=0.03` → **razonable**, pero puede ser **apretado** en PDFs vectoriales degradados/escala rara.  
+  Sugiero volverlo híbrido: `max(0.03m, k * ancho_medio_trazo_en_px * mpx)` o al menos medir sensibilidad.
+- `ancho_min_m=0.15` → **muy bajo** para ventana real; puede abrir falsos positivos. Yo subiría a **0.30–0.40m** salvo que tengas lucarnas mínimas reales en dataset.
+- `ancho_max_m=3.0` → **ok** como techo inicial.
+- `max_spread_vertical_m=2.0` → **algo laxo** para “tripleta de una sola ventana”; usualmente el paquete de 3 líneas está bastante más compacto. Podrías bajar a **1.2–1.5m** y observar recall.
+
+---
+
+## 4) Riesgo de sesgo Beauchef (hardcode implícito)
+
+No veo hardcode de coordenadas (bien), pero sí hay **hardcode de convención gráfica**:
+
+- Asumes firma universal D1-D3 (3 líneas horizontales).  
+- Asumes orientación casi horizontal (<10°). Planos rotados o ventanas en muros no ortogonales podrían perderse.
+- Asumes que `_detectar_lineas_referencia_periodicas` mete ahí las ventanas; en otros proyectos puede no pasar igual.
+
+O sea: no está “beauchef-codeado”, pero sí **convención-codeado**. Es aceptable si lo declaras explícitamente como detector de tipología, no detector universal de ventanas.
+
+---
+
+## Recomendación corta de siguiente paso (antes de merge definitivo)
+
+1. Correr E2E en 3–4 proyectos distintos.  
+2. Loggear métricas por página: candidatos horizontales, grupos UF, grupos de 3, descartes por ancho/spread.  
+3. Guardar “motivo de descarte” por grupo (debug).  
+4. Evaluar un modo flexible (2 o 3 líneas) detrás de flag.
+
+Si querés, te propongo una versión V2 mínima de la función con **scoring y motivos de descarte**, sin romper tu contrato actual.

@@ -44,6 +44,10 @@ _TOL_VERTICE_M = _param('D2-hoja-vano-firma-relativa', 'tol_vertice_m', 0.03)
 _ANCHO_MAX_HOJA_CONFIRMADA_M = _param('D2-hoja-vano-firma-relativa', 'ancho_max_hoja_confirmada_m', 0.10)
 _MARGEN_CONTEXTO_M = _param('D1-encuentro-de-brazos', 'margen_contexto_m', 0.6)
 _TOL_CONECTOR_ESQUINA_M = _param('D1-encuentro-de-brazos', 'tol_conector_esquina_m', 0.03)
+_TOL_JAMBA_M = _param('D3-ventana-reconstruccion-por-jamba', 'tol_jamba_m', 0.03)
+_ANCHO_VENTANA_MIN_M = _param('D3-ventana-reconstruccion-por-jamba', 'ancho_min_m', 0.15)
+_ANCHO_VENTANA_MAX_M = _param('D3-ventana-reconstruccion-por-jamba', 'ancho_max_m', 3.0)
+_MAX_SPREAD_VERTICAL_M = _param('D3-ventana-reconstruccion-por-jamba', 'max_spread_vertical_m', 2.0)
 
 
 def _validar_mpx(mpx, nombre_fn):
@@ -1088,4 +1092,116 @@ def relleno_solido_de_contexto(contexto_local, mpx, margen_m=_MARGEN_CONTEXTO_M,
     objetivo_ids = {id(s) for s in objetivo} if objetivo else None
     con_pares = construir_contexto_con_pares(contexto_local, mpx)
     bin_arr, w, h = _relleno_solido(con_pares, box, contexto_local, objetivo_ids, mpx)
+
+
+def reconstruir_ventanas_por_jamba(muros_excluidos_por_referencia, mpx,
+                                    tol_jamba_m=_TOL_JAMBA_M,
+                                    ancho_min_m=_ANCHO_VENTANA_MIN_M,
+                                    ancho_max_m=_ANCHO_VENTANA_MAX_M,
+                                    max_spread_vertical_m=_MAX_SPREAD_VERTICAL_M):
+    """Reconstruye ventanas reales desde 'muros_excluidos_por_referencia'
+    (D3-ventana-reconstruccion-por-jamba, ver catalogo_tipologias.py).
+
+    Motivacion (caso real MU03-13, Beauchef, Roadmap 2026-08-31/09-04):
+    _detectar_lineas_referencia_periodicas excluye cadenas que colineales +
+    gap acotado + span largo parecen deslinde/rasante -- pero una fila de
+    ventanas repetidas de una fachada cae en ESE MISMO patron geometrico
+    (varias lineas horizontales cortas, muy regulares, span largo si se
+    mira la fachada completa). Cuando eso pasa, las 3 lineas reales de cada
+    ventana (top/centro/bottom, la misma firma D1-D3 de
+    identificar_lineas_centrales) quedan enterradas en el excluido en vez de
+    llegar a muros_geo como fragmentos sueltos sin sentido (el bug real que
+    motivo este fix: 11 fragmentos exportados como MU## sueltos, con
+    ancho_linea_prom implausible, en vez de 6 ventanas reales).
+
+    Metodo (generalizado, SIN coordenadas hardcodeadas -- el intento
+    anterior de agrupar esos 11 fragmentos por CERCANIA dio una agrupacion
+    asimetrica que el arquitecto confirmo incorrecta): agrupar las lineas
+    horizontales excluidas por su PAR DE JAMBA (x0, x1) casi identico entre
+    si (tol_jamba_m) -- las 3 lineas de una misma ventana comparten
+    exactamente el mismo par de jamba, aunque esten en 3 alturas (y)
+    distintas. Un grupo de EXACTAMENTE 3 lineas con el mismo par de jamba es
+    una ventana (firma D1-D3: 2 bordes + 1 central) -- 2 lineas sin
+    tercera es la firma de PUERTA (Convenciones_CAD.md), no se reconstruye
+    aca; 1 o 4+ no tiene firma valida conocida, se ignora sin avisar en
+    silencio (queda en muros_excluidos_por_referencia tal cual, disponible
+    para diagnostico).
+
+    Devuelve una lista de ventanas reconstruidas, cada una:
+    {'id': 'VT01', 'x0': int, 'x1': int, 'y_top': int, 'y_bot': int,
+     'ancho_m': float, 'segmentos_origen': ['MU19', 'MU21', 'MU20']}
+    -- 'segmentos_origen' guarda la trazabilidad (que cadenas excluidas
+    armaron esta ventana), nunca se fusiona en silencio.
+    """
+    _validar_mpx(mpx, 'reconstruir_ventanas_por_jamba')
+    tol_jamba_px = tol_jamba_m / mpx
+
+    def _es_horizontal(m):
+        s = m['segmentos'][0]
+        dx = s['p2'][0] - s['p1'][0]
+        dy = s['p2'][1] - s['p1'][1]
+        ang = abs(math.degrees(math.atan2(dy, dx))) % 180
+        return ang < 10 or ang > 170
+
+    def _bbox_x(m):
+        xs = [p[0] for s in m['segmentos'] for p in (s['p1'], s['p2'])]
+        return min(xs), max(xs)
+
+    def _y_extremos(m):
+        ys = [p[1] for s in m['segmentos'] for p in (s['p1'], s['p2'])]
+        return min(ys), max(ys)
+
+    horizontales = [m for m in muros_excluidos_por_referencia if _es_horizontal(m)]
+    n = len(horizontales)
+    bboxes = [_bbox_x(m) for m in horizontales]
+
+    # Union-Find por par de jamba (x0, x1) casi identico -- NUNCA por
+    # cercania/proximidad de fragmentos (ese es el metodo que ya fallo).
+    parent = list(range(n))
+
+    def _find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    def _union(i, k):
+        ri, rk = _find(i), _find(k)
+        if ri != rk:
+            parent[ri] = rk
+
+    for i in range(n):
+        for k in range(i + 1, n):
+            if abs(bboxes[i][0] - bboxes[k][0]) <= tol_jamba_px and abs(bboxes[i][1] - bboxes[k][1]) <= tol_jamba_px:
+                _union(i, k)
+
+    grupos = {}
+    for i in range(n):
+        grupos.setdefault(_find(i), []).append(i)
+
+    ventanas = []
+    for idxs in grupos.values():
+        if len(idxs) != 3:
+            continue  # firma D1-D3 exige exactamente 2 bordes + 1 central
+        miembros = [horizontales[i] for i in idxs]
+        x0 = round(sum(bboxes[i][0] for i in idxs) / 3)
+        x1 = round(sum(bboxes[i][1] for i in idxs) / 3)
+        ancho_m = round((x1 - x0) * mpx, 2)
+        if not (ancho_min_m <= ancho_m <= ancho_max_m):
+            continue
+        y_extremos = [_y_extremos(m) for m in miembros]
+        y_top = min(y[0] for y in y_extremos)
+        y_bot = max(y[1] for y in y_extremos)
+        if (y_bot - y_top) * mpx > max_spread_vertical_m:
+            continue
+        ventanas.append({
+            'x0': x0, 'x1': x1, 'y_top': y_top, 'y_bot': y_bot,
+            'ancho_m': ancho_m,
+            'segmentos_origen': [m['id'] for m in miembros],
+        })
+
+    ventanas.sort(key=lambda v: v['x0'])
+    for i, v in enumerate(ventanas, 1):
+        v['id'] = f'VT{i:02d}'
+    return ventanas
     return {'box': box, 'w': w, 'h': h, 'bin': bin_arr}
