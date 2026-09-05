@@ -1,0 +1,1074 @@
+  ✓ LEYENDA SIMBOLOGIA: 1 color(es) con texto asociado encontrados en el PDF completo:
+      color=(0.0, 0.0, 0.0) texto='ROL SII: 2791 - 1' -> ⚠ NO reconocido como agregado/eliminado (revisar palabras clave)
+  ✓ Cuadro de superficies: 1054 caracteres extraidos de la pagina 8
+
+⏱ Celda 4 iniciada: 2026-08-30 03:59:24
+
+========================================================
+  Página 3  —  escala 1:50
+  Recorte: (5%,2%) → (45%,48%)
+========================================================
+  ⏱ Inicio página: 03:59:24
+  2919x2313 px analizados  |  0.00588 m/px  |  1m = 170 px
+  → Claude Vision...
+  ✓ Claude: 5 recintos, 4 incumplimientos
+  → Extracción vectorial...
+DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
+  DIAG PASO1 -- crop_px=(328, 111, 3247, 2424): 2977 segmentos_l, bbox x=[414,3167]
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 112 corte_elevacion, 2134 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 418 ignorar, 73 mobiliario, 0 muro, 17 puerta, 0 rampa, 1 ventana, 222 sin capa mapeada — de 2977 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['accesibilidad'] = ['Accesibilidad'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['achurado'] = ['HATCH'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['LINEA TERRENO ORIGINAL'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['muro'] = ['MUROS'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 2134 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 99 segmentos identificados como referencia (Paso 1.5), 99 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 1126 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 73 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 323 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      '0': 257 segmentos evitados de proteger
+        largo_m=0.2 p1=(2357, 1863) p2=(2357, 1829)
+        largo_m=0.1 p1=(2351, 1840) p2=(2363, 1852)
+        largo_m=0.2 p1=(2340, 1846) p2=(2374, 1846)
+        largo_m=0.2 p1=(2357, 1795) p2=(2357, 1829)
+        largo_m=0.1 p1=(2363, 1818) p2=(2351, 1806)
+      'PROYECCION': 63 segmentos evitados de proteger
+        largo_m=0.09 p1=(475, 553) p2=(475, 568)
+        largo_m=0.13 p1=(475, 579) p2=(475, 600)
+        largo_m=0.13 p1=(475, 611) p2=(475, 633)
+        largo_m=0.13 p1=(475, 643) p2=(475, 665)
+        largo_m=0.13 p1=(475, 676) p2=(475, 697)
+      'Muros Proy': 2 segmentos evitados de proteger
+        largo_m=0.4 p1=(2006, 1268) p2=(2006, 1336)
+        largo_m=0.4 p1=(1972, 1336) p2=(1972, 1268)
+      'FORMATO': 1 segmentos evitados de proteger
+        largo_m=2.72 p1=(195, 2218) p2=(657, 2218)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 6
+  ✓ Muros exportados: 252 (de 8 grupos protegidos, 78 segmentos descartados por angulo no-ortogonal, 0 muros con estado agregado/eliminado detectado via leyenda -- el color ya NO excluye geometria, ver _detectar_leyenda_simbologia)
+  ⏱ Extracción + filtrado (Paso 1-4): 0:00:02
+    DIAG bloqueado MU06 vs MU60: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.1999074074074074, anchoB=0.1999074074074074)
+    DIAG CONECTIVIDAD -- MU06 (anchoA=0.1999074074074074m) vs MU60 (anchoB=0.1999074074074074m): tolPx=3.4000000000000004 (~0.02m de dilatacion)
+    DIAG bloqueado MU10 vs MU13: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.1999074074074074, anchoB=None)
+    DIAG PAREJA -- MU13 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [1019, 757]-[509, 757] (largo=2.999m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [883, 1165]-[883, 1165] (largo=0.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1768, 757]-[1257, 757] (largo=3.004m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [206, 1108]-[206, 1108] (largo=0.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [509, 740]-[1019, 740] (largo=2.999m): dist=0.1m, dif_angulo=0.0deg
+        candidato [1019, 723]-[475, 723] (largo=3.199m): dist=0.2m, dif_angulo=0.0deg
+        candidato [507, 1108]-[527, 1108] (largo=0.118m): dist=2.064m, dif_angulo=0.0deg
+    DIAG bloqueado MU12 vs MU15: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG PAREJA -- MU12 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [1019, 723]-[475, 723] (largo=3.199m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [1223, 723]-[1547, 723] (largo=1.905m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [509, 740]-[1019, 740] (largo=2.999m): dist=0.1m, dif_angulo=0.0deg, solapa=True
+        candidato [1019, 757]-[509, 757] (largo=2.999m): dist=0.2m, dif_angulo=0.0deg, solapa=True
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [509, 740]-[1019, 740] (largo=2.999m): dist=0.1m, dif_angulo=0.0deg
+        candidato [1019, 757]-[509, 757] (largo=2.999m): dist=0.2m, dif_angulo=0.0deg
+        candidato [509, 893]-[475, 893] (largo=0.2m): dist=1.0m, dif_angulo=0.0deg
+    DIAG bloqueado MU13 vs MU17: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG PAREJA -- MU13 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [1019, 757]-[509, 757] (largo=2.999m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [883, 1165]-[883, 1165] (largo=0.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1768, 757]-[1257, 757] (largo=3.004m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [206, 1108]-[206, 1108] (largo=0.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [509, 740]-[1019, 740] (largo=2.999m): dist=0.1m, dif_angulo=0.0deg
+        candidato [1019, 723]-[475, 723] (largo=3.199m): dist=0.2m, dif_angulo=0.0deg
+        candidato [507, 1108]-[527, 1108] (largo=0.118m): dist=2.064m, dif_angulo=0.0deg
+    DIAG bloqueado MU15 vs MU16: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG bloqueado MU18 vs MU21: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG bloqueado MU27 vs MU31: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.1999074074074074, anchoB=0.3998148148148148)
+    DIAG bloqueado MU59 vs MU63: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.3998148148148148)
+    DIAG bloqueado MU64 vs MU65: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.29986111111111113, anchoB=None)
+    DIAG bloqueado MU75 vs MU78: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.13523148148148148, anchoB=None)
+    DIAG bloqueado MU75 vs MU79: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.13523148148148148, anchoB=None)
+    DIAG bloqueado MU75 vs MU80: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.13523148148148148, anchoB=None)
+    DIAG bloqueado MU75 vs MU81: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.13523148148148148, anchoB=None)
+    DIAG bloqueado MU76 vs MU78: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.13523148148148148, anchoB=None)
+    DIAG bloqueado MU76 vs MU79: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.13523148148148148, anchoB=None)
+  DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 22, 'grupo B sin par paralelo': 34, 'grupo A sin par paralelo': 156}
+  ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 252 entradas -> 126 muros (126 fusionadas, 131 pares bloqueados por puerta intermedia, 212 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
+  ⏱ Fusión + cuerpo cerrado: 0:00:16
+  DIAG BBOX -- PAGINA_PLANTA=3 crop_px=(328, 111, 3247, 2424) fname_tag=pag3-1 muros_geo=126
+    bbox RELATIVO al crop: x=[180,2703] y=[281,1846]
+    bbox ABSOLUTO (pagina completa): x=[508,3031] y=[392,1957] (plano_full shape=(5052, 7152, 3))
+  DIAG VISUAL COMPLETO: guardado diag_muros_pag3-1_30aug_0359.png (126 muros dibujados)
+  ⏱ Diagnóstico muros (línea): 0:00:00
+    ⚠ relleno solido VACIO para MU02 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU03 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU04 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU05 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU06 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU08 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU09 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU10 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU11 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU15 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU16 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU17 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU18 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU19 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU20 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU21 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU22 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU23 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU24 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU25 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU26 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU27 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU28 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU29 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU30 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU31 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU32 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU33 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU34 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU35 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU36 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU37 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU38 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU39 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU40 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU41 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU42 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU43 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU44 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU45 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU46 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU47 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU48 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU49 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU50 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU51 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU52 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU53 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU54 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU55 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU56 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU57 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU58 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU59 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU60 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU61 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU62 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU63 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU64 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU65 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU66 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU67 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU68 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU69 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU70 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU71 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU72 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU73 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU74 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU75 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU76 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU77 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU78 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU79 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU80 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU81 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU82 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU83 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU84 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU85 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU86 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU87 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU88 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU89 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU90 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU91 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU92 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU93 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU94 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU95 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU96 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU97 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU98 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU99 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU100 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU101 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU102 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU103 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU104 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU105 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU106 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU107 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU108 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU109 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU110 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU111 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU112 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU113 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU114 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU115 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU116 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU117 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU118 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU119 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU120 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU121 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU122 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU123 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU124 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU125 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU126 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+  DIAG VISUAL COMPLETO (todos los tipos, relleno solido + contexto local): guardado diag_completo_pag3-1_30aug_0359.png
+    muros=126 (verde=nuevo, slate=existente, rojo=eliminado -- ahora RELLENO solido, no solo linea) | puertas(arcos)=7 (naranja) | ventana=17 segs (azul) | hoja/vano CONFIRMADA (<=10cm)=0 segs (magenta) | hoja/vano DUDA (>10cm, no excluida)=39 segs (naranja-rosado) | conflictos=0 (amarillo)
+    escaleras/rampas: NO marcadas -- sin detector geometrico implementado todavia (Convenciones_CAD D.4/D.5, catalogo_tipologias.py estado=pendiente)
+  ⏱ Diagnóstico completo (relleno + clasificación local): 0:00:00
+  ✓ Puertas exportadas (clasificador geometrico): 7
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 3273)]
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 8 grupos protegidos como muro, top 25 por span (11 textos de cota disponibles para el chequeo de distancia):
+     span=16.84m  bbox=13.9x9.5m  n_seg=716  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.3
+     span=10.64m  bbox=10.6x0.91m  n_seg=161  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=161)=0.0/0.0/0.0
+     span=10.55m  bbox=10.5x1.01m  n_seg=207  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=207)=0.0/0.0/0.0
+     span=9.56m  bbox=1.02x9.5m  n_seg=325  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/16.0/23.7
+     span=6.1m  bbox=6.1x0.0m  n_seg=33  ancho_linea(min/mediana/max)=0.12/0.12/0.12  %cerca_cota(0.18m/0.35m/0.59m, n=33)=0.0/0.0/0.0
+     span=3.86m  bbox=3.79x0.71m  n_seg=260  ancho_linea(min/mediana/max)=0/0.0/0.3  %cerca_cota(0.18m/0.35m/0.59m, n=260)=0.0/0.0/2.7
+     span=3.86m  bbox=3.79x0.71m  n_seg=266  ancho_linea(min/mediana/max)=0/0.0/0.3  %cerca_cota(0.18m/0.35m/0.59m, n=266)=0.0/0.0/0.0
+     span=2.72m  bbox=2.72x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(0.18m/0.35m/0.59m, n=1)=0.0/0.0/0.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 2 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(4985,3150)-(5009,3219) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+    tipo=(4, 'Square') bbox_px=(5345,3150)-(5369,3219) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 7 fuente(s) en esta pagina
+    (56, 'ttf', 'TrueType', 'Swiss721BT-RomanCondensed', 'F10', 'WinAnsiEncoding', 0)
+    (53, 'ttf', 'Type0', 'Swiss721BT-RomanCondensed', 'F9', 'Identity-H', 0)
+    (76, 'ttf', 'TrueType', 'CenturyGothic', 'F11', 'WinAnsiEncoding', 0)
+    (7, 'ttf', 'TrueType', 'Verdana', 'F1', 'WinAnsiEncoding', 0)
+    (14, 'ttf', 'TrueType', 'ArialMT', 'F2', 'WinAnsiEncoding', 0)
+    (26, 'ttf', 'Type0', 'ArialMT', 'F5', 'Identity-H', 0)
+    (19, 'ttf', 'TrueType', 'Arial-BoldMT', 'F3', 'WinAnsiEncoding', 0)
+  DIAGNOSTICO CAPAS: 31 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=1 {'name': '6º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=2 {'name': '1º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=8 {'name': 'Muros Proy', 'intent': [], 'on': True, 'usage': None}
+    xref=9 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=29 {'name': 'ARTEFACTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=30 {'name': 'Textos', 'intent': [], 'on': True, 'usage': None}
+    xref=57 {'name': '5º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=58 {'name': 'TEXTOS ROJOS', 'intent': [], 'on': True, 'usage': None}
+    xref=59 {'name': 'BM-COTAS-0.13', 'intent': [], 'on': True, 'usage': None}
+    xref=60 {'name': '0', 'intent': [], 'on': True, 'usage': None}
+    xref=61 {'name': 'NIVELES', 'intent': [], 'on': True, 'usage': None}
+    xref=62 {'name': 'LINEA TERRENO ORIGINAL', 'intent': [], 'on': True, 'usage': None}
+    xref=65 {'name': 'PROYECCION', 'intent': [], 'on': True, 'usage': None}
+    xref=66 {'name': '2º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=67 {'name': 'Puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=68 {'name': 'PAVIMENTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=69 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=70 {'name': 'COTAS', 'intent': [], 'on': True, 'usage': None}
+    xref=71 {'name': 'MARCADOR CORTES-ELEVACIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=77 {'name': 'PROYECCIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=78 {'name': 'MOBILIARIO', 'intent': [], 'on': True, 'usage': None}
+    xref=79 {'name': 'Accesibilidad', 'intent': [], 'on': True, 'usage': None}
+    xref=80 {'name': 'HATCH', 'intent': [], 'on': True, 'usage': None}
+    xref=83 {'name': 'BALL', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': '4º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': '3º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'MUROS', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'ILUMINACION', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'MUEBLES', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'TEXTO', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 6775 paths totales en get_drawings(), distribucion completa por capa:
+    'FORMATO': 1925
+    '0': 981
+    'COTAS': 937
+    'ARTEFACTOS': 847
+    '6º PLANO': 458
+    'PROYECCION': 348
+    'HATCH': 277
+    'MARCADOR CORTES-ELEVACIONES': 201
+    'MOBILIARIO': 182
+    '2º PLANO': 180
+    '5º PLANO': 132
+    'Puertas': 112
+    'Accesibilidad': 87
+    '': 30
+    '4º PLANO': 24
+    'PROYECCIONES': 17
+    '1º PLANO': 13
+    'PAVIMENTOS': 13
+    'BALL': 8
+    'Muros Proy': 2
+    'Ventanas': 1
+  ⚠ La capa 'MUROS' (mapeada a 'muro') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'BM-COTAS-0.13' (mapeada a 'cota') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'MUEBLES' (mapeada a 'mobiliario') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'LINEA TERRENO ORIGINAL' (mapeada a 'deslinde_terreno') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  DIAGNOSTICO DASHES: 0 de 2977 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
+  DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (1)', 1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (2)', 2]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (3)', 3]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (4)', 4]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (5)', 5]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (6)', 6]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (7)', 7]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (8)', 8]
+    [2, 'CC-BEAUCHEFF_DOM-DOM Acc (1)', 9]
+  DIAGNOSTICO RAW_DRAWINGS: 0 zona(s) Cocina/Pasillo/Oficina, radio 250.01574803149606px, sin filtros
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=0px): 0 item(s) crudo(s) sin filtrar
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 172 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=3.21 muestra_p1=(1019, 723) muestra_p2=(475, 723) capas=['Puertas']
+    n_segmentos=3 span_m=0.97 muestra_p1=(475, 1968) muestra_p2=(475, 1934) capas=['0']
+    n_segmentos=4 span_m=0.21 muestra_p1=(666, 1926) muestra_p2=(667, 1927) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(932, 1929) muestra_p2=(932, 1933) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(932, 1935) muestra_p2=(932, 1939) capas=['COTAS']
+    n_segmentos=3 span_m=0.1 muestra_p1=(944, 1942) muestra_p2=(944, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1020, 1926) muestra_p2=(1019, 1927) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1017, 1929) muestra_p2=(1017, 1933) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1017, 1935) muestra_p2=(1017, 1940) capas=['COTAS']
+    n_segmentos=5 span_m=0.24 muestra_p1=(1017, 1940) muestra_p2=(1019, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1019, 1942) muestra_p2=(1020, 1943) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1140, 1926) muestra_p2=(1138, 1926) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1136, 1929) muestra_p2=(1136, 1933) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1136, 1935) muestra_p2=(1136, 1939) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1136, 1939) muestra_p2=(1138, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1138, 1942) muestra_p2=(1140, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.13 muestra_p1=(1140, 1942) muestra_p2=(1141, 1942) capas=['COTAS']
+    n_segmentos=3 span_m=0.19 muestra_p1=(1501, 1934) muestra_p2=(1502, 1936) capas=['COTAS']
+    n_segmentos=3 span_m=0.21 muestra_p1=(1500, 1942) muestra_p2=(1498, 1942) capas=['COTAS']
+    n_segmentos=3 span_m=0.23 muestra_p1=(1496, 1942) muestra_p2=(1494, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1494, 1942) muestra_p2=(1494, 1941) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1888, 1926) muestra_p2=(1886, 1926) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1886, 1926) muestra_p2=(1885, 1929) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1885, 1929) muestra_p2=(1884, 1933) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1884, 1935) muestra_p2=(1885, 1939) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1885, 1939) muestra_p2=(1886, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1886, 1942) muestra_p2=(1888, 1942) capas=['COTAS']
+    n_segmentos=4 span_m=0.13 muestra_p1=(1888, 1942) muestra_p2=(1889, 1942) capas=['COTAS']
+    n_segmentos=3 span_m=0.97 muestra_p1=(2227, 1934) muestra_p2=(2227, 1968) capas=['0']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2098, 1932) muestra_p2=(2100, 1931) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2102, 1931) muestra_p2=(2103, 1932) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2098, 1942) muestra_p2=(2098, 1941) capas=['COTAS']
+    n_segmentos=7 span_m=0.23 muestra_p1=(1710, 2000) muestra_p2=(1712, 2001) capas=['COTAS']
+    n_segmentos=4 span_m=0.17 muestra_p1=(1712, 2001) muestra_p2=(1714, 2003) capas=['COTAS']
+    n_segmentos=5 span_m=0.19 muestra_p1=(1714, 2003) muestra_p2=(1714, 2005) capas=['COTAS']
+    n_segmentos=3 span_m=0.12 muestra_p1=(1731, 2009) muestra_p2=(1730, 2011) capas=['COTAS']
+    n_segmentos=6 span_m=0.29 muestra_p1=(1327, 2059) muestra_p2=(1328, 2058) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1337, 2059) muestra_p2=(1336, 2063) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1336, 2065) muestra_p2=(1337, 2070) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(1337, 2070) muestra_p2=(1338, 2072) capas=['COTAS']
+    n_segmentos=5 span_m=0.23 muestra_p1=(1338, 2072) muestra_p2=(1340, 2073) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2332, 1845) muestra_p2=(2332, 1846) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2335, 1848) muestra_p2=(2339, 1848) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2341, 1848) muestra_p2=(2345, 1848) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2345, 1848) muestra_p2=(2348, 1846) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2348, 1846) muestra_p2=(2349, 1845) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2332, 1725) muestra_p2=(2332, 1727) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2335, 1728) muestra_p2=(2339, 1729) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2341, 1729) muestra_p2=(2345, 1728) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2345, 1728) muestra_p2=(2348, 1727) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2348, 1727) muestra_p2=(2348, 1725) capas=['COTAS']
+    n_segmentos=5 span_m=0.23 muestra_p1=(2332, 1632) muestra_p2=(2332, 1634) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2335, 1635) muestra_p2=(2339, 1636) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2341, 1636) muestra_p2=(2345, 1635) capas=['COTAS']
+    n_segmentos=5 span_m=0.23 muestra_p1=(2348, 1634) muestra_p2=(2348, 1632) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2332, 1547) muestra_p2=(2332, 1549) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2335, 1550) muestra_p2=(2339, 1550) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2341, 1550) muestra_p2=(2345, 1550) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2345, 1550) muestra_p2=(2348, 1549) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2348, 1549) muestra_p2=(2348, 1547) capas=['COTAS']
+  ✓ Vectorial: 11 textos (cotas/nombres), 2591 trazos candidatos a símbolo, 348 tramos protegidos como muro (por conectividad, no por largo), 230 tramos desprotegidos por parecer achurado (rampa/escalera), 124 en 5 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 6, 'span_m': 1.0}, {'n_segmentos': 4, 'span_m': 5.4}, {'n_segmentos': 33, 'span_m': 6.1}, {'n_segmentos': 12, 'span_m': 1.02}, {'n_segmentos': 50, 'span_m': 9.2}]
+  → OpenCV...
+  ✓ Limpieza pre-umbral: 11 textos, 124 líneas discontinuas, 2591 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 4 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 168.3m²
+  ✓ Cruce: 4/4 con nombre | 2 incumpl. geo
+  ⏱ Fin página: 04:00:44 (duración: 0:01:20)
+
+========================================================
+  Página 3  —  escala 1:50
+  Recorte: (48%,2%) → (83%,40%)
+========================================================
+  ⏱ Inicio página: 04:00:44
+  2474x1904 px analizados  |  0.00588 m/px  |  1m = 170 px
+  → Claude Vision...
+  ✓ Claude: 6 recintos, 2 incumplimientos
+  → Extracción vectorial...
+DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
+  DIAG PASO1 -- crop_px=(3440, 126, 5914, 2030): 2962 segmentos_l, bbox x=[3539,5835]
+  ✓ MAPEO POR CAPA: 110 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 0 corte_elevacion, 1909 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 481 ignorar, 360 mobiliario, 0 muro, 18 puerta, 0 rampa, 0 ventana, 84 sin capa mapeada — de 2962 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['achurado'] = ['HATCH'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['corte_elevacion'] = ['MARCADOR CORTES-ELEVACIONES'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['LINEA TERRENO ORIGINAL'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['muro'] = ['MUROS'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['ventana'] = ['Ventanas'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 1909 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 74 segmentos identificados como referencia (Paso 1.5), 74 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 1050 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 360 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 407 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      '0': 228 segmentos evitados de proteger
+        largo_m=0.2 p1=(236, 1294) p2=(236, 1260)
+        largo_m=0.1 p1=(230, 1271) p2=(242, 1283)
+        largo_m=0.2 p1=(219, 1277) p2=(253, 1277)
+        largo_m=0.2 p1=(236, 1226) p2=(236, 1260)
+        largo_m=0.1 p1=(242, 1249) p2=(230, 1237)
+      'PROYECCION': 120 segmentos evitados de proteger
+        largo_m=0.13 p1=(797, 223) p2=(775, 223)
+        largo_m=0.13 p1=(764, 223) p2=(742, 223)
+        largo_m=0.13 p1=(731, 223) p2=(710, 223)
+        largo_m=0.13 p1=(699, 223) p2=(677, 223)
+        largo_m=0.13 p1=(667, 223) p2=(645, 223)
+      'PROYECCIONES': 58 segmentos evitados de proteger
+        largo_m=0.06 p1=(1148, 928) p2=(1148, 919)
+        largo_m=0.06 p1=(1148, 919) p2=(1147, 909)
+        largo_m=0.03 p1=(1147, 909) p2=(1146, 905)
+        largo_m=0.0 p1=(1140, 882) p2=(1140, 882)
+        largo_m=0.06 p1=(1140, 882) p2=(1136, 873)
+      'FORMATO': 1 segmentos evitados de proteger
+        largo_m=4.62 p1=(99, 1789) p2=(885, 1789)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 5
+  ✓ Muros exportados: 99 (de 4 grupos protegidos, 94 segmentos descartados por angulo no-ortogonal, 0 muros con estado agregado/eliminado detectado via leyenda -- el color ya NO excluye geometria, ver _detectar_leyenda_simbologia)
+  ⏱ Extracción + filtrado (Paso 1-4): 0:00:02
+    DIAG bloqueado MU02 vs MU81: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG PAREJA -- MU02 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [1817, 223]-[1511, 223] (largo=1.799m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [1851, 223]-[2327, 223] (largo=2.799m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1834, 427]-[1834, 427] (largo=0.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1341, 223]-[1511, 223] (largo=1.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [1511, 240]-[1817, 240] (largo=1.799m): dist=0.1m, dif_angulo=0.0deg
+        candidato [1834, 257]-[1664, 257] (largo=1.0m): dist=0.2m, dif_angulo=0.0deg
+        candidato [1817, 988]-[1494, 988] (largo=1.899m): dist=4.498m, dif_angulo=0.0deg
+    DIAG bloqueado MU02 vs MU83: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG PAREJA -- MU02 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [1817, 223]-[1511, 223] (largo=1.799m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [1851, 223]-[2327, 223] (largo=2.799m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1834, 427]-[1834, 427] (largo=0.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1341, 223]-[1511, 223] (largo=1.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [1511, 240]-[1817, 240] (largo=1.799m): dist=0.1m, dif_angulo=0.0deg
+        candidato [1834, 257]-[1664, 257] (largo=1.0m): dist=0.2m, dif_angulo=0.0deg
+        candidato [1817, 988]-[1494, 988] (largo=1.899m): dist=4.498m, dif_angulo=0.0deg
+    DIAG bloqueado MU02 vs MU84: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG PAREJA -- MU02 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [1817, 223]-[1511, 223] (largo=1.799m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [1851, 223]-[2327, 223] (largo=2.799m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1834, 427]-[1834, 427] (largo=0.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1341, 223]-[1511, 223] (largo=1.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [1511, 240]-[1817, 240] (largo=1.799m): dist=0.1m, dif_angulo=0.0deg
+        candidato [1834, 257]-[1664, 257] (largo=1.0m): dist=0.2m, dif_angulo=0.0deg
+        candidato [1817, 988]-[1494, 988] (largo=1.899m): dist=4.498m, dif_angulo=0.0deg
+    DIAG bloqueado MU03 vs MU81: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG PAREJA -- MU03 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [1511, 240]-[1817, 240] (largo=1.799m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [1834, 427]-[1834, 427] (largo=0.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1511, 240]-[1341, 240] (largo=1.0m): dist=0.0m, dif_angulo=0.0deg, solapa=False
+        candidato [1511, 231]-[1341, 231] (largo=1.0m): dist=0.053m, dif_angulo=0.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [1817, 223]-[1511, 223] (largo=1.799m): dist=0.1m, dif_angulo=0.0deg
+        candidato [1834, 257]-[1664, 257] (largo=1.0m): dist=0.1m, dif_angulo=0.0deg
+        candidato [1817, 988]-[1494, 988] (largo=1.899m): dist=4.398m, dif_angulo=0.0deg
+    DIAG bloqueado MU03 vs MU82: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG bloqueado MU03 vs MU84: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG bloqueado MU15 vs MU22: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.0999537037037037, anchoB=0.1999074074074074)
+    DIAG bloqueado MU18 vs MU22: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.0999537037037037, anchoB=0.1999074074074074)
+    DIAG bloqueado MU31 vs MU34: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4997685185185185)
+    DIAG bloqueado MU47 vs MU51: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.1999074074074074)
+    DIAG bloqueado MU52 vs MU70: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG bloqueado MU61 vs MU65: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4997685185185185)
+    DIAG bloqueado MU61 vs MU62: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4997685185185185)
+    DIAG bloqueado MU74 vs MU76: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.1999074074074074, anchoB=None)
+    DIAG bloqueado MU75 vs MU76: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.699675925925926, anchoB=None)
+  DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'grupo A sin par paralelo': 16, 'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 16, 'grupo B sin par paralelo': 2}
+  ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 99 entradas -> 30 muros (69 fusionadas, 13 pares bloqueados por puerta intermedia, 34 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
+  ⏱ Fusión + cuerpo cerrado: 0:00:01
+  DIAG BBOX -- PAGINA_PLANTA=3 crop_px=(3440, 126, 5914, 2030) fname_tag=pag3-2 muros_geo=30
+    bbox RELATIVO al crop: x=[542,2344] y=[223,1532]
+    bbox ABSOLUTO (pagina completa): x=[3982,5784] y=[349,1658] (plano_full shape=(5052, 7152, 3))
+  DIAG VISUAL COMPLETO: guardado diag_muros_pag3-2_30aug_0359.png (30 muros dibujados)
+  ⏱ Diagnóstico muros (línea): 0:00:00
+    ⚠ relleno solido VACIO para MU01 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU02 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU03 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU04 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU05 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU06 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU07 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU09 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU10 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU12 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU13 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU15 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU16 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU17 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU19 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU20 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU22 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU23 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU24 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU25 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU26 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU27 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU28 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU29 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU30 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+  DIAG VISUAL COMPLETO (todos los tipos, relleno solido + contexto local): guardado diag_completo_pag3-2_30aug_0359.png
+    muros=30 (verde=nuevo, slate=existente, rojo=eliminado -- ahora RELLENO solido, no solo linea) | puertas(arcos)=5 (naranja) | ventana=59 segs (azul) | hoja/vano CONFIRMADA (<=10cm)=4 segs (magenta) | hoja/vano DUDA (>10cm, no excluida)=25 segs (naranja-rosado) | conflictos=0 (amarillo)
+    escaleras/rampas: NO marcadas -- sin detector geometrico implementado todavia (Convenciones_CAD D.4/D.5, catalogo_tipologias.py estado=pendiente)
+  ⏱ Diagnóstico completo (relleno + clasificación local): 0:00:00
+  ✓ Puertas exportadas (clasificador geometrico): 5
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 2910), ((0.18, 0.72, 0.0), 52)]
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 4 grupos protegidos como muro, top 25 por span (8 textos de cota disponibles para el chequeo de distancia):
+     span=15.2m  bbox=12.87x8.1m  n_seg=1471  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.0
+     span=12.62m  bbox=12.6x0.62m  n_seg=315  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.0
+     span=11.11m  bbox=11.1x0.56m  n_seg=315  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.0
+     span=4.62m  bbox=4.62x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(0.18m/0.35m/0.59m, n=1)=0.0/0.0/0.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 2 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(1873,3135)-(1897,3204) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+    tipo=(4, 'Square') bbox_px=(2233,3135)-(2257,3204) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 7 fuente(s) en esta pagina
+    (56, 'ttf', 'TrueType', 'Swiss721BT-RomanCondensed', 'F10', 'WinAnsiEncoding', 0)
+    (53, 'ttf', 'Type0', 'Swiss721BT-RomanCondensed', 'F9', 'Identity-H', 0)
+    (76, 'ttf', 'TrueType', 'CenturyGothic', 'F11', 'WinAnsiEncoding', 0)
+    (7, 'ttf', 'TrueType', 'Verdana', 'F1', 'WinAnsiEncoding', 0)
+    (14, 'ttf', 'TrueType', 'ArialMT', 'F2', 'WinAnsiEncoding', 0)
+    (26, 'ttf', 'Type0', 'ArialMT', 'F5', 'Identity-H', 0)
+    (19, 'ttf', 'TrueType', 'Arial-BoldMT', 'F3', 'WinAnsiEncoding', 0)
+  DIAGNOSTICO CAPAS: 31 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=1 {'name': '6º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=2 {'name': '1º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=8 {'name': 'Muros Proy', 'intent': [], 'on': True, 'usage': None}
+    xref=9 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=29 {'name': 'ARTEFACTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=30 {'name': 'Textos', 'intent': [], 'on': True, 'usage': None}
+    xref=57 {'name': '5º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=58 {'name': 'TEXTOS ROJOS', 'intent': [], 'on': True, 'usage': None}
+    xref=59 {'name': 'BM-COTAS-0.13', 'intent': [], 'on': True, 'usage': None}
+    xref=60 {'name': '0', 'intent': [], 'on': True, 'usage': None}
+    xref=61 {'name': 'NIVELES', 'intent': [], 'on': True, 'usage': None}
+    xref=62 {'name': 'LINEA TERRENO ORIGINAL', 'intent': [], 'on': True, 'usage': None}
+    xref=65 {'name': 'PROYECCION', 'intent': [], 'on': True, 'usage': None}
+    xref=66 {'name': '2º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=67 {'name': 'Puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=68 {'name': 'PAVIMENTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=69 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=70 {'name': 'COTAS', 'intent': [], 'on': True, 'usage': None}
+    xref=71 {'name': 'MARCADOR CORTES-ELEVACIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=77 {'name': 'PROYECCIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=78 {'name': 'MOBILIARIO', 'intent': [], 'on': True, 'usage': None}
+    xref=79 {'name': 'Accesibilidad', 'intent': [], 'on': True, 'usage': None}
+    xref=80 {'name': 'HATCH', 'intent': [], 'on': True, 'usage': None}
+    xref=83 {'name': 'BALL', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': '4º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': '3º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'MUROS', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'ILUMINACION', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'MUEBLES', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'TEXTO', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 6775 paths totales en get_drawings(), distribucion completa por capa:
+    'FORMATO': 1925
+    '0': 981
+    'COTAS': 937
+    'ARTEFACTOS': 847
+    '6º PLANO': 458
+    'PROYECCION': 348
+    'HATCH': 277
+    'MARCADOR CORTES-ELEVACIONES': 201
+    'MOBILIARIO': 182
+    '2º PLANO': 180
+    '5º PLANO': 132
+    'Puertas': 112
+    'Accesibilidad': 87
+    '': 30
+    '4º PLANO': 24
+    'PROYECCIONES': 17
+    '1º PLANO': 13
+    'PAVIMENTOS': 13
+    'BALL': 8
+    'Muros Proy': 2
+    'Ventanas': 1
+  ⚠ La capa 'MUROS' (mapeada a 'muro') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'BM-COTAS-0.13' (mapeada a 'cota') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'MUEBLES' (mapeada a 'mobiliario') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'LINEA TERRENO ORIGINAL' (mapeada a 'deslinde_terreno') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  DIAGNOSTICO DASHES: 0 de 2962 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
+  DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (1)', 1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (2)', 2]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (3)', 3]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (4)', 4]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (5)', 5]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (6)', 6]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (7)', 7]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (8)', 8]
+    [2, 'CC-BEAUCHEFF_DOM-DOM Acc (1)', 9]
+  DIAGNOSTICO RAW_DRAWINGS: 0 zona(s) Cocina/Pasillo/Oficina, radio 250.01574803149606px, sin filtros
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=0px): 0 item(s) crudo(s) sin filtrar
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 125 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=0.11 muestra_p1=(546, 124) muestra_p2=(547, 125) capas=['COTAS']
+    n_segmentos=3 span_m=0.11 muestra_p1=(547, 127) muestra_p2=(546, 129) capas=['COTAS']
+    n_segmentos=5 span_m=0.18 muestra_p1=(551, 138) muestra_p2=(552, 139) capas=['COTAS']
+    n_segmentos=5 span_m=0.14 muestra_p1=(560, 122) muestra_p2=(559, 123) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(288, 118) muestra_p2=(286, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(285, 121) muestra_p2=(284, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(284, 128) muestra_p2=(285, 132) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(285, 132) muestra_p2=(286, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(286, 134) muestra_p2=(288, 135) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(798, 118) muestra_p2=(796, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(795, 121) muestra_p2=(794, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(794, 128) muestra_p2=(795, 132) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(795, 132) muestra_p2=(796, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(796, 134) muestra_p2=(798, 135) capas=['COTAS']
+    n_segmentos=3 span_m=0.08 muestra_p1=(1068, 126) muestra_p2=(1069, 128) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1308, 118) muestra_p2=(1306, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1305, 121) muestra_p2=(1304, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1304, 128) muestra_p2=(1305, 132) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(1305, 132) muestra_p2=(1306, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1306, 134) muestra_p2=(1308, 135) capas=['COTAS']
+    n_segmentos=3 span_m=0.17 muestra_p1=(1560, 125) muestra_p2=(1561, 124) capas=['COTAS']
+    n_segmentos=3 span_m=0.17 muestra_p1=(1561, 124) muestra_p2=(1561, 123) capas=['COTAS']
+    n_segmentos=3 span_m=0.15 muestra_p1=(1566, 123) muestra_p2=(1567, 124) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1818, 118) muestra_p2=(1817, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1815, 121) muestra_p2=(1815, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1815, 128) muestra_p2=(1815, 132) capas=['COTAS']
+    n_segmentos=5 span_m=0.24 muestra_p1=(1815, 132) muestra_p2=(1817, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1817, 134) muestra_p2=(1818, 135) capas=['COTAS']
+    n_segmentos=4 span_m=0.17 muestra_p1=(2071, 125) muestra_p2=(2071, 124) capas=['COTAS']
+    n_segmentos=3 span_m=0.14 muestra_p1=(2077, 124) muestra_p2=(2078, 125) capas=['COTAS']
+    n_segmentos=5 span_m=0.18 muestra_p1=(2082, 138) muestra_p2=(2083, 139) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2329, 118) muestra_p2=(2327, 119) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2326, 121) muestra_p2=(2325, 125) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2325, 128) muestra_p2=(2326, 132) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2326, 132) muestra_p2=(2327, 134) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2327, 134) muestra_p2=(2329, 135) capas=['COTAS']
+    n_segmentos=3 span_m=0.18 muestra_p1=(1300, 55) muestra_p2=(1301, 54) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1310, 55) muestra_p2=(1311, 53) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(1311, 53) muestra_p2=(1311, 52) capas=['COTAS']
+    n_segmentos=3 span_m=0.12 muestra_p1=(1334, 52) muestra_p2=(1335, 53) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(206, 1276) muestra_p2=(207, 1278) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(209, 1279) muestra_p2=(213, 1280) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(216, 1280) muestra_p2=(220, 1279) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(220, 1279) muestra_p2=(222, 1278) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(222, 1278) muestra_p2=(223, 1276) capas=['COTAS']
+    n_segmentos=3 span_m=0.15 muestra_p1=(211, 1018) muestra_p2=(212, 1017) capas=['COTAS']
+    n_segmentos=3 span_m=0.11 muestra_p1=(212, 1017) muestra_p2=(213, 1017) capas=['COTAS']
+    n_segmentos=3 span_m=0.12 muestra_p1=(215, 1017) muestra_p2=(217, 1017) capas=['COTAS']
+    n_segmentos=5 span_m=0.15 muestra_p1=(220, 998) muestra_p2=(222, 998) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(206, 766) muestra_p2=(207, 767) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(209, 769) muestra_p2=(213, 769) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(216, 769) muestra_p2=(220, 769) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(220, 769) muestra_p2=(222, 767) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(222, 767) muestra_p2=(223, 766) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(206, 255) muestra_p2=(207, 257) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(209, 258) muestra_p2=(213, 259) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(216, 259) muestra_p2=(220, 258) capas=['COTAS']
+    n_segmentos=5 span_m=0.24 muestra_p1=(220, 258) muestra_p2=(222, 257) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(222, 257) muestra_p2=(223, 255) capas=['COTAS']
+    n_segmentos=3 span_m=0.18 muestra_p1=(165, 884) muestra_p2=(164, 884) capas=['COTAS']
+  ✓ Vectorial: 8 textos (cotas/nombres), 2935 trazos candidatos a símbolo, 211 tramos protegidos como muro (por conectividad, no por largo), 114 tramos desprotegidos por parecer achurado (rampa/escalera), 104 en 3 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 60, 'span_m': 5.8}, {'n_segmentos': 14, 'span_m': 1.32}, {'n_segmentos': 30, 'span_m': 2.81}]
+  → OpenCV...
+  ✓ Limpieza pre-umbral: 8 textos, 104 líneas discontinuas, 2935 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 7 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 115.01m²
+  ✓ Cruce: 6/7 con nombre | 7 incumpl. geo
+  ⚠ 1 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E03
+  ⏱ Fin página: 04:01:41 (duración: 0:00:56)
+
+========================================================
+  Página 3  —  escala 1:50
+  Recorte: (4%,48%) → (69%,98%)
+========================================================
+  ⏱ Inicio página: 04:01:41
+  4642x2500 px analizados  |  0.00588 m/px  |  1m = 170 px
+  → Claude Vision...
+  ✓ Claude: 7 recintos, 4 incumplimientos
+  → Extracción vectorial...
+DIAGNOSTICO ROTACION: rotation=270  rect=Rect(0.0, 0.0, 2384.0, 1684.0)  mediabox=Rect(0.0, 0.0, 1684.0, 2384.0)
+  DIAG PASO1 -- crop_px=(307, 2450, 4949, 4950): 3738 segmentos_l, bbox x=[394,4889]
+  ✓ MAPEO POR CAPA: 0 accesibilidad, 0 achurado, 0 ascensor, 0 columna, 32 corte_elevacion, 2809 cota, 0 deslinde_terreno, 0 eje, 0 escalera, 388 ignorar, 164 mobiliario, 0 muro, 67 puerta, 0 rampa, 0 ventana, 278 sin capa mapeada — de 3738 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['accesibilidad'] = ['Accesibilidad'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['achurado'] = ['HATCH'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['LINEA TERRENO ORIGINAL'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['muro'] = ['MUROS'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['ventana'] = ['Ventanas'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 2809 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 117 segmentos identificados como referencia (Paso 1.5), 98 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 1523 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 75 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 387 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      '0': 386 segmentos evitados de proteger
+        largo_m=0.3 p1=(2460, 431) p2=(2460, 482)
+        largo_m=0.15 p1=(2469, 466) p2=(2451, 448)
+        largo_m=0.3 p1=(675, 774) p2=(623, 774)
+        largo_m=0.15 p1=(640, 783) p2=(658, 765)
+        largo_m=0.3 p1=(649, 799) p2=(649, 748)
+      'FORMATO': 1 segmentos evitados de proteger
+        largo_m=3.26 p1=(216, 2416) p2=(770, 2416)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 0
+  ✓ Muros exportados: 219 (de 12 grupos protegidos, 29 segmentos descartados por angulo no-ortogonal, 0 muros con estado agregado/eliminado detectado via leyenda -- el color ya NO excluye geometria, ver _detectar_leyenda_simbologia)
+  ✓ Lineas de referencia periodicas (deslinde/rasante/linea oficial): 31 muros movidos a muros_excluidos_por_referencia (no arquitectura real)
+  ⏱ Extracción + filtrado (Paso 1-4): 0:00:03
+    DIAG bloqueado MU08 vs MU11: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.8701851851851852, anchoB=0.13523148148148148)
+    DIAG CONECTIVIDAD -- MU08 (anchoA=0.8701851851851852m) vs MU11 (anchoB=0.13523148148148148m): tolPx=2.3000000000000003 (~0.014m de dilatacion)
+    DIAG bloqueado MU09 vs MU12: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG PAREJA -- MU09 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [4037, 1288]-[4037, 1099] (largo=1.111m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [4296, 1148]-[4296, 1148] (largo=0.0m): dist=0.0m, dif_angulo=90.0deg, solapa=False
+        candidato [4270, 1148]-[4270, 1148] (largo=0.0m): dist=0.0m, dif_angulo=90.0deg, solapa=False
+        candidato [4245, 1148]-[4245, 1148] (largo=0.0m): dist=0.0m, dif_angulo=90.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [4026, 1288]-[4026, 1099] (largo=1.111m): dist=0.065m, dif_angulo=0.0deg
+        candidato [4026, 1538]-[4026, 1287] (largo=1.476m): dist=0.065m, dif_angulo=0.0deg
+        candidato [4049, 1099]-[4049, 1288] (largo=1.111m): dist=0.071m, dif_angulo=0.0deg
+    DIAG bloqueado MU24 vs MU25: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.523287037037037, anchoB=0.5468055555555555)
+    DIAG CONECTIVIDAD -- MU24 (anchoA=0.523287037037037m) vs MU25 (anchoB=0.5468055555555555m): tolPx=8.9 (~0.052m de dilatacion)
+    DIAG bloqueado MU65 vs MU68: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.8584259259259259, anchoB=0.15287037037037038)
+    DIAG CONECTIVIDAD -- MU65 (anchoA=0.8584259259259259m) vs MU68 (anchoB=0.15287037037037038m): tolPx=2.6 (~0.015m de dilatacion)
+    DIAG bloqueado MU66 vs MU70: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.09407407407407407)
+    DIAG bloqueado MU71 vs MU77: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.8584259259259259, anchoB=0.15287037037037038)
+    DIAG bloqueado MU71 vs MU78: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.8584259259259259, anchoB=0.5174074074074074)
+    DIAG bloqueado MU73 vs MU78: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.5174074074074074)
+    DIAG bloqueado MU82 vs MU85: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4703703703703704)
+    DIAG bloqueado MU89 vs MU92: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4703703703703704)
+    DIAG bloqueado MU96 vs MU99: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4703703703703704)
+    DIAG bloqueado MU103 vs MU106: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4703703703703704)
+    DIAG bloqueado MU151 vs MU155: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4703703703703704)
+    DIAG bloqueado MU159 vs MU163: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4703703703703704)
+    DIAG bloqueado MU167 vs MU171: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.4703703703703704)
+  DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 5, 'grupo A sin par paralelo': 24}
+  ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 188 entradas -> 63 muros (125 fusionadas, 0 pares bloqueados por puerta intermedia, 29 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
+  ⏱ Fusión + cuerpo cerrado: 0:00:01
+  DIAG BBOX -- PAGINA_PLANTA=3 crop_px=(307, 2450, 4949, 4950) fname_tag=pag3-3 muros_geo=63
+    bbox RELATIVO al crop: x=[87,4582] y=[111,1986]
+    bbox ABSOLUTO (pagina completa): x=[394,4889] y=[2561,4436] (plano_full shape=(5052, 7152, 3))
+  DIAG VISUAL COMPLETO: guardado diag_muros_pag3-3_30aug_0359.png (63 muros dibujados)
+  ⏱ Diagnóstico muros (línea): 0:00:00
+    ⚠ relleno solido VACIO para MU02 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU03 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU04 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU05 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU06 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU07 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU08 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU09 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU10 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU11 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU12 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU13 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU14 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU15 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU16 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU17 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU18 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU19 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU20 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU21 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU23 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU24 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU25 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU26 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU27 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU28 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU29 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU30 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU31 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU32 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU33 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU34 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU35 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU36 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU37 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU38 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU39 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU40 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU41 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU42 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU43 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU44 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU45 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU46 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU47 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU48 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU49 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU50 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU51 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU52 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU53 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU54 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU55 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU56 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU57 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU58 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU59 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU60 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU61 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU62 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+    ⚠ relleno solido VACIO para MU63 (0 pixeles) -- probable falta de emparejamiento usando solo el propio grupo como contexto
+  DIAG VISUAL COMPLETO (todos los tipos, relleno solido + contexto local): guardado diag_completo_pag3-3_30aug_0359.png
+    muros=63 (verde=nuevo, slate=existente, rojo=eliminado -- ahora RELLENO solido, no solo linea) | puertas(arcos)=0 (naranja) | ventana=17 segs (azul) | hoja/vano CONFIRMADA (<=10cm)=0 segs (magenta) | hoja/vano DUDA (>10cm, no excluida)=47 segs (naranja-rosado) | conflictos=0 (amarillo)
+    escaleras/rampas: NO marcadas -- sin detector geometrico implementado todavia (Convenciones_CAD D.4/D.5, catalogo_tipologias.py estado=pendiente)
+  ⏱ Diagnóstico completo (relleno + clasificación local): 0:00:00
+  ✓ Puertas exportadas (clasificador geometrico): 0
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 3738)]
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 12 grupos protegidos como muro, top 25 por span (8 textos de cota disponibles para el chequeo de distancia):
+     span=26.05m  bbox=23.45x11.36m  n_seg=766  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.0
+     span=25.34m  bbox=22.93x10.78m  n_seg=55  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=55)=0.0/0.0/0.0
+     span=20.6m  bbox=20.59x0.45m  n_seg=229  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=229)=0.0/0.0/0.0
+     span=20.31m  bbox=20.3x0.68m  n_seg=28  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=28)=0.0/0.0/0.0
+     span=20.3m  bbox=20.29x0.37m  n_seg=747  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.0
+     span=20.3m  bbox=20.29x0.3m  n_seg=21  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=21)=0.0/0.0/0.0
+     span=9.3m  bbox=0.38x9.29m  n_seg=243  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=243)=0.0/0.0/0.0
+     span=9.3m  bbox=0.32x9.29m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=7)=0.0/0.0/0.0
+     span=9.3m  bbox=0.4x9.29m  n_seg=243  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=243)=0.0/0.0/0.0
+     span=9.3m  bbox=0.32x9.29m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=7)=0.0/0.0/0.0
+     span=4.18m  bbox=4.16x0.35m  n_seg=16  ancho_linea(min/mediana/max)=0.3/0.3/0.3  %cerca_cota(0.18m/0.35m/0.59m, n=16)=0.0/0.0/0.0
+     span=3.26m  bbox=3.26x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(0.18m/0.35m/0.59m, n=1)=0.0/0.0/0.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 2 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(5006,811)-(5030,880) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+    tipo=(4, 'Square') bbox_px=(5366,811)-(5390,880) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 7 fuente(s) en esta pagina
+    (56, 'ttf', 'TrueType', 'Swiss721BT-RomanCondensed', 'F10', 'WinAnsiEncoding', 0)
+    (53, 'ttf', 'Type0', 'Swiss721BT-RomanCondensed', 'F9', 'Identity-H', 0)
+    (76, 'ttf', 'TrueType', 'CenturyGothic', 'F11', 'WinAnsiEncoding', 0)
+    (7, 'ttf', 'TrueType', 'Verdana', 'F1', 'WinAnsiEncoding', 0)
+    (14, 'ttf', 'TrueType', 'ArialMT', 'F2', 'WinAnsiEncoding', 0)
+    (26, 'ttf', 'Type0', 'ArialMT', 'F5', 'Identity-H', 0)
+    (19, 'ttf', 'TrueType', 'Arial-BoldMT', 'F3', 'WinAnsiEncoding', 0)
+  DIAGNOSTICO CAPAS: 31 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=1 {'name': '6º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=2 {'name': '1º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=8 {'name': 'Muros Proy', 'intent': [], 'on': True, 'usage': None}
+    xref=9 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=29 {'name': 'ARTEFACTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=30 {'name': 'Textos', 'intent': [], 'on': True, 'usage': None}
+    xref=57 {'name': '5º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=58 {'name': 'TEXTOS ROJOS', 'intent': [], 'on': True, 'usage': None}
+    xref=59 {'name': 'BM-COTAS-0.13', 'intent': [], 'on': True, 'usage': None}
+    xref=60 {'name': '0', 'intent': [], 'on': True, 'usage': None}
+    xref=61 {'name': 'NIVELES', 'intent': [], 'on': True, 'usage': None}
+    xref=62 {'name': 'LINEA TERRENO ORIGINAL', 'intent': [], 'on': True, 'usage': None}
+    xref=65 {'name': 'PROYECCION', 'intent': [], 'on': True, 'usage': None}
+    xref=66 {'name': '2º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=67 {'name': 'Puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=68 {'name': 'PAVIMENTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=69 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=70 {'name': 'COTAS', 'intent': [], 'on': True, 'usage': None}
+    xref=71 {'name': 'MARCADOR CORTES-ELEVACIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=77 {'name': 'PROYECCIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=78 {'name': 'MOBILIARIO', 'intent': [], 'on': True, 'usage': None}
+    xref=79 {'name': 'Accesibilidad', 'intent': [], 'on': True, 'usage': None}
+    xref=80 {'name': 'HATCH', 'intent': [], 'on': True, 'usage': None}
+    xref=83 {'name': 'BALL', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': '4º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': '3º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'MUROS', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'ILUMINACION', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'MUEBLES', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'TEXTO', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 6775 paths totales en get_drawings(), distribucion completa por capa:
+    'FORMATO': 1925
+    '0': 981
+    'COTAS': 937
+    'ARTEFACTOS': 847
+    '6º PLANO': 458
+    'PROYECCION': 348
+    'HATCH': 277
+    'MARCADOR CORTES-ELEVACIONES': 201
+    'MOBILIARIO': 182
+    '2º PLANO': 180
+    '5º PLANO': 132
+    'Puertas': 112
+    'Accesibilidad': 87
+    '': 30
+    '4º PLANO': 24
+    'PROYECCIONES': 17
+    '1º PLANO': 13
+    'PAVIMENTOS': 13
+    'BALL': 8
+    'Muros Proy': 2
+    'Ventanas': 1
+  ⚠ La capa 'MUROS' (mapeada a 'muro') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'BM-COTAS-0.13' (mapeada a 'cota') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'MUEBLES' (mapeada a 'mobiliario') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'LINEA TERRENO ORIGINAL' (mapeada a 'deslinde_terreno') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  DIAGNOSTICO DASHES: 0 de 3738 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
+  DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (1)', 1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (2)', 2]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (3)', 3]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (4)', 4]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (5)', 5]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (6)', 6]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (7)', 7]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (8)', 8]
+    [2, 'CC-BEAUCHEFF_DOM-DOM Acc (1)', 9]
+  DIAGNOSTICO RAW_DRAWINGS: 0 zona(s) Cocina/Pasillo/Oficina, radio 250.01574803149606px, sin filtros
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=0px): 0 item(s) crudo(s) sin filtrar
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 164 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=0.69 muestra_p1=(2689, 1123) muestra_p2=(2603, 1123) capas=['MOBILIARIO']
+    n_segmentos=3 span_m=0.69 muestra_p1=(2035, 1123) muestra_p2=(2122, 1123) capas=['MOBILIARIO']
+    n_segmentos=3 span_m=0.64 muestra_p1=(3861, 1386) muestra_p2=(3861, 1293) capas=['MOBILIARIO']
+    n_segmentos=5 span_m=0.83 muestra_p1=(3536, 1386) muestra_p2=(3536, 1293) capas=['MOBILIARIO']
+    n_segmentos=5 span_m=0.83 muestra_p1=(1162, 1386) muestra_p2=(1162, 1293) capas=['MOBILIARIO']
+    n_segmentos=3 span_m=0.63 muestra_p1=(843, 1386) muestra_p2=(843, 1293) capas=['MOBILIARIO']
+    n_segmentos=6 span_m=0.76 muestra_p1=(3731, 111) muestra_p2=(3694, 89) capas=['4º PLANO']
+    n_segmentos=6 span_m=0.76 muestra_p1=(1058, 55) muestra_p2=(1036, 67) capas=['4º PLANO']
+    n_segmentos=4 span_m=0.33 muestra_p1=(640, 2155) muestra_p2=(637, 2156) capas=['COTAS']
+    n_segmentos=4 span_m=0.33 muestra_p1=(637, 2179) muestra_p2=(640, 2180) capas=['COTAS']
+    n_segmentos=4 span_m=0.27 muestra_p1=(1074, 2128) muestra_p2=(1075, 2129) capas=['COTAS']
+    n_segmentos=3 span_m=0.16 muestra_p1=(1091, 2115) muestra_p2=(1094, 2116) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1923, 2127) muestra_p2=(1922, 2128) capas=['COTAS']
+    n_segmentos=3 span_m=0.15 muestra_p1=(1922, 2128) muestra_p2=(1923, 2129) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1933, 2105) muestra_p2=(1932, 2107) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1932, 2110) muestra_p2=(1933, 2112) capas=['COTAS']
+    n_segmentos=3 span_m=0.15 muestra_p1=(2768, 2128) muestra_p2=(2769, 2129) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2779, 2105) muestra_p2=(2778, 2107) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2778, 2110) muestra_p2=(2779, 2112) capas=['COTAS']
+    n_segmentos=3 span_m=0.29 muestra_p1=(3173, 2156) muestra_p2=(3171, 2160) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(3171, 2160) muestra_p2=(3170, 2166) capas=['COTAS']
+    n_segmentos=4 span_m=0.33 muestra_p1=(3170, 2169) muestra_p2=(3171, 2175) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(3608, 2128) muestra_p2=(3609, 2129) capas=['COTAS']
+    n_segmentos=3 span_m=0.16 muestra_p1=(3644, 2118) muestra_p2=(3642, 2120) capas=['COTAS']
+    n_segmentos=3 span_m=0.16 muestra_p1=(3641, 2120) muestra_p2=(3638, 2118) capas=['COTAS']
+    n_segmentos=5 span_m=0.27 muestra_p1=(1062, 2248) muestra_p2=(1063, 2250) capas=['COTAS']
+    n_segmentos=5 span_m=0.22 muestra_p1=(1073, 2248) muestra_p2=(1072, 2246) capas=['COTAS']
+    n_segmentos=4 span_m=0.25 muestra_p1=(2333, 2229) muestra_p2=(2332, 2235) capas=['COTAS']
+    n_segmentos=4 span_m=0.25 muestra_p1=(2332, 2239) muestra_p2=(2333, 2245) capas=['COTAS']
+    n_segmentos=3 span_m=0.24 muestra_p1=(2350, 2248) muestra_p2=(2351, 2250) capas=['COTAS']
+    n_segmentos=5 span_m=0.27 muestra_p1=(3619, 2248) muestra_p2=(3620, 2250) capas=['COTAS']
+    n_segmentos=3 span_m=0.21 muestra_p1=(3640, 2233) muestra_p2=(3639, 2236) capas=['COTAS']
+    n_segmentos=4 span_m=0.21 muestra_p1=(3638, 2239) muestra_p2=(3635, 2240) capas=['COTAS']
+    n_segmentos=3 span_m=0.2 muestra_p1=(3629, 2236) muestra_p2=(3628, 2233) capas=['COTAS']
+    n_segmentos=6 span_m=0.34 muestra_p1=(2340, 2296) muestra_p2=(2339, 2300) capas=['COTAS']
+    n_segmentos=3 span_m=0.28 muestra_p1=(2340, 2303) muestra_p2=(2339, 2309) capas=['COTAS']
+    n_segmentos=3 span_m=0.28 muestra_p1=(2339, 2309) muestra_p2=(2337, 2312) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(2330, 2312) muestra_p2=(2329, 2310) capas=['COTAS']
+    n_segmentos=3 span_m=0.25 muestra_p1=(4401, 1684) muestra_p2=(4407, 1685) capas=['COTAS']
+    n_segmentos=4 span_m=0.25 muestra_p1=(4411, 1685) muestra_p2=(4417, 1684) capas=['COTAS']
+    n_segmentos=3 span_m=0.19 muestra_p1=(4420, 1666) muestra_p2=(4422, 1666) capas=['COTAS']
+    n_segmentos=4 span_m=0.35 muestra_p1=(4383, 1583) muestra_p2=(4387, 1585) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(4406, 1568) muestra_p2=(4407, 1567) capas=['COTAS']
+    n_segmentos=4 span_m=0.18 muestra_p1=(4387, 1558) muestra_p2=(4384, 1557) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(4414, 1235) muestra_p2=(4418, 1236) capas=['COTAS']
+    n_segmentos=3 span_m=0.16 muestra_p1=(4397, 1192) muestra_p2=(4396, 1195) capas=['COTAS']
+    n_segmentos=3 span_m=0.29 muestra_p1=(4383, 910) muestra_p2=(4387, 912) capas=['COTAS']
+    n_segmentos=3 span_m=0.27 muestra_p1=(4387, 912) muestra_p2=(4393, 913) capas=['COTAS']
+    n_segmentos=4 span_m=0.33 muestra_p1=(4396, 913) muestra_p2=(4402, 912) capas=['COTAS']
+    n_segmentos=3 span_m=0.22 muestra_p1=(4406, 894) muestra_p2=(4407, 894) capas=['COTAS']
+    n_segmentos=4 span_m=0.18 muestra_p1=(4517, 1227) muestra_p2=(4513, 1228) capas=['COTAS']
+    n_segmentos=3 span_m=0.24 muestra_p1=(4420, 1873) muestra_p2=(4422, 1873) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(4397, 1844) muestra_p2=(4400, 1845) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(4402, 1845) muestra_p2=(4404, 1844) capas=['COTAS']
+    n_segmentos=3 span_m=0.25 muestra_p1=(4400, 1448) muestra_p2=(4397, 1448) capas=['COTAS']
+    n_segmentos=7 span_m=0.35 muestra_p1=(4396, 1453) muestra_p2=(4397, 1456) capas=['COTAS']
+    n_segmentos=4 span_m=0.35 muestra_p1=(4418, 1448) muestra_p2=(4414, 1447) capas=['COTAS']
+    n_segmentos=3 span_m=0.22 muestra_p1=(680, 334) muestra_p2=(678, 338) capas=['COTAS']
+    n_segmentos=3 span_m=0.19 muestra_p1=(678, 338) muestra_p2=(677, 344) capas=['COTAS']
+    n_segmentos=3 span_m=0.19 muestra_p1=(677, 348) muestra_p2=(678, 354) capas=['COTAS']
+  ✓ Vectorial: 8 textos (cotas/nombres), 3903 trazos candidatos a símbolo, 280 tramos protegidos como muro (por conectividad, no por largo), 46 tramos desprotegidos por parecer achurado (rampa/escalera), 117 en 5 cadena(s) de línea discontinua
+     muestra de cadenas discontinuas detectadas: [{'n_segmentos': 4, 'span_m': 4.98}, {'n_segmentos': 94, 'span_m': 10.16}, {'n_segmentos': 4, 'span_m': 1.21}, {'n_segmentos': 4, 'span_m': 1.21}, {'n_segmentos': 7, 'span_m': 1.28}]
+  → OpenCV...
+  ✓ Limpieza pre-umbral: 8 textos, 117 líneas discontinuas, 3903 trazos cortos (artefactos/arcos, ya excluye tramos de muro protegidos) borrados
+  ✓ OpenCV: 19 espacios >= 0.5 m²
+  ⚠ 1 región(es) excluida(s) por parecer fusión exterior+interior (toca el borde + área > 60m²): 255.05m²
+  ✓ Cruce: 5/19 con nombre | 1 incumpl. geo
+  ⚠ 14 espacio(s) SIN NOMBRE — requieren que el arquitecto confirme qué son: E04, E07, E12, E13, E05, E06, E18, E09, E10, E14, E15, E16, E17, E19
+  ⏱ Fin página: 04:02:48 (duración: 0:01:06)
+⏱ Celda 4 finalizada: 2026-08-30 04:02:48 (duración total: 0:03:23)
+
+========================================================
+✓ Procesadas 3 / 3 páginas
+  Incumplimientos geométricos totales: 10

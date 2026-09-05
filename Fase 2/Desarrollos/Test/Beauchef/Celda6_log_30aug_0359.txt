@@ -1,0 +1,125 @@
+==================================================================
+  ARCHICHECK — INFORME CAPA 1 GEOMETRICA
+==================================================================
+  Proyecto: beauchef
+  Archivo : CC-BEAUCHEFF_DOM Planos.pdf
+  Fecha   : 30/08/2026 04:08
+  Páginas : 3 + 3 + 3
+
+  ------------------------------------------------------------------
+  PAGINA 3 [pag3-1]  |  1:50  |  planta — equipamiento
+  Nivel: Planta de Acceso
+  ------------------------------------------------------------------
+  ID      Nombre                     Tipo          Area m2  Ancho m  Estado
+  --      ------                     ----          -------  -------  ------
+  E03     Camarín                    otro            20.84      6.1  OK
+  E01     Taller                     sala             5.28     2.09  INCUMPLE
+  E02     Guardia                    oficina          4.75     2.09  OK
+  E04     Baño                       bano             0.95     0.98  INCUMPLE
+          TOTAL                                      31.80
+
+  INCUMPLIMIENTOS GEOMETRICOS (2)
+  ------------------------------------------------------------------
+  [AREA]  E01 Taller
+    Medido: 5.28 m2  |  Minimo: 10.0 m2  |  Deficit: 4.72 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [AREA]  E04 Baño
+    Medido: 0.95 m2  |  Minimo: 1.5 m2  |  Deficit: 0.55 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+
+  OBSERVACIONES NORMATIVAS CLAUDE (4)
+  [MEDIA] Art. 4.1.10 — El baño no presenta indicación explícita de ser accesible universal (PMR). Para 
+  [MEDIA] Art. 4.2.4 — La puerta del Baño presenta ancho estimado de 0.70 m, inferior al mínimo de 0.80
+  [ALTA] Art. 4.1.10 / DDU 279 — No se grafica circulación ni acceso accesible universal desde el exterior hacia 
+  [MEDIA] Art. 4.2.10 — No se identifican salidas de emergencia claramente marcadas hacia el exterior de
+
+  ------------------------------------------------------------------
+  PAGINA 3 [pag3-2]  |  1:50  |  planta — equipamiento
+  Nivel: Planta de Kiosco / Enfermeria
+  ------------------------------------------------------------------
+  ID      Nombre                     Tipo          Area m2  Ancho m  Estado
+  --      ------                     ----          -------  -------  ------
+  E02     Enfermeria                 sala             7.21     2.49  INCUMPLE
+  E07     Kiosco                     comercio         5.67     2.49  OK
+  E06     Baño Accesible             bano             2.70     1.59  OK
+  E01     Baño 1 (sector derecho)    bano             1.75     0.89  OK
+  E04     Baño 2 (sector derecho)    bano             0.99     1.03  INCUMPLE
+  E03     Espacio E03 (SIN NOMBRE -  otro             0.86     1.03  OK
+  E05     Baño (Kiosco/Enfermería)   bano             0.77     1.09  INCUMPLE
+          TOTAL                                      19.90
+
+  INCUMPLIMIENTOS GEOMETRICOS (7)
+  ------------------------------------------------------------------
+  [AREA]  E02 Enfermeria
+    Medido: 7.21 m2  |  Minimo: 10.0 m2  |  Deficit: 2.79 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [DISCREPANCIA_AREA_DECLARADA]  E02 Enfermeria
+    Medido: 7.21 m2  |  Declarado (cuadro): 10.09 m2  |  Diferencia: 39.9%
+    Ref: Cuadro de superficies del plano vs. area medida por geometria (OpenCV)
+  [DISCREPANCIA_AREA_DECLARADA]  E07 Kiosco
+    Medido: 5.67 m2  |  Declarado (cuadro): 19.99 m2  |  Diferencia: 252.6%
+    Ref: Cuadro de superficies del plano vs. area medida por geometria (OpenCV)
+  [DISCREPANCIA_AREA_DECLARADA]  E06 Baño Accesible
+    Medido: 2.7 m2  |  Declarado (cuadro): 6.17 m2  |  Diferencia: 128.5%
+    Ref: Cuadro de superficies del plano vs. area medida por geometria (OpenCV)
+  [AREA]  E04 Baño 2 (sector derecho)
+    Medido: 0.99 m2  |  Minimo: 1.5 m2  |  Deficit: 0.51 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [AREA]  E05 Baño (Kiosco/Enfermería)
+    Medido: 0.77 m2  |  Minimo: 1.5 m2  |  Deficit: 0.73 m2
+    Ref: SIN VERIFICAR — sin base confirmada en OGUC (revisar antes de confiar)
+  [DISCREPANCIA_AREA_DECLARADA]  E05 Baño (Kiosco/Enfermería)
+    Medido: 0.77 m2  |  Declarado (cuadro): 19.99 m2  |  Diferencia: 2496.1%
+    Ref: Cuadro de superficies del plano vs. area medida por geometria (OpenCV)
+
+  OBSERVACIONES NORMATIVAS CLAUDE (2)
+  [MEDIA] Art. 4.1.7 OGUC — El baño accesible (PMR) debe contar con puerta de ancho mínimo 0.90m con apertur
+  [BAJA] Art. 4.1.7 / DDU 279 OGUC — Los baños del sector derecho (Baño 1 y Baño 2) no cuentan con baño accesible uni
+
+  ------------------------------------------------------------------
+  PAGINA 3 [pag3-3]  |  1:50  |  planta — equipamiento
+  Nivel: Planta de Camarines
+  ------------------------------------------------------------------
+  ID      Nombre                     Tipo          Area m2  Ancho m  Estado
+  --      ------                     ----          -------  -------  ------
+  E01     Camarín izquierdo          otro            10.83     2.03  OK
+  E02     Camarín derecho            otro            10.57     2.02  OK
+  E11     Baño derecho               bano             9.02      3.5  OK
+  E03     Baño izquierdo             bano             7.80     4.06  OK
+  E04     Espacio E04 (SIN NOMBRE -  otro             7.72     4.06  OK
+  E07     Espacio E07 (SIN NOMBRE -  otro             6.81     3.48  OK
+  E12     Espacio E12 (SIN NOMBRE -  otro             6.77     1.71  OK
+  E13     Espacio E13 (SIN NOMBRE -  otro             2.97     0.64  OK
+  E05     Espacio E05 (SIN NOMBRE -  otro             1.23     0.27  OK
+  E06     Espacio E06 (SIN NOMBRE -  otro             1.23     0.27  OK
+  E18     Espacio E18 (SIN NOMBRE -  otro             0.61     0.59  OK
+  E08     Escalera central           escalera         0.60     0.59  INCUMPLE
+  E09     Espacio E09 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E10     Espacio E10 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E14     Espacio E14 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E15     Espacio E15 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E16     Espacio E16 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E17     Espacio E17 (SIN NOMBRE -  otro             0.60     0.59  OK
+  E19     Espacio E19 (SIN NOMBRE -  otro             0.60     0.59  OK
+          TOTAL                                      70.40
+
+  INCUMPLIMIENTOS GEOMETRICOS (1)
+  ------------------------------------------------------------------
+  [ANCHO]  E08 Escalera central
+    Medido: 0.59 m  |  Minimo: 1.1 m  |  Deficit: 0.51 m
+    Ref: Art. 4.2.10 OGUC — tabla por carga de ocupacion, 1,10 m es el piso minimo (hasta 50 personas); puede exigir hasta 1,50 m o 2 escaleras segun ocupacion, no calculado todavia
+
+  OBSERVACIONES NORMATIVAS CLAUDE (4)
+  [ALTA] Art. 4.1.7 OGUC — No se detecta baño ni cabina accesible universal (PMR) diferenciada en los recin
+  [MEDIA] Art. 4.2.10 OGUC — El ancho de la escalera central es de aproximadamente 1.00 m según cotas (1.03 m
+  [MEDIA] Art. 4.1.10 OGUC — No se identifican ventanas ni vanos de ventilación e iluminación natural en los 
+  [ALTA] Art. 4.2.4 OGUC — No se detectan salidas de emergencia hacia el exterior en este nivel de camarine
+
+==================================================================
+
+✓ JSON guardado: archicheck_geometrico_beauchef_30ago_0356.json
+  Paginas   : 3
+  Area total: 122.1 m2
+  Recintos  : 30
+  Incumpl.  : 10
+  Elementos (semantico) — Puertas:19  Ventanas:4  Escaleras:1  Rampas:0

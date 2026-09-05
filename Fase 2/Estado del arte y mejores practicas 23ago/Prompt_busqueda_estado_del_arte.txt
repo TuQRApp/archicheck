@@ -1,0 +1,57 @@
+PROMPT usado para pedir a varias IAs (ChatGPT, Claude, Perplexity, Gemini, Grok, etc.) que
+busquen papers, benchmarks y prácticas técnicas que confirmen, contrasten o complementen
+el pipeline de ArchiCheck (vectorización, geometría, semántico, gráfico, lógico).
+
+Generado: 2026-08-23
+Resultados obtenidos con este prompt (mismo día): ver en esta misma carpeta
+- Chatgpt Estado_del_arte_ArchiCheck_2021_2026.docx
+- Claude_Estado_del_Arte_Pipeline_Planos.docx
+- Perplexity_revision_literatura_pipeline_planos_arquitectonicos.docx
+
+---
+
+Estoy construyendo un pipeline de análisis automático de planos arquitectónicos (PDF → geometría vectorial → recintos + elementos → cruce normativo). Necesito que busques en internet papers, benchmarks, repos y artículos técnicos recientes (idealmente 2021-2026) sobre el estado del arte en cada uno de estos problemas, y que me digas explícitamente si lo que encuentras CONFIRMA, CONTRASTA o COMPLEMENTA el enfoque que ya tengo. No me interesa una explicación genérica de "qué es un floor plan parser" — quiero literatura concreta con links, y tu evaluación crítica comparando enfoques.
+
+CONTEXTO TÉCNICO ACTUAL (para que sepas contra qué contrastar):
+
+1. VECTORIZACIÓN
+   - Extraigo geometría directamente de los paths vectoriales del PDF (PyMuPDF), no rasterizo a imagen y aplico CV clásico sobre píxeles como primer paso.
+   - El ancho de línea (path.get('width')) viene en puntos PDF y se convierte a píxeles con dpi/72 — no es una medida de escala real del mundo, solo grosor de trazo.
+   - Pregunta: ¿qué papers/herramientas usan extracción vectorial nativa (PDF/DWG/SVG paths) vs. el enfoque dominante de CNN/segmentación sobre raster (CubiCasa5K, RPLAN, Raster2Seq, RoomFormer)? ¿Qué ventajas/limitaciones documentadas tiene cada camino?
+
+2. DETECCIÓN DE MUROS
+   - Enfoque actual: unión de segmentos por conectividad geométrica (Union-Find) — se agrupan si comparten extremo (cadena conexa, span mínimo) o si son colineales con gap regular (líneas discontinuas).
+   - No uso ancho de línea ni tipo de trazo (dashes) para distinguir muro real de símbolo/deslinde — se descartó por no discriminar en la práctica.
+   - Pregunta: ¿qué heurísticas o modelos (basados en grafos, en aprendizaje, o híbridos) existen para clasificar "muro real" vs. "línea decorativa/cota/deslinde" en planos CAD? ¿Cómo resuelven conectores en esquinas T, cruces, y segmentos con anchos distintos que se juntan en un vértice compartido?
+
+3. DETECCIÓN DE PUERTAS
+   - Enfoque actual: ajuste de círculo/arco (fitting geométrico) sobre el símbolo de puerta, con 2 puntos de unión al muro asociado; caso especial para arcos dibujados como curva Bézier (no solo arco circular).
+   - Comparado contra CubiCasa5K (19-36% precisión reportada) y contra Grounding DINO+SAM2 / floor-plan-walls (0% en nuestras pruebas).
+   - Pregunta: ¿qué otros métodos de detección de puertas por geometría (no solo detección visual/CNN) existen? ¿Hay benchmarks públicos de precisión/recall para detección de puertas en planos reales (no sintéticos)?
+
+4. DETECCIÓN DE VENTANAS (pendiente de implementar)
+   - Idea de diseño aún no construida: identificar ventana como "muro recto con línea central paralela" (rectángulo angosto con línea al medio, análogo geométrico simple).
+   - Pregunta: ¿qué enfoques (geométricos o de aprendizaje) hay específicamente para clasificar ventanas en planta a partir de vectores/símbolos CAD? ¿Cómo se diferencian de otros símbolos lineales (muros dobles, mobiliario, cotas)?
+
+5. SEGMENTACIÓN DE RECINTOS / ÁREAS
+   - Enfoque actual: pixel counting real sobre máscara OpenCV (no estimación visual) para área de recintos y ancho de pasillos/escaleras (minAreaRect), cruzado con nombres semánticos que da un modelo de visión (Claude).
+   - Se validó un caso de "polígono de cierre" (cuerpo cerrado) que debe generalizar a anchos de segmento distintos, ángulos no rectos y conectores de 3+ brazos.
+   - Pregunta: ¿qué papers tratan el problema de "cierre de polígono de recinto" (room polygon closure) cuando el trazado tiene discontinuidades, conectores de esquina o grosor variable? ¿Cómo abordan false positives/negatives en detección de área utilizable vs. muro?
+
+6. CAPA GEOMÉTRICA vs. CAPA SEMÁNTICA (arquitectura híbrida)
+   - Enfoque actual: la geometría determinística (OpenCV/vectores) da la posición/forma real; un modelo de visión LLM (Claude) da el nombre/uso del recinto y clasifica elementos que la geometría no resuelve sola. La capa "CAD" ya no es la autoridad final — es señal/prior; el veredicto final combina cierre geométrico + verificación semántica.
+   - Pregunta: ¿qué literatura existe sobre arquitecturas híbridas que combinan extracción geométrica determinística con modelos de lenguaje/visión multimodales para planos arquitectónicos? ¿Hay papers recientes (2024-2026) sobre uso de VLMs (GPT-4o, Claude, Gemini) específicamente para floor plan understanding, más allá de detección pura?
+
+7. BENCHMARKS Y DATASETS DE REFERENCIA
+   - Ya evaluamos/descartamos o contrastamos contra: CubiCasa5K, RPLAN, Raster2Seq, RoomFormer, PolyRoom, floor-plan-walls, Grounding DINO+SAM2, MinUNet/MitUNet, Floor Plan API (comercial).
+   - Pregunta: ¿hay datasets o benchmarks más recientes o más representativos de planos reales chilenos/latinoamericanos o de arquitectura comercial/educacional (no solo residencial tipo RPLAN)? ¿Qué modelos superan a los ya mencionados en precisión de muros/puertas/ventanas sobre planos reales (no sintéticos)?
+
+FORMATO DE RESPUESTA QUE NECESITO:
+Para cada hallazgo relevante, dame:
+- Título / nombre del método o paper
+- Link directo (arXiv, GitHub, journal, etc.)
+- Año
+- Resumen de 2-3 líneas de qué hace
+- Tu evaluación: ¿CONFIRMA nuestro enfoque, lo CONTRASTA (hace algo distinto y quizás mejor), o lo COMPLEMENTA (resuelve algo que hoy no cubrimos, como ventanas)?
+
+Prioriza fuentes primarias (papers, repos con benchmarks reproducibles) sobre blogs genéricos. Si no encuentras nada específico en algún punto, dilo explícitamente en vez de rellenar con generalidades.

@@ -1,0 +1,94 @@
+{
+  "id": "resp_0083f3b473b30a88006a93a40bbda087d1aa010e75d1ed80bc",
+  "object": "response",
+  "created_at": 1788060683,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1788060696,
+  "error": null,
+  "frequency_penalty": 0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5.3-codex",
+  "moderation": null,
+  "output": [
+    {
+      "id": "msg_0083f3b473b30a88006a93a40ccb3887d1a4dc95ce27ef32ca",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "Buen diagnóstico inicial: **sí, el cuello que queda es de complejidad combinada en `_fusionar_muros_por_proximidad`**, no en los dos fixes previos.\n\nVoy por tus puntos:\n\n## (a) Pares candidatos en `_fusionar_muros_por_proximidad`\n\nEn el bloque:\n\n- `cell = max(1, tol_fusion_px)`\n- bucket por `_claves(bb, tol_fusion_px)`\n- para cada `i`: `candidatos.update(buckets.get(k, ()))`\n\nesto **no garantiza** cota subcuadrática.  \nEn una zona densa/fragmentada (tu caso 944 fragmentos saliendo de 2 grupos), muchos bboxes caen en pocas celdas o en celdas solapadas por margen, y cada `i` recupera casi todos los `j`.\n\nResultado en peor caso: **P ≈ n(n-1)/2 ~ O(n²)** pares evaluados (o casi).\n\nCon n=944, máximo teórico ~445k pares. Aunque `evaluados` evita duplicados, no reduce orden.\n\n## (b) Reconstrucción de `contexto_par` por par\n\nAquí está el killer principal actual:\n\n```python\ncontexto_par = [\n    s for k in range(n)\n    if intersecta_bbox_k_con_bbox_par\n    for s in muros_geo[k]['segmentos']\n]\n```\n\nEso es un **scan O(n)** de entradas por cada par candidato que llega a `mpx`.  \nTotal: **O(P·n)** solo para armar contexto (sin contar segmentos internos).\n\nSi P se acerca a n², te vas a **O(n³)** en esta etapa sola.\n\nY sí: tu análisis del cache es correcto.  \n`_CACHE_CENTRALES/_CACHE_HOJAS` cachean por **identidad de `contexto`**; como `contexto_par` es lista nueva en cada iteración, **no pega entre pares**. Solo ayuda dentro de una misma llamada a `cuerpo_cerrado_fusiona`.\n\n## (c) `construir_contexto_con_pares` dentro de `cuerpo_cerrado_fusiona`\n\nTambién correcto: `construir_contexto_con_pares(contexto_local, ...)` es esencialmente **O(m²)** (llama `ancho_por_emparejamiento` por segmento, con loops sobre contexto).\n\nSi `m` (segmentos del contexto local) es grande en zona densa, costo por par sube fuerte.  \nTotal aproximado: **O(P·m²)** además del O(P·n) de armado de contexto.\n\n---\n\n## Patrón total peor caso realista\n\nEn tu escenario de súper fragmentación local:\n\n- P cercano a O(n²)\n- contexto local grande y repetitivo entre pares vecinos\n- recomputación completa por par\n\n=> combinación tipo **O(P·n + P·m²)**, que en práctica explica “1h+ colgado” en una sola página densa.\n\n---\n\n## Fix concreto de bajo riesgo (sin tocar criterio geométrico)\n\n### 1) Reusar índice espacial también para construir `contexto_par` (eliminar scan O(n) por par)\n\nYa tienes buckets de muros por celda. Úsalos para obtener `k` candidatos del contexto del par, en vez de `for k in range(n)`.\n\n### 2) Cachear `contexto_par` + `con_pares_precalculados` por “clave espacial de par”\n\nMuchos pares cercanos comparten prácticamente la misma vecindad.  \nSi dos pares caen en misma firma de celdas del bbox expandido, puedes reusar:\n\n- lista `contexto_par`\n- `con_pares_precalculados = construir_contexto_con_pares(contexto_par, mpx)`\n\ny pasarlo a `cuerpo_cerrado_fusiona(..., con_pares_precalculados=...)`.\n\nNo cambia decisiones, solo evita recomputar.\n\n---\n\n## Sugerencia de código (directo sobre `_fusionar_muros_por_proximidad`)\n\n```python\n# justo después de crear buckets/evaluados:\ncache_ctx = {}  # key -> (contexto_par, con_pares_precalculados)\n\ndef _key_contexto_par(i, j):\n    bx0 = min(bboxes[i][0], bboxes[j][0]) - RADIO_CONTEXTO_PX\n    bx1 = max(bboxes[i][1], bboxes[j][1]) + RADIO_CONTEXTO_PX\n    by0 = min(bboxes[i][2], bboxes[j][2]) - RADIO_CONTEXTO_PX\n    by1 = max(bboxes[i][3], bboxes[j][3]) + RADIO_CONTEXTO_PX\n    # clave por celdas (coarse), estable y barata\n    kx0, kx1 = int(bx0 // cell), int(bx1 // cell)\n    ky0, ky1 = int(by0 // cell), int(by1 // cell)\n    return (kx0, kx1, ky0, ky1)\n\ndef _contexto_par_desde_buckets(i, j):\n    bx0 = min(bboxes[i][0], bboxes[j][0]) - RADIO_CONTEXTO_PX\n    bx1 = max(bboxes[i][1], bboxes[j][1]) + RADIO_CONTEXTO_PX\n    by0 = min(bboxes[i][2], bboxes[j][2]) - RADIO_CONTEXTO_PX\n    by1 = max(bboxes[i][3], bboxes[j][3]) + RADIO_CONTEXTO_PX\n\n    # recolectar SOLO muros en celdas intersectadas\n    idxs = set()\n    kx0, kx1 = int(bx0 // cell), int(bx1 // cell)\n    ky0, ky1 = int(by0 // cell), int(by1 // cell)\n    for kx in range(kx0, kx1 + 1):\n        for ky in range(ky0, ky1 + 1):\n            idxs.update(buckets.get((kx, ky), ()))\n\n    # filtro exacto por intersección de bbox (mismo criterio actual)\n    idxs_filtrados = [\n        k for k in idxs\n        if bboxes[k][0] <= bx1 and bboxes[k][1] >= bx0 and bboxes[k][2] <= by1 and bboxes[k][3] >= by0\n    ]\n\n    return [s for k in idxs_filtrados for s in muros_geo[k]['segmentos']]\n```\n\nY reemplazar el bloque actual de `contexto_par` por:\n\n```python\nctx_key = _key_contexto_par(i, j)\nif ctx_key in cache_ctx:\n    contexto_par, con_pares_pre = cache_ctx[ctx_key]\nelse:\n    contexto_par = _contexto_par_desde_buckets(i, j)\n    con_pares_pre = construir_contexto_con_pares(contexto_par, mpx)\n    cache_ctx[ctx_key] = (contexto_par, con_pares_pre)\n\nresultado_cc = cuerpo_cerrado_fusiona(\n    muros_geo[i]['segmentos'], muros_geo[j]['segmentos'],\n    contexto_par, mpx,\n    con_pares_precalculados=con_pares_pre,\n)\n```\n\n---\n\nSi quieres, te propongo una segunda iteración con **instrumentación mínima** (contadores P real, tamaño medio de `contexto_par`, hit-rate de `cache_ctx`) para validar en Colab que el cuello baja antes de tocar nada más."
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "current_turn",
+    "effort": "none",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 21793,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 1613,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 23406
+  },
+  "user": null,
+  "metadata": {}
+}

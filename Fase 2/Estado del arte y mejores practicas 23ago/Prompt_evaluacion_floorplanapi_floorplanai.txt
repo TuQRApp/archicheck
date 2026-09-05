@@ -1,0 +1,27 @@
+PROMPT de seguimiento — pedir a las mismas IAs (ChatGPT, Claude, Copilot, Gemini, Perplexity, etc.) que evalúen
+específicamente las herramientas comerciales Floor Plan API y Floorplan.ai contra la literatura académica ya
+revisada, y contra el pipeline propio.
+
+Generado: 2026-08-23 (segunda ronda, después de que ninguna de las 5 IAs las nombrara en la primera búsqueda)
+Va después de: Prompt_busqueda_estado_del_arte.txt (mismo prompt base, mismo criterio de evaluación)
+
+---
+
+Esta es una segunda ronda de la misma investigación. En la primera ronda te pedí (a ti y a otras IAs) papers, benchmarks y prácticas técnicas 2021-2026 para mi pipeline de análisis automático de planos arquitectónicos (PDF → geometría vectorial → recintos + elementos → cruce normativo). Ninguna de las 5 respuestas independientes que recibí mencionó dos herramientas comerciales que sí conozco y quiero contrastar explícitamente: **Floor Plan API** (floorplanapi.com) y **Floorplan.ai**.
+
+Necesito que las busques específicamente y las evalúes con el mismo criterio que usaste para los papers académicos: ¿CONFIRMAN, CONTRASTAN o COMPLEMENTAN mi enfoque actual? No me sirve una descripción de marketing — quiero lo que encuentres sobre su método real, su evidencia de precisión, y cómo se comparan contra los papers/datasets académicos que ya identificamos (FloorPlanCAD, CubiCasa5K, RPLAN, RoomFormer, ArchCAD-400K, SymPoint, VectorGraphNET, GLSP, ResPlan, etc. — no expliques qué son estos, ya los conozco, úsalos como vara de comparación).
+
+CONTEXTO YA CONOCIDO (para que no me lo repitas, y para que sepas qué ya se investigó):
+- Floor Plan API publica una cifra propia de 85.31% IoU, sin verificación independiente que haya podido confirmar hasta ahora. Su registro (floorplanapi.com/register) estuvo bloqueado en un intento previo de probarla contra un caso real (plano "Isla de Pascua", el peor caso conocido de mi propio pipeline: ~20 recintos reales vs. 80 fragmentos geométricos / 60 sin nombre que da hoy mi extracción propia).
+- Floorplan.ai fue el punto de referencia original ("algo como Floorplan.ai") que motivó investigar alternativas — un documento previo (Copilot, "Alternativas a Floorplan.ai") propuso Raster-to-Graph, PolyRoom y RoomFormer como sustitutos, pero al verificar los repos reales encontré que PolyRoom toma nube de puntos 3D como entrada (no aplica, es una tarea distinta) y RoomFormer tampoco vectoriza PDF/CAD directamente — así que desconfía de afirmaciones sin verificar el repo/paper real detrás.
+- Mi pipeline propio: extracción vectorial nativa desde PDF (PyMuPDF, no raster+CNN), muros por conectividad geométrica (Union-Find evolucionando a grafo tipado de primitivas+junctions), puertas por fitting de arco/Bézier, recintos por pixel counting + cierre de polígono, capa semántica separada vía VLM (Claude) que nunca es autoridad geométrica.
+
+LO QUE NECESITO DE CADA HERRAMIENTA (Floor Plan API y Floorplan.ai, por separado):
+1. ¿Qué método usan realmente? (raster+CNN, vectorial nativo, VLM end-to-end, propietario sin publicar) — si no está documentado públicamente, dilo explícitamente en vez de inventar.
+2. ¿Qué evidencia de precisión existe MÁS ALLÁ de su propio marketing? (reviews técnicas independientes, papers que las citen o comparen contra ellas, benchmarks de terceros, casos de uso documentados con cifras verificables).
+3. ¿Compiten en el mismo dominio que mi pipeline (PDF/CAD de arquitecto, planos reales de proyectos) o están optimizadas para otro caso de uso (fotos de planos, planos residenciales simples, renders)?
+4. Comparación explícita contra la literatura académica ya revisada: si su cifra de precisión (ej. el 85.31% IoU de Floor Plan API) es real y verificable, ¿cómo se compara contra el umbral de referencia de Pizarro et al. 2023 (IoU ≥ 0.77 aceptable para extracción de muros) y contra los F1 por clase de FloorPlanCAD (puerta simple 0.885, doble 0.796, corrediza 0.874)?
+5. Evaluación final: CONFIRMA (valida que mi camino propio es competitivo o mejor), CONTRASTA (hacen algo genuinamente distinto/mejor que debería considerar adoptar o imitar), o COMPLEMENTA (cubren un caso que mi pipeline no cubre hoy, ej. escaneos sucios, fotos, DWG/DXF).
+6. Si detectas que alguna afirmación tuya no se puede verificar con una fuente real (no solo el sitio de marketing de la propia empresa), dilo explícitamente — prefiero "no encontré evidencia independiente" a una cifra sin respaldo.
+
+Formato de respuesta: mismo que la ronda anterior — nombre, link, fecha/año de la fuente, resumen de 2-3 líneas, evaluación CONFIRMA/CONTRASTA/COMPLEMENTA con justificación breve.

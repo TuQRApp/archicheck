@@ -1,0 +1,74 @@
+==================================================================
+  ARCHICHECK — INFORME CAPA 1 GEOMETRICA
+==================================================================
+  Proyecto: pdv
+  Archivo : 05+06 Planos Rest Pza PdV (021 06 21).pdf
+  Fecha   : 28/08/2026 03:30
+  Páginas : 2 + 2
+
+  ------------------------------------------------------------------
+  PAGINA 2 [pag2-1]  |  1:50  |  planta — restaurante
+  Nivel: Situacion Propuesta Nivel 1
+  ------------------------------------------------------------------
+  ID      Nombre                     Tipo          Area m2  Ancho m  Estado
+  --      ------                     ----          -------  -------  ------
+  E04     Pasillo                    pasillo         40.20     7.95  OK
+  E01     Terraza (zona norte inter  terraza         36.57    16.81  OK
+  E03     Baño Universal             bano            29.72     5.24  OK
+  E06     Oficina                    oficina          8.81     2.95  OK
+  E05     Escalera                   escalera         2.14     0.99  INCUMPLE
+  E02     Baño Personal              bano             2.06     1.36  OK
+  E07     Terraza (sur central-dere  terraza          0.80     0.39  OK
+          TOTAL                                     120.30
+
+  INCUMPLIMIENTOS GEOMETRICOS (2)
+  ------------------------------------------------------------------
+  [CIRCULO_GIRO]  E03 Baño Universal
+    Medido: None m  |  Minimo: 1.5 m  |  Deficit: None m
+    Ref: DDU 351 / Art. 4.1.7 OGUC — circulo de giro 1,50 m en recintos accesibles
+  [ANCHO]  E05 Escalera
+    Medido: 0.99 m  |  Minimo: 1.1 m  |  Deficit: 0.11 m
+    Ref: Art. 4.2.10 OGUC — tabla por carga de ocupacion, 1,10 m es el piso minimo (hasta 50 personas); puede exigir hasta 1,50 m o 2 escaleras segun ocupacion, no calculado todavia
+
+  OBSERVACIONES NORMATIVAS CLAUDE (5)
+  [ALTA] Art. 4.1.7 OGUC — La rampa de acceso universal tiene una pendiente declarada de 10.58%, superando 
+  [ALTA] Art. 4.1.7 OGUC — No se detecta visualmente círculo de giro libre de 1.50m de diámetro en el Baño 
+  [MEDIA] Art. 4.2.10 OGUC — El ancho de la escalera hacia Nivel 2 no está claramente dimensionado en este pl
+  [MEDIA] Art. 4.5.7 OGUC / NCh 440 — La cocina (restaurante) requiere ventilación mecánica con extracción de humos y 
+  [BAJA] Art. 4.2.9 OGUC — La vía de evacuación desde zona de cocina/pasillo hasta salida exterior debe gar
+
+  ------------------------------------------------------------------
+  PAGINA 2 [pag2-2]  |  1:50  |  planta — otro
+  Nivel: Nivel 2 - Situacion Propuesta
+  ------------------------------------------------------------------
+  ID      Nombre                     Tipo          Area m2  Ancho m  Estado
+  --      ------                     ----          -------  -------  ------
+  E07     Pasillo                    pasillo         42.30     8.41  OK
+  E03     Bodega (derecha)           bodega          24.06     3.47  OK
+  E04     Bodega (izquierda)         bodega          12.19     3.04  OK
+  E02     Baño Clientes mujeres      bano            10.70     1.81  OK
+  E13     Oficina (derecha)          oficina          6.67     2.41  OK
+  E01     Espacio E01 (SIN NOMBRE -  otro             5.88     0.35  OK
+  E14     Espacio E14 (SIN NOMBRE -  otro             5.50     0.33  OK
+  E06     Espacio E06 (SIN NOMBRE -  otro             4.36      1.8  OK
+  E11     Baño Clientes hombres      bano             2.20     1.35  OK
+  E05     Espacio E05 (SIN NOMBRE -  otro             1.94     1.23  OK
+  E09     Espacio E09 (SIN NOMBRE -  otro             0.91     0.93  OK
+  E10     Espacio E10 (SIN NOMBRE -  otro             0.59     0.71  OK
+  E12     Espacio E12 (SIN NOMBRE -  otro             0.52     0.45  OK
+  E08     Espacio E08 (SIN NOMBRE -  otro             0.51     0.89  OK
+          TOTAL                                     118.30
+
+  OBSERVACIONES NORMATIVAS CLAUDE (3)
+  [ALTA] Art. 4.1.7 OGUC — Nivel 2 es piso alto accesible únicamente por escalera interna. No se detectan s
+  [MEDIA] Art. 4.1.7 / 4.2.10 OGUC — No se detecta Baño Universal (PMR) en Nivel 2. El proyecto contempla baños de cl
+  [BAJA] Art. 4.2.10 OGUC — Ancho de escalera ES01 estimado en ~1.2 m. Debe verificarse que este ancho sea s
+
+==================================================================
+
+✓ JSON guardado: archicheck_geometrico_pdv_28ago_0317.json
+  Paginas   : 2
+  Area total: 238.6 m2
+  Recintos  : 21
+  Incumpl.  : 2
+  Elementos (semantico) — Puertas:21  Ventanas:2  Escaleras:2  Rampas:0
