@@ -1,0 +1,94 @@
+{
+  "id": "resp_0ce5fcaa5d9229f3006a9ccdce564087d1bd54773d8ddce881",
+  "object": "response",
+  "created_at": 1788661198,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1788661208,
+  "error": null,
+  "frequency_penalty": 0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5.3-codex",
+  "moderation": null,
+  "output": [
+    {
+      "id": "msg_0ce5fcaa5d9229f3006a9ccdcf7b9487d1a9d987a484c2e3a8",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "Excelente investigación. Voy directo y crítico, punto por punto.\n\n## 1) ¿Tu diagnóstico de causa raíz es correcto?\n\n**Sí, es correcto** y está muy bien aislado.\n\nLa secuencia problemática es exactamente esta:\n\n- `ancho_por_emparejamiento` acepta para `s` un par a distancia `d` plausible “globalmente” (rango de espesores), **sin testear plausibilidad local respecto al largo de `s`**.\n- Entonces `anchoPx` queda no-`None` (ej. 59 px para un segmento de 34 px).\n- En `cuerpo_cerrado_fusiona`, al no ser `None`, **no entra** al fallback `_ancho_heredado_de_conector`.\n- Más tarde `_relleno_solido` aplica `if ancho_px > largo_s: continue` y no pinta ese tramo como cara real.\n- Como tampoco fue agregado a `segmentos_ancho_forzado`, queda fuera de ambos caminos de pintado.\n- Resultado: conectividad rota aunque geométricamente toque.\n\nNo veo en el código compartido ningún mecanismo previo que evite eso antes de la decisión de fusiona. O sea: **hay inconsistencia de criterio entre “detectar ancho” y “usar ancho para rellenar/conectar”**.\n\n---\n\n## 2) Riesgo de romper un caso legítimo real con `d > largo_s`\n\nEn términos geométricos de “cara real de muro” (no conector), **es muy difícil justificar** que una cara válida tenga separación mayor que su propio desarrollo útil en ese tramo; suele indicar emparejamiento espurio.\n\nEl caso que podría verse afectado:\n- segmentos muy cortos por fragmentación CAD (quiebres, trims, intersecciones) que sí pertenecen a una cara real, y su muro es grueso;\n- ahí podría ocurrir `largo_s < espesor` por ruido de segmentación, no por semántica arquitectónica.\n\nPero en tu pipeline eso justamente debería resolverse mejor como:\n- o bien se une/normaliza antes,\n- o cae en mecanismo de conector heredado si es pieza de enlace.\n\nDado tu requisito explícito (“sin umbral ad-hoc por largo, mantener cuerpo cerrado”), el filtro por plausibilidad **es defendible** y más consistente con lo que ya hace `_relleno_solido`.\n\n---\n\n## 3) ¿Misma condición estricta o variante?\n\nRecomiendo **misma lógica estricta** para consistencia semántica:\n\n- Rechazar candidato si `d > largo_s`.\n- Permitir `d == largo_s` (caso borde).\n\nSi querés robustez numérica por flotantes, usar epsilon mínimo:\n- `if d - largo_s > 1e-6: continue`\n\nNo meter tolerancia porcentual nueva aquí salvo que tengas evidencia de jitter numérico real; si no, introduces otro grado de libertad que puede reabrir regresiones.\n\n---\n\n## 4) Dónde insertarlo (mínimamente invasivo)\n\n**Lugar ideal:** dentro del loop `for c in contexto`, inmediatamente después de calcular `d` y antes de `_solapan_en_direccion` / append.\n\nOrden sugerido:\n\n```python\nd = _dist_perp_entre_paralelas(s, c)\nif d < tol_min_px or d > tol_max_px:\n    continue\nlargo_s = math.hypot(s['p2'][0] - s['p1'][0], s['p2'][1] - s['p1'][1])\nif d > largo_s:\n    continue\nif not _solapan_en_direccion(s, c):\n    continue\ncandidatos.append((c, d))\n```\n\nMejor aún, calcula `largo_s` una vez por `s` (fuera del loop de `c`) para no repetir.\n\nEsto es mínimamente invasivo porque:\n- no toca ranking,\n- no toca `_hay_linea_central_entre`,\n- solo elimina candidatos que luego igual no ibas a poder rellenar como cara real.\n\n---\n\n## 5) ¿Otros lugares donde ya se aplica / consistencia?\n\nCon lo compartido, el chequeo explícito `ancho_px > largo_s` aparece en `_relleno_solido` en:\n1. loop principal de cuadriláteros,\n2. armado de `piernas` para remate (segmentos con par).\n\nNo veo otro sitio equivalente en la etapa de decisión previa.  \nPor eso tu fix en `ancho_por_emparejamiento` **no es duplicación inútil**, sino alineación entre “medición” y “consumo”.\n\n---\n\n### Recomendación final breve\n\nSí: aplicaría el fix en `ancho_por_emparejamiento` con la misma desigualdad estricta que `_relleno_solido`.  \nEs el cambio correcto para cerrar esta inconsistencia causal y habilitar que el fallback de conector heredado actúe cuando corresponde.  \n\nSi querés, te propongo un parche exacto (diff) y un micro set de pruebas de no regresión centradas en este bug."
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "current_turn",
+    "effort": "none",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 8548,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 7936
+    },
+    "output_tokens": 1065,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 9613
+  },
+  "user": null,
+  "metadata": {}
+}

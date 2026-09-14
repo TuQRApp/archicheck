@@ -1,0 +1,94 @@
+{
+  "id": "resp_062275ec2e950f58006a9ccdad0ec487d1815a17e98cad870e",
+  "object": "response",
+  "created_at": 1788661165,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1788661175,
+  "error": null,
+  "frequency_penalty": 0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5.3-codex",
+  "moderation": null,
+  "output": [
+    {
+      "id": "msg_062275ec2e950f58006a9ccdae376887d193145293a723e71c",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "Excelente investigación. Sí, tu lectura es sólida y además está bien acotada (no estás proponiendo “tocar todo”, sino alinear dos etapas que hoy tienen criterios incompatibles).\n\n## 1) Causa raíz: ¿correcta?\n\n**Sí, correcta.**  \nEl flujo actual permite esta inconsistencia:\n\n- `ancho_por_emparejamiento` marca un segmento con `anchoPx` válido aunque ese “ancho” sea geométricamente inverosímil para ese segmento (`d > largo_s`).\n- Entonces en `cuerpo_cerrado_fusiona` **no entra** al fallback de conector (`_ancho_heredado_de_conector`) porque `anchoPx` ya no es `None`.\n- Después `_relleno_solido` sí aplica el filtro de plausibilidad (`if ancho_px > largo_s: continue`) y **no lo pinta** como cara real.\n- Como tampoco quedó marcado como conector forzado, se pierde de ambos caminos.\n- Resultado: conectividad falsa negativa (“no conectados…”).\n\nNo veo en el código que compartiste ninguna otra barrera previa que impida ese estado intermedio. O sea: **no hay protección upstream**, solo downstream en render.\n\n---\n\n## 2) ¿Qué caso legítimo podría romper `d <= largo_s`?\n\nRiesgo principal: segmentos muy cortos pero realmente cara de muro (por discretización/fragmentación del PDF), donde el ancho real quede apenas mayor que su largo por artefacto de segmentación.\n\nPero en tu contexto, eso ya hoy **no se pinta** como cara real en `_relleno_solido` si `ancho_px > largo_s`. Por lo tanto, permitirlo en emparejamiento no aporta valor funcional; al contrario, te bloquea el fallback de conector.  \nAsí que el cambio es más bien **consistencia semántica**: si no sería pintable como cara real, no debería “consumir” el estado de “tengo par real”.\n\nConclusión práctica: el caso legítimo que “romperías” ya está roto hoy en conectividad/render por diseño actual. Tu fix lo reencamina al mecanismo de conector heredado (cuando corresponda).\n\n---\n\n## 3) ¿`>` estricto o variante con tolerancia?\n\nRecomendación: **mantener exactamente la misma lógica que `_relleno_solido`** para no introducir divergencias nuevas.\n\n- En `_relleno_solido`: se rechaza solo si `ancho_px > largo_s`.\n- En `ancho_por_emparejamiento`: usa **`if d > largo_s: continue`**.\n\nNo metería margen adicional ahora (tipo epsilon), salvo que tengas evidencia de ruido numérico relevante. Si querés blindar floating point mínimo, podría ser `d > largo_s + 1e-6`, pero no es imprescindible en px.\n\n---\n\n## 4) ¿Dónde insertarlo para mínimo impacto?\n\nLugar ideal: **en el loop de candidatos de `ancho_por_emparejamiento`, justo después de calcular `d` y antes de `_solapan_en_direccion` / append**.\n\nVentaja:\n- No cambia la lógica de ordenamiento ni selección final.\n- Solo evita que entren candidatos inviables.\n- Mantiene intacto `_hay_linea_central_entre` para candidatos plausibles.\n\nEjemplo mínimo:\n\n```python\nd = _dist_perp_entre_paralelas(s, c)\nif d < tol_min_px or d > tol_max_px:\n    continue\n\nlargo_s = math.hypot(s['p2'][0] - s['p1'][0], s['p2'][1] - s['p1'][1])\nif d > largo_s:\n    continue\n\nif not _solapan_en_direccion(s, c):\n    continue\ncandidatos.append((c, d))\n```\n\nSi querés micro-optimizar, calcula `largo_s` una vez por `s` antes del loop de `c`.\n\n---\n\n## 5) ¿Otros lugares con chequeo similar a mantener consistentes?\n\nSí, al menos en lo que compartiste, aparece en `_relleno_solido` **dos veces**:\n\n1. En el loop de rellenado por cuadriláteros.\n2. En el armado de `piernas` para remate de esquinas (también excluye `ancho_px > largo_seg` para caras reales).\n\nEso ya está consistente internamente.  \nTu cambio en `ancho_por_emparejamiento` no duplica mal: **evita clasificar como “con ancho real” algo que luego el raster ya descarta**. Es redundancia intencional de validación en etapas distintas (clasificación vs pintura), no redundancia dañina.\n\n---\n\nSi querés, te propongo un parche exacto (diff) sobre la función con el mínimo de líneas y un print de debug temporal para validar que en tu caso 34px/59px ahora cae a `None` y dispara `_ancho_heredado_de_conector`."
+        }
+      ],
+      "phase": "final_answer",
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "current_turn",
+    "effort": "none",
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 0.98,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 8548,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 1054,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 9602
+  },
+  "user": null,
+  "metadata": {}
+}

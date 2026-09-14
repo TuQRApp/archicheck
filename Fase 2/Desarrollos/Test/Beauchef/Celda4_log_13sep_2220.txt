@@ -1,0 +1,4 @@
+Paginas: 4
+Leyenda detectada: {(0.87, 0.43, 0.43): 'Universal', (1.0, 0.0, 0.0): '0.8'}
+  color=(0.87, 0.43, 0.43) texto='Universal' -> estado=None
+  color=(1.0, 0.0, 0.0) texto='0.8' -> estado=None

@@ -529,11 +529,14 @@ const CORRECCIONES_VACIAS = {
   // motivo opcional por elemento eliminado (id -> texto), separado de elementosPuntualesEliminados
   // para no tocar los .includes(id) ya usados en varios lugares — ver eliminarElemento().
   motivosEliminacion: {},
-  // id -> nueva categoria (Reclasificar, 2026-08-29): cambia la categoría de un elemento ya
-  // detectado (ej. un muro que en realidad es una ventana) preservando su geometría real
-  // (segmentos) tal cual la midió Colab — sin re-clickear nada, a diferencia de Eliminar + volver
-  // a marcar a mano. Ver aplicación en getElementosPuntualesPorPagina.
-  reclasificaciones: {},
+  // id -> texto (2026-09-05, a pedido explícito del usuario): comentario opcional sobre CUALQUIER
+  // corrección -- agregar, mover o simplemente editar un campo -- no solo eliminar
+  // (que ya tenía motivosEliminacion desde antes). Mismo objetivo: que la corrección documente el
+  // POR QUÉ, no solo el QUÉ, para que sirva de aprendizaje real al revisarla después. Se guarda
+  // separado de los demás dicts de corrección para que aplique sin importar qué otra acción se
+  // haya tomado sobre el elemento (ver comentarElemento() y su uso en getMedicionesPorPagina /
+  // getElementosPuntualesPorPagina).
+  comentarios: {},
 };
 
 // "campo" apunta a analisis_semantico[campo] (detección vía Claude Vision) para las categorías
@@ -609,6 +612,10 @@ function getMedicionesPorPagina(colabJson, correcciones, entryIdx) {
     // de un valor limpio, mismo criterio de redondeo ya usado en Cortar/Fusionar.
     return { ...r, area_m2: Math.round(Math.max(0, (r.area_m2 || 0) - areaExcluidaTotal) * 100) / 100, _areas_excluidas: excl };
   });
+  // Comentario del arquitecto (2026-09-05) -- aplica sin importar qué otra corrección se haya
+  // hecho sobre el recinto (editar, cortar, fusionar), mismo criterio que en
+  // getElementosPuntualesPorPagina.
+  mg = mg.map(r => correcciones.comentarios?.[r.id] ? { ...r, comentario_arquitecto: correcciones.comentarios[r.id] } : r);
   return mg;
 }
 
@@ -643,6 +650,33 @@ function getElementosPuntualesPorPagina(colabJson, correcciones, entryIdx) {
         const segmentos = normalizarSegmentos(p.segmentos);
         return { ...p, segmentos, _origenGeo: true, ...centroideDeSegmentos(segmentos, pag?.imagen_w_px, pag?.imagen_h_px) };
       });
+    } else if (cat.id === "ventana" && ((pag?.ventanas_simples_por_linea_central || []).length || (pag?.ventanas_reconstruidas_por_jamba || []).length)) {
+      // Ventana con geometría determinística (2026-09-05, gap encontrado: Puerta ya priorizaba su
+      // geometría real desde el 2026-08-04, Ventana nunca tuvo la rama equivalente y siempre caía
+      // a analisis_semantico.ventanas_detalle -- Vision tiene recall bajo en ventanas, documentado
+      // en el roadmap, así que ventanas medidas por Colab quedaban invisibles en el portal aunque
+      // el JSON las trajera). Dos fuentes con formas distintas, se normalizan ambas a `segmentos`:
+      // - ventanas_simples_por_linea_central: ya trae `segmentos` (mismo shape que muro/puerta_geo).
+      // - ventanas_reconstruidas_por_jamba: trae bbox (x0/x1/y_top/y_bot, ver reconstruir_ventanas_
+      //   por_jamba en cuerpo_cerrado.py) -- se convierte a las 4 aristas del rectángulo para que
+      //   dibujarOverlayEnCanvas la trate igual que cualquier otro elemento con `.segmentos`.
+      const simples = (pag.ventanas_simples_por_linea_central || []).filter(v => !correcciones.elementosPuntualesEliminados.includes(v.id));
+      const porJamba = (pag.ventanas_reconstruidas_por_jamba || []).filter(v => !correcciones.elementosPuntualesEliminados.includes(v.id))
+        .map(v => ({
+          ...v,
+          segmentos: [
+            { p1: [v.x0, v.y_top], p2: [v.x1, v.y_top] },
+            { p1: [v.x1, v.y_top], p2: [v.x1, v.y_bot] },
+            { p1: [v.x1, v.y_bot], p2: [v.x0, v.y_bot] },
+            { p1: [v.x0, v.y_bot], p2: [v.x0, v.y_top] },
+          ],
+        }));
+      arr = [...simples, ...porJamba];
+      arr = arr.map(v => correcciones.elementosPuntualesEditados[v.id] ? { ...v, ...correcciones.elementosPuntualesEditados[v.id] } : v);
+      arr = arr.map(v => {
+        const segmentos = normalizarSegmentos(v.segmentos);
+        return { ...v, segmentos, _origenGeo: true, ...centroideDeSegmentos(segmentos, pag?.imagen_w_px, pag?.imagen_h_px) };
+      });
     } else {
       arr = (sem[cat.campo] || []).filter(e => !e.id || !correcciones.elementosPuntualesEliminados.includes(e.id));
       arr = arr.map(e => (e.id && correcciones.elementosPuntualesEditados[e.id]) ? { ...e, ...correcciones.elementosPuntualesEditados[e.id] } : e);
@@ -650,14 +684,10 @@ function getElementosPuntualesPorPagina(colabJson, correcciones, entryIdx) {
     out.push(...arr.map(e => ({ ...e, categoria: cat.id })));
   }
   out.push(...correcciones.elementosPuntualesNuevos.filter(n => n.entryIdx === entryIdx && !correcciones.elementosPuntualesEliminados.includes(n.id)));
-  // Reclasificar (2026-08-29): se aplica al final, sobre el resultado ya combinado (detectados +
-  // nuevos), para que sea un único punto de override sin importar el origen del elemento — el
-  // loop de arriba fuerza `categoria: cat.id` según de qué bucket vino cada uno (pag.muros_geo,
-  // pag.puertas_geo, analisis_semantico[campo]), así que sin este paso una reclasificación quedaría
-  // pisada de vuelta a su categoría original. construirColabJsonCorregido ya reagrupa por
-  // `.categoria` al armar el JSON final, así que sobreescribirla acá es suficiente — no hace falta
-  // tocar esa función.
-  return out.map(e => correcciones.reclasificaciones?.[e.id] ? { ...e, categoria: correcciones.reclasificaciones[e.id] } : e);
+  // Comentario del arquitecto (2026-09-05, a pedido explícito): un único punto de override,
+  // aplica sin importar si el elemento es nuevo, movido o solo editado, porque comentarios vive
+  // en un dict separado de todos esos.
+  return out.map(e => correcciones.comentarios?.[e.id] ? { ...e, comentario_arquitecto: correcciones.comentarios[e.id] } : e);
 }
 
 // Subconjunto de getElementosPuntualesPorPagina con posición real (cx_relativo/cy_relativo
@@ -773,6 +803,15 @@ function construirColabJsonCorregido(colabJson, correcciones) {
       } else if (cat.id === "puerta") {
         pag.puertas_geo = porCategoria.puerta.filter(p => p._origenGeo).map(({ _origenGeo, ...p }) => p);
         pag.analisis_semantico.puertas_detalle = porCategoria.puerta.filter(p => !p._origenGeo);
+      } else if (cat.id === "ventana") {
+        // Mismo patrón que puerta (ver arriba). Las 2 fuentes geométricas (línea central + jamba,
+        // ver getElementosPuntualesPorPagina) se unifican en una sola lista corregida -- una vez
+        // confirmada por el arquitecto, la distinción de origen ya no importa. Se vacía
+        // ventanas_reconstruidas_por_jamba explícitamente para no dejar datos sin corregir del
+        // JSON original conviviendo con la lista ya corregida.
+        pag.ventanas_simples_por_linea_central = porCategoria.ventana.filter(v => v._origenGeo).map(({ _origenGeo, ...v }) => v);
+        pag.ventanas_reconstruidas_por_jamba = [];
+        pag.analisis_semantico.ventanas_detalle = porCategoria.ventana.filter(v => !v._origenGeo);
       } else {
         pag.analisis_semantico[cat.campo] = porCategoria[cat.id];
       }
@@ -1675,7 +1714,7 @@ function RevisionGeometricaCanvas({
 }
 
 // ── Panel de edición de un recinto o elemento puntual seleccionado ─────────
-function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onReclasificar, onCerrar }) {
+function PanelRetag({ tipo, item, comentarioInicial = "", onGuardar, onEliminar, onMover, onComentar, onCerrar }) {
   const [nombre, setNombre] = useState("");
   const [tipoRecinto, setTipoRecinto] = useState("");
   const [areaM2, setAreaM2] = useState("");
@@ -1684,6 +1723,12 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onReclasificar
   // POR QUÉ un muro detectado por OpenCV era un falso positivo, no solo que se borró) pero
   // disponible para cualquier elemento puntual, mismo campo simple para todos.
   const [motivoEliminar, setMotivoEliminar] = useState("");
+  // Comentario general (2026-09-05, a pedido explícito del usuario): a diferencia de
+  // motivoEliminar (solo tiene sentido al eliminar, porque el elemento desaparece), este aplica
+  // a cualquier otra corrección -- agregar, mover, editar un campo -- y se puede
+  // guardar en cualquier momento mientras el elemento siga seleccionado, sin depender de qué botón
+  // se presione después.
+  const [comentario, setComentario] = useState("");
 
   useEffect(() => {
     setNombre(item?.nombre ?? item?.ubicacion_o_recinto ?? "");
@@ -1691,6 +1736,8 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onReclasificar
     setAreaM2(item?.area_m2 ?? "");
     setAnchoM(item?.categoria === "muro" ? (item?.largo_m ?? "") : (item?.ancho_estimado_m ?? ""));
     setMotivoEliminar("");
+    setComentario(comentarioInicial);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
   if (!item) return null;
@@ -1750,25 +1797,24 @@ function PanelRetag({ tipo, item, onGuardar, onEliminar, onMover, onReclasificar
           )}
         </>
       )}
-      {/* Reclasificar (2026-08-29): cambia la categoría del elemento preservando su geometría real
-          (segmentos) tal cual la midió Colab — sin re-clickear nada, a diferencia de Eliminar +
-          volver a marcar a mano, que depende de la precisión del clic. Solo tiene sentido si el
-          elemento ya tiene una geometría real que preservar (segmentos) — para un punto/línea
-          sintética de Claude Vision no hay nada geométrico que valga la pena conservar, mejor
-          eliminar y marcar de nuevo con la herramienta correcta. */}
-      {!esRecinto && esPoligono && onReclasificar && (
+      {/* Comentario general (2026-09-05, a pedido explícito del usuario): "aplica a eliminar,
+          nuevo. También mover" -- a diferencia del motivo de descarte (arriba,
+          exclusivo de Eliminar porque el elemento deja de existir), este campo cubre cualquier
+          otra corrección y se puede guardar en cualquier momento sin cerrar el panel, para poder
+          seguir editando/moviendo el mismo elemento después. onComentar es opcional
+          en la prop (undefined si el llamador no lo pasa) -- no rompe usos anteriores de este
+          componente que no lo pasen. */}
+      {onComentar && (
         <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid #D1D9EE" }}>
           <div style={{ fontSize: 10, color: "#6B7A99", marginBottom: 5 }}>
-            Reclasificar como (conserva la geometría exacta, sin volver a marcar):
+            Comentario (opcional) — explica qué corregiste y por qué, para que sirva de aprendizaje:
           </div>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {CATEGORIAS_ELEMENTO.filter(c => c.id !== item.categoria).map(c => (
-              <button key={c.id} style={{ ...btnStyle(COLORES_ELEMENTO_PUNTUAL[c.id]), padding: "5px 9px", fontSize: 10 }}
-                onClick={() => onReclasificar(c.id)}>
-                → {c.label}
-              </button>
-            ))}
-          </div>
+          <textarea style={{ ...inputStyle, minHeight: 50, resize: "vertical", fontFamily: "inherit" }}
+            value={comentario} onChange={e => setComentario(e.target.value)}
+            placeholder="Ej. 'esto es una jardinera decorativa, no un muro' / 'reubicado, la puerta real está más al norte'" />
+          <button style={{ ...btnStyle("#2952A3"), marginTop: 4 }} onClick={() => onComentar(comentario)}>
+            Guardar comentario
+          </button>
         </div>
       )}
     </div>
@@ -1936,7 +1982,7 @@ function RevisionModal({
   tool, setTool, selectedId, selectedTipo, linePoints, fusionSet = [],
   onSeleccionar, onLinePoint, onMoverDestino, onConfirmarMuro, onToggleFusion, onConfirmarFusion,
   onGuardarRecinto, onEliminarRecinto, onGuardarElemento, onEliminarElemento, onMoverElemento,
-  onReclasificarElemento, onCerrarPanel,
+  onComentarElemento, onCerrarPanel,
   onFinalizar, onCerrarModal,
 }) {
   const containerRef = useRef();
@@ -2037,10 +2083,11 @@ function RevisionModal({
             <PanelRetag
               tipo={selectedTipo}
               item={recintoSel || elementoSel}
+              comentarioInicial={correcciones.comentarios?.[(recintoSel || elementoSel)?.id] || ""}
               onGuardar={patch => recintoSel ? onGuardarRecinto(patch) : onGuardarElemento(elementoSel, patch)}
               onEliminar={motivo => recintoSel ? onEliminarRecinto() : onEliminarElemento(elementoSel, motivo)}
               onMover={onMoverElemento}
-              onReclasificar={recintoSel ? null : cat => onReclasificarElemento(elementoSel, cat)}
+              onComentar={texto => onComentarElemento(recintoSel || elementoSel, texto)}
               onCerrar={onCerrarPanel}
             />
           )}
@@ -2853,13 +2900,15 @@ ${printRef.current.innerHTML}
     });
   }
 
-  // Reclasificar (2026-08-29): cambia solo `categoria` — la geometría real (segmentos) del
-  // elemento no se toca, ver getElementosPuntualesPorPagina (donde se aplica el override) y
-  // PanelRetag (de dónde sale la lista de categorías destino).
-  function reclasificarElemento(item, nuevaCategoria) {
-    setColabCorrecciones(prev => ({ ...prev, reclasificaciones: { ...prev.reclasificaciones, [item.id]: nuevaCategoria } }));
-    setToast(`Reclasificado como ${nuevaCategoria}`);
-    setReviewSelectedId(null); setReviewSelectedTipo(null);
+  // Comentario opcional sobre cualquier elemento/recinto (2026-09-05, a pedido explícito del
+  // usuario) -- no reemplaza motivosEliminacion (obligatorio al eliminar, captura ANTES de que el
+  // elemento desaparezca); este cubre los demás casos donde el elemento sigue existiendo después
+  // de la corrección (agregar, mover, editar), donde sí se puede volver a seleccionar
+  // y comentar en cualquier momento. No cierra el panel -- el arquitecto puede seguir editando/
+  // moviendo el mismo elemento después de comentarlo.
+  function comentarElemento(item, texto) {
+    setColabCorrecciones(prev => ({ ...prev, comentarios: { ...prev.comentarios, [item.id]: texto } }));
+    setToast(texto.trim() ? "Comentario guardado" : "Comentario borrado");
   }
 
   function moverElemento(item, pt, imagenWPx, imagenHPx) {
@@ -3723,7 +3772,7 @@ ${printRef.current.innerHTML}
                 onGuardarElemento={(item, patch) => { aplicarCorreccionElemento(item, patch); setReviewSelectedId(null); setReviewSelectedTipo(null); }}
                 onEliminarElemento={(item, motivo) => eliminarElemento(item, motivo)}
                 onMoverElemento={() => setReviewTool("mover")}
-                onReclasificarElemento={reclasificarElemento}
+                onComentarElemento={comentarElemento}
                 onCerrarPanel={() => { setReviewSelectedId(null); setReviewSelectedTipo(null); }}
                 onFinalizar={handleFinalizarModal}
                 onCerrarModal={() => setReviewModalOpen(false)}
@@ -4474,8 +4523,8 @@ ${printRef.current.innerHTML}
       {toast && (
         <div style={{ position: "fixed", bottom: 24, right: 24, background: toast === "aceptada" ? "#1E8449" : toast === "comentada" ? "#2952A3" : toast === "modificada" ? "#D68910" : toast === "descartada" ? "#6B7A99" : "#2952A3", color: "#fff", borderRadius: 10, padding: "12px 20px", fontSize: 13, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 9999, display: "flex", alignItems: "center", gap: 8 }}>
           {/* Los 4 estados de obsStatus (aceptada/comentada/modificada/descartada) tienen texto+ícono
-              fijo; cualquier otro valor (ej. "Geometría confirmada", mensajes de Reclasificar/Recortar
-              tramo) se muestra tal cual — antes caía al else de "descartada" sin importar el mensaje
+              fijo; cualquier otro valor (ej. "Geometría confirmada", mensajes de Recortar tramo)
+              se muestra tal cual — antes caía al else de "descartada" sin importar el mensaje
               real, bug preexistente encontrado al agregar los toasts nuevos de esta sesión. */}
           {toast === "aceptada" ? "✅ Observación aceptada" : toast === "comentada" ? "💬 Comentario guardado" : toast === "modificada" ? "✏️ Marcada para modificar" : toast === "descartada" ? "🗑️ Observación descartada" : toast}
         </div>

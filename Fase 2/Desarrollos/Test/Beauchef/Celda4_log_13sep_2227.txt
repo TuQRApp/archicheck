@@ -1,0 +1,11 @@
+Leyenda PdV:
+  color=(0.87, 0.43, 0.43) texto='Baño Personal' -> estado=None
+  color=(0.0, 0.0, 0.0) texto='Baño' -> estado=None
+  color=(1.0, 0.0, 0.0) texto='0.8' -> estado=None
+  color=(1.0, 0.75, 0.0) texto='1   2   3   4   5    6      7      8' -> estado=None
+
+Leyenda Beauchef (regresion, debe seguir 'CLUB HIPICO' o similar):
+  color=(0.0, 0.0, 0.0) texto='CLUB HIPICO'
+  color=(1.0, 0.0, 0.0) texto='MANUELA ERRAZURIZ'
+  color=(0.78, 0.78, 0.78) texto='A'
+  color=(0.18, 0.72, 0.0) texto='%DxR'

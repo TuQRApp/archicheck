@@ -1,0 +1,46 @@
+  ✓ LEYENDA SIMBOLOGIA: 1 color(es) con texto asociado encontrados en el PDF completo:
+      color=(0.0, 0.0, 0.0) texto='4,80' -> ⚠ NO reconocido como agregado/eliminado (revisar palabras clave)
+
+⏱ Celda 4 iniciada: 2026-09-05 19:32:21
+Funciones cargadas OK
+  DIAG PASO1 -- crop_px=(808, 143, 7178, 5006): 77404 segmentos_l, bbox x=[987,6964]
+  ✓ COTAS (linea): 1919 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 439 segmentos identificados como referencia (Paso 1.5), 381 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 621 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  [clasificacion ventana/hoja-vano] 49048 segmento(s) protegido(s) en el pool, O(n^2)...
+  ⚠ RED DE SEGURIDAD: 49048 segmentos protegidos > 4000 -- se salta la clasificacion ventana/hoja-vano para esta pagina (identificar_lineas_centrales es O(n^2) sin tope, este volumen la colgaria por minutos u horas) -- muros y puertas se exportan igual, solo se pierde la distincion fina ventana/hoja-vano en esta pagina densa
+  ✓ Clasificacion ventana/hoja-vano (D1-D3, adelantada antes del export de muros -- GAP-GEO-VENT-001): ventana=0 segs, hoja/vano confirmada=0 segs, hoja/vano duda=0 segs, conflictos=0
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 11
+  ✓ Muros exportados: 14199 (de 7 grupos protegidos, 34792 segmentos descartados por angulo no-ortogonal, 0 muros con estado agregado/eliminado detectado via leyenda -- el color ya NO excluye geometria, ver _detectar_leyenda_simbologia)
+    [lineas periodicas] eje horizontal: 8633 muro(s) candidato(s), agrupando O(n^2)...
+    ⚠ RED DE SEGURIDAD: 8633 candidatos eje horizontal > 4000 -- se salta la deteccion de lineas de referencia periodicas para este eje (zona probablemente con geometria patologica/ruido -- revisar visualmente si se repite)
+    [lineas periodicas] eje vertical: 5471 muro(s) candidato(s), agrupando O(n^2)...
+    ⚠ RED DE SEGURIDAD: 5471 candidatos eje vertical > 4000 -- se salta la deteccion de lineas de referencia periodicas para este eje (zona probablemente con geometria patologica/ruido -- revisar visualmente si se repite)
+  ⏱ Extracción + filtrado (Paso 1-4): 0:01:59
+  [fusion muros] 14199 muro(s) antes de fusionar...
+    ⚠ CONTEXTO ENORME -- MU01 vs MU04: contexto_par tiene 421 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    DIAG bloqueado MU01 vs MU11: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.699675925925926, anchoB=0.7761111111111111)
+    DIAG CONECTIVIDAD -- MU01 (anchoA=0.699675925925926m) vs MU11 (anchoB=0.7761111111111111m): tolPx=11.9 (~0.07m de dilatacion)
+    ⚠ CONTEXTO ENORME -- MU02 vs MU03: contexto_par tiene 317 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    ⚠ CONTEXTO ENORME -- MU02 vs MU04: contexto_par tiene 317 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    ⚠ CONTEXTO ENORME -- MU03 vs MU866: contexto_par tiene 314 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    ⚠ CONTEXTO ENORME -- MU03 vs MU867: contexto_par tiene 352 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    DIAG bloqueado MU07 vs MU08: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.5468055555555555, anchoB=0.5997222222222223)
+    DIAG CONECTIVIDAD -- MU07 (anchoA=0.5468055555555555m) vs MU08 (anchoB=0.5997222222222223m): tolPx=9.3 (~0.055m de dilatacion)
+    DIAG bloqueado MU07 vs MU09: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.5468055555555555, anchoB=0.5997222222222223)
+    DIAG CONECTIVIDAD -- MU07 (anchoA=0.5468055555555555m) vs MU09 (anchoB=0.5997222222222223m): tolPx=9.3 (~0.055m de dilatacion)
+    DIAG bloqueado MU07 vs MU12: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.5468055555555555, anchoB=0.6232407407407408)
+    DIAG CONECTIVIDAD -- MU07 (anchoA=0.5468055555555555m) vs MU12 (anchoB=0.6232407407407408m): tolPx=9.3 (~0.055m de dilatacion)
+    DIAG bloqueado MU07 vs MU14: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.5468055555555555, anchoB=None)
+    DIAG bloqueado MU07 vs MU15: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.5468055555555555, anchoB=None)
+    DIAG bloqueado MU08 vs MU15: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.5997222222222223, anchoB=None)
+    DIAG bloqueado MU09 vs MU15: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.5997222222222223, anchoB=None)
+    DIAG bloqueado MU09 vs MU19: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.5997222222222223, anchoB=0.19402777777777777)
+    DIAG bloqueado MU10 vs MU14: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.5468055555555555, anchoB=None)
+    DIAG bloqueado MU10 vs MU15: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.5468055555555555, anchoB=None)
+    DIAG bloqueado MU12 vs MU14: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.6232407407407408, anchoB=None)
+    DIAG bloqueado MU12 vs MU15: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.6232407407407408, anchoB=None)
+    DIAG bloqueado MU13 vs MU14: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    DIAG bloqueado MU13 vs MU15: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=None)
+    [fusion muros] 500 pares con contexto_par construido hasta ahora (de 14199 muros totales)...
+    [fusion muros] 1000 pares con contexto_par construido hasta ahora (de 14199 muros totales)...

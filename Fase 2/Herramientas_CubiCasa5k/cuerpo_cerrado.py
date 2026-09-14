@@ -48,6 +48,7 @@ _TOL_JAMBA_M = _param('D3-ventana-reconstruccion-por-jamba', 'tol_jamba_m', 0.03
 _ANCHO_VENTANA_MIN_M = _param('D3-ventana-reconstruccion-por-jamba', 'ancho_min_m', 0.15)
 _ANCHO_VENTANA_MAX_M = _param('D3-ventana-reconstruccion-por-jamba', 'ancho_max_m', 3.0)
 _MAX_SPREAD_VERTICAL_M = _param('D3-ventana-reconstruccion-por-jamba', 'max_spread_vertical_m', 2.0)
+_TOL_CROSS_M = _param('D3-ventana-corta-muro', 'tol_cross_m', 0.15)
 
 
 def _validar_mpx(mpx, nombre_fn):
@@ -1015,6 +1016,51 @@ def cuerpo_cerrado_fusiona(grupo_a, grupo_b, contexto_local, mpx, margen_m=_MARG
     # siempre que se evalua un par, no solo cuando alguien lo pide aparte.
     clasif_no_muro = clasificar_no_muro(contexto_local, mpx)
     hoja_ids = clasif_no_muro['sets_por_tipologia']['hoja_vano_puerta']
+
+    # PRIORIDAD (2026-09-13, regla explicita del arquitecto): el cierre
+    # geometrico real -- los grupos se TOCAN, sin separacion explicita --
+    # decide antes que ancho_por_emparejamiento, nunca al reves. Caso real
+    # que motivo esto (PdV, muesca MU30/MU31): ambos grupos comparten un
+    # vertice exacto (0px de distancia) pero un candidato de ancho MAL
+    # calculado (tol_min_m descartaba el par cercano real, dejando pasar
+    # uno lejano e implausible como "valido") terminaba bloqueando la
+    # fusion via un tol_px de dilatacion incoherente con la geometria real.
+    # Un ancho equivocado no puede vetar un contacto que ya es un hecho.
+    #
+    # Excluye explicitamente 'ventana' y 'hoja_vano_puerta' confirmadas --
+    # tocar la linea central de una ventana o la hoja de una puerta NO es
+    # "mismo cuerpo" aunque compartan un punto (ver CASO 1/4b de
+    # test_cuerpo_cerrado.py: el pilar/muro toca la ventana, pero eso es
+    # justamente la separacion que la ventana representa). 'hoja_vano_
+    # puerta_duda' NO se excluye aca -- sigue contando como muro candidato
+    # (ver CASO 9, Convenciones_CAD D.9: una duda no es una exclusion).
+    ventana_ids = clasif_no_muro['sets_por_tipologia']['ventana']
+    _excluidos_contacto = ventana_ids | hoja_ids
+
+    def _clave_segmento(s):
+        return (tuple(s['p1']), tuple(s['p2']))
+
+    # Coordenadas (no id()) de los segmentos excluidos -- grupo_a/grupo_b
+    # pueden llegar como copias con las mismas coordenadas pero objetos
+    # distintos a los de contexto_local (confirmado con test_cuerpo_
+    # cerrado.py CASO 1/4b: el llamador construye grupo_b por separado del
+    # contexto). En produccion (_fusionar_muros_por_proximidad) son el
+    # mismo objeto, asi que esto no cambia nada ahi -- solo hace la funcion
+    # robusta tambien cuando no lo son.
+    _coords_excluidas = set()
+    for s in contexto_local:
+        if id(s) in _excluidos_contacto:
+            _coords_excluidas.add(_clave_segmento(s))
+            _coords_excluidas.add((tuple(s['p2']), tuple(s['p1'])))
+    _grupo_a_es_wall_candidato = not any(_clave_segmento(s) in _coords_excluidas for s in grupo_a)
+    _grupo_b_es_wall_candidato = not any(_clave_segmento(s) in _coords_excluidas for s in grupo_b)
+    if _grupo_a_es_wall_candidato and _grupo_b_es_wall_candidato:
+        tol_contacto_px = tol_conector_esquina_m / mpx
+        if _grupos_se_tocan_directamente(grupo_a, grupo_b, tol_contacto_px):
+            return {'fusiona': True,
+                    'motivo': 'cuerpo cerrado: contacto geometrico directo (prioritario sobre ancho por emparejamiento)',
+                    'anchoA': None, 'anchoB': None, 'tolPx': tol_contacto_px,
+                    'conflictosTipologia': clasif_no_muro['conflictos']}
     ancho_a = ancho_por_emparejamiento(grupo_a, contexto_local, mpx, hoja_ids=hoja_ids)
     ancho_b = ancho_por_emparejamiento(grupo_b, contexto_local, mpx, hoja_ids=hoja_ids)
 
@@ -1204,4 +1250,410 @@ def reconstruir_ventanas_por_jamba(muros_excluidos_por_referencia, mpx,
     for i, v in enumerate(ventanas, 1):
         v['id'] = f'VT{i:02d}'
     return ventanas
-    return {'box': box, 'w': w, 'h': h, 'bin': bin_arr}
+
+
+def _distancia(p1, p2):
+    return math.hypot(p1[0] - p2[0], p1[1] - p2[1])
+
+
+def _grupos_se_tocan_directamente(grupo_a, grupo_b, tol_px):
+    """True si algun EXTREMO de un segmento de grupo_a coincide (dentro de
+    tol_px) con un EXTREMO de un segmento de grupo_b -- vertice a vertice,
+    el mismo criterio ya validado que usa _ancho_heredado_de_conector para
+    reconocer un conector real ("al menos uno de sus extremos coincide...
+    con el extremo de OTRO segmento").
+
+    A proposito NO es punto-a-segmento (que si usa el gate de proximidad en
+    _fusionar_muros_por_proximidad para PROPONER candidatos, incluyendo
+    cruces en T real entre 2 muros) -- para esta decision especifica
+    (contacto directo = prioridad sobre ancho_por_emparejamiento) un cruce
+    en T generico es demasiado permisivo: confirmado con
+    test_cuerpo_cerrado.py CASO 1/4b, donde el extremo de una linea central
+    de ventana cae sobre la MITAD de la cara de un pilar/muro real -- eso
+    es contacto, pero no es "mismo cuerpo". Un vertice compartido de
+    verdad (esquina real donde 2+ piernas rematan juntas) si lo es -- ver
+    cuerpo_cerrado_fusiona."""
+    for sa in grupo_a:
+        for pa in (sa['p1'], sa['p2']):
+            for sb in grupo_b:
+                for pb in (sb['p1'], sb['p2']):
+                    if _distancia(pa, pb) <= tol_px:
+                        return True
+    return False
+
+
+def _proyeccion_eje_largo(p1, p2):
+    """Para un segmento aprox. horizontal o vertical: devuelve (es_horizontal,
+    a1, a2, cruz) -- a1/a2 son el rango en el eje LARGO del segmento (x si es
+    horizontal, y si es vertical), 'cruz' es la posicion (aprox. constante)
+    en el eje corto. Segmentos claramente diagonales (arco de puerta, etc.)
+    no deberian llegar aca -- ver filtro angular de segs_reales en Celda 4."""
+    dx, dy = abs(p2[0] - p1[0]), abs(p2[1] - p1[1])
+    if dx >= dy:
+        return True, min(p1[0], p2[0]), max(p1[0], p2[0]), (p1[1] + p2[1]) / 2
+    return False, min(p1[1], p2[1]), max(p1[1], p2[1]), (p1[0] + p2[0]) / 2
+
+
+def _dividir_en_muros_por_union(segmentos, indices, tol_cluster_px, tol_diametro_cluster_px):
+    """
+    NUEVO (2026-08-08): reemplaza la exportacion directa de un grupo de
+    conectividad completo como UN muro -- causaba el bug real 'Totalmente
+    fusionado' descartado a mano por el arquitecto en PdV Nivel 1 (MU01: 638
+    segmentos, 351m de 'largo total', cubriendo el 90% del plano). Los muros
+    de un edificio SIEMPRE se tocan entre si en cada esquina y cruce en T, asi
+    que con conectividad pura (Paso 2 de Celda 4) tarde o temprano toda la red
+    de muros del piso cae en un solo componente -- confirmado que NO es un
+    problema de calibrar TOL_MURO_PX (ver nota 2026-07-25: bajar a 12px no
+    evito la fusion tampoco).
+
+    Construye un grafo (nodo = extremo de segmento, agrupando los que caen
+    cerca) y separa 'indices' en cadenas independientes, cortando SOLO en
+    nodos donde 3+ segmentos se cruzan (cruce en T/X) o donde un segmento
+    termina solo (punta suelta, grado 1). Los nodos de PASO (exactamente 2
+    segmentos, ej. una esquina de 90 grados) NO cortan -- la cadena sigue de
+    largo a traves de ellos, igual que el arquitecto traza un muro con
+    quiebres en el portal (ver MU-A48 del backfill de PdV: 3 segmentos con 2
+    quiebres de 90 grados, guardado como un solo muro, no tres).
+
+    El clustering de nodos NO puede ser Union-Find transitivo con un radio
+    fijo -- probado con los segmentos reales de MU01 (ver roadmap P1,
+    diagnostico 2026-08-08): una fila de puntos mas o menos equiespaciados a
+    lo largo de un muro recto (trazos duplicados, marcas de cota que cruzan
+    el muro, etc.) se va encadenando de a poco hasta formar un solo 'nodo' de
+    decenas de metros de diametro -- se midio un nodo de grado 222 con
+    bounding box de 14.79m x 1.35m sobre datos reales, algo arquitectonicamente
+    imposible. La correccion: cada cluster acumula un bounding box explicito
+    y solo acepta un punto nuevo si el bbox RESULTANTE (no solo la distancia
+    al punto mas cercano ya en el cluster) se mantiene bajo
+    tol_diametro_cluster_px. Esto no elimina del todo los nodos de grado alto
+    (siguen existiendo cruces reales complejos, hasta grado ~17 en los datos
+    de prueba), pero los mantiene fisicamente compactos (bbox bajo 0.35m),
+    consistente con un cruce real y no con una cadena de puntos lejanos.
+
+    Filosofia (igual que el resto de este Paso 2, ver comentario de
+    TOL_MURO_PX): el riesgo es asimetrico. Exportar de mas (un fragmento
+    chico que en realidad es ruido, o parte de un muro que no se pudo unir)
+    cuesta poco porque el arquitecto revisa y descarta en el portal --
+    exportar de menos (perder geometria real) repite la regresion original.
+    Por eso esta funcion NO aplica ningun piso de largo minimo por cadena: el
+    backfill manual de PdV confirmo muros reales tan cortos como 0.14m
+    (MU-A80) que un piso arbitrario habria descartado.
+    """
+    puntos = []
+    for i in indices:
+        puntos.append((i, segmentos[i]['p1']))
+        puntos.append((i, segmentos[i]['p2']))
+    n = len(puntos)
+    clusters = []  # cada uno: {'idx_puntos': [...], 'minx','maxx','miny','maxy'}
+
+    def _diag(minx, maxx, miny, maxy):
+        return math.hypot(maxx - minx, maxy - miny)
+
+    cell = max(1, tol_cluster_px)
+    buckets = {}
+
+    def _claves_bbox(minx, maxx, miny, maxy, margen):
+        kx0, kx1 = int((minx - margen) // cell), int((maxx + margen) // cell)
+        ky0, ky1 = int((miny - margen) // cell), int((maxy + margen) // cell)
+        for kx in range(kx0, kx1 + 1):
+            for ky in range(ky0, ky1 + 1):
+                yield (kx, ky)
+
+    def _registrar_cluster(ci):
+        c = clusters[ci]
+        for k in _claves_bbox(c['minx'], c['maxx'], c['miny'], c['maxy'], tol_cluster_px):
+            buckets.setdefault(k, set()).add(ci)
+
+    punto_a_cluster = [-1] * n
+    for pi in range(n):
+        _seg_i, (x, y) = puntos[pi]
+        candidatos = set()
+        for k in _claves_bbox(x, x, y, y, tol_cluster_px):
+            candidatos.update(buckets.get(k, ()))
+        mejor_idx, mejor_dist = -1, None
+        for ci in candidatos:
+            c = clusters[ci]
+            dmin = min(_distancia(puntos[pj][1], (x, y)) for pj in c['idx_puntos'])
+            if dmin > tol_cluster_px:
+                continue
+            nminx, nmaxx = min(c['minx'], x), max(c['maxx'], x)
+            nminy, nmaxy = min(c['miny'], y), max(c['maxy'], y)
+            if _diag(nminx, nmaxx, nminy, nmaxy) > tol_diametro_cluster_px:
+                continue
+            if mejor_dist is None or dmin < mejor_dist:
+                mejor_dist, mejor_idx = dmin, ci
+        if mejor_idx >= 0:
+            c = clusters[mejor_idx]
+            c['idx_puntos'].append(pi)
+            c['minx'] = min(c['minx'], x); c['maxx'] = max(c['maxx'], x)
+            c['miny'] = min(c['miny'], y); c['maxy'] = max(c['maxy'], y)
+            punto_a_cluster[pi] = mejor_idx
+            _registrar_cluster(mejor_idx)
+        else:
+            nuevo_idx = len(clusters)
+            clusters.append({'idx_puntos': [pi], 'minx': x, 'maxx': x, 'miny': y, 'maxy': y})
+            punto_a_cluster[pi] = nuevo_idx
+            _registrar_cluster(nuevo_idx)
+
+    # Nodo por segmento: cada indice original aporto 2 puntos consecutivos (2k, 2k+1)
+    nodo_por_indice = {}
+    for k, i in enumerate(indices):
+        nodo_por_indice[i] = (punto_a_cluster[2 * k], punto_a_cluster[2 * k + 1])
+
+    grado_nodo = [0] * len(clusters)
+    for i in indices:
+        a, b = nodo_por_indice[i]
+        grado_nodo[a] += 1
+        grado_nodo[b] += 1
+
+    adyacencia = [[] for _ in clusters]
+    for i in indices:
+        a, b = nodo_por_indice[i]
+        adyacencia[a].append((i, b))
+        adyacencia[b].append((i, a))
+
+    visitado = {i: False for i in indices}
+    es_corte = [g != 2 for g in grado_nodo]
+
+    def _caminar(nodo_inicio, seg_inicio):
+        cadena = [seg_inicio]
+        visitado[seg_inicio] = True
+        a, b = nodo_por_indice[seg_inicio]
+        nodo_actual = b if a == nodo_inicio else a
+        while not es_corte[nodo_actual]:
+            siguiente = None
+            for (seg_j, otro) in adyacencia[nodo_actual]:
+                if not visitado[seg_j]:
+                    siguiente = (seg_j, otro)
+                    break
+            if siguiente is None:
+                break  # cierre de anillo (todo grado 2) -- ver bucle de abajo
+            seg_j, otro = siguiente
+            cadena.append(seg_j)
+            visitado[seg_j] = True
+            nodo_actual = otro
+        return cadena
+
+    cadenas = []
+    for nodo in range(len(clusters)):
+        if not es_corte[nodo]:
+            continue
+        for (seg_i, _otro) in adyacencia[nodo]:
+            if visitado[seg_i]:
+                continue
+            cadenas.append(_caminar(nodo, seg_i))
+    # anillos cerrados sin ningun nodo de corte (simbolos como burbujas de eje)
+    for i in indices:
+        if visitado[i]:
+            continue
+        a, _b = nodo_por_indice[i]
+        cadenas.append(_caminar(a, i))
+
+    return cadenas
+
+
+def _sufijo_letras(k):
+    """Sufijo tipo columna de planilla (a, b, ..., z, aa, ab, ...) para el k-esimo
+    (0-indexado) pedazo de un muro cortado -- a diferencia de ciclar sobre
+    'abcdefghijklmnopqrstuvwxyz' con modulo (el metodo anterior), nunca repite
+    un sufijo ya usado sin importar cuantos pedazos salgan. Necesario en la
+    practica: un muro sobre-fusionado (ver docstring de
+    _dividir_en_muros_por_union) puede producir 100+ pedazos al cortarlo por
+    ventanas -- con modulo, MU01a/MU01b/... se repetian cada 26 pedazos (caso
+    real confirmado, Campo Lindo 2026-09-13: MU01 corto en 113 pedazos),
+    dejando ids duplicados en muros_geo."""
+    k += 1
+    letras = ''
+    while k > 0:
+        k -= 1
+        letras = chr(ord('a') + k % 26) + letras
+        k //= 26
+    return letras
+
+
+def cortar_muros_por_ventanas(muros_geo, ventanas, mpx, tol_muro_px, tol_diametro_cluster_px,
+                               tol_cross_m=_TOL_CROSS_M):
+    """
+    NUEVO (2026-09-05, a pedido explicito del usuario -- 'la ventana rompe
+    el muro'): hasta esta version, una ventana se identificaba y se sacaba
+    de muros_geo (D1-D3 / reconstruccion por jamba), pero las lineas de CARA
+    del muro (las que tambien son el borde de la ventana en este estilo de
+    dibujo) seguian corriendo continuas a traves de la ventana -- la
+    ventana quedaba marcada ENCIMA del muro, no como un corte real. Igual
+    que una puerta es 'separacion explicita' que corta la fusion
+    (_punto_cerca_de_puerta), una ventana confirmada debe cortar la
+    GEOMETRIA del muro, no solo bloquear que se fusione.
+
+    Corre DESPUES de que muros_geo ya esta armado y fusionado (mismo
+    patron post-proceso que _detectar_lineas_referencia_periodicas) --
+    para cada segmento de cada muro, si el rango de una ventana (mismo eje,
+    misma banda de cruce dentro de tol_cross_m) se superpone a su rango,
+    se recorta esa porcion. Si el corte deja el muro en 2+ pedazos
+    desconectados, se re-evalua con la MISMA logica de
+    _dividir_en_muros_por_union (cortar solo en cruces reales/puntas
+    sueltas, nunca en nodos de paso) -- nunca se asume que cortar un
+    segmento corta el muro entero; una red con mas de un camino (ej. la
+    entrada tipo 'MU01' que agrupa todo un piso) puede seguir conectada
+    por otro lado.
+
+    `ventanas`: lista de dicts normalizados -- ver _normalizar_ventana_
+    para_corte mas abajo. `tol_cross_m` es el tope de distancia perpendicular
+    para considerar que un segmento de muro es la cara de ESA ventana (no
+    una pared de otra habitacion que por casualidad comparte rango en el
+    eje largo) -- por defecto el mismo tope que D1-ancho-emparejamiento
+    (0.9m, espesor de muro plausible), generoso pero acotado.
+
+    Devuelve (resultado, mapa_corte). `mapa_corte` es {id_original: [ids_nuevos]}
+    -- SOLO para los muros cuyo id cambio de verdad (se partieron en 2+
+    pedazos con sufijo a/b/c... o desaparecieron del todo, lista vacia). Un
+    muro recortado que queda en UNA sola pieza conserva su id original y no
+    aparece aca -- cualquier referencia externa (ej. muro_asociado_id de una
+    puerta) sigue siendo valida sin cambios. El llamador usa este mapa para
+    reasociar esas referencias por proximidad geometrica real (nunca por un
+    umbral arbitrario) contra los pedazos nuevos -- ver caso real Campo
+    Lindo 2026-09-05, PG01 con muro_asociado_id='MU03' que una ventana
+    partio en 2.
+    """
+    tol_cross_px = tol_cross_m / mpx
+    resultado = []
+    mapa_corte = {}
+    n_muros_cortados = 0
+    n_piezas_totales = 0
+
+    for m in muros_geo:
+        piezas_por_segmento = []
+        cambiado = False
+        for s in m['segmentos']:
+            es_horiz, a1, a2, cruz = _proyeccion_eje_largo(s['p1'], s['p2'])
+            piezas = [(a1, a2)]
+            for v in ventanas:
+                if v['horizontal'] != es_horiz:
+                    continue
+                if abs(v['cruz'] - cruz) > tol_cross_px:
+                    continue
+                vo1, vo2 = v['along']
+                nuevas_piezas = []
+                for (b1, b2) in piezas:
+                    if vo2 <= b1 or vo1 >= b2:
+                        nuevas_piezas.append((b1, b2))
+                        continue
+                    cambiado = True
+                    if vo1 > b1:
+                        nuevas_piezas.append((b1, vo1))
+                    if vo2 < b2:
+                        nuevas_piezas.append((vo2, b2))
+                piezas = nuevas_piezas
+            for (b1, b2) in piezas:
+                if (b2 - b1) < 1:  # pieza degenerada (<1px), la ventana se comio el segmento entero
+                    continue
+                if es_horiz:
+                    piezas_por_segmento.append({'p1': [round(b1), round(cruz)], 'p2': [round(b2), round(cruz)]})
+                else:
+                    piezas_por_segmento.append({'p1': [round(cruz), round(b1)], 'p2': [round(cruz), round(b2)]})
+
+        if not cambiado:
+            resultado.append(m)
+            continue
+
+        n_muros_cortados += 1
+        if not piezas_por_segmento:
+            # la ventana se comio TODO el muro (caso real: un muro cuya
+            # unica geometria era, en si misma, la ventana) -- no queda
+            # nada real que exportar como muro; se avisa, no se descarta
+            # en silencio.
+            print(f"  ⚠ Muro {m.get('id')} desaparecio por completo al cortar ventana(s) que lo atravesaban "
+                  f"-- no quedo ningun tramo real fuera de la(s) ventana(s)")
+            mapa_corte[m['id']] = []
+            continue
+
+        cadenas_idx = _dividir_en_muros_por_union(piezas_por_segmento, list(range(len(piezas_por_segmento))),
+                                                   tol_muro_px, tol_diametro_cluster_px)
+        n_piezas_totales += len(cadenas_idx)
+        ids_nuevos = []
+        for k, idxs in enumerate(cadenas_idx):
+            segs_cadena = [piezas_por_segmento[i] for i in idxs]
+            largo = sum(_distancia(s['p1'], s['p2']) for s in segs_cadena) * mpx
+            nuevo_id = m['id'] if len(cadenas_idx) == 1 else f"{m['id']}{_sufijo_letras(k)}"
+            ids_nuevos.append(nuevo_id)
+            resultado.append({
+                'id': nuevo_id,
+                'segmentos': segs_cadena,
+                'largo_total_m': round(largo, 2),
+                'ancho_linea_prom': m.get('ancho_linea_prom'),
+                'estado': m.get('estado'),
+            })
+        if len(cadenas_idx) != 1:
+            mapa_corte[m['id']] = ids_nuevos
+
+    if n_muros_cortados:
+        print(f'  ✓ Ventana rompe muro: {n_muros_cortados} muro(s) cortados por ventanas confirmadas, '
+              f'resultando en {n_piezas_totales} tramo(s) (algunos muros se dividen en 2+, otros quedan '
+              f'conectados por otro camino y siguen como 1 solo)')
+    return resultado, mapa_corte
+
+
+def reasociar_puertas_tras_corte(puertas_geo, muros_geo, mapa_corte, mpx):
+    """
+    NUEVO (2026-09-13, caso real Campo Lindo -- ver catalogo_tipologias.py
+    D3-ventana-corta-muro): cuando cortar_muros_por_ventanas() parte un muro
+    en 2+ pedazos (o lo hace desaparecer del todo), cualquier puerta que
+    tuviera ese id como muro_asociado_id queda apuntando a un id que ya no
+    existe. Repara esa referencia en el propio `puertas_geo` (in-place) y la
+    devuelve para conveniencia del llamador.
+
+    Criterio de reasociacion: puramente geometrico, nunca un umbral arbitrario
+    de distancia -- de los pedazos nuevos que vienen del mismo muro original
+    (`mapa_corte[muro_asociado_id]`), se elige el que tiene el punto mas
+    cercano a los `puntos_union` de la puerta (donde su arco toca la pared
+    real) -- son casi siempre 0-2px de distancia real porque ese punto de
+    union se calculo justamente pegado al muro. Si el muro desaparecio del
+    todo (`mapa_corte[id] == []`) no hay ningun pedazo real para reasociar:
+    muro_asociado_id pasa a None, avisado explicitamente, nunca en silencio.
+    """
+    if not mapa_corte:
+        return puertas_geo
+    muros_por_id = {m['id']: m for m in muros_geo}
+
+    def _dist_a_muro(punto, muro):
+        return min(min(_distancia(punto, s['p1']), _distancia(punto, s['p2'])) for s in muro['segmentos'])
+
+    for pg in puertas_geo:
+        mid = pg.get('muro_asociado_id')
+        if mid not in mapa_corte:
+            continue
+        candidatos_ids = mapa_corte[mid]
+        if not candidatos_ids:
+            print(f"  ⚠ Puerta {pg['id']} tenia muro_asociado_id={mid!r}, que desaparecio por completo al cortar "
+                  f"ventana(s) -- muro_asociado_id pasa a None (no queda ningun pedazo real para reasociar)")
+            pg['muro_asociado_id'] = None
+            continue
+        if len(candidatos_ids) == 1:
+            pg['muro_asociado_id'] = candidatos_ids[0]
+            continue
+        puntos_ref = pg.get('puntos_union') or [pt for s in pg['segmentos'] for pt in (s['p1'], s['p2'])]
+        mejor_id, mejor_dist = None, None
+        for cid in candidatos_ids:
+            m_cand = muros_por_id.get(cid)
+            if not m_cand:
+                continue
+            d = min(_dist_a_muro(p, m_cand) for p in puntos_ref)
+            if mejor_dist is None or d < mejor_dist:
+                mejor_dist, mejor_id = d, cid
+        print(f"  ⚠ Puerta {pg['id']} tenia muro_asociado_id={mid!r}, que una ventana corto en {len(candidatos_ids)} "
+              f"pedazos ({candidatos_ids}) -- reasociada por proximidad geometrica real a {mejor_id!r} "
+              f"(dist={round((mejor_dist or 0) * mpx, 3)}m)")
+        pg['muro_asociado_id'] = mejor_id
+    return puertas_geo
+
+
+def _normalizar_ventana_para_corte(v):
+    """Convierte una ventana (simple o reconstruida por jamba, formas de
+    dict distintas -- ver ventanas_simples_por_linea_central y
+    reconstruir_ventanas_por_jamba) al formato comun que necesita
+    cortar_muros_por_ventanas: {'horizontal':bool, 'along':(a1,a2), 'cruz':c}."""
+    if 'x0' in v:  # ventana por jamba -- siempre horizontal en el diseño actual
+        return {'horizontal': True, 'along': (v['x0'], v['x1']), 'cruz': (v['y_top'] + v['y_bot']) / 2}
+    # ventana simple -- 1 segmento, cualquier orientacion
+    s = v['segmentos'][0]
+    es_horiz, a1, a2, cruz = _proyeccion_eje_largo(s['p1'], s['p2'])
+    return {'horizontal': es_horiz, 'along': (a1, a2), 'cruz': cruz}

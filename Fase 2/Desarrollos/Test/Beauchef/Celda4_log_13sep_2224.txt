@@ -1,0 +1,4 @@
+Leyenda detectada: {(0.87, 0.43, 0.43): 'Baño Personal', (0.0, 0.0, 0.0): 'Baño', (1.0, 0.0, 0.0): 'Baño'}
+  color=(0.87, 0.43, 0.43) texto='Baño Personal' -> estado=None
+  color=(0.0, 0.0, 0.0) texto='Baño' -> estado=None
+  color=(1.0, 0.0, 0.0) texto='Baño' -> estado=None

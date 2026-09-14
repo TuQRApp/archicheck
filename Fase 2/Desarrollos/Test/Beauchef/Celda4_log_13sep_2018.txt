@@ -1,0 +1,5 @@
+Pagina 3 renderizada: 7152x5052 px (zoom=3)
+Crop pag3-3: fraccion=(0.04, 0.48, 0.69, 0.98) -> px=(286, 2424, 4934, 4950)
+MPX calculado: 0.005880 (esperado segun JSON real: 0.00588 aprox)
+Leyenda detectada: {(0.0, 0.0, 0.0): 'ROL SII: 2791 - 1'}
+  DIAG PASO1 -- crop_px=(286, 2424, 4934, 4950): 3738 segmentos_l, bbox x=[394,4889]

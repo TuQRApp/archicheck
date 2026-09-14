@@ -2911,6 +2911,82 @@ Se corrió `consultar_reconstruccion_ventanas_jamba.mjs` pidiendo segunda opini�
 **Para retomar mañana**: sigue pendiente la verificación end-to-end en Colab real (Celda 1→4 en orden, Vision API incluida) para confirmar que `ventanas_reconstruidas_por_jamba` llega bien al JSON desde una corrida nueva — no solo reprocesando el JSON del 30-ago. Requiere la sesión de Google/Colab del usuario, tiene costo chico de API. Bugbot y la calibración real de `ancho_min_m`/`ancho_max_m` (con más datos que "ventanas 0.8m en cocina-bodega") también siguen pendientes, sin resolver hoy.
 
 ---
+
+## ✅🔍 2026-09-05 (continuación) — Fix original de GAP-GEO-VENT-001 implementado: las 11 ventanas simples ya no se exportan como `MU##`
+
+**Hallazgo que disparó esto**: el usuario notó que `plano_ventanas_GENERALIZADO_verificacion.png` (6 ventanas) mostraba menos que `plano_ventanas_v3_final.png` (17 ventanas, 31-ago) y pidió explicación antes de seguir. Causa: no era una regresión del algoritmo de jambas (que sigue dando 6/6 correctas) — la verificación de ayer solo dibujaba la salida de esa función puntual, nunca pretendió dibujar las 11 ventanas "simples" (`MU02,14,15,18-21,23-26`), que **seguían sentadas dentro de `muros_geo`** mal etiquetadas como muros. Confirmado contra el JSON real: las 11 seguían ahí. Ese es exactamente el fix original de `GAP-GEO-VENT-001` (§2.9 Diseño Funcional) — diseñado el 31-ago, nunca implementado hasta hoy.
+
+**Causa técnica exacta de por qué nunca se conectó** (encontrada leyendo el código real, no supuesta): `clasificar_no_muro()` identifica segmentos ventana por `id()` de objeto en memoria — y ese cálculo corría en Celda 4 *después* de que `muros_geo` ya había transformado los segmentos a `dict`s nuevos (coordenadas ajustadas) para exportarlos. Para cuando existía un `MU##`, la identidad de objeto que lo conectaba con la clasificación ya se había perdido para siempre — no faltaba una línea de código, faltaba mover *cuándo* se calculaba.
+
+**Fix implementado en la Celda 4**:
+1. `clasificar_no_muro()` ahora corre **antes** del loop que arma `muros_geo` (mismo resultado exacto que antes — depende solo de `protegido`, que no cambia entre ambos puntos de la Celda 4).
+2. Los `id()` de objeto se convierten a **índices estables de `segmentos_l`** (`_indice_por_id_seg`), el único identificador que sobrevive a la transformación de coordenadas del loop de export.
+3. Si una cadena de segmentos ya fue confirmada 100% como ventana, se exporta a un campo nuevo **`ventanas_simples_por_linea_central`** en vez de a `muros_geo`. Si la cadena mezcla ventana y no-ventana, se avisa por consola pero se exporta igual como muro (nunca se parte una cadena conectada sin criterio geométrico propio para el corte).
+4. Guardia agregada en la asociación `muro_asociado_id` de puertas (`puertas_geo`): si un grupo de conectividad terminó siendo 100% ventana (sin ningún muro real propio), ya no se le asigna por error el `muro_asociado_id` de un grupo anterior no relacionado — queda `None` con aviso explícito.
+5. Notebook vivo actualizado: `ArchiCheck_Base 05sep_1609.ipynb` (el `04sep_2306.ipynb` pasa a `Versiones anteriores/`). Catálogo actualizado: `D1-D3-ventana-lineas-centrales` pasa de `exporta_a_schema: False` a `True`.
+
+**🔴 Sin verificar contra una corrida real de Colab** — a diferencia del fix de jambas de ayer (que sí se pudo validar localmente porque solo consume `muros_excluidos_por_referencia`, un campo que ya vive en el JSON exportado), este fix necesita `segmentos_l`/`protegido` — datos intermedios de la extracción vectorial cruda del PDF que **no quedan guardados en ningún JSON ya generado**. Se verificó por lectura cuidadosa de código (rastreando el flujo completo de `id()` → índice, paso a paso) y por `py_compile` (sintaxis válida), pero no por ejecución real. Para validarlo de verdad hacen falta, en orden de preferencia: (a) un harness local que corra la extracción vectorial de Celda 2-4 directamente contra `CC-BEAUCHEFF_DOM Planos.pdf` con Python (ahora es técnicamente posible — PyMuPDF/OpenCV no dependen de la API de Vision, solo `analisis_semantico` la necesita — pero no se construyó todavía, es trabajo pendiente no trivial), o (b) la corrida real en Colab ya pendiente de ayer.
+
+**Sigue sin decidirse**: cómo unificar `ventanas_simples_por_linea_central` (este fix) + `ventanas_reconstruidas_por_jamba` (ayer) en un `ventanas_geo` único — hoy quedan como 2 campos separados, cada uno resolviendo un mecanismo de pérdida distinto.
+
+---
+
+## ✅🔍 2026-09-05 (continuación) — Harness local construido y validado; corrección mayor: la ventana debe romper el muro (`D3-ventana-corta-muro`)
+
+**Se construyó el harness que quedó pendiente en la entrada anterior.** `_celda4_funciones.py` (Beauchef) es una copia de la Celda 4 real, recortada justo antes del loop principal (todo lo que es `def`, sin la parte que llama a Vision/genera diagnósticos visuales) — se puede llamar `extraer_datos_vectoriales()` directo contra el PDF real, en Python local, sin Colab. La configuración real (`MAPEO_CAPAS`, escala 1:50, recorte `(4%,48%)→(69%,98%)` para `pag3-3`) se reconstruyó desde `Celda4_log_30aug_0359.txt` (la Celda 3 del notebook vivo es una plantilla en blanco, no retiene configuración entre proyectos) más las capas OCG reales del PDF (`doc.get_ocgs()`). **Autovalidación antes de confiar en el harness**: corrido con el código ANTERIOR a los fixes de esta semana, reprodujo exacto `muros_geo=63, muros_excluidos_por_referencia=31, puertas_geo=0` — los mismos números reales del 30-ago. Confirmado fiel.
+
+**Al correr el fix de ayer (GAP-GEO-VENT-001 adelantado) contra el PDF real** (no contra el JSON viejo), salieron números distintos a lo esperado: `muros_geo=41` (no 52) y `muros_excluidos_por_referencia=0` (no 31). Investigado a fondo: **no es un bug, es una interacción real**. `cuerpo_cerrado_fusiona()` no depende de la clasificación adelantada — recalcula `clasificar_no_muro()` localmente, sobre el contexto acotado de cada par que evalúa. La diferencia real viene de una fusión por proximidad (`_fusionar_muros_por_proximidad`, gateada por `cuerpo_cerrado_fusiona`) que corre ENTRE el loop de export y el filtro de líneas de referencia periódicas — un paso que no se había visto en la lectura de código anterior. Al sacar las líneas de ventana antes de esta fusión, ya no necesitan pasar por el filtro periódico después (de ahí el 0), y la entrada gigante tipo `MU01` (toda la red de muros de la página, ~150-170m) absorbe distinto contenido según qué candidatos existían al momento de fusionar. Verificado con overlay real que los muros normales (largos idénticos en ambas corridas: 13.88, 13.36, 6.4, 4.23...) no se vieron afectados — solo cambia cuánto absorbe la entrada gigante.
+
+**🔴 El usuario revisó el overlay y encontró el problema real, más profundo que el número**: *"El muro no debe correr sobre la ventana. La ventana rompe el muro."* Sacar la línea central de `muros_geo` no alcanzaba — las líneas de CARA del muro (que en este estilo de dibujo también son el borde de la ventana) seguían corriendo continuas por debajo de cada ventana. Confirmado el concepto de "ventana por jamba" con el usuario antes de seguir (no tenía claro la diferencia con "ventana simple" — quedó explicado en el chat: simple = el pipeline la vio bien pero la etiquetó mal; por jamba = el pipeline nunca la vio, había que reconstruirla juntando fragmentos sueltos por su ancho compartido).
+
+**Fix implementado — `cortar_muros_por_ventanas()`**, corre como último paso sobre `muros_geo` ya fusionado: para cada segmento de muro cuyo eje y banda de cruce coincide con una ventana confirmada (simple o por jamba), recorta la porción superpuesta. Si el corte separa el muro en 2+ pedazos reales, se re-evalúa con la misma lógica de `_dividir_en_muros_por_union` (cortar solo en cruces reales, nunca puntos de paso) — nunca se asume que un corte separa toda una red conectada.
+
+**Dos rondas de calibración, ambas con el harness (no a ciegas)**:
+1. Primer intento con `tol_cross_m=0.9` (el tope genérico de espesor de muro plausible) — **sobre-cortó brutalmente**: la entrada `MU01` pasó de 41 a 161, un solo muro terminó en 121 fragmentos. Diagnosticado con instrumentación puntual: la tolerancia agarraba líneas de otras habitaciones a alturas parecidas dentro de la red grande, no solo la cara de la ventana correspondiente.
+2. Bajado a `tol_cross_m=0.15` (calibrado al alto real de la banda top/centro/bottom de una ventana en Beauchef, no un genérico) — incluso con la misma cantidad de fragmentos resultantes (161, porque muchos de esos fragmentos SÍ son reales: los maineles/pilares entre ventanas consecutivas, que quedaban ocultos dentro de la red fusionada), **verificado con zoom real que el corte cae exactamente donde corresponde** — confirmado en las 2 zonas críticas (fila de ventanas del Camarín, fila del Baño): el muro corta en cada ventana y retoma después, sin gaps falsos ni fusiones espurias. La primera lectura visual (crop de baja resolución) pareció mostrar el muro corriendo continuo — error de lectura propio, corregido verificando las coordenadas exactas contra el JSON antes de confiar en la imagen.
+
+**Limitación conocida, avisada explícitamente por consola (nunca en silencio), no resuelta**: si una puerta ya tenía `muro_asociado_id` apuntando a un muro que este paso corta en 2+ pedazos, la referencia queda apuntando a un id que ya no existe. No se dio el caso en Beauchef `pag3-3` (0 puertas ahí) — sin re-mapeo automático todavía (haría falta reasociar por proximidad geométrica, no por id).
+
+**Notebook vivo**: `ArchiCheck_Base 05sep_1740.ipynb` (el `05sep_1706.ipynb` anterior pasa a `Versiones anteriores/`). Catálogo: nueva entrada `D3-ventana-corta-muro`.
+
+**Sin verificar todavía**: una corrida real de Colab end-to-end (el harness no corre Vision), y un proyecto con puertas reales para probar el caso límite de `muro_asociado_id` roto.
+
+---
+
+## 🟡 2026-09-05 (continuación) — Bug de "cuerpo cerrado" (muros que deberían fusionarse y quedan separados): 4 intentos probados, los 4 revertidos. Sigue sin resolver.
+
+**Pedido del usuario**: corregir el gap de ventana en el portal (hecho), eliminar "Reclasificar" del portal (hecho, sin código huérfano), y el bug principal — varios muros de PdV Nivel 1 que deberían formar un solo cuerpo cerrado quedan separados en el JSON final. Ejemplos reales dados por el usuario: `MU30+MU31`, `MU03+MU16+MU17`, `MU18+MU19+MU20+MU21`, `MU01`, `MU09`. Un quinto punto (`MU12,MU04,MU10,MU33,MU50,MU43,MU47` como posibles líneas centrales de ventana mal clasificadas como muro) quedó sin investigar hoy — no hubo tiempo tras la extensión de la investigación principal.
+
+**Diagnóstico real (instrumentación directa, no supuesto)**: `MU30/MU31` es un conector corto (34px) que `ancho_por_emparejamiento` empareja por casualidad con una cara a 59px — más lejos que su propio largo, geométricamente inverosímil — lo que le da un `anchoPx` no-`None` y le impide caer en el fallback de conector heredado (`_ancho_heredado_de_conector`, ya construido 23-ago). Motivó el primer intento de fix.
+
+**4 intentos probados, medidos en los 3 proyectos reales completos (PdV, Beauchef, Campo Lindo), los 4 revertidos:**
+
+1. **`d > largo_s`** en `ancho_por_emparejamiento` (descartar un candidato de cara paralela si la distancia perpendicular supera el largo propio del segmento) — mismo criterio que ya usaba `_relleno_solido` para decidir si pintaba, aplicado antes, en la clasificación. **Consultado y aparentemente validado por DeepSeek + Codex antes de aplicarlo.**
+2. **`tol_conector_esquina_m` 0.03→0.06** (para que el conector de MU30/MU31, que toca a su vecino a 0.047m, califique como conector real).
+3. **Herencia en cadena, dominio = contexto local completo** (BFS de 2+ saltos en `_ancho_heredado_de_conector`/`_ancho_heredado_de_segmento`, para resolver conectores en fila donde ni el vecino inmediato tiene ancho propio).
+4. **Herencia en cadena, dominio = el propio grupo** (misma idea, acotada a la cadena de segmentos ya unida por `_dividir_en_muros_por_union`, para evitar que el BFS salte a muros ajenos).
+
+**Resultado medido — los 4 empeoran Beauchef siempre, incluso ya corregido el error de configuración de abajo:**
+
+| Escenario | PdV pág.1/2 | Campo Lindo pág.2/3 | Beauchef (3 zonas reales) |
+|---|---|---|---|
+| Baseline (sin tocar nada) | 126→59 / 108→40 | 271→64 / 109→36 | 236→112 / 91→22 / 202→41 = **175** |
+| (1) `d > largo_s` sola | 126→62 / 108→41 | — | 236→163 / 91→38 / 202→47 = **248** |
+| (1)+(2) tol 0.06 | 126→61 / 108→41 | 271→64 / 109→37 | 236→157 / 91→38 / 202→47 = **242** |
+| (1)+(2)+(3) cadena, contexto completo | 126→49 / 108→36 | 271→48 / 109→30 | 236→134 / 91→28 / 202→47 = **209** |
+| (1)+(2)+(4) cadena, grupo propio | 126→61 / 108→41 | 271→64 / 109→37 | 236→157 / 91→38 / 202→47 = **242** (igual que sin cadena) |
+
+Los intentos (3)/(4) mejoran PdV y Campo Lindo, pero **ninguna combinación baja a Beauchef de 175** — todas la empeoran, entre +34 y +73 muros. La variante (4) (grupo propio) no hace nada distinto de no tener cadena en absoluto — un grupo pre-fusión casi nunca tiene 2+ segmentos sin ancho propio tocándose entre sí.
+
+**Hallazgo aparte, importante para toda corrida futura de prueba local**: el harness `_tmp_generar_json_final.py` (`Fase 2/Herramientas_CubiCasa5k/`) tenía mal configurado Beauchef — usaba la página 3 completa sin recortar (`(3, '1:50', None)`) en vez de las 3 zonas reales de `Fase 2/Desarrollos/Test/Coordenadas planos pdv.txt` (`(0.046,0.022,0.454,0.48)`, `(0.481,0.025,0.827,0.402)`, `(0.043,0.485,0.692,0.98)`). Con la página completa daba 791→250; con las 3 zonas reales da 529→175. Ya corregido en el script. Los 4 intentos de arriba se volvieron a medir con la config corregida — el patrón de regresión se confirma igual, no era un artefacto del recorte incorrecto.
+
+**Por qué un fix "lógicamente correcto" y hasta validado externamente empeora en la práctica** (según DeepSeek + Codex, consultados con la evidencia completa de los 4 intentos): bloquear un candidato con `d > largo_s` no solo excluye el caso patológico — también excluye pares legítimos (un retorno corto en un muro en L/U frente a la cara principal, o un tramo de transición en muro de espesor variable, donde `d > largo_s` es normal). Esos casos caen al fallback de herencia, que les asigna un ancho distinto, lo que cambia `ancho_min_px` → la tolerancia de dilatación (`tol_px` en `cuerpo_cerrado_fusiona`) → y termina bloqueando fusiones que antes funcionaban bien. Es un efecto no-local que el análisis de la lógica en abstracto no predijo — **lección explícita para la próxima vez**: medir el resultado real, aislado con `git stash`, en los 3 proyectos completos, antes de dar cualquier fix por bueno, no alcanza con revisar la lógica ni con ver que el número mejora en la corrida siguiente (que puede estar confundida con otros cambios acumulados de la misma sesión).
+
+**Recomendación coincidente de DeepSeek y Codex (consulta completa en `Fase 2/Herramientas_CubiCasa5k/_consultas/`, script `consultar_bug_cadena_conectores.mjs`)**: no seguir parchando `cuerpo_cerrado_fusiona` (ancho por emparejamiento + herencia de conector) segmento por segmento — es un diseño local frágil para este tipo de caso. Atacar en cambio **antes**, en `_dividir_en_muros_por_union`, agregando una regla de continuidad estructural puramente geométrica (vértice compartido + ángulo ~0°/90°, sin depender de anchos) que agrupe una muesca/retorno completo en un solo candidato de muro desde el principio — si eso funciona, MU30/MU31 nunca necesitaría pasar por `ancho_por_emparejamiento` ni por herencia de conector. Ambos modelos también recomiendan instrumentación más fina antes del próximo intento (% segmentos con ancho propio vs. heredado, distribución de anchos, conteo de rechazos por motivo, casos sintéticos adversariales) en vez de depender solo de "entradas → muros finales" por proyecto.
+
+**Estado final hoy**: `cuerpo_cerrado.py` revertido byte a byte al último commit (`git diff` limpio, verificado con corridas completas). `catalogo_tipologias.py` (entradas `D1-ancho-emparejamiento` y `D1-encuentro-de-brazos`) documenta los 4 intentos con las cifras reales. El bug de cuerpo cerrado (los 5 ejemplos del usuario) **sigue sin resolver**. Pendiente para retomar: implementar la regla de continuidad estructural en `_dividir_en_muros_por_union` que proponen ambos modelos, con la instrumentación que piden antes de medir contra los 3 proyectos — y todavía sin investigar el quinto punto (líneas centrales de ventana mal clasificadas como muro).
+
+---
 ---
 
 ## Inventario de herramientas — análisis geométrico / semántico / gráfico (2026-07-22)
@@ -3145,7 +3221,7 @@ El Gate post-MVP valida con una muestra pequeña de arquitectos antes de lanzar.
 
 ## Fuera de alcance por ahora (combinado, todas las fases)
 
-Automatizar Colab · agregar comunas/PRCs nuevas (foco actual: afinar Santiago y Ñuñoa) · API pública para integraciones de terceros · DWG/IFC · U-Net en producción automática (post-entrenamiento sigue siendo manual hasta este punto). *(Auth/billing/storage ya no están en esta lista — se detallaron en la Fase 5 de Productización SaaS.)*
+Automatizar Colab · agregar comunas/PRCs nuevas (foco actual: afinar Santiago y Ñuñoa) · API pública para integraciones de terceros · DWG/IFC · U-Net en producción automática (post-entrenamiento sigue siendo manual hasta este punto) · **soporte para planos NO vectorizados (escaneos/rasters)** — Celda 2 los rechaza de entrada hoy a propósito; los 4 candidatos ya benchmarkeados para ese caso (CubiCasa5K, Raster2Seq, MitUNet, MLSTRUCT-FP/Pizarro — ver tabla comparativa más arriba) no llegan a precisión utilizable (MLSTRUCT-FP, el de dominio chileno real, dio 0% recall en muros), así que no hay una alternativa lista para adoptar aunque se quisiera soportar el caso ahora. Se retoma solo si aparece la necesidad real de procesar un plano sin datos vectoriales, y probablemente requiera fine-tuning con dataset propio (`Preparar_Dataset_Muros_2026-08-07.ipynb`, nunca corrido con datos reales) antes de ser viable. *(Auth/billing/storage ya no están en esta lista — se detallaron en la Fase 5 de Productización SaaS.)*
 
 ---
 

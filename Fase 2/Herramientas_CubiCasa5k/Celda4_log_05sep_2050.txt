@@ -1,0 +1,340 @@
+  ✓ LEYENDA SIMBOLOGIA: 1 color(es) con texto asociado encontrados en el PDF completo:
+      color=(0.0, 0.0, 0.0) texto='ROL SII: 2791 - 1' -> ⚠ NO reconocido como agregado/eliminado (revisar palabras clave)
+
+⏱ Celda 4 iniciada: 2026-09-05 20:50:44
+  DIAG PASO1 -- crop_px=None: 25998 segmentos_l, bbox x=[8,7146]
+  ✓ MAPEO POR CAPA: 110 accesibilidad, 277 achurado, 321 corte_elevacion, 7820 cota, 0 deslinde_terreno, 14771 ignorar, 597 mobiliario, 0 muro, 102 puerta, 1 ventana, 1999 sin capa mapeada — de 25998 segmentos totales (solo 'eje'/'cota' afectan Paso 1.5/1.6, solo 'mobiliario'/'ignorar' excluyen en Paso 2 -- el resto es diagnostico)
+  ⚠ MAPEO_CAPAS['deslinde_terreno'] = ['LINEA TERRENO ORIGINAL'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ⚠ MAPEO_CAPAS['muro'] = ['MUROS'] pero 0 segmentos de ESTA pagina coincidieron -- revisa si es un typo, o si esa capa simplemente no tiene contenido en esta pagina especifica.
+  ✓ COTAS (linea): 7904 segmentos identificados como linea/marca de cota (Paso 1.6)
+  ✓ EJES/RASANTES: 310 segmentos identificados como referencia (Paso 1.5), 291 evitados de proteger como muro pese a superar el span minimo
+  ✓ COTAS (linea): 4444 segmentos adicionales evitados de proteger como muro (Paso 1.6)
+  ✓ MOBILIARIO (por capa): 500 segmentos evitados de proteger como muro
+  ✓ IGNORAR (por capa): 14589 segmentos evitados de proteger como muro (otro piso/formato/capa por defecto)
+    desglose por capa real (para verificar visualmente antes de confiar -- ver muestra_p1/p2 abajo, coordenadas ya ajustadas al recorte):
+      'FORMATO': 13367 segmentos evitados de proteger
+        largo_m=2.72 p1=(523, 2329) p2=(985, 2329)
+        largo_m=4.5 p1=(6983, 4484) p2=(6217, 4484)
+        largo_m=4.5 p1=(6983, 2252) p2=(6217, 2252)
+        largo_m=4.5 p1=(6983, 512) p2=(6217, 512)
+        largo_m=4.5 p1=(6983, 2592) p2=(6217, 2592)
+      '0': 979 segmentos evitados de proteger
+        largo_m=0.2 p1=(2685, 1974) p2=(2685, 1940)
+        largo_m=0.1 p1=(2679, 1951) p2=(2691, 1963)
+        largo_m=0.2 p1=(2668, 1957) p2=(2702, 1957)
+        largo_m=0.2 p1=(2685, 1906) p2=(2685, 1940)
+        largo_m=0.1 p1=(2691, 1929) p2=(2679, 1917)
+      'PROYECCION': 183 segmentos evitados de proteger
+        largo_m=0.09 p1=(803, 664) p2=(803, 679)
+        largo_m=0.13 p1=(803, 690) p2=(803, 711)
+        largo_m=0.13 p1=(803, 722) p2=(803, 744)
+        largo_m=0.13 p1=(803, 754) p2=(803, 776)
+        largo_m=0.13 p1=(803, 787) p2=(803, 808)
+      'PROYECCIONES': 58 segmentos evitados de proteger
+        largo_m=0.06 p1=(4588, 1054) p2=(4588, 1045)
+        largo_m=0.06 p1=(4588, 1045) p2=(4587, 1035)
+        largo_m=0.03 p1=(4587, 1035) p2=(4586, 1031)
+        largo_m=0.0 p1=(4580, 1008) p2=(4580, 1008)
+        largo_m=0.06 p1=(4580, 1008) p2=(4576, 999)
+      'Muros Proy': 2 segmentos evitados de proteger
+        largo_m=0.4 p1=(2334, 1378) p2=(2334, 1447)
+        largo_m=0.4 p1=(2300, 1447) p2=(2300, 1378)
+  [clasificacion ventana/hoja-vano] 2462 segmento(s) protegido(s) en el pool, O(n^2)...
+  ✓ Clasificacion ventana/hoja-vano (D1-D3, adelantada antes del export de muros -- GAP-GEO-VENT-001): ventana=1079 segs, hoja/vano confirmada=4 segs, hoja/vano duda=143 segs, conflictos=0
+  ⚠ Cadena con 1/3 segmentos clasificados como ventana pero no todos -- se exporta igual como muro (no se parte una cadena conectada sin criterio geometrico propio)
+  ⚠ Cadena con 1/2 segmentos clasificados como ventana pero no todos -- se exporta igual como muro (no se parte una cadena conectada sin criterio geometrico propio)
+  ⚠ Cadena con 2/4 segmentos clasificados como ventana pero no todos -- se exporta igual como muro (no se parte una cadena conectada sin criterio geometrico propio)
+  ⚠ Cadena con 1/2 segmentos clasificados como ventana pero no todos -- se exporta igual como muro (no se parte una cadena conectada sin criterio geometrico propio)
+  ✓ Puertas exportadas desde curva Bezier (arco ~90 grados): 11
+  ✓ Muros exportados: 791 (de 57 grupos protegidos, 856 segmentos descartados por angulo no-ortogonal, 0 muros con estado agregado/eliminado detectado via leyenda -- el color ya NO excluye geometria, ver _detectar_leyenda_simbologia)
+    [lineas periodicas] eje horizontal: 525 muro(s) candidato(s), agrupando O(n^2)...
+    [lineas periodicas] eje vertical: 252 muro(s) candidato(s), agrupando O(n^2)...
+  ⏱ Extracción + filtrado (Paso 1-4): 0:01:00
+  [fusion muros] 791 muro(s) antes de fusionar...
+    DIAG bloqueado MU06 vs MU56: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.1999074074074074, anchoB=0.1999074074074074)
+    DIAG CONECTIVIDAD -- MU06 (anchoA=0.1999074074074074m) vs MU56 (anchoB=0.1999074074074074m): tolPx=3.4000000000000004 (~0.02m de dilatacion)
+    DIAG bloqueado MU24 vs MU28: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.1999074074074074, anchoB=0.3998148148148148)
+    DIAG CONECTIVIDAD -- MU24 (anchoA=0.1999074074074074m) vs MU28 (anchoB=0.3998148148148148m): tolPx=3.4000000000000004 (~0.02m de dilatacion)
+    DIAG bloqueado MU55 vs MU59: grupo A sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=None, anchoB=0.40569444444444447)
+    DIAG PAREJA -- MU55 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [2317, 1378]-[2317, 1447] (largo=0.406m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [2667, 1219]-[2667, 1219] (largo=0.0m): dist=0.0m, dif_angulo=90.0deg, solapa=False
+        candidato [2662, 1219]-[2662, 1219] (largo=0.0m): dist=0.0m, dif_angulo=90.0deg, solapa=False
+        candidato [2657, 1219]-[2657, 1219] (largo=0.0m): dist=0.0m, dif_angulo=90.0deg, solapa=False
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [2521, 1583]-[2521, 1310] (largo=1.605m): dist=1.199m, dif_angulo=0.0deg
+        candidato [2555, 1583]-[2555, 1276] (largo=1.805m): dist=1.399m, dif_angulo=0.0deg
+        candidato [1381, 1957]-[1381, 1310] (largo=3.804m): dist=5.503m, dif_angulo=0.0deg
+    DIAG bloqueado MU60 vs MU61: grupo B sin par paralelo -- linea suelta (ventana/ref), no muro (anchoA=0.29986111111111113, anchoB=None)
+    DIAG PAREJA -- MU61 (sin par, 1 segmento(s)) -- candidatos mas cercanos por segmento:
+      segmento [2538, 1702]-[2419, 1702] (largo=0.7m):
+        -- top 3 por distancia cruda (puede incluir coincidencias sin relacion real) --
+        candidato [2521, 1702]-[2555, 1702] (largo=0.2m): dist=0.0m, dif_angulo=0.0deg, solapa=True
+        candidato [1585, 1719]-[2096, 1719] (largo=3.004m): dist=0.1m, dif_angulo=0.0deg, solapa=False
+        candidato [2334, 1719]-[2521, 1719] (largo=1.099m): dist=0.1m, dif_angulo=0.0deg, solapa=True
+        -- top 3 CON solape real (lo que ancho_por_emparejamiento efectivamente evalua) --
+        candidato [2521, 1702]-[2555, 1702] (largo=0.2m): dist=0.0m, dif_angulo=0.0deg
+        candidato [2334, 1719]-[2521, 1719] (largo=1.099m): dist=0.1m, dif_angulo=0.0deg
+        candidato [2300, 1753]-[2555, 1753] (largo=1.499m): dist=0.3m, dif_angulo=0.0deg
+    DIAG bloqueado MU72 vs MU74: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.11171296296296296, anchoB=0.13523148148148148)
+    DIAG bloqueado MU72 vs MU75: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.11171296296296296, anchoB=0.13523148148148148)
+    DIAG bloqueado MU72 vs MU76: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.11171296296296296, anchoB=0.15875)
+    DIAG bloqueado MU72 vs MU77: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.11171296296296296, anchoB=0.15875)
+    DIAG bloqueado MU73 vs MU74: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.11171296296296296, anchoB=0.13523148148148148)
+    DIAG bloqueado MU73 vs MU75: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.11171296296296296, anchoB=0.13523148148148148)
+    DIAG bloqueado MU73 vs MU76: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.11171296296296296, anchoB=0.15875)
+    DIAG bloqueado MU73 vs MU77: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.11171296296296296, anchoB=0.15875)
+    DIAG bloqueado MU74 vs MU75: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.13523148148148148, anchoB=0.13523148148148148)
+    DIAG bloqueado MU74 vs MU76: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.13523148148148148, anchoB=0.15875)
+    DIAG bloqueado MU74 vs MU77: no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana) (anchoA=0.13523148148148148, anchoB=0.15875)
+    ⚠ CONTEXTO ENORME -- MU330 vs MU385: contexto_par tiene 268 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    ⚠ CONTEXTO ENORME -- MU333 vs MU385: contexto_par tiene 268 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    ⚠ CONTEXTO ENORME -- MU338 vs MU385: contexto_par tiene 268 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    ⚠ CONTEXTO ENORME -- MU340 vs MU385: contexto_par tiene 268 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    ⚠ CONTEXTO ENORME -- MU380 vs MU385: contexto_par tiene 268 segmentos (> 250), se salta el gate de cuerpo cerrado para este par -- zona probablemente con geometria patologica/ruido, revisar visualmente si se repite mucho
+    [fusion muros] 500 pares con contexto_par construido hasta ahora (de 791 muros totales)...
+    [fusion muros] 1000 pares con contexto_par construido hasta ahora (de 791 muros totales)...
+  DIAG resumen de motivos de bloqueo por cuerpo cerrado: {'no conectados incluso tras cerrar micro-gaps (hueco real, ej. puerta/ventana)': 348, 'grupo A sin par paralelo': 182, 'grupo B sin par paralelo': 57}
+  ✓ Fusion de muros por proximidad + cuerpo cerrado (regla arquitecto, tolerancia <= 10.2px punto-a-segmento -- ya convertida desde metros, ver TOL_FUSION_MUROS_M): 791 entradas -> 250 muros (541 fusionadas, 90 pares bloqueados por puerta intermedia, 587 pares bloqueados por cuerpo cerrado -- geometricamente cerca pero no son el mismo cuerpo)
+  ⚠ RED DE SEGURIDAD: 5 par(es) saltaron el gate de cuerpo cerrado por contexto_par > 250 segmentos (fusionados solo por proximidad+sin puerta, sin la verificacion geometrica completa) -- si este numero es alto, probablemente hay una zona con geometria patologica/ruido que conviene excluir en Celda 3, ver muestras arriba
+  ⏱ Fusión + cuerpo cerrado: 0:00:57
+  DIAG BBOX: omitido (name 'PAGINA_PLANTA' is not defined)
+  DIAG VISUAL COMPLETO: omitido (name 'plano_full' is not defined)
+  ⏱ Diagnóstico muros (línea): 0:00:00
+  DIAG VISUAL COMPLETO (todos los tipos): omitido (name 'plano_full' is not defined)
+  ⏱ Diagnóstico completo (relleno + clasificación local): 0:00:00
+  ✓ Puertas exportadas (clasificador geometrico): 14
+  DIAGNOSTICO COLOR (para verificar/ajustar el filtro de amarillo): [((0.0, 0.0, 0.0), 36750), ((1.0, 1.0, 1.0), 699), ((0.78, 0.78, 0.78), 427), ((0.18, 0.72, 0.0), 52)]
+  DIAGNOSTICO EJES/COTAS (temporal, no afecta el resultado): 57 grupos protegidos como muro, top 25 por span (93 textos de cota disponibles para el chequeo de distancia):
+     span=28.7m  bbox=0.0x28.7m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(0.18m/0.35m/0.59m, n=1)=0.0/0.0/0.0
+     span=26.05m  bbox=23.45x11.36m  n_seg=766  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.0
+     span=25.34m  bbox=22.93x10.78m  n_seg=55  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=55)=0.0/0.0/0.0
+     span=20.6m  bbox=20.59x0.45m  n_seg=229  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=229)=0.0/0.0/0.0
+     span=20.31m  bbox=20.3x0.68m  n_seg=28  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=28)=0.0/0.0/0.0
+     span=20.3m  bbox=20.29x0.37m  n_seg=747  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.0
+     span=20.3m  bbox=20.29x0.3m  n_seg=21  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=21)=0.0/0.0/0.0
+     span=16.84m  bbox=13.9x9.5m  n_seg=716  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/4.3/10.3
+     span=15.2m  bbox=12.87x8.1m  n_seg=1471  ancho_linea(min/mediana/max)=0.12/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.7/8.0
+     span=12.62m  bbox=12.6x0.62m  n_seg=315  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.0
+     span=11.11m  bbox=11.1x0.56m  n_seg=315  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/1.0
+     span=10.64m  bbox=10.6x0.91m  n_seg=161  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=161)=0.0/0.0/0.0
+     span=10.55m  bbox=10.5x1.01m  n_seg=207  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=207)=0.0/0.0/0.0
+     span=9.56m  bbox=1.02x9.5m  n_seg=325  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=0.0/0.0/0.3
+     span=9.3m  bbox=0.38x9.29m  n_seg=243  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=243)=0.0/0.0/0.0
+     span=9.3m  bbox=0.32x9.29m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=7)=0.0/0.0/0.0
+     span=9.3m  bbox=0.4x9.29m  n_seg=243  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=243)=0.0/0.0/0.0
+     span=9.3m  bbox=0.32x9.29m  n_seg=7  ancho_linea(min/mediana/max)=0.3/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=7)=0.0/0.0/0.0
+     span=8.26m  bbox=4.98x6.6m  n_seg=2488  ancho_linea(min/mediana/max)=0/0.3/1.44  %cerca_cota(0.18m/0.35m/0.59m, n=300)=11.7/17.7/24.0
+     span=6.1m  bbox=6.1x0.0m  n_seg=33  ancho_linea(min/mediana/max)=0.12/0.12/0.12  %cerca_cota(0.18m/0.35m/0.59m, n=33)=0.0/0.0/0.0
+     span=4.62m  bbox=4.62x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(0.18m/0.35m/0.59m, n=1)=100.0/100.0/100.0
+     span=4.5m  bbox=4.5x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(0.18m/0.35m/0.59m, n=1)=0.0/100.0/100.0
+     span=4.5m  bbox=4.5x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(0.18m/0.35m/0.59m, n=1)=100.0/100.0/100.0
+     span=4.5m  bbox=4.5x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(0.18m/0.35m/0.59m, n=1)=0.0/0.0/100.0
+     span=4.5m  bbox=4.5x0.0m  n_seg=1  ancho_linea(min/mediana/max)=0.54/0.54/0.54  %cerca_cota(0.18m/0.35m/0.59m, n=1)=100.0/100.0/100.0
+  DIAGNOSTICO IMAGENES: 0 imagen(es) incrustada(s) en el PDF de esta pagina (sin filtrar por crop)
+  DIAGNOSTICO XOBJECTS: 0 objeto(s) tipo Form XObject en esta pagina
+  DIAGNOSTICO ANOTACIONES: 2 anotacion(es) en esta pagina
+    tipo=(4, 'Square') bbox_px=(5313,3261)-(5337,3330) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+    tipo=(4, 'Square') bbox_px=(5673,3261)-(5697,3330) info={'content': 'PENDIENTE1%', 'name': '', 'title': 'AutoCAD SHX Text', 'creationDate': '', 'modDate': '', 'subject': '', 'id': ''}
+  DIAGNOSTICO IMAGE_INFO: 0 imagen(es) detectada(s) via get_image_info() (incluye inline, no solo XObject)
+  DIAGNOSTICO FUENTES: 7 fuente(s) en esta pagina
+    (56, 'ttf', 'TrueType', 'Swiss721BT-RomanCondensed', 'F10', 'WinAnsiEncoding', 0)
+    (53, 'ttf', 'Type0', 'Swiss721BT-RomanCondensed', 'F9', 'Identity-H', 0)
+    (76, 'ttf', 'TrueType', 'CenturyGothic', 'F11', 'WinAnsiEncoding', 0)
+    (7, 'ttf', 'TrueType', 'Verdana', 'F1', 'WinAnsiEncoding', 0)
+    (14, 'ttf', 'TrueType', 'ArialMT', 'F2', 'WinAnsiEncoding', 0)
+    (26, 'ttf', 'Type0', 'ArialMT', 'F5', 'Identity-H', 0)
+    (19, 'ttf', 'TrueType', 'Arial-BoldMT', 'F3', 'WinAnsiEncoding', 0)
+  DIAGNOSTICO CAPAS: 31 capa(s) (OCG) en el documento, via doc.get_ocgs()
+    xref=1 {'name': '6º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=2 {'name': '1º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=8 {'name': 'Muros Proy', 'intent': [], 'on': True, 'usage': None}
+    xref=9 {'name': 'FORMATO', 'intent': [], 'on': True, 'usage': None}
+    xref=29 {'name': 'ARTEFACTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=30 {'name': 'Textos', 'intent': [], 'on': True, 'usage': None}
+    xref=57 {'name': '5º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=58 {'name': 'TEXTOS ROJOS', 'intent': [], 'on': True, 'usage': None}
+    xref=59 {'name': 'BM-COTAS-0.13', 'intent': [], 'on': True, 'usage': None}
+    xref=60 {'name': '0', 'intent': [], 'on': True, 'usage': None}
+    xref=61 {'name': 'NIVELES', 'intent': [], 'on': True, 'usage': None}
+    xref=62 {'name': 'LINEA TERRENO ORIGINAL', 'intent': [], 'on': True, 'usage': None}
+    xref=65 {'name': 'PROYECCION', 'intent': [], 'on': True, 'usage': None}
+    xref=66 {'name': '2º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=67 {'name': 'Puertas', 'intent': [], 'on': True, 'usage': None}
+    xref=68 {'name': 'PAVIMENTOS', 'intent': [], 'on': True, 'usage': None}
+    xref=69 {'name': 'Ventanas', 'intent': [], 'on': True, 'usage': None}
+    xref=70 {'name': 'COTAS', 'intent': [], 'on': True, 'usage': None}
+    xref=71 {'name': 'MARCADOR CORTES-ELEVACIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=77 {'name': 'PROYECCIONES', 'intent': [], 'on': True, 'usage': None}
+    xref=78 {'name': 'MOBILIARIO', 'intent': [], 'on': True, 'usage': None}
+    xref=79 {'name': 'Accesibilidad', 'intent': [], 'on': True, 'usage': None}
+    xref=80 {'name': 'HATCH', 'intent': [], 'on': True, 'usage': None}
+    xref=83 {'name': 'BALL', 'intent': [], 'on': True, 'usage': None}
+    xref=84 {'name': '4º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=92 {'name': '3º PLANO', 'intent': [], 'on': True, 'usage': None}
+    xref=93 {'name': 'MUROS', 'intent': [], 'on': True, 'usage': None}
+    xref=100 {'name': 'ILUMINACION', 'intent': [], 'on': True, 'usage': None}
+    xref=103 {'name': 'Cubiertas', 'intent': [], 'on': True, 'usage': None}
+    xref=118 {'name': 'MUEBLES', 'intent': [], 'on': True, 'usage': None}
+    xref=119 {'name': 'TEXTO', 'intent': [], 'on': True, 'usage': None}
+  DIAGNOSTICO CAPAS: claves disponibles en get_drawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'even_odd', 'fill', 'fill_opacity', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO CAPAS: claves disponibles en get_cdrawings() (primeros 3 paths):
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = 1º PLANO
+      seqno = 0
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 1
+    claves=['closePath', 'color', 'dashes', 'items', 'layer', 'lineCap', 'lineJoin', 'rect', 'seqno', 'stroke_opacity', 'type', 'width']
+      layer = PROYECCION
+      seqno = 2
+  DIAGNOSTICO DISTRIBUCION CAPAS: 6775 paths totales en get_drawings(), distribucion completa por capa:
+    'FORMATO': 1925
+    '0': 981
+    'COTAS': 937
+    'ARTEFACTOS': 847
+    '6º PLANO': 458
+    'PROYECCION': 348
+    'HATCH': 277
+    'MARCADOR CORTES-ELEVACIONES': 201
+    'MOBILIARIO': 182
+    '2º PLANO': 180
+    '5º PLANO': 132
+    'Puertas': 112
+    'Accesibilidad': 87
+    '': 30
+    '4º PLANO': 24
+    'PROYECCIONES': 17
+    '1º PLANO': 13
+    'PAVIMENTOS': 13
+    'BALL': 8
+    'Muros Proy': 2
+    'Ventanas': 1
+  ⚠ La capa 'MUROS' (mapeada a 'muro') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'BM-COTAS-0.13' (mapeada a 'cota') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'MUEBLES' (mapeada a 'mobiliario') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  ⚠ La capa 'LINEA TERRENO ORIGINAL' (mapeada a 'deslinde_terreno') NUNCA aparece como 'layer' en ningun path de get_drawings() de esta pagina -- si esperabas contenido de esta capa aqui, revisa si el PDF anida capas (grupo padre distinto al nombre que mapeaste).
+  DIAGNOSTICO DASHES: 0 de 25998 segmentos tienen patron de guion nativo (dashes) no vacio
+  DIAGNOSTICO METADATA: producer='pdfplot14.hdi 14.00.049.000' creator='AutoCAD 2018 - English 2018 (22.0s (LMS Tech))' title='DOM Acc (1)'
+  DIAGNOSTICO TOC: 10 marcador(es)/bookmark(s) en el documento
+    [1, 'Sheets and Views', -1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (1)', 1]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (2)', 2]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (3)', 3]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (4)', 4]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (5)', 5]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (6)', 6]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (7)', 7]
+    [2, 'CC-BEAUCHEFF_DOM-DOM (8)', 8]
+    [2, 'CC-BEAUCHEFF_DOM-DOM Acc (1)', 9]
+  DIAGNOSTICO RAW_DRAWINGS: 0 zona(s) Cocina/Pasillo/Oficina, radio 250.01574803149606px, sin filtros
+  DIAGNOSTICO VENTANA (zona Terraza/Cocina-Barra, centro=(690, 3300), radio=0px): 0 item(s) crudo(s) sin filtrar
+  DIAGNOSTICO COTAS RELAJADO v2: omitido -- este proyecto ya tiene capa 'cota' mapeada (la señal de capa es mas confiable, ver historial de 0% precision geometrica contra capa real)
+  DIAGNOSTICO EJES RELAJADO v2 (SUGERENCIA sin aplicar -- proyecto sin capa 'eje' mapeada): 502 cadena(s) que la regla actual (Paso 1.5) no agarra, para que el arquitecto confirme
+    n_segmentos=3 span_m=3.21 muestra_p1=(1347, 834) muestra_p2=(803, 834) capas=['Puertas']
+    n_segmentos=3 span_m=0.97 muestra_p1=(803, 2079) muestra_p2=(803, 2045) capas=['0']
+    n_segmentos=4 span_m=0.21 muestra_p1=(994, 2037) muestra_p2=(995, 2038) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1260, 2040) muestra_p2=(1260, 2044) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1260, 2046) muestra_p2=(1260, 2050) capas=['COTAS']
+    n_segmentos=3 span_m=0.1 muestra_p1=(1272, 2053) muestra_p2=(1272, 2054) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1348, 2037) muestra_p2=(1347, 2038) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1345, 2040) muestra_p2=(1345, 2044) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1345, 2046) muestra_p2=(1345, 2051) capas=['COTAS']
+    n_segmentos=5 span_m=0.24 muestra_p1=(1345, 2051) muestra_p2=(1347, 2053) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(1347, 2053) muestra_p2=(1348, 2054) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1468, 2037) muestra_p2=(1466, 2037) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1464, 2040) muestra_p2=(1464, 2044) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1464, 2046) muestra_p2=(1464, 2050) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(1464, 2050) muestra_p2=(1466, 2053) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(1466, 2053) muestra_p2=(1468, 2054) capas=['COTAS']
+    n_segmentos=4 span_m=0.13 muestra_p1=(1468, 2054) muestra_p2=(1469, 2054) capas=['COTAS']
+    n_segmentos=3 span_m=0.19 muestra_p1=(1829, 2045) muestra_p2=(1830, 2047) capas=['COTAS']
+    n_segmentos=3 span_m=0.21 muestra_p1=(1828, 2053) muestra_p2=(1826, 2054) capas=['COTAS']
+    n_segmentos=3 span_m=0.23 muestra_p1=(1824, 2054) muestra_p2=(1822, 2053) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1822, 2053) muestra_p2=(1822, 2052) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2216, 2037) muestra_p2=(2214, 2037) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2214, 2037) muestra_p2=(2213, 2040) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2213, 2040) muestra_p2=(2212, 2044) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2212, 2046) muestra_p2=(2213, 2050) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2213, 2050) muestra_p2=(2214, 2053) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2214, 2053) muestra_p2=(2216, 2054) capas=['COTAS']
+    n_segmentos=4 span_m=0.13 muestra_p1=(2216, 2054) muestra_p2=(2217, 2054) capas=['COTAS']
+    n_segmentos=3 span_m=0.97 muestra_p1=(2555, 2045) muestra_p2=(2555, 2079) capas=['0']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2426, 2043) muestra_p2=(2428, 2042) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2430, 2042) muestra_p2=(2431, 2043) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2426, 2053) muestra_p2=(2426, 2052) capas=['COTAS']
+    n_segmentos=7 span_m=0.23 muestra_p1=(2038, 2111) muestra_p2=(2040, 2112) capas=['COTAS']
+    n_segmentos=4 span_m=0.17 muestra_p1=(2040, 2112) muestra_p2=(2042, 2114) capas=['COTAS']
+    n_segmentos=5 span_m=0.19 muestra_p1=(2042, 2114) muestra_p2=(2042, 2116) capas=['COTAS']
+    n_segmentos=3 span_m=0.12 muestra_p1=(2059, 2120) muestra_p2=(2058, 2122) capas=['COTAS']
+    n_segmentos=6 span_m=0.29 muestra_p1=(1655, 2170) muestra_p2=(1656, 2169) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1665, 2170) muestra_p2=(1664, 2174) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(1664, 2176) muestra_p2=(1665, 2181) capas=['COTAS']
+    n_segmentos=6 span_m=0.24 muestra_p1=(1665, 2181) muestra_p2=(1666, 2183) capas=['COTAS']
+    n_segmentos=5 span_m=0.23 muestra_p1=(1666, 2183) muestra_p2=(1668, 2184) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2660, 1956) muestra_p2=(2660, 1957) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2663, 1959) muestra_p2=(2667, 1959) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2669, 1959) muestra_p2=(2673, 1959) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2673, 1959) muestra_p2=(2676, 1957) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2676, 1957) muestra_p2=(2677, 1956) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2660, 1836) muestra_p2=(2660, 1838) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2663, 1839) muestra_p2=(2667, 1840) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2669, 1840) muestra_p2=(2673, 1839) capas=['COTAS']
+    n_segmentos=4 span_m=0.15 muestra_p1=(2673, 1839) muestra_p2=(2676, 1838) capas=['COTAS']
+    n_segmentos=4 span_m=0.14 muestra_p1=(2676, 1838) muestra_p2=(2676, 1836) capas=['COTAS']
+    n_segmentos=5 span_m=0.23 muestra_p1=(2660, 1743) muestra_p2=(2660, 1745) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2663, 1746) muestra_p2=(2667, 1747) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2669, 1747) muestra_p2=(2673, 1746) capas=['COTAS']
+    n_segmentos=5 span_m=0.23 muestra_p1=(2676, 1745) muestra_p2=(2676, 1743) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2660, 1658) muestra_p2=(2660, 1660) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2663, 1661) muestra_p2=(2667, 1661) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2669, 1661) muestra_p2=(2673, 1661) capas=['COTAS']
+    n_segmentos=4 span_m=0.24 muestra_p1=(2673, 1661) muestra_p2=(2676, 1660) capas=['COTAS']
+    n_segmentos=4 span_m=0.23 muestra_p1=(2676, 1660) muestra_p2=(2676, 1658) capas=['COTAS']
+  ⚠ Muro MU21 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU131 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU136 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU138 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU139 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU141 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU143 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU144 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU150 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU151 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU155 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU158 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU159 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU160 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU161 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU162 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU163 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU164 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU165 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU169 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU191 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU197 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU198 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU199 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU207 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU208 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ⚠ Muro MU209 desaparecio por completo al cortar ventana(s) que lo atravesaban -- no quedo ningun tramo real fuera de la(s) ventana(s)
+  ✓ Ventana rompe muro: 55 muro(s) cortados por ventanas confirmadas, resultando en 328 tramo(s) (algunos muros se dividen en 2+, otros quedan conectados por otro camino y siguen como 1 solo)
+  ⚠ Puerta PG02 tenia muro_asociado_id='MU209', que una ventana corto en varios pedazos -- la referencia quedo apuntando a un id que ya no existe (sin re-mapeo automatico todavia)
+  ⚠ Puerta PG03 tenia muro_asociado_id='MU209', que una ventana corto en varios pedazos -- la referencia quedo apuntando a un id que ya no existe (sin re-mapeo automatico todavia)
+  ⚠ Puerta PG04 tenia muro_asociado_id='MU01', que una ventana corto en varios pedazos -- la referencia quedo apuntando a un id que ya no existe (sin re-mapeo automatico todavia)
+  ⚠ Puerta PG11 tenia muro_asociado_id='MU122', que una ventana corto en varios pedazos -- la referencia quedo apuntando a un id que ya no existe (sin re-mapeo automatico todavia)
+  ⚠ Puerta PG14 tenia muro_asociado_id='MU122', que una ventana corto en varios pedazos -- la referencia quedo apuntando a un id que ya no existe (sin re-mapeo automatico todavia)
+  pag3: 523 muros detectados
+  -> guardado: C:\dev\Claude\archicheck\Fase 2\Desarrollos\Test\Beauchef\_run_local_05sep\_muros_detectados_beauchef_pag3.png
+
+=== clindo ===

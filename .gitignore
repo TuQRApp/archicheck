@@ -37,3 +37,8 @@ dist-ssr
 # Python (ahora instalado localmente para correr test_cuerpo_cerrado.py, ver 2026-08-30)
 __pycache__/
 *.pyc
+
+# Salida de imagenes de diagnostico visual (zooms/overviews generados por
+# los scripts _tmp_render_*.py / _tmp_diag_cuerpo_cerrado.py) -- regenerable
+# en segundos, no es fuente ni evidencia permanente (2026-09-14)
+/Fase 2/Herramientas_CubiCasa5k/_tmp_diag_out/

@@ -1,0 +1,10 @@
+Leyenda PdV:
+  color=(0.0, 0.0, 0.0) texto='SIMBOLOGIA' -> estado=None
+  color=(1.0, 0.75, 0.0) texto='1.4' -> estado=None
+  color=(0.87, 0.43, 0.43) texto='Existente' -> estado=None
+
+Leyenda Beauchef (regresion):
+  color=(0.0, 0.0, 0.0) texto='CLUB HIPICO'
+  color=(1.0, 0.0, 0.0) texto='MANUELA ERRAZURIZ'
+  color=(0.78, 0.78, 0.78) texto='A'
+  color=(0.18, 0.72, 0.0) texto='%DxR'
