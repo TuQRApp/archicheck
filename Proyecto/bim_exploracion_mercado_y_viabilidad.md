@@ -153,4 +153,38 @@ Visor de IFC 100% en navegador (WASM + WebGPU), gratuito, de la empresa chilena 
 
 ---
 
-*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación. Secciones 7 y 8 agregadas el 2026-09-18 en sesión de Claude Code, tras un piloto real sobre un IFC español (no se encontró IFC chileno público) usando el visor Altiro.*
+## 9. Piloto `IfcTester`/IDS — motor declarativo para el subconjunto numérico de `OGUC_REGLAS` (2026-09-18)
+
+Siguiendo la recomendación de la sección 8 (`ifcopenshell` trae empaquetado `ifctester`, su propio validador contra especificaciones IDS de buildingSMART), se instaló localmente (`pip install ifcopenshell` + `pip install ifctester`, ambos 0.8.5) y se corrieron **3 reglas OGUC reales contra el mismo IFC español del piloto** — los umbrales se tomaron tal cual del diccionario `OGUC_REGLAS` ya verificado en `Fase 2/Herramientas_CubiCasa5k/_celda4_actual.py`, no se inventaron para esta prueba. Script: `Fase 2/BIM/piloto_ids_oguc.py`.
+
+| Regla (umbral ya verificado en `OGUC_REGLAS`) | Aplicable | Cumple | Falla |
+|---|---|---|---|
+| Puertas — `OverallWidth` ≥ 0.80 m (Art. 4.1.7 N°6) | 64 | **64** | 0 |
+| Muros — `Pset_WallCommon.FireRating` declarado (Art. 4.3.3) | 143 | 0 | **143** |
+| Escaleras — `Qto_StairFlightBaseQuantities.Width` ≥ 1.10 m (Art. 4.2.10) | 2 | 0 | **2** |
+
+**Funciona como motor declarativo**: sin escribir ningún parser a mano, `IfcTester` leyó el atributo nativo `OverallWidth` de las 64 puertas y evaluó el umbral correctamente.
+
+**Pero el resultado "perfecto" de puertas escondía un riesgo, no una victoria limpia.** Verificación manual de los valores crudos: `OverallWidth` real es 0.845 m / 0.945 m / 2.09 m — muy distinto de los "72.5 cm" que aparecían en el nombre del tipo de puerta en el piloto de la sección 7 (`PUE_INT_1H_Abatible_Madera:72.5 x 203 cm`). Conclusión: `OverallWidth` mide el **vano/marco completo**, no el ancho de hoja ni necesariamente el "ancho libre" que exige literalmente el Art. 4.1.7 N°6 (el paso útil real, descontando marco y hoja abierta). El PASS 64/64 es correcto contra el atributo que se le pidió a IDS, pero **puede no ser el atributo normativamente correcto** — mismo riesgo ya anotado en la sección 2 y en el piloto de la sección 7: que el dato exista con un nombre parecido no significa que mida lo que la norma pide. No se debe confiar en este chequeo específico en producción sin que un arquitecto confirme qué atributo/Pset corresponde a "ancho libre" en cada convención de exportación.
+
+Las otras dos reglas confirman **a escala completa** (143 muros, no solo el 1 inspeccionado a mano en la sección 7) lo que el piloto manual ya sugería: cero muros declaran `FireRating`, y ninguna escalera trae el quantity set estándar (`Qto_StairFlightBaseQuantities` no existe para ninguna de las 2 `IfcStairFlight` del modelo) — el ancho de escalera habría que sacarlo de geometría cruda, no de una propiedad.
+
+**Conclusión del piloto**: `IfcTester`/IDS sirve para el subconjunto de `OGUC_REGLAS` que son umbrales simples sobre un atributo/propiedad existente, con la misma exigencia de siempre — verificar contra fuente que el campo mide lo que la norma pide, no asumirlo por el nombre. No resuelve las reglas relacionales/espaciales (adyacencia muro-escalera, etc.), que siguen necesitando recorrido manual de relaciones IFC (`IfcRelSpaceBoundary`, `IfcRelConnectsElements`).
+
+---
+
+## 10. Generador de plano en planta (PDF) directo desde geometría IFC (2026-09-18)
+
+Para comprobar si un IFC puede producir un entregable visualmente equivalente a lo que hoy sube un arquitecto (un plano en PDF), se escribió `Fase 2/BIM/generar_plano_pdf.py`: para cada nivel del edificio, cada elemento (`IfcWallStandardCase`, `IfcColumn`, `IfcDoor`, `IfcCurtainWall`, `IfcPlate`, `IfcStairFlight`, `IfcRailing`) se triangula con `ifcopenshell.geom` (coordenadas de mundo) y cada triángulo se proyecta al plano XY con `shapely` (`unary_union`) — no es un bounding-box ni un convex hull, sigue la silueta real del elemento aunque sea curvo o no rectangular.
+
+Resultado sobre el IFC de prueba: PDF de 4 páginas (una por nivel — PS1, P00, P01, P02), guardado junto al IFC original en `Fase 2/BIM/Archivos ejemplo/plano_generado_desde_ifc.pdf` (104, 171, 143 y 10 elementos dibujados por nivel respectivamente). La planta resultante es reconocible como edificio real (dos alas rotadas según orientación del sitio, columnas, puertas marcadas, fachada con paños de vidrio angulados).
+
+**Qué NO es**: no tiene cotas, cuadro de superficies, escala gráfica ni norte — es una verificación técnica de geometría, no un plano timbrado para la DOM. Tampoco dibuja `IfcSpace` ni `IfcSlab` (habrían tapado el resto del dibujo).
+
+**Por qué importa**: confirma en la práctica que se puede pasar de IFC a un plano visualmente auditable sin heurística de PDF de por medio — la etapa 8 (verificación humana) sigue siendo necesaria, pero corre sobre geometría exacta en vez de inferida. Es además la pieza que permitiría, si algún día se consigue el PDF timbrado real de este mismo proyecto, correr la Celda 4 (pipeline PDF existente) sobre él y comparar `muros_geo`/`puertas_geo` extraídos por heurística contra los extraídos directo del IFC — el experimento de comparación cabeza a cabeza que quedó pendiente desde la sección 1.
+
+**Convención de guardado (instrucción del usuario, 2026-09-18):** cualquier PDF u otro derivado generado a partir de un IFC/BIM de ejemplo se guarda siempre en la misma carpeta que el archivo de origen, no en una carpeta de salida separada.
+
+---
+
+*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación. Secciones 7 y 8 agregadas el 2026-09-18 en sesión de Claude Code, tras un piloto real sobre un IFC español (no se encontró IFC chileno público) usando el visor Altiro. Secciones 9 y 10 agregadas el mismo día: piloto real de `IfcTester`/IDS con reglas OGUC ya verificadas, y generador de plano PDF directo desde geometría IFC.*
