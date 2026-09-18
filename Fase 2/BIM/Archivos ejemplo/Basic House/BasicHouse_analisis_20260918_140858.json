@@ -1,0 +1,384 @@
+{
+  "archivo_origen": "BasicHouse.ifc",
+  "generado": "2026-09-18T14:09:02",
+  "resumen_global": {
+    "muros": 13,
+    "muros_con_fire_rating": 0,
+    "puertas": 8,
+    "puertas_ok_0_80m": 8,
+    "puertas_sin_dato_ancho": 0,
+    "ventanas": 19,
+    "recintos": 0,
+    "recintos_con_area": 0,
+    "recintos_con_chequeo_ventilacion_posible": 0,
+    "ventilacion_aplicable_al_edificio": false,
+    "ventilacion_nota": "Chequeo de ventilacion desactivado: hay IfcWindow pero ningun IfcSpace.BoundedBy las vincula a un recinto en todo el edificio -- el exportador no genera boundaries de nivel 2 (o no los genera en absoluto), no es que los recintos no tengan ventanas."
+  },
+  "muros_geo": [
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBp",
+      "nombre": "Basic Wall:Yttervägg Paroc:1298028",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBo",
+      "nombre": "Basic Wall:Yttervägg Paroc:1298029",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBn",
+      "nombre": "Basic Wall:Yttervägg Paroc:1298030",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBm",
+      "nombre": "Basic Wall:Yttervägg Paroc:1298031",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBj",
+      "nombre": "Basic Wall:Innervägg 170mm Paroc:1298034",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBh",
+      "nombre": "Basic Wall:Innervägg 170mm Paroc:1298036",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBg",
+      "nombre": "Basic Wall:Innervägg 170mm Paroc:1298037",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBf",
+      "nombre": "Basic Wall:Innervägg 170mm Paroc:1298038",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBe",
+      "nombre": "Basic Wall:Innervägg 170mm Paroc:1298039",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBd",
+      "nombre": "Basic Wall:Innervägg 170mm Paroc:1298040",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBc",
+      "nombre": "Basic Wall:Innervägg 170mm Paroc:1298041",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q9K",
+      "nombre": "Basic Wall:Innervägg 170mm Paroc:1298123",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_rm$",
+      "nombre": "Basic Wall:Innervägg 170mm Paroc:1298592",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    }
+  ],
+  "puertas_geo": [
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBb",
+      "nombre": "Innerdörr - standard:D9:1298042",
+      "ancho_m": 910.0,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBa",
+      "nombre": "Innerdörr - standard:D9:1298043",
+      "ancho_m": 910.0,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBZ",
+      "nombre": "Innerdörr - standard:D9:1298044",
+      "ancho_m": 910.0,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBY",
+      "nombre": "Innerdörr - standard:D9:1298045",
+      "ancho_m": 910.0,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_qBX",
+      "nombre": "Innerdörr - standard:D9:1298046",
+      "ancho_m": 910.0,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8y",
+      "nombre": "Ytterdörr - standard:D10:1298083",
+      "ancho_m": 1010.0,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8x",
+      "nombre": "Ytterdörr - standard:D10:1298084",
+      "ancho_m": 1010.0,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q9D",
+      "nombre": "Innerdörr - standard:D9:1298130",
+      "ancho_m": 910.0,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    }
+  ],
+  "ventanas_geo": [
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8F",
+      "nombre": "2-luft fast:10x10:1298064",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8E",
+      "nombre": "2-luft fast:10x10:1298065",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8D",
+      "nombre": "2-luft fast:10x10:1298066",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8C",
+      "nombre": "2-luft fast:10x10:1298067",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8B",
+      "nombre": "2-luft fast:10x10:1298068",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8A",
+      "nombre": "2-luft fast:10x10:1298069",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q89",
+      "nombre": "2-luft fast:10x10:1298070",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q84",
+      "nombre": "2-luft fast:10x10:1298075",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q83",
+      "nombre": "2-luft fast:10x10:1298076",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q82",
+      "nombre": "2-luft fast:10x10:1298077",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q81",
+      "nombre": "2-luft fast:10x10:1298078",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8_",
+      "nombre": "Window-Fixed_Frame-Elitfonster-Single_Pane:Fönster 22x22:1298081",
+      "ancho_m": 2200.0,
+      "alto_m": 2200.0,
+      "area_m2": 4840000.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8z",
+      "nombre": "Window-Fixed_Frame-Elitfonster-Single_Pane:Fönster 22x22:1298082",
+      "ancho_m": 2200.0,
+      "alto_m": 2200.0,
+      "area_m2": 4840000.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8w",
+      "nombre": "Window-Fixed_Frame-Elitfonster-Single_Pane:Fönster 22x22:1298085",
+      "ancho_m": 2200.0,
+      "alto_m": 2200.0,
+      "area_m2": 4840000.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8v",
+      "nombre": "Window-Fixed_Frame-Elitfonster-Single_Pane:Fönster 22x22:1298086",
+      "ancho_m": 2200.0,
+      "alto_m": 2200.0,
+      "area_m2": 4840000.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q8u",
+      "nombre": "Window-Fixed_Frame-Elitfonster-Single_Pane:Fönster 22x22:1298087",
+      "ancho_m": 2200.0,
+      "alto_m": 2200.0,
+      "area_m2": 4840000.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_q9S",
+      "nombre": "Window-Fixed_Frame-Elitfonster-Single_Pane:Fönster Kök Avlångt:1298115",
+      "ancho_m": 600.000000000001,
+      "alto_m": 1200.0,
+      "area_m2": 720000.0000000013
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_rra",
+      "nombre": "1-luft öppningsbart:10x10:1298939",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    },
+    {
+      "id": "2DedXznHnDaeAWsrTB_rvg",
+      "nombre": "2-luft fast:10x10:1299189",
+      "ancho_m": 1010.0,
+      "alto_m": 1010.0,
+      "area_m2": 1020100.0
+    }
+  ],
+  "recintos_geo": [],
+  "incumplimientos_geo": [
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Yttervägg Paroc:1298028",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Yttervägg Paroc:1298029",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Yttervägg Paroc:1298030",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Yttervägg Paroc:1298031",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Innervägg 170mm Paroc:1298034",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Innervägg 170mm Paroc:1298036",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Innervägg 170mm Paroc:1298037",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Innervägg 170mm Paroc:1298038",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Innervägg 170mm Paroc:1298039",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Innervägg 170mm Paroc:1298040",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Innervägg 170mm Paroc:1298041",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Innervägg 170mm Paroc:1298123",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Innervägg 170mm Paroc:1298592",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    }
+  ]
+}

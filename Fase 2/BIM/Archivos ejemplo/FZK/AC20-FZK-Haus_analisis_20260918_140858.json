@@ -1,0 +1,390 @@
+{
+  "archivo_origen": "AC20-FZK-Haus.ifc",
+  "generado": "2026-09-18T14:09:02",
+  "resumen_global": {
+    "muros": 13,
+    "muros_con_fire_rating": 0,
+    "puertas": 5,
+    "puertas_ok_0_80m": 5,
+    "puertas_sin_dato_ancho": 0,
+    "ventanas": 11,
+    "recintos": 7,
+    "recintos_con_area": 7,
+    "recintos_con_chequeo_ventilacion_posible": 7,
+    "ventilacion_aplicable_al_edificio": true,
+    "ventilacion_nota": null
+  },
+  "muros_geo": [
+    {
+      "id": "2XPyKWY018sA1ygZKgQPtU",
+      "nombre": "Wand-Int-ERDG-4",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3PfS__Y_DBAfq5naM6zD2Z",
+      "nombre": "Wand-Int-ERDG-2",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2ptk1k7qn8_Qk22vjh$0DE",
+      "nombre": "Wand-Int-ERDG-1",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3jjW3rL656ex34Gws22EfM",
+      "nombre": "Wand-Int-ERDG-3",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1$wmdwWPjDYuku_ghVkynE",
+      "nombre": "Wand-Int-ERDG-5",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3rPX_Juz59peXXY6wDJl18",
+      "nombre": "Wand-Ext-ERDG-1",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "16DNNqzfP2thtfaOflvsKA",
+      "nombre": "Wand-Ext-ERDG-4",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "25fsbPyk15VvuXI$yNKenK",
+      "nombre": "Wand-Ext-ERDG-3",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1bzfVsJqn8De5PukCrqylz",
+      "nombre": "Wand-Ext-ERDG-2",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0knNIAVBPBFvBy_m5QVHsU",
+      "nombre": "Wand-Ext-OG-1",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "25OWQvmXj5BPgyergP43tY",
+      "nombre": "Wand-Ext-OG-2",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3VCarUKgH1buLo22Ozxe6J",
+      "nombre": "Wand-Ext-OG-3",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3Ttjr$59XEWfWN1WUHjelZ",
+      "nombre": "Wand-Ext-OG-4",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    }
+  ],
+  "puertas_geo": [
+    {
+      "id": "1Oms875aH3Wg$9l65H2ZGw",
+      "nombre": "Innentuer-1",
+      "ancho_m": 0.885,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "0pGAjlJMP3ifYPATVF5xAR",
+      "nombre": "Innentuer-2",
+      "ancho_m": 0.885,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2qiPPF3FrF8OIqfrKiSUqm",
+      "nombre": "Innentuer-3",
+      "ancho_m": 0.885,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2jTRqchjf7oB0yhQ6462T0",
+      "nombre": "Haustuer",
+      "ancho_m": 1.01,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1M$gxUrX1Fiwe3P64ww7U5",
+      "nombre": "Terrassentuer",
+      "ancho_m": 2.01,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    }
+  ],
+  "ventanas_geo": [
+    {
+      "id": "1srAI$R4T8ihLXSNHmUSET",
+      "nombre": "EG-Fenster-6",
+      "ancho_m": 2.0,
+      "alto_m": 1.2,
+      "area_m2": 2.4
+    },
+    {
+      "id": "0B1RwEzzP3CfME5NR$Vqh5",
+      "nombre": "EG-Fenster-7",
+      "ancho_m": 2.0,
+      "alto_m": 1.2,
+      "area_m2": 2.4
+    },
+    {
+      "id": "25nJxEpYf8LRDJNkMUVO0m",
+      "nombre": "EG-Fenster-4",
+      "ancho_m": 2.0,
+      "alto_m": 1.2,
+      "area_m2": 2.4
+    },
+    {
+      "id": "3BFcylCsX74PQAoRAe5fNv",
+      "nombre": "EG-Fenster-5",
+      "ancho_m": 2.0,
+      "alto_m": 1.2,
+      "area_m2": 2.4
+    },
+    {
+      "id": "13aSY79zb8fP4HApEJ0z_e",
+      "nombre": "EG-Fenster-8",
+      "ancho_m": 2.0,
+      "alto_m": 1.2,
+      "area_m2": 2.4
+    },
+    {
+      "id": "2EQh_jhP1B_A_AMuSJc5E0",
+      "nombre": "EG-Fenster-9",
+      "ancho_m": 2.0,
+      "alto_m": 1.2,
+      "area_m2": 2.4
+    },
+    {
+      "id": "1TAI4ouKX4Xx4lBDZIu5qM",
+      "nombre": "EG-Fenster-1",
+      "ancho_m": 2.0,
+      "alto_m": 1.2,
+      "area_m2": 2.4
+    },
+    {
+      "id": "2Q9w7oRXP249jBobEMVqlZ",
+      "nombre": "EG-Fenster-2",
+      "ancho_m": 2.0,
+      "alto_m": 1.2,
+      "area_m2": 2.4
+    },
+    {
+      "id": "1DiYqhfzH9xxuJdVHwXCNa",
+      "nombre": "EG-Fenster-3",
+      "ancho_m": 2.0,
+      "alto_m": 1.2,
+      "area_m2": 2.4
+    },
+    {
+      "id": "1zOBw0Gej5Wf0QAJfHnOc0",
+      "nombre": "OG-Fenster-2",
+      "ancho_m": 1.0,
+      "alto_m": 1.0,
+      "area_m2": 1.0
+    },
+    {
+      "id": "2ACmFFQhT1Ouf0x4YRUh9m",
+      "nombre": "OG-Fenster-1",
+      "ancho_m": 1.0,
+      "alto_m": 1.0,
+      "area_m2": 1.0
+    }
+  ],
+  "recintos_geo": [
+    {
+      "nombre": "Schlafzimmer",
+      "area_m2": 21.410325,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 2,
+      "ventanas_con_area_valida": 2,
+      "area_ventanas_m2": 4.8,
+      "pct_ventilacion": 22.4,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Bad",
+      "area_m2": 12.127619,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 1,
+      "ventanas_con_area_valida": 1,
+      "area_ventanas_m2": 2.4,
+      "pct_ventilacion": 19.8,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Buero",
+      "area_m2": 12.59545,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 2,
+      "ventanas_con_area_valida": 2,
+      "area_ventanas_m2": 4.8,
+      "pct_ventilacion": 38.1,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Wohnen",
+      "area_m2": 25.2088935,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 2,
+      "ventanas_con_area_valida": 2,
+      "area_ventanas_m2": 4.8,
+      "pct_ventilacion": 19.0,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Flur",
+      "area_m2": 11.185458,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Küche",
+      "area_m2": 16.30545,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 2,
+      "ventanas_con_area_valida": 2,
+      "area_ventanas_m2": 4.8,
+      "pct_ventilacion": 29.4,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Galerie",
+      "area_m2": 74.5092415823,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 2,
+      "ventanas_con_area_valida": 2,
+      "area_ventanas_m2": 2.0,
+      "pct_ventilacion": 2.7,
+      "cumple_ventilacion_10pct": false
+    }
+  ],
+  "incumplimientos_geo": [
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Int-ERDG-4",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Int-ERDG-2",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Int-ERDG-1",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Int-ERDG-3",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Int-ERDG-5",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Ext-ERDG-1",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Ext-ERDG-4",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Ext-ERDG-3",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Ext-ERDG-2",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Ext-OG-1",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Ext-OG-2",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Ext-OG-3",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Wand-Ext-OG-4",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Flur",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Galerie",
+      "pct_ventilacion": 2.7,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    }
+  ]
+}

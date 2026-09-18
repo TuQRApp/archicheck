@@ -1,0 +1,2246 @@
+{
+  "archivo_origen": "ISSUE_034_HouseZ.ifc",
+  "generado": "2026-09-18T14:09:03",
+  "resumen_global": {
+    "muros": 140,
+    "muros_con_fire_rating": 0,
+    "puertas": 15,
+    "puertas_ok_0_80m": 0,
+    "puertas_sin_dato_ancho": 15,
+    "ventanas": 22,
+    "recintos": 5,
+    "recintos_con_area": 5,
+    "recintos_con_chequeo_ventilacion_posible": 0,
+    "ventilacion_aplicable_al_edificio": false,
+    "ventilacion_nota": "Chequeo de ventilacion desactivado: hay IfcWindow pero ningun IfcSpace.BoundedBy las vincula a un recinto en todo el edificio -- el exportador no genera boundaries de nivel 2 (o no los genera en absoluto), no es que los recintos no tengan ventanas."
+  },
+  "muros_geo": [
+    {
+      "id": "0wt3Zp9yD0oO85Aa_$hH_g",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "09WFicrfP8chBMjUI8Co97",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0gZ86uo3r4VgvThffdiGj4",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0cqygasTD6LxCTc5fi0vZE",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1AKHkJMZXA98_IBStuAjzf",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3H5OFHYyj2xuQlfAVwJ7s_",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3wCizOuYr9iB4MN25CMlOe",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3OXzum40L5WQm6YQte4DkC",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2VwgxKRCT4_v3jTa0J$Ikd",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2jsNYcgq50VOEEjIph7xqX",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1w9BzHuLL6EeIf$LrMU2_U",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3RNd2ukNj5ae9y_6DBJDWb",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0bTYiR9IX7qemHYvp8nPsg",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "14xSpWym5EkQON2NcWevyL",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1fvsDAE0PCXxkHA1n5WKUL",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1ApDIIhzf9PvtJit05EzaZ",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2uiL222fLATu4$zECkUkQb",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2ELwiqBX59UwtW0xE4r0DZ",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1nErs9d1f8qRYNxWlpd2Eu",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1NteaWzNT678vtOaHc5k3q",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3PJBL7qKP9WOssbsnoUJZt",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0WSmEoKkf6kQavudEwExZl",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2mEIirJ1n0BAWmTSAgfz3$",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "20JBSXE753ROEGMyWtg6bY",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "30kuO9tpjALQe8LIvb3ARB",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2abNoOS8HBLxdOstRGaGMa",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0fhYQCwEXAD9kOq0bhBcAs",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "06ysvyjfL079XN8_G0weS_",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0k6KTIjE9FVemQWqjdlKjx",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3dnaCb5aj3q8OGI5NkHEpB",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3US1WyK6P5M9XmTD3PqZFd",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3qbWR5541A2v5OjOFh9sdK",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0qVlIOonjE7v$rAoZELu__",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2j$Lch2On7BBstI9kdjLqY",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0GptDz8FPCbw3zwV5vFlJN",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0_V15bLcr7ewWmtGFUCzhJ",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3hg41LMjP3bvf0bFmwSZAY",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "18qH9bWtvBBQM31Z5YRG_4",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "01ELIkGQv7ouT1iPK47$ae",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0fXr7NWr173ANycbEhLzr6",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1pvkOnKO18Gw_eDDAeGb7F",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2mR$pJheTAZRqpKgFmgoWb",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2w4fDI3dv5efLTiBBuSb1v",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3tcNeSBdb4EvYIwEgxyXXm",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0E8Q6jLwv4ChEpykaNsgfU",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3s4P4qqYT0q8L4MIekm_EB",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2D3Prm2bn9EuRQHNA$QSBf",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1HgqdDDdrDieQQisC9Ko2u",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2sfXqHPCb6MRI6EGeqeJm_",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1_Eo6Wo6nFje5Louo5Pg56",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0LuEO_fPj1K9qumW_Vk_9L",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1AcDFjRS908PUd4oV7As7A",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0_AtAO_5D8XPkMCJuUZjDT",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3PisvfSt576QtlWGRkEq9V",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2kTsOibo108vIIdDIi_zsT",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1f40mUthrBRAWgus6_AbZW",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "19aP82tw1EaAOCz61k2b$c",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0d0VIMH9rCTvw6$TzjdGKH",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "10YL34RG9AJA87CdVznlVW",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2LcRxfRbD24A_sT65n9T0k",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1W_fHCQWDAReHz0z$4PKJF",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0vKMPVmwLDXuypb$$saBZf",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3rzJTDKLjBhxU9h7bCgsp5",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2FIN0iuOHCRwQc1JNQVMWV",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3sJXpGKx531Rk85yVk$yGz",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1zaMo0C_HF6vheyNQiyBjz",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "32r061Y1X2iAqRCmpik0Ql",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1yQpssLOX7BfTUYj94X4cG",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "17IOhYRRH4VwzODZPyes0j",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1c7JLBlVrCTRF1f4Qe59iw",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2r0LU8DE923wIYvxB3hYTO",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0GkdFLBoD9lQsZj4jGMnAV",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2u$lXBjtj9kwSCx7fImwfO",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1BNPguhYHCuOr1vCr5h4ou",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1MMbVJN7f28xI7J_JFf1wo",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3ol2oEYAzAPO1MaQgtAwJp",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3jGWnE$M92u80zOG7fQs4K",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2YQ4V_MSn8V8Y5AhUdOfBc",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1E4D0xadb0sOg8wpexfAQp",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0v5hXf7cf3i8ms_x9FTNJV",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0GFivhhUr5rREO9miVFI_Z",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2YPbxv2I51bwMnHgYIBQGs",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3xLESoVUbFJO8sy89su3gY",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2gj6DY1218g9t5QQ90jmc9",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1PVG7S4wv8GOQbQlnqXNYN",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1i$RSuuC5C$fKDwX9XxB9O",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1B$ekwjm9CRwhMMH4JqMYl",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "08j_CXmWPDOv_zz2tf0h7O",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0i4YqyhZL9vh1IYOoWp7q$",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1GTdsXwhf7RwgD$GbGWhd0",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "06ZQZhCjPCABQQsZg$B47Z",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3c5epRD1D8cPsikIW7fOPU",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "38w_yMcdPDsupWC5yR$8P6",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1DGHwwv1D1Pv1d5o5gruL3",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3_WWAFLBv6DQM1ne9CgQl9",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2t6Gc5FmbAcPiKPhOXkAJ1",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3IzCbqVtzFf9bZDZrEUpFn",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2RJbOdRAbEwfO5sYdugGlW",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1WT2hBjo5B39odOeION7p$",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3_PK$Wno51wh8UMLZbR84V",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1rFfBPyQ16kRRUrjHdrle3",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2bZJFrFf5A_hLOAWPg9mV8",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2TF8ClH$LA_gJ0JcGYa$1L",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1Y8H2_LCfAuw$9T5dy5$35",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2JlYMjnk1A8RmLNYx$uEbz",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0jTu1hP4L6keGRrvTPJRpZ",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0DO5D_UA17Lgx9rY0QrK91",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3rGab91cnB7v6TKyIcO9nL",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0aQLabVZzEFRnpj5JRjKx_",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1cYvh$PKD4uuEBeUc90KCY",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "029cVTr7PDLwnqjCfZEjn5",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0qJnMwdAz5og1veuf38wp6",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1B250IBJnCKPQlecza5I4v",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2aPvk_81DBEeZgTt2Xjhgn",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3v38Oe2vL7nvMKeDKkJAcV",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3wJPDhq9f7cAD1lQ$rOogT",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "27E2BOnp19lR9_jHHWZoJP",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1BtY7Vbf9FqRasgVBq7C4G",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "27VUthnGf5$wo_at7ifp3v",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0O7dveVt11SvBL7ADlZdvu",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3mLge0UobCVvFdzP6gNoJw",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2WcUFSgdH48foBzMtFCJUh",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2Gy_E76tX06gq6HNvIFHpM",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "36_RN5wy962wKCWtWjxVlj",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2FN3t5XNfD9vYoK6Nd3RB5",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3XD3Keqk958RQePkNA5seL",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0wr9uCYYT4que_2DRRtmra",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2WbGJ7D$D0JQ_ZVmWEVInw",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3G47j4ZvL3c8m52Mp$xBsX",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "326SD2ppn6ohC9F6GK4g2n",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3NDl$6FkP1NRygt7L0T69L",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0VMwJxrGf958YAmPwk1Nzm",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3d0gonZ0X9OBWeFS9wnihV",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "20H7WD7Cv0$gFEnPM1Pc7q",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1qtR6fY$L1Xh1SmraIrqP3",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1wKCsjMOLACwwYX0lQywvC",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3ws1ycf7z6k9HpBnW46kE1",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2dw97eugHCGO0WYQQdbCwQ",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1ZUN_5$UnErgDP7Wya8y$A",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3ki586qVX6r8Gx5ZbJb3Ze",
+      "nombre": "",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    }
+  ],
+  "puertas_geo": [
+    {
+      "id": "1J3La4tNL3EOQZ_EZeNKAy",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "0yuZjAzCP7NuKob3DkR8Tw",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "0CT277MXj6j9shG7h8qk6Z",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2DFT2OHTz9jQPqMsoY5MJo",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "38ccp5HYLBIRPTOxxTjZk1",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "3lAf1GHcTEhB3h3_InJO8u",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1ravFLfpPCZ8dT8ovKlG6O",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "0TtrrAMI5A0h5Hjhd9E55q",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1K3nZJQ_r0BgmczZHJpALC",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2lL91oE$j6mARYtSlbYVME",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "0oFn9FJPDE$vhs$3k2H25J",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "0M9KrLWkn529SPpOcx$frM",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1R1l_Ptm92jPIX_faq9iU4",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1nnq7HzuD899J1c65Cws_D",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "0TZ4FBcKTAq87KZYoPp$qP",
+      "nombre": "",
+      "ancho_m": null,
+      "cumple_ancho_min_0_80m": null,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    }
+  ],
+  "ventanas_geo": [
+    {
+      "id": "3ZAbA97onCThWGIcZiecj4",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "3s9rKK4_vBTPpjiIgXinlW",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "3kPPCs2CHBKx9JaC5mmR9u",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "2fKkTP46v2tw1gPqkgDoEd",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "1lNOuu_6D3GQYA9RQlw3$y",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "0Vw_UM9Ib2z9oNgisD4Ilu",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "1XW4n_e9j3dgZ7sGkg73VA",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "2kGZ7kmef6oxlHDUkeBCxd",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "30L9bIJ5L5rf9Yettjb6rx",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "0poxwcAy97ZPRDBQD5DTgX",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "3wXx7eprrANPhtOcplH2Ld",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "1J4MYjJdn4kfjWwETipBqz",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "0Zs4FSOGX6v9k7wxN_clSU",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "2hEkAZFC18JPbm$5UwoD$T",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "1Y3Z9fCpb7gOOPYRA4Mcle",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "1ingD_mpjF_x$2SKZXGQZW",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "2egpMhL1jF9Q1DOz66gdNu",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "0Gg7p9tLLAgwS4sQUGtsei",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "2fYYhrhcT0B9p95j1yKBkt",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "3phSFjNvX2xAFk$7tHTXW7",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "2cjYqkHkDDlBTPh9knvoTb",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    },
+    {
+      "id": "1fY5np2Wn5XfdFW0iqOwI$",
+      "nombre": "",
+      "ancho_m": null,
+      "alto_m": null,
+      "area_m2": null
+    }
+  ],
+  "recintos_geo": [
+    {
+      "nombre": "Parametricos Office",
+      "area_m2": 38673056.8238015,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": null,
+      "cumple_ventilacion_10pct": null
+    },
+    {
+      "nombre": "Living Room",
+      "area_m2": 28477469.8265697,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": null,
+      "cumple_ventilacion_10pct": null
+    },
+    {
+      "nombre": "GF Hallway",
+      "area_m2": 25346075.9448732,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": null,
+      "cumple_ventilacion_10pct": null
+    },
+    {
+      "nombre": "Washing Room",
+      "area_m2": 5388351.53971335,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": null,
+      "cumple_ventilacion_10pct": null
+    },
+    {
+      "nombre": "Bedroom 01",
+      "area_m2": 15147929.6709993,
+      "area_campo_origen": "NetFloorArea",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": null,
+      "cumple_ventilacion_10pct": null
+    }
+  ],
+  "incumplimientos_geo": [
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "puerta_ancho_sin_dato",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.1.7 N6",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    }
+  ]
+}

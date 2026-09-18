@@ -167,7 +167,9 @@ Siguiendo la recomendación de la sección 8 (`ifcopenshell` trae empaquetado `i
 
 **Pero el resultado "perfecto" de puertas escondía un riesgo, no una victoria limpia.** Verificación manual de los valores crudos: `OverallWidth` real es 0.845 m / 0.945 m / 2.09 m — muy distinto de los "72.5 cm" que aparecían en el nombre del tipo de puerta en el piloto de la sección 7 (`PUE_INT_1H_Abatible_Madera:72.5 x 203 cm`). Conclusión: `OverallWidth` mide el **vano/marco completo**, no el ancho de hoja ni necesariamente el "ancho libre" que exige literalmente el Art. 4.1.7 N°6 (el paso útil real, descontando marco y hoja abierta). El PASS 64/64 es correcto contra el atributo que se le pidió a IDS, pero **puede no ser el atributo normativamente correcto** — mismo riesgo ya anotado en la sección 2 y en el piloto de la sección 7: que el dato exista con un nombre parecido no significa que mida lo que la norma pide. No se debe confiar en este chequeo específico en producción sin que un arquitecto confirme qué atributo/Pset corresponde a "ancho libre" en cada convención de exportación.
 
-Las otras dos reglas confirman **a escala completa** (143 muros, no solo el 1 inspeccionado a mano en la sección 7) lo que el piloto manual ya sugería: cero muros declaran `FireRating`, y ninguna escalera trae el quantity set estándar (`Qto_StairFlightBaseQuantities` no existe para ninguna de las 2 `IfcStairFlight` del modelo) — el ancho de escalera habría que sacarlo de geometría cruda, no de una propiedad.
+Las otras dos reglas confirman **a escala completa** (143 muros, no solo el 1 inspeccionado a mano en la sección 7) lo que el piloto manual ya sugería: cero muros declaran `FireRating`.
+
+**Corrección posterior (2026-09-18, verificado contra la fuente oficial buildingSMART tras revisión cruzada con DeepSeek — ver sección 14):** la caracterización original de la regla de escaleras estaba mal planteada. No es que "este archivo no traiga el Qto estándar" — **`Width` nunca fue parte del estándar `Qto_StairFlightBaseQuantities`** (que solo define `Length`, `GrossVolume`, `NetVolume` en IFC4.3, confirmado en `standards.buildingsmart.org`), ni tampoco de `Pset_StairFlightCommon`. El ancho de un tramo de escalera **no tiene ningún campo nombrado en todo el schema IFC** — la regla 3 de esta sección no estaba probando "¿este archivo tiene el dato?", estaba pidiendo una propiedad que no existe en el estándar en absoluto, así que el resultado 0/2 no distingue "exportador incompleto" de "pregunta mal planteada". El ancho de escalera siempre requiere cálculo desde geometría cruda, en cualquier IFC, no solo en este.
 
 **Conclusión del piloto**: `IfcTester`/IDS sirve para el subconjunto de `OGUC_REGLAS` que son umbrales simples sobre un atributo/propiedad existente, con la misma exigencia de siempre — verificar contra fuente que el campo mide lo que la norma pide, no asumirlo por el nombre. No resuelve las reglas relacionales/espaciales (adyacencia muro-escalera, etc.), que siguen necesitando recorrido manual de relaciones IFC (`IfcRelSpaceBoundary`, `IfcRelConnectsElements`).
 
@@ -245,4 +247,63 @@ Se repitió el piloto sobre un segundo archivo real, `Fase 2/BIM/Archivos ejempl
 
 ---
 
-*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación. Secciones 7 y 8 agregadas el 2026-09-18 en sesión de Claude Code, tras un piloto real sobre un IFC español (no se encontró IFC chileno público) usando el visor Altiro. Secciones 9 y 10 agregadas el mismo día: piloto real de `IfcTester`/IDS con reglas OGUC ya verificadas, y generador de plano PDF directo desde geometría IFC. Sección 11 agregada el mismo día: evaluación de brecha entre lo probado y el objetivo final de análisis normativo completo por IFC. Sección 12 agregada el mismo día: segundo IFC de prueba (`BasicHouse.ifc`) para cross-validar hallazgos contra un exportador distinto — confirma el vacío de `FireRating` como patrón real, matiza el problema de Qto no estándar como exportador-dependiente, y suma el primer caso con ventanas reales y mobiliario.*
+## 13. Primer ejercicio real de "análisis normativo desde IFC" — 4 archivos distintos (2026-09-18)
+
+Se armó `Fase 2/BIM/analizar_todos.py`: el primer script que produce el JSON canónico (mismo espíritu que `archicheck_geometrico_*.json` del pipeline PDF — `muros_geo`/`puertas_geo`/`ventanas_geo`/`recintos_geo`/`incumplimientos_geo`) y corre 3 reglas OGUC ya verificadas en el propio código (`OGUC_REGLAS`) contra 4 IFC de ejemplo distintos. Se descartó `DuplexHouse.ifc` del análisis: es **MD5 idéntico a `BasicHouse.ifc`**, el mismo archivo duplicado con otro nombre.
+
+Se sumó un quinto archivo encontrado en el camino: `AC20-FZK-Haus.ifc` — el "FZK Haus" del KIT (Karlsruhe Institute of Technology), una referencia académica muy citada en investigación BIM, exportado de ArchiCAD (alemán). Y `ISSUE_034_HouseZ.ifc`, que trajo su propia variante: usa `IfcWall` genérico en vez de `IfcWallStandardCase` en las 140 instancias de muro — ningún otro archivo de la sesión lo hacía así.
+
+| Archivo | Muros | Con `FireRating` | Puertas | ≥0.80m | Ventanas | Recintos | Ventilación calculable |
+|---|---|---|---|---|---|---|---|
+| Administrativo (ES) | 143 | **0** | 64 | 64 | 0 | 540 | 0 (sin `IfcWindow` en el edificio) |
+| BasicHouse | 13 | **0** | 8 | 8 | 19 | 0 | 0 (sin `IfcSpace` en el archivo) |
+| FZK-Haus | 13 | **0** | 5 | 5 | 11 | 7 | **7** |
+| HouseZ | 140 | **0** | 15 | 0 (sin dato) | 22 | 5 | 0 (`BoundedBy` vacío, ver más abajo) |
+
+**`FireRating` da 0 en los 4 archivos, con 4 exportadores distintos** (Revit español, Revit inglés, ArchiCAD alemán, y el exportador de HouseZ) — deja de ser sospecha de un archivo raro, es un patrón universal de la práctica real de modelado BIM.
+
+**HouseZ trajo un tercer tipo de vacío**: ninguna de sus 15 puertas declara `OverallWidth`. El primer intento del script lo reportó mal (`cumple=False`, "no cumple", en vez de `cumple=None`, "sin dato") — el mismo tipo de confusión que motiva este documento, encontrada en el propio código de esta sesión, no solo en los IFC de terceros. Corregido antes de reportar (ver sección 14, donde la revisión cruzada encontró más casos del mismo patrón).
+
+**El ejercicio completo, de punta a punta, con `FZK-Haus`:** este archivo tiene recintos con nombres reales (alemán), `NetFloorArea` estándar, y las ventanas vinculadas a cada recinto vía `IfcRelSpaceBoundary` — la primera vez que las tres piezas necesarias para la regla de ventilación natural (superficie del recinto + área de ventanas + vínculo entre ambas) coinciden en un mismo archivo.
+
+| Recinto | Área (m²) | Ventanas vinculadas | % ventilación | ¿Cumple ≥10%? |
+|---|---|---|---|---|
+| Schlafzimmer | 21.41 | 2 (4.8 m²) | 22.4% | ✅ |
+| Bad | 12.13 | 1 (2.4 m²) | 19.8% | ✅ |
+| Büro | 12.60 | 2 (4.8 m²) | 38.1% | ✅ |
+| Wohnen | 25.21 | 2 (4.8 m²) | 19.0% | ✅ |
+| Küche | 16.31 | 2 (4.8 m²) | 29.4% | ✅ |
+| Flur | 11.19 | 0 | 0.0% | ❌ |
+| **Galerie** | 74.51 | 2 (2.0 m²) | **2.7%** | **❌** |
+
+`Galerie` (sala de doble altura) y `Flur` (pasillo) quedan bajo el 10% de ventilación natural — calculado desde geometría IFC real, sin heurística de PDF de por medio. `Flur` es un caso a tratar con cautela: la regla genérica de `reglas_verificacion.json` no distingue recintos habitables de circulaciones, y la mayoría de los códigos de construcción reales (probablemente OGUC también, sin verificar artículo por artículo en este ejercicio) eximen a pasillos de ventilación natural — se reporta tal cual sale de la regla tal como está documentada hoy en el proyecto, sin inventar una excepción no verificada.
+
+Los 4 JSON quedan junto a cada IFC (`{origen}_analisis_{timestamp}.json`). Ver sección 14 para las correcciones que se le hicieron a este script tras revisión cruzada con Codex y DeepSeek — los números de esta tabla ya reflejan las versiones corregidas, no la primera corrida.
+
+---
+
+## 14. Revisión cruzada del código de hoy con Codex y DeepSeek (2026-09-18)
+
+Siguiendo el mecanismo ya establecido en el proyecto (`Fase 2/Herramientas_CubiCasa5k/revisar_con_codex.mjs` / `revisar_con_deepseek.mjs`, documentado en `Convenciones_CAD.md` D.11), se crearon las versiones equivalentes para el piloto BIM de hoy — `Fase 2/BIM/revisar_con_codex.mjs` y `revisar_con_deepseek.mjs` — apuntando a los 3 scripts nuevos (`piloto_ids_oguc.py`, `generar_plano_pdf.py`, `analizar_todos.py`) en vez de a los archivos del pipeline PDF. Mismo patrón: disparo manual, archivos completos, respuesta cruda guardada en `_codex_reviews/`/`_deepseek_reviews/` para que Claude la filtre.
+
+**Ambos revisores, de forma independiente, encontraron el mismo bug crítico**, ya corregido:
+
+- **`analizar_todos.py` confundía "0.0 real" con "sin dato"** en el cálculo de ventilación (`if (area and area_ventanas)` — Python trata `0` como falso). Esto significaba que un recinto con **cero ventanas reales vinculadas** (el caso exacto que la regla debe detectar) se reportaba como "no evaluable" en vez de "incumple". Corregido comparando contra `None` explícitamente en todo el bloque.
+- Codex encontró además: la misma confusión en `area_m2` de ventanas (`if (ancho and alto)`) y en el contador `recintos_con_area` — corregidos igual.
+- Codex encontró una inconsistencia real entre archivos: `piloto_ids_oguc.py` seguía usando `IFCWALLSTANDARDCASE` hardcodeado para la regla de muros, mientras que `analizar_todos.py` ya se había corregido a `IfcWall` genérico (por HouseZ) — el piloto IDS queda con esa limitación documentada, no se volvió a correr.
+- **Al corregir el bug, apareció un problema más grande, no cosmético**: el edificio administrativo español (0 `IfcWindow` reales, sección 7) pasó a reportar **540 "incumplimientos de ventilación"** — un falso positivo masivo, no un hallazgo real, porque ese edificio no tiene ninguna apertura clasificada como `IfcWindow` (es 100% muro cortina). Se agregó un resguardo: el chequeo de ventilación se desactiva a nivel de edificio completo cuando hay 0 `IfcWindow` en todo el modelo, en vez de reportar el 100% de los recintos como incumplimiento por definición.
+- **Segundo resguardo del mismo tipo, encontrado al aplicar el primero**: HouseZ tiene 22 `IfcWindow` reales, pero como ya se sabía que su `IfcSpace.BoundedBy` viene vacío, sin este resguardo habría reportado sus 5 recintos al 0% de ventilación — otro falso positivo, esta vez por falta de vínculo espacial, no por falta de ventanas. Se agregó una segunda condición: el chequeo de ventilación solo se activa si **al menos un recinto del edificio** logró vincular una ventana real.
+
+**DeepSeek encontró, además, dos cosas que Codex no vio:**
+
+1. **La vinculación ventana↔recinto vía `IfcRelSpaceBoundary` no es un mecanismo garantizado.** El `RelatedBuildingElement` de un boundary "nivel 1" (el más común en la práctica) suele apuntar al **muro**, no a la ventana — la ventana solo aparece si el exportador genera boundaries de "nivel 2" (ArchiCAD, como `FZK-Haus`, sí lo hace; no hay garantía de que otro exportador lo haga igual). El resultado de la sección 13 para `FZK-Haus` sigue siendo válido porque se verificó con datos reales, pero no se debe asumir que este método generaliza a cualquier IFC sin volver a comprobarlo.
+2. **`Qto_StairFlightBaseQuantities.Width` no existe en el estándar IFC** (ver corrección en la sección 9 más arriba) — hallazgo verificado después contra `standards.buildingsmart.org` directamente, no solo aceptado de la revisión.
+3. El mismo bug `None≠False` de `analizar_todos.py` estaba también reintroducido en `piloto_ids_oguc.py`: `cardinality="required"` sobre un `ids.Attribute` con `value=...` hace que IDS trate un atributo `None` como **falla**, no como "sin dato" — el 64/64 PASS de puertas reportado en la sección 9 no distingue "todas las puertas cumplen" de "ninguna tiene el atributo nulo" (en ese caso particular sí eran datos reales, verificado a mano, pero el piloto no lo habría detectado si no hubiera sido así).
+
+**Bug real adicional, corregido, encontrado por Codex y DeepSeek en `generar_plano_pdf.py`:** el cálculo del origen común (`ox, oy`) usaba `modelo.by_type("IfcWallStandardCase")` — si el archivo no tiene ningún muro de esa clase exacta (HouseZ, que usa `IfcWall` genérico), la variable quedaba en `None` y el script se caía con `TypeError` al primer `translate()`. Nunca se había corrido el generador de planos contra HouseZ hasta este punto de la sesión — el bug estaba latente, sin manifestarse. Corregido: usa `IfcWall` (incluye el subtipo) con fallback a `(0, 0)`, y se agregó `IfcWall` al diccionario de estilos de dibujo (el mismo problema existía ahí también: los 140 muros de HouseZ no se habrían dibujado). Verificado corriendo el generador sobre HouseZ por primera vez — genera el plano correctamente.
+
+**Por qué importa esta sección más que las anteriores**: no es una lista de bugs de programación cualquiera — cada uno es una instancia concreta del riesgo central de todo este documento (confundir "dato ausente" con "no cumple la norma", y asumir que una clase/mecanismo IFC es universal cuando no lo es), encontrado esta vez en el propio código de ArchiCheck, no solo en los archivos IFC de terceros. La revisión cruzada con Codex/DeepSeek —ya una práctica establecida en el proyecto— demostró ser igual de útil para el código nuevo de BIM que para el pipeline PDF original.
+
+---
+
+*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación. Secciones 7 y 8 agregadas el 2026-09-18 en sesión de Claude Code, tras un piloto real sobre un IFC español (no se encontró IFC chileno público) usando el visor Altiro. Secciones 9 y 10 agregadas el mismo día: piloto real de `IfcTester`/IDS con reglas OGUC ya verificadas, y generador de plano PDF directo desde geometría IFC. Sección 11 agregada el mismo día: evaluación de brecha entre lo probado y el objetivo final de análisis normativo completo por IFC. Sección 12 agregada el mismo día: segundo IFC de prueba (`BasicHouse.ifc`) para cross-validar hallazgos contra un exportador distinto — confirma el vacío de `FireRating` como patrón real, matiza el problema de Qto no estándar como exportador-dependiente, y suma el primer caso con ventanas reales y mobiliario. Secciones 13 y 14 agregadas el mismo día: primer ejercicio real de análisis normativo (JSON + reglas) sobre 4 IFC distintos, y revisión cruzada de ese código con Codex/DeepSeek — 2 bugs reales de "dato ausente vs. no cumple" corregidos, y 2 falsos positivos masivos evitados con resguardos de aplicabilidad.*

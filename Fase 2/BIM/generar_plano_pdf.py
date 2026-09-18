@@ -29,6 +29,9 @@ from shapely.ops import unary_union
 ARCHIVOS = [
     r"Archivos ejemplo/04N02-36_GVA_NNN-NNN_AR_M3D_NN_02_Administrativo.ifc",
     r"Archivos ejemplo/Basic House/BasicHouse.ifc",
+    r"Archivos ejemplo/FZK/AC20-FZK-Haus.ifc",
+    r"Archivos ejemplo/HouseZ/ISSUE_034_HouseZ.ifc",
+    # DuplexHouse.ifc se omite a proposito: MD5 identico a BasicHouse.ifc.
 ]
 
 
@@ -45,6 +48,11 @@ ESTILOS = {
     # exagera el poche de muro a escalas chicas. La geometria (contorno) sigue
     # siendo la real, no se infla el poligono, solo el ancho de linea.
     "IfcWallStandardCase": dict(facecolor="#2b2b2b", edgecolor="black", linewidth=1.1, zorder=3, label="Muro"),
+    # Mismo estilo para IfcWall generico -- HouseZ usa esta clase en vez del
+    # subtipo IfcWallStandardCase (bug real, revision cruzada 2026-09-18):
+    # el.is_a() devuelve la clase EXACTA de la instancia, asi que ambas
+    # entradas conviven sin doble conteo.
+    "IfcWall": dict(facecolor="#2b2b2b", edgecolor="black", linewidth=1.1, zorder=3, label="Muro"),
     "IfcColumn": dict(facecolor="#555555", edgecolor="black", linewidth=0.8, zorder=3, label="Pilar"),
     "IfcDoor": dict(facecolor="#3b82f6", edgecolor="#1d4ed8", linewidth=0.6, zorder=4, label="Puerta"),
     "IfcCurtainWall": dict(facecolor="#93c5fd", edgecolor="#1d4ed8", linewidth=0.5, zorder=2, label="Muro cortina"),
@@ -54,7 +62,7 @@ ESTILOS = {
     "IfcWindow": dict(facecolor="#7dd3fc", edgecolor="#0369a1", linewidth=0.8, zorder=4, label="Ventana"),
     "IfcFurnishingElement": dict(facecolor="#d9c9a3", edgecolor="#78350f", linewidth=0.3, zorder=2, label="Mobiliario"),
 }
-ORDEN_DIBUJO = ["IfcPlate", "IfcCurtainWall", "IfcFurnishingElement", "IfcWallStandardCase", "IfcColumn",
+ORDEN_DIBUJO = ["IfcPlate", "IfcCurtainWall", "IfcFurnishingElement", "IfcWallStandardCase", "IfcWall", "IfcColumn",
                 "IfcStairFlight", "IfcDoor", "IfcWindow", "IfcRailing"]
 
 settings = ifcopenshell.geom.settings()
@@ -105,15 +113,26 @@ def marcar_centroide(ax, geom, **kwargs):
 def main(ifc_path):
     out_pdf = ruta_salida(ifc_path)
     modelo = ifcopenshell.open(ifc_path)
-    niveles = sorted(modelo.by_type("IfcBuildingStorey"), key=lambda s: s.Elevation)
+    # Elevation puede venir None en un IFC valido (bug real senalado por
+    # revision cruzada, Codex 2026-09-18) -- sorted() con key=None explota.
+    niveles = sorted(modelo.by_type("IfcBuildingStorey"),
+                      key=lambda s: s.Elevation if s.Elevation is not None else 0.0)
 
-    # Origen comun para que las coordenadas no salgan en UTM real (~720000, ~4376000)
-    todos_muros = modelo.by_type("IfcWallStandardCase")
-    ox, oy = None, None
+    # Origen comun para que las coordenadas no salgan en UTM real (~720000, ~4376000).
+    # Bug real encontrado por revision cruzada (Codex + DeepSeek, 2026-09-18):
+    # IfcWallStandardCase puede no existir (HouseZ usa IfcWall generico) y
+    # ox/oy quedaban en None, rompiendo el primer translate() del script mas
+    # abajo. Se usa IfcWall (incluye el subtipo) con fallback a (0, 0) si el
+    # archivo no tiene ningun muro en absoluto.
+    todos_muros = modelo.by_type("IfcWall")
+    ox, oy = 0.0, 0.0
     for w in todos_muros[:1]:
-        shp = ifcopenshell.geom.create_shape(settings, w)
-        vv = shp.geometry.verts
-        ox, oy = vv[0], vv[1]
+        try:
+            shp = ifcopenshell.geom.create_shape(settings, w)
+            vv = shp.geometry.verts
+            ox, oy = vv[0], vv[1]
+        except Exception:
+            pass
         break
 
     with PdfPages(out_pdf) as pdf:

@@ -1,0 +1,193 @@
+# Hallazgos
+
+## analizar_todos.py — `recintos_geo`, cálculo de ventilación
+
+**Línea (función `analizar`, bloque de recintos):**
+```python
+pct_ventilacion = (area_ventanas / area * 100) if (area and area_ventanas) else None
+```
+
+**Qué está mal:** este es exactamente el mismo bug "None = no cumple" que dicen haber corregido en puertas, pero aquí quedó sin corregir. Si `area_ventanas > 0` pero `area` falta, `pct_ventilacion` es `None`, y aguas abajo:
+
+```python
+"cumple_ventilacion_10pct": (pct_ventilacion >= 10.0) if pct_ventilacion is not None else None,
+```
+...queda en `None` (correcto: sin dato). Pero además, la condición `if (area and area_ventanas)` **excluye silenciosamente el caso `area_ventanas == 0`**, es decir recintos con ventanas vinculadas por `IfcRelSpaceBoundary` pero cuya área no se pudo calcular, o recintos **sin ninguna ventana vinculada**. En un recinto con `area` conocida y `area_ventanas == 0`, el resultado correcto sería `pct = 0` → `False` (no cumple ventilación). Aquí se reporta `None` ("sin dato"), lo que lo hace indistinguible de "no se pudo evaluar".
+
+**Por qué importa:** un recinto interior sin ventanas (baño, bodega) es precisamente el caso donde la regla debe gatillar. Con este código esos recintos quedan fuera tanto de `cumple_ventilacion_10pct` como del conteo `recintos_con_chequeo_ventilacion_posible`, y tampoco entran en `incumplimientos` (que solo filtra `is False`). Se está reportando "no evaluable" donde el dato sí existe.
+
+**Nota adicional relacionada:** `area_ventanas_m2: ... if area_ventanas else None` convierte `0.0` en `None` por la misma razón (falsy), reforzando la confusión "0 real" vs "sin dato" en el JSON.
+
+---
+
+## analizar_todos.py — vinculación ventanas↔recinto vía `sp.BoundedBy`
+
+**Línea (función `analizar`, bloque de recintos):**
+```python
+for b in sp.BoundedBy:
+    el = b.RelatedBuildingElement
+    if el is not None and el.is_a("IfcWindow"):
+        ventanas_del_recinto.append(el.GlobalId)
+```
+
+**Qué está mal:** en IFC, `IfcRelSpaceBoundary.RelatedBuildingElement` suele apuntar al **muro** que bordea el recinto, no a la ventana. La ventana está conectada al muro vía `IfcRelVoidsElement` + `IfcRelFillsElement`, o vía la **segunda capa de boundaries** (`IfcRelSpaceBoundary` nivel 2, con `RelatedBuildingElement` = la ventana) cuando el modelo tiene boundaries de nivel 2. Muchos exportadores (Revit/ArchiCAD por defecto) generan solo level 1, donde `RelatedBuildingElement` es el muro.
+
+**Por qué importa:** si los IFC de ejemplo traen boundaries de nivel 1, `area_ventanas` da 0 para *todos* los recintos con ventana real, y —combinado con el bug anterior— el chequeo se reporta como `None` en vez de como incumplimiento, dando una falsa sensación de "no se pudo evaluar" cuando en realidad el extractor está mal. La regla de ventilación es justamente la que más depende de este vínculo, y no hay ningún log ni contador que permita detectar el problema. Convendría al menos contar cuántos recintos quedaron con `num_ventanas_vinculadas == 0` teniendo `area > 0` para poder flaggear el caso.
+
+---
+
+## analizar_todos.py — `buscar_area` con `qtos_only=True` y claves en idioma
+
+**Línea (función `buscar_area`):**
+```python
+CLAVES_AREA_RECINTO = ["NetFloorArea", "GrossFloorArea", "Area", "Fläche", "Flache", "NetArea"]
+```
+
+**Qué está mal:** los nombres de property en `Qto_SpaceBaseQuantities` son estándar IFC ("NetFloorArea" etc.), no localizados — el `Qtos` name puede estar en otro idioma pero los *property names* dentro son fijos por schema. Incluir variantes en alemán sugiere que se está asumiendo que pueden aparecer; si aparecen es porque algún exportador las metió en un Pset custom, no en el Qto estándar. No es un bug por sí solo, pero **el orden de prioridad importa**: `NetFloorArea` debería ganarle siempre a `GrossFloorArea` (porque el umbral 10% de ventilación apunta a superficie útil, no bruta), y el código itera `qtos.values()` en el orden que devuelva ifcopenshell (dict, no ordenado semánticamente). Si un recinto trae ambos, la elección es efectivamente no determinista.
+
+**Por qué importa:** dos corridas del mismo IFC podrían, en principio, elegir `GrossFloorArea` en vez de `NetFloorArea` y cambiar el `pct_ventilacion` en varios puntos porcentuales, algo que en un análisis normativo es inaceptable. Basta con iterar claves en orden explícito (`for clave in CLAVES_AREA_RECINTO: for pset in qtos.values(): ...`).
+
+---
+
+## piloto_ids_oguc.py — Spec de muros: `cardinality="required"` sobre un Pset
+
+**Línea:**
+```python
+s2.requirements.append(
+    ids.Property(
+        propertySet="Pset_WallCommon",
+        baseName="FireRating",
+        cardinality="required",
+        ...
+    )
+)
+```
+
+**Qué está mal:** `cardinality="required"` en IDS significa "el requisito debe cumplirse para que el spec pase". La estructura lógica queda: *si el elemento aplica (IFCWALLSTANDARDCASE), entonces debe existir Pset_WallCommon.FireRating*. Eso coincide con la intención del script. Pero hay dos supuestos implícitos que no se verifican:
+
+1. **`Pset_WallCommon` no siempre existe con ese nombre exacto.** El comentario de `analizar_todos.py` dice expresamente "usar `get_psets()` en vez de nombres hardcodeados — cubre nombres en otros idiomas", y sin embargo aquí, en el piloto IDS, se hardcodea el nombre. Es una **inconsistencia entre archivos**: el pipeline manual ya sabe que hardcodear `Pset_WallCommon` es frágil, y el piloto lo hace igual. Si el IFC viene con el Pset renombrado (pasa con traducciones o Psets custom), la regla IDS reportará "no cumple" cuando en realidad es "el dato está declarado en otro lado". IDS no permite comodines en `propertySet`, así que este piloto no puede cubrir el caso — conviene documentarlo como limitación conocida, no venderlo como equivalente a la regla Python.
+
+2. **IDS no distingue "Pset ausente" de "FireRating vacío" en el output de forma clara.** `failed_entities` mezclará ambos. Para un reporte normativo hay que saber cuáles son.
+
+---
+
+## piloto_ids_oguc.py — Regla 1: `OverallWidth` como sustituto de "ancho libre"
+
+**Línea:**
+```python
+s1.requirements.append(
+    ids.Attribute(
+        name="OverallWidth",
+        value=ids.Restriction(options={"minInclusive": "0.8"}, base="decimal"),
+        cardinality="required",
+        ...
+    )
+)
+```
+
+**Qué está mal:** el comentario reconoce que `OverallWidth` es aproximación al ancho libre. Además hay dos problemas concretos de IDS:
+
+1. `cardinality="required"` sobre un `ids.Attribute` significa "el atributo debe estar presente y satisfacer el restriction". Con `value=...` puesto, ifctester lo interpreta como comparación, así que si `OverallWidth` es `None` (nulo en el IFC), **el elemento cuenta como falla**, no como "sin dato". Es el mismo bug `None≠False` que se corrigió en `analizar_todos.py`, reintroducido por la puerta de atrás en el piloto IDS. La salida del `reporter.Console` no lo distingue.
+
+2. `OverallWidth` en IFC es un `IfcPositiveLengthMeasure` que el exportador **suele dejar en `None`** (depende del software); el dato relevante vive o en `IfcDoorLiningProperties` o en la geometría. El script no cuenta cuántos elementos cayeron en "atributo nulo vs atributo fuera de rango", así que no se puede saber si la regla está fallando por incumplimiento real o porque el atributo no viene.
+
+**Por qué importa:** el piloto se está usando para decidir si IDS es motor válido de OGUC. Con esta salida no se puede distinguir "muchas puertas incumplen" de "muchos exportadores no rellenan OverallWidth", y esas dos conclusiones llevan a decisiones opuestas.
+
+---
+
+## piloto_ids_oguc.py — Regla 3: `Qto_StairFlightBaseQuantities.Width`
+
+**Línea:**
+```python
+ids.Property(
+    propertySet="Qto_StairFlightBaseQuantities",
+    baseName="Width",
+    value=ids.Restriction(options={"minInclusive": "1.1"}, base="decimal"),
+    cardinality="required",
+)
+```
+
+**Qué está mal:** este es el caso más frágil de todo el piloto, y el comentario lo admite ("a propósito, para ver si existe"), pero no lo trata:
+
+1. `Qto_StairFlightBaseQuantities.Width` **no es un property estándar del schema IFC4**. Los Qto estándar para `IfcStairFlight` incluyen `Length`, `NumberOfRiser`, `NumberOfTreads`, `RiserHeight`, `TreadLength`, `NetVolume`, `GrossVolume`, pero **no `Width`**. El ancho suele estar en `IfcStairFlight` vía `IfcQuantityLength` custom, en `Pset_StairFlightCommon` como `Width`, o directamente no estar. Es muy probable que el piloto reporte 0 aplicables o todas fallas por pset ausente.
+
+2. Si el pset no existe, `failed_entities` aparecerá vacío y `applicable_entities` igual — el `reporter.Console` no dirá "0 elementos con este pset", solo no listará nada. El resumen final `print` tampoco distingue ese caso. La conclusión "IDS no sirve para esta regla" y "el IFC no trae este dato" son indistinguibles.
+
+**Por qué importa:** la regla 3 se está usando como canario de "¿IDS cubre más que umbrales?" Si falla por nombre de Pset incorrecto, se concluye erróneamente que IDS no sirve para escaleras cuando en realidad el problema es el rumbo del dato en el IFC.
+
+---
+
+## generar_plano_pdf.py — Origen de traslación `ox, oy` puede fallar
+
+**Línea (función `main`):**
+```python
+todos_muros = modelo.by_type("IfcWallStandardCase")
+ox, oy = None, None
+for w in todos_muros[:1]:
+    shp = ifcopenshell.geom.create_shape(settings, w)
+    vv = shp.geometry.verts
+    ox, oy = vv[0], vv[1]
+    break
+```
+
+**Qué está mal:**
+1. Si el IFC **no tiene ningún `IfcWallStandardCase`** (pasa: HouseZ usa `IfcWall` genérico, ya lo reconocen en `analizar_todos.py`), `ox` y `oy` quedan en `None`, y luego `translate(geom, xoff=-ox, ...)` explota con `TypeError`. El try/except de `main` solo captura `PermissionError`, así que el proceso muere sin generar el PDF de ese archivo. Se está asumiendo una clase que el propio analizar_todos sabe que no siempre existe.
+
+2. El origen se calcula con el **primer vértice del primer muro**, que no es un punto estable: si el muro empieza en un extremo u otro, o si el IFC tiene varias alas, el "origen" queda arbitrariamente en una esquina. Más limpio: usar `IfcBuilding` placement, o directamente el centroide del bounding box de todo el nivel.
+
+**Por qué importa:** el piloto se rompe sobre uno de los IFC listados en `ARCHIVOS` sin dar un error legible. Es exactamente el tipo de fallo "asumir que una clase existe" que el comentario del propio archivo critica más abajo para `IfcRelContainedInSpatialStructure`.
+
+---
+
+## generar_plano_pdf.py — `footprint_2d`: `tri.buffer(0)` sobre triángulos degenerados
+
+**Línea (función `footprint_2d`):**
+```python
+tri = Polygon([pts[a], pts[b], pts[c]])
+if tri.area > 1e-9:
+    tris.append(tri.buffer(0))
+```
+
+**Qué está mal:** dos cosas:
+
+1. `tri.area > 1e-9` se calcula **antes** del `buffer(0)`. Un triángulo con orientación invertida (sentido horario) tiene área negativa en shapely — y `-negativo > 1e-9` es falso, así que **se descarta silenciosamente**. ifcopenshell no garantiza winding consistente en todos los exportadores. Normalmente sí lo es, pero en mallas con normales mixtas puede haber triángulos CW intercalados que se pierden y dejan huecos en la silueta.
+
+2. `buffer(0)` en shapely 2.x no es la operación de "arreglar polígono" que era en 1.x — es una dilatación/erosión por 0 que suele ser no-op excepto en geometrías inválidas auto-intersectadas, y a veces **introduce artefactos**. Para triangulación convexa como esta, no hace nada útil y añade costo O(n) por triángulo en modelos grandes.
+
+**Por qué importa:** el comentario del archivo vende este método como "silueta real, no bounding-box", pero (1) puede perder triángulos por winding, rompiendo siluetas de muros no rectangulares (justo el caso que dice manejar bien), y (2) acumula overhead innecesario en un bucle que ya es el cuello de botella de todo el script.
+
+---
+
+## generar_plano_pdf.py — rendimiento: `create_shape` dos veces por muro y `unary_union` por elemento
+
+**Línea (función `main`, inicio + bucle interno):**
+```python
+for w in todos_muros[:1]:
+    shp = ifcopenshell.geom.create_shape(settings, w)   # ← 1ª triangulación
+...
+for tipo in ORDEN_DIBUJO:
+    for el in por_tipo.get(tipo, []):
+        geom = footprint_2d(el)                          # ← create_shape otra vez, por elemento, por nivel
+```
+
+**Qué está mal:** cada elemento se triangula en `footprint_2d` **una vez por nivel en el que aparece**. Como `IfcRelContainedInSpatialStructure` normalmente contiene el elemento en un solo storey, no es duplicación entre páginas. Pero el muro de origen (el que da `ox, oy`) se triangula **dos veces**: una para sacar la esquina y otra como parte del ciclo normal. Para modelos grandes esto es marginal, pero se suma a:
+
+- `unary_union` sobre todos los triángulos de cada elemento es la parte cara. Para el IFC administrativo con muchos elementos, esta es la línea que va a explotar en tiempo. No hay caché entre corridas ni por GlobalId.
+- `marcar_centroide` hace `geom.centroid` (barato) pero `dibujar_geom` recorre `poly.exterior.coords` — para polígonos con muchos vértices (muros curvos, plates fragmentados) matplotlib va a arrastrarse. Nada alarmante para un piloto, pero si el objetivo es "correrlo sobre el mismo edificio que el pipeline PDF", esto va a ser el primer candidato a optimizar.
+
+**Por qué importa:** el script dice ser un piloto de viabilidad, así que no es bloqueante; pero si se planea usar como base para producción, la combinación `create_shape` + `unary_union` por elemento no escala. Una nota en el docstring bastaría para no venderlo como listo.
+
+---
+
+## Inconsistencia entre archivos: `num_o_none` solo en analizar_todos
+
+`analizar_todos.py` protege con `num_o_none(d.OverallWidth)` contra valores no-numéricos que ifcopenshell a veces devuelve (por ejemplo `IfcLengthMeasure` mal serializado). `piloto_ids_oguc.py` no hace ese filtrado — delega en ifctester, que puede explotar o reportar falla. Y `generar_plano_pdf.py` **no chequea `OverallWidth` en absoluto**, así que la tabla cruzada de "ventanas con dimensiones declaradas" no tiene contraparte visual en el PDF.
+
+No es un bug per se, pero socava la comparación entre los tres archivos, que es el objetivo declarado del piloto.
+
+---
+
+## No son bugs (verificado, no reportar): 
+- El orden de `ARCHIVOS[:1]` para sacar `ox, oy` sí es intencional.
+- El `elif` en `incumplimientos` para clasificar `None` como `puerta_ancho_sin_dato` está bien puesto.
+- La doble extracción de `espacios` en `generar_plano_pdf.py` (una por `get_decomposition`, otra filtrando `elementos`) no genera datos duplicados porque la lista `elementos` ya los contiene; no es un problema.
