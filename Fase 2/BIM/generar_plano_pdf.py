@@ -11,6 +11,9 @@
 # no es un bounding-box ni un convex hull, sigue la forma real del elemento
 # incluidos muros curvos o plates no rectangulares.
 
+import datetime
+from pathlib import Path
+
 import ifcopenshell
 import ifcopenshell.geom
 import ifcopenshell.util.element
@@ -20,12 +23,19 @@ from matplotlib.patches import Polygon as MplPolygon
 from shapely.geometry import Polygon
 from shapely.ops import unary_union
 
+# Regla del proyecto (2026-09-18): todo archivo generado a partir de un IFC/BIM
+# se guarda junto al archivo de origen, con el nombre del origen + timestamp de
+# generacion -- nunca un nombre fijo/generico que se pise entre corridas.
 ARCHIVOS = [
-    (r"Archivos ejemplo/04N02-36_GVA_NNN-NNN_AR_M3D_NN_02_Administrativo.ifc",
-     r"Archivos ejemplo/plano_generado_desde_ifc_v2.pdf"),
-    (r"Archivos ejemplo/Basic House/BasicHouse.ifc",
-     r"Archivos ejemplo/Basic House/plano_generado_desde_ifc.pdf"),
+    r"Archivos ejemplo/04N02-36_GVA_NNN-NNN_AR_M3D_NN_02_Administrativo.ifc",
+    r"Archivos ejemplo/Basic House/BasicHouse.ifc",
 ]
+
+
+def ruta_salida(ifc_path: str) -> str:
+    origen = Path(ifc_path)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    return str(origen.parent / f"{origen.stem}_plano_{timestamp}.pdf")
 
 ESTILOS = {
     # linewidth aca es a proposito MAS grueso que el espesor real del muro:
@@ -92,7 +102,8 @@ def marcar_centroide(ax, geom, **kwargs):
     ax.plot(c.x, c.y, marker="s", markersize=3.2, **kwargs)
 
 
-def main(ifc_path, out_pdf):
+def main(ifc_path):
+    out_pdf = ruta_salida(ifc_path)
     modelo = ifcopenshell.open(ifc_path)
     niveles = sorted(modelo.by_type("IfcBuildingStorey"), key=lambda s: s.Elevation)
 
@@ -186,9 +197,9 @@ def main(ifc_path, out_pdf):
 
 
 if __name__ == "__main__":
-    for ifc_path, out_pdf in ARCHIVOS:
+    for ifc_path in ARCHIVOS:
         print(f"\n=== {ifc_path} ===")
         try:
-            main(ifc_path, out_pdf)
-        except PermissionError:
-            print(f"  (omitido -- {out_pdf} esta abierto/bloqueado, no se regenero)")
+            main(ifc_path)
+        except PermissionError as e:
+            print(f"  (omitido -- archivo de salida bloqueado: {e})")
