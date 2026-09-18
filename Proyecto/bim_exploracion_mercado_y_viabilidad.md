@@ -191,4 +191,56 @@ Resultado sobre el IFC de prueba: PDF de 4 páginas (una por nivel — PS1, P00,
 
 ---
 
-*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación. Secciones 7 y 8 agregadas el 2026-09-18 en sesión de Claude Code, tras un piloto real sobre un IFC español (no se encontró IFC chileno público) usando el visor Altiro. Secciones 9 y 10 agregadas el mismo día: piloto real de `IfcTester`/IDS con reglas OGUC ya verificadas, y generador de plano PDF directo desde geometría IFC.*
+## 11. Evaluación de brecha — ¿alcanza esto para el análisis normativo completo por IFC? (2026-09-18)
+
+**Objetivo final del usuario, para que quede registrado tal cual se planteó**: subir un IFC y revisar automáticamente *todos* los elementos — puertas, ventanas, muros, escaleras, salidas de emergencia, ventilación, mobiliario, ocupación, superficies, cortes, elevaciones. Todo.
+
+**Respuesta corta: no, no todavía.** Lo hecho en las secciones 7-10 es evidencia real para decidir si vale la pena seguir invirtiendo en la vía BIM — no un sistema funcional. Balance por categoría:
+
+| Elemento pedido | Estado real a esta fecha |
+|---|---|
+| Puertas (ancho) | ✅ Probado — `OverallWidth` se lee bien. ⚠️ Riesgo real encontrado (sección 9): puede no ser "ancho libre", el dato normativo exacto |
+| Muros | ✅ Extracción funciona (tipo, área, volumen vía Pset no estándar). ⚠️ `FireRating` ausente en el 100% de los 143 muros probados — no verificable con el dato solo |
+| Escaleras | ✅ Existen tipadas, con `NumberOfRiser`/`NumberOfTreads` nativos. ❌ Ancho (dato crítico Art. 4.2.10) sin quantity set estándar — requiere cálculo desde geometría cruda, no construido |
+| Ventanas | ❌ Riesgo real: el edificio de prueba no tiene ninguna `IfcWindow` — 100% muro cortina (`CurtainWall`+`Plate`). La clasificación depende de la tipología del edificio, no es universal |
+| Salidas de emergencia | ❌ No existe nada. IFC no etiqueta "esto es salida de emergencia" — requiere calcular carga de ocupación + trazar rutas de evacuación sobre la topología del modelo. 0% construido, en ningún lado del proyecto (ni PDF ni BIM) |
+| Ventilación/iluminación natural | ❌ No probado. Requiere vincular vano (ventana o muro cortina) a su `IfcSpace` y calcular % de superficie — no construido |
+| Mobiliario | ❌ No probado. No se sabe si los clientes reales de ArchiCheck modelan mobiliario en BIM — dato no verificado con ningún cliente |
+| Ocupación | ❌ No existe. Requiere tablas m²/persona por uso (OGUC Art. 4.2.4) aplicadas a áreas de `IfcSpace` — 0% construido |
+| Superficies por recinto | ⚠️ Parcial. Se extrajeron nombres de `IfcSpace` (sección 10) pero no se verificó si sus áreas vienen confiables — dado el patrón de esta sesión, probable que tengan el mismo problema que los muros (Pset no estándar) |
+| Cortes | ❌ No construido. El generador de la sección 10 solo hace planta (proyección horizontal); un corte es una proyección vertical — mismo método (`ifcopenshell.geom` + `shapely`), cero líneas escritas |
+| Elevaciones | ❌ No construido. Mismo caso que cortes — técnicamente la extensión más barata de toda esta lista, pero no existe |
+
+**El patrón que se repitió todo el día, y que es la lección real de esta sesión**: cada vez que se probó algo nuevo (quantities de muros, `FireRating`, ancho de escalera, clase de ventana, contenedor de `IfcSpace`) apareció un caso donde **el dato existe con un nombre distinto al esperado, no existe, o vive en un mecanismo IFC diferente al asumido** (`IfcRelAggregates` en vez de `IfcRelContainedInSpatialStructure`, ver sección 10). Esto no es un problema puntual de este archivo — es la naturaleza de BIM real: cada oficina/software exporta distinto. Un sistema que cubra "todos los elementos" necesita una capa de extracción defensiva con fallback por campo, no un script de piloto que asuma un solo camino como los de hoy.
+
+**Qué falta construir, de mayor a menor tamaño:**
+1. **Motor de reglas normativo completo** — hoy `OGUC_REGLAS` (el que ya existe en el pipeline PDF, no es exclusivo de BIM) tiene ~6 reglas verificadas contra fuente, no las ~50-100 que exigiría cobertura real. Es trabajo de la Fase 2 (P2) del roadmap general, pendiente también para PDF — no es una brecha exclusiva de BIM.
+2. **Ocupación + rutas de evacuación** — motor nuevo, no existe en ningún punto del proyecto hoy.
+3. **Ventilación/iluminación por recinto** — requiere vincular vano↔`IfcSpace`, no existe.
+4. **Extracción robusta con fallback** por cada categoría de elemento (lo de hoy fue "hacerlo funcionar una vez sobre un archivo", no "a prueba de la variabilidad real de exportadores").
+5. **Cortes y elevaciones** — extensión directa de `generar_plano_pdf.py`, la más barata de la lista.
+6. **Mobiliario** — depende de una pregunta de descubrimiento sin responder: ¿los clientes reales modelan mobiliario en BIM? No verificado.
+
+**Recomendación registrada de esta sesión**: antes de construir lo de arriba, decidir con qué frecuencia real llegan archivos BIM de clientes actuales de ArchiCheck — si es poco frecuente, probablemente no se justifica todavía frente a terminar P2/P4 del pipeline PDF (que sigue siendo la vía principal según el roadmap general), y esta exploración queda como opción evaluada y lista para retomar cuando la demanda real lo justifique, no como carril de desarrollo activo.
+
+---
+
+## 12. Segundo IFC de prueba — `BasicHouse.ifc`, cross-validación de hallazgos (2026-09-18)
+
+Se repitió el piloto sobre un segundo archivo real, `Fase 2/BIM/Archivos ejemplo/Basic House/BasicHouse.ifc` (52.7 MB) — otro archivo de muestra genérico, no un proyecto chileno (exportado de Revit 2021, familias con nombres en sueco: "Ytterlvägg" = muro exterior, "Innerdörr"/"Ytterdörr" = puerta interior/exterior, "Väggförteckning"/"Fönsterförteckning" = listas de muros/ventanas — parece plantilla de oficina sueca, no una "casa" residencial real pese al nombre del archivo). 2 niveles: "Floor 0" (todo el contenido real) y "Floor 1" (solo la cubierta, 1 elemento).
+
+**Por qué vale la pena aunque no sea chileno**: a diferencia del edificio administrativo español de las secciones 7-11, este archivo tiene **exportador distinto y más completo** — permite cross-validar si los hallazgos de antes eran un defecto de un archivo puntual o un patrón real de BIM en general.
+
+**Resultado — algunos hallazgos se confirman, otros NO se repiten (exportador-dependientes):**
+- ✅ **`FireRating` sigue ausente — esta vez confirmado con datos de OTRO exportador.** `Pset_WallCommon` existe en los 13 muros, pero sin `FireRating` en ninguno (13/13 falla en `IfcTester`, igual patrón que los 143/143 del edificio español). Con dos exportadores distintos mostrando el mismo vacío, deja de ser sospecha de un archivo raro y pasa a ser **evidencia de un patrón real**: los arquitectos casi nunca declaran resistencia al fuego en el modelo BIM, sin importar el software.
+- ❌ **El problema de "Qto no estándar" NO se repite aquí — este exportador SÍ trae `BaseQuantities` reales** (Height/Length/Width/GrossFootprintArea/NetVolume/NetSideArea en muros; Height/Width/Area en ventanas). Conclusión revisada: la sección 7 tenía razón en la alerta ("no asumir Qto estándar"), pero se sobre-generalizó — depende de la disciplina de exportación de cada oficina, no es universal. Un extractor robusto necesita *ambos* caminos con fallback, no asumir que ninguno existe.
+- ✅ **Puertas con dato confiable esta vez.** A diferencia del caso de la sección 9 (donde `OverallWidth` resultó ser el vano/marco, no el ancho de hoja real), acá `OverallWidth` = 910 mm / 1010 mm coincide con los nombres reales de las puertas ("Innerdörr - standard:D9" / "Ytterdörr - standard:D10") — valores de puerta interior/exterior estándar suecos, plausibles como ancho de hoja real. Pasa el chequeo IDS de 0.80 m con datos que esta vez sí inspiran confianza.
+- 🆕 **Primera vez con `IfcWindow` real** (19 instancias, no muro cortina) y **primera vez con mobiliario** (`IfcFurnishingElement`, 71 instancias: escritorios, sillas, sofás, mesas, gabinetes de cocina) — ninguno de los dos existía en el edificio español. Responde parcialmente la pregunta abierta de la sección 11 ("¿los clientes modelan mobiliario en BIM?"): al menos es *posible* que un archivo lo traiga, sigue sin verificarse con un cliente real de ArchiCheck.
+
+**Extensión de `generar_plano_pdf.py`**: se agregaron estilos para `IfcWindow` y `IfcFurnishingElement`, y el script se generalizó (`main(ifc_path, out_pdf)` + lista `ARCHIVOS`) para correr sobre varios archivos de ejemplo sin duplicar código. Resultado guardado junto al IFC en `Fase 2/BIM/Archivos ejemplo/Basic House/plano_generado_desde_ifc.pdf`: planta de un solo nivel, mobiliario completo y legible (mesa de comedor con 8 sillas, sala de estar, cocina en L, escritorios), ventanas marcadas en los muros exteriores.
+
+**Matiz sobre IDS descubierto en el camino, no mencionado en la sección 9**: el chequeo de `FireRating` en IDS necesita saber el nombre exacto del property set (`Pset_WallCommon`) de antemano — es una limitación del formato IDS en sí, no del extractor. Un extractor propio en Python usando `ifcopenshell.util.element.get_psets(el, qtos_only=True)` es más robusto para el caso de cantidades (no le importa si el set se llama `Qto_WallBaseQuantities` o simplemente `BaseQuantities`, los reconoce igual), pero ese mismo tipo de abstracción no está disponible para propiedades normativas específicas como `FireRating` — ahí sí hay que seguir sabiendo el nombre exacto del campo en cada convención de exportación.
+
+---
+
+*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación. Secciones 7 y 8 agregadas el 2026-09-18 en sesión de Claude Code, tras un piloto real sobre un IFC español (no se encontró IFC chileno público) usando el visor Altiro. Secciones 9 y 10 agregadas el mismo día: piloto real de `IfcTester`/IDS con reglas OGUC ya verificadas, y generador de plano PDF directo desde geometría IFC. Sección 11 agregada el mismo día: evaluación de brecha entre lo probado y el objetivo final de análisis normativo completo por IFC. Sección 12 agregada el mismo día: segundo IFC de prueba (`BasicHouse.ifc`) para cross-validar hallazgos contra un exportador distinto — confirma el vacío de `FireRating` como patrón real, matiza el problema de Qto no estándar como exportador-dependiente, y suma el primer caso con ventanas reales y mobiliario.*

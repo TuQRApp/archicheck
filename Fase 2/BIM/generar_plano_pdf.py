@@ -20,8 +20,12 @@ from matplotlib.patches import Polygon as MplPolygon
 from shapely.geometry import Polygon
 from shapely.ops import unary_union
 
-IFC_PATH = r"Archivos ejemplo/04N02-36_GVA_NNN-NNN_AR_M3D_NN_02_Administrativo.ifc"
-OUT_PDF = r"Archivos ejemplo/plano_generado_desde_ifc_v2.pdf"
+ARCHIVOS = [
+    (r"Archivos ejemplo/04N02-36_GVA_NNN-NNN_AR_M3D_NN_02_Administrativo.ifc",
+     r"Archivos ejemplo/plano_generado_desde_ifc_v2.pdf"),
+    (r"Archivos ejemplo/Basic House/BasicHouse.ifc",
+     r"Archivos ejemplo/Basic House/plano_generado_desde_ifc.pdf"),
+]
 
 ESTILOS = {
     # linewidth aca es a proposito MAS grueso que el espesor real del muro:
@@ -37,9 +41,11 @@ ESTILOS = {
     "IfcPlate": dict(facecolor="#bfdbfe", edgecolor="#60a5fa", linewidth=0.3, zorder=1, label="Paño vidrio"),
     "IfcStairFlight": dict(facecolor="#f59e0b", edgecolor="black", linewidth=0.6, zorder=3, label="Escalera"),
     "IfcRailing": dict(facecolor="none", edgecolor="#9333ea", linewidth=0.8, zorder=5, label="Baranda"),
+    "IfcWindow": dict(facecolor="#7dd3fc", edgecolor="#0369a1", linewidth=0.8, zorder=4, label="Ventana"),
+    "IfcFurnishingElement": dict(facecolor="#d9c9a3", edgecolor="#78350f", linewidth=0.3, zorder=2, label="Mobiliario"),
 }
-ORDEN_DIBUJO = ["IfcPlate", "IfcCurtainWall", "IfcWallStandardCase", "IfcColumn",
-                "IfcStairFlight", "IfcDoor", "IfcRailing"]
+ORDEN_DIBUJO = ["IfcPlate", "IfcCurtainWall", "IfcFurnishingElement", "IfcWallStandardCase", "IfcColumn",
+                "IfcStairFlight", "IfcDoor", "IfcWindow", "IfcRailing"]
 
 settings = ifcopenshell.geom.settings()
 settings.set("use-world-coords", True)
@@ -86,8 +92,8 @@ def marcar_centroide(ax, geom, **kwargs):
     ax.plot(c.x, c.y, marker="s", markersize=3.2, **kwargs)
 
 
-def main():
-    modelo = ifcopenshell.open(IFC_PATH)
+def main(ifc_path, out_pdf):
+    modelo = ifcopenshell.open(ifc_path)
     niveles = sorted(modelo.by_type("IfcBuildingStorey"), key=lambda s: s.Elevation)
 
     # Origen comun para que las coordenadas no salgan en UTM real (~720000, ~4376000)
@@ -99,7 +105,7 @@ def main():
         ox, oy = vv[0], vv[1]
         break
 
-    with PdfPages(OUT_PDF) as pdf:
+    with PdfPages(out_pdf) as pdf:
         for nivel in niveles:
             rels = [r for r in modelo.by_type("IfcRelContainedInSpatialStructure")
                     if r.RelatingStructure == nivel]
@@ -176,8 +182,13 @@ def main():
             plt.close(fig)
             print(f"Nivel {nivel.Name}: {sum(len(v) for v in por_tipo.values())} elementos dibujados")
 
-    print(f"\nListo: {OUT_PDF}")
+    print(f"\nListo: {out_pdf}")
 
 
 if __name__ == "__main__":
-    main()
+    for ifc_path, out_pdf in ARCHIVOS:
+        print(f"\n=== {ifc_path} ===")
+        try:
+            main(ifc_path, out_pdf)
+        except PermissionError:
+            print(f"  (omitido -- {out_pdf} esta abierto/bloqueado, no se regenero)")
