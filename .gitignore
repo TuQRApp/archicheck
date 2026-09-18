@@ -42,3 +42,12 @@ __pycache__/
 # los scripts _tmp_render_*.py / _tmp_diag_cuerpo_cerrado.py) -- regenerable
 # en segundos, no es fuente ni evidencia permanente (2026-09-14)
 /Fase 2/Herramientas_CubiCasa5k/_tmp_diag_out/
+
+# Datasets IFC/BIM de terceros usados como insumo de prueba (2026-09-18):
+# son binarios grandes (MB-decenas de MB) y reproducibles via
+# "Fase 2/BIM/Archivos ejemplo/descargar_datasets.py" -- no se comitean para
+# no inflar el historial de git (ya pesado por los PDF de normativa). Los
+# JSON de analisis y PDF de plano que genera el pipeline sobre ellos SI se
+# comitean (son livianos y son evidencia de resultado, no insumo).
+/Fase 2/BIM/Archivos ejemplo/**/*.ifc
+/Fase 2/BIM/Archivos ejemplo/**/*.zip
