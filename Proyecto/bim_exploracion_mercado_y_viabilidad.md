@@ -125,4 +125,32 @@ Confirmado con el usuario: el modelo de producto NO es integrarse al software de
 
 ---
 
-*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación.*
+## 7. Piloto técnico — hallazgos sobre un archivo IFC real (2026-09-18)
+
+No se encontró ningún IFC de origen chileno público y descargable (mismo patrón que la sección 6: los modelos de proyecto son de clientes privados, no hay repositorio abierto). Como las preguntas técnicas pendientes son de esquema IFC y de cómo exporta Revit/ArchiCAD — no de normativa chilena — se corrió el piloto sobre un archivo real español encontrado por el usuario: `04N02-36_GVA_NNN-NNN_AR_M3D_NN_02_Administrativo.ifc` (edificio administrativo, IFC2x3, exportado de **Revit 2021**, el mismo software que usan las oficinas grandes en Chile). Archivo guardado en `Fase 2/BIM/Archivos ejemplo/`. Inspeccionado con **Altiro** (`ifc.cl`), visor de IFC chileno gratuito basado en navegador (ver más abajo sección 8 sobre la herramienta misma).
+
+**Clasificación — mejor que el peor caso, pero con matices.** 454 elementos en 4 niveles (cotas de nivel reales tipo -72.800 m, aparentemente datum de sitio, no altura relativa). Por clase: `Space` 540, `Plate` 363, `Column` 169, `WallStandardCase` 143, `OpeningElement` 84, `Door` 64, `CurtainWall` 50, `Slab` 26, `Roof` 2, `StairFlight` 2, `Railing` 2, `Stair` 1.
+- Muros, puertas, pilares, losas y escaleras vienen **correctamente tipados** (no como proxy genérico) — confirma el escenario optimista de la sección 1.
+- **No hay ninguna clase `Window` en todo el modelo.** La fachada es 100% `CurtainWall`+`Plate` (muro cortina de vidrio), típico de un administrativo moderno. Si Archicheck espera `IfcWindow` para verificar iluminación/ventilación (Art. 4.5.7 OGUC), este edificio lo rompe — hay que resolver también contra sistemas de muro cortina, no solo ventanas puntuales individuales. Hallazgo nuevo, no anticipado en la sección 1.
+
+**Cantidades — hay datos geométricos reales, pero no en el lugar "estándar".** Un muro cualquiera (`Muro básico:MUR_BH_(BH20)`) trae ÁREA 43.62 m², LONGITUD 10.80 m, VOLUMEN 8.72 m³ ya calculados. Pero viven agrupados como "Cotas" (grupo de parámetros nativo de Revit), **no como `Qto_WallBaseQuantities`** (el quantity set estándar de IFC que `ifcopenshell` busca por defecto vía `ifcopenshell.util.element`). Implicación para el extractor propio: no basta con pedir el Qto_ estándar — hay que tener fallback a los Pset "traducidos" desde los parámetros nativos del software de origen, porque el exportador de este proyecto no generó cantidades IFC canónicas.
+
+**Normativa — el dato clave casi nunca está, aunque el Pset exista.** El mismo muro tiene `Pset_WallCommon` poblado, pero solo con `IsExternal=true`, `ExtendToStructure=false`, `LoadBearing=false`. **`FireRating` no está informado.** Confirma con evidencia real el matiz ya anotado en la sección 2: que un elemento traiga BIM tipado no garantiza que traiga el dato normativo específico que se necesita — depende de la disciplina de modelado de la oficina de origen. El chequeo "todos los muros de la escalera de evacuación deben ser F-120" solo funciona si esa práctica existe aguas arriba.
+
+**Puertas:** dimensión codificada tanto en el nombre del tipo (`72.5 x 203 cm`) como en propiedades de tipo — fácil de extraer para ancho de vano en evacuación/accesibilidad.
+
+**Conclusión del piloto:** no cambia la recomendación de la sección 1, la confirma con datos reales. `ifcopenshell` sí puede reemplazar gran parte de las etapas 1-6, pero el extractor no puede asumir que los datos vienen en `Qto_*`/Pset estándar — necesita fallback a los grupos de parámetros nativos del exportador, y la ausencia de campos normativos específicos (FireRating y similares) sigue exigiendo tratar esos casos como "dato faltante", igual que hoy con el PDF.
+
+---
+
+## 8. Altiro (`ifc.cl`) — herramienta chilena de inspección IFC, evaluada como insumo de research
+
+Visor de IFC 100% en navegador (WASM + WebGPU), gratuito, de la empresa chilena **APIBIM**, sin subir archivos a servidor. Trae funciones de nivel profesional (Solibri/Navisworks): árbol espacial, propiedades y Psets/Qtos completos, filtros, mediciones, clash detection con export a BCF/CSV, conectividad MEP, validación IDS (buildingSMART), comparación de revisiones, tablas dinámicas con export a Excel/CSV, y un asistente de IA con **conector MCP** para manejar la pestaña desde un agente externo.
+
+**Para qué sirve en este proyecto:** herramienta de prototipado/validación manual, no pieza de producto. Permite inspeccionar un IFC real en minutos sin instalar `ifcopenshell` ni escribir código — así se hizo el piloto de la sección 7. El conector MCP es el hallazgo más interesante: en teoría permite consultar un modelo (árbol, propiedades, cantidades) de forma conversacional desde una sesión de Claude Code, aunque el piloto real de esta sesión se hizo por automatización de navegador (drag-and-drop manual + lectura de la interfaz), no por el conector MCP directamente — no se probó ese camino todavía.
+
+**Qué NO resuelve:** no tiene API server-side ni modo batch — todo corre en la pestaña del navegador del usuario. Para producto real (procesar automáticamente los IFC de todos los clientes) sigue en pie la conclusión de la sección 5: hace falta `ifcopenshell` como motor de extracción propio. Altiro no compite con eso, es una herramienta de inspección ad-hoc.
+
+---
+
+*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación. Secciones 7 y 8 agregadas el 2026-09-18 en sesión de Claude Code, tras un piloto real sobre un IFC español (no se encontró IFC chileno público) usando el visor Altiro.*
