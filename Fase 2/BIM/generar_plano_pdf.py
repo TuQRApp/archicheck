@@ -13,6 +13,7 @@
 
 import ifcopenshell
 import ifcopenshell.geom
+import ifcopenshell.util.element
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.patches import Polygon as MplPolygon
@@ -20,16 +21,22 @@ from shapely.geometry import Polygon
 from shapely.ops import unary_union
 
 IFC_PATH = r"Archivos ejemplo/04N02-36_GVA_NNN-NNN_AR_M3D_NN_02_Administrativo.ifc"
-OUT_PDF = r"Archivos ejemplo/plano_generado_desde_ifc.pdf"
+OUT_PDF = r"Archivos ejemplo/plano_generado_desde_ifc_v2.pdf"
 
 ESTILOS = {
-    "IfcWallStandardCase": dict(facecolor="#2b2b2b", edgecolor="none", zorder=3, label="Muro"),
-    "IfcColumn": dict(facecolor="#555555", edgecolor="none", zorder=3, label="Pilar"),
-    "IfcDoor": dict(facecolor="#3b82f6", edgecolor="none", zorder=4, label="Puerta"),
-    "IfcCurtainWall": dict(facecolor="#93c5fd", edgecolor="#1d4ed8", linewidth=0.3, zorder=2, label="Muro cortina"),
-    "IfcPlate": dict(facecolor="#bfdbfe", edgecolor="none", zorder=1, label="Paño vidrio"),
-    "IfcStairFlight": dict(facecolor="#f59e0b", edgecolor="none", zorder=3, label="Escalera"),
-    "IfcRailing": dict(facecolor="none", edgecolor="#9333ea", linewidth=0.6, zorder=5, label="Baranda"),
+    # linewidth aca es a proposito MAS grueso que el espesor real del muro:
+    # a escala de edificio completo (~60-70 m) en una pagina A3, un muro de
+    # 0.15-0.20 m real mide <1 mm en el papel -- practicamente invisible sin
+    # exagerar el trazo, exactamente como un plano de arquitectura tambien
+    # exagera el poche de muro a escalas chicas. La geometria (contorno) sigue
+    # siendo la real, no se infla el poligono, solo el ancho de linea.
+    "IfcWallStandardCase": dict(facecolor="#2b2b2b", edgecolor="black", linewidth=1.1, zorder=3, label="Muro"),
+    "IfcColumn": dict(facecolor="#555555", edgecolor="black", linewidth=0.8, zorder=3, label="Pilar"),
+    "IfcDoor": dict(facecolor="#3b82f6", edgecolor="#1d4ed8", linewidth=0.6, zorder=4, label="Puerta"),
+    "IfcCurtainWall": dict(facecolor="#93c5fd", edgecolor="#1d4ed8", linewidth=0.5, zorder=2, label="Muro cortina"),
+    "IfcPlate": dict(facecolor="#bfdbfe", edgecolor="#60a5fa", linewidth=0.3, zorder=1, label="Paño vidrio"),
+    "IfcStairFlight": dict(facecolor="#f59e0b", edgecolor="black", linewidth=0.6, zorder=3, label="Escalera"),
+    "IfcRailing": dict(facecolor="none", edgecolor="#9333ea", linewidth=0.8, zorder=5, label="Baranda"),
 }
 ORDEN_DIBUJO = ["IfcPlate", "IfcCurtainWall", "IfcWallStandardCase", "IfcColumn",
                 "IfcStairFlight", "IfcDoor", "IfcRailing"]
@@ -69,6 +76,16 @@ def dibujar_geom(ax, geom, estilo):
         ax.add_patch(MplPolygon(xy, closed=True, **estilo))
 
 
+def marcar_centroide(ax, geom, **kwargs):
+    """Punto de tamano FIJO en pantalla (no a escala real) para que un pilar
+    de 30x30 cm siga siendo visible aunque su huella real sea sub-milimetrica
+    en la pagina."""
+    if geom is None or geom.is_empty:
+        return
+    c = geom.centroid
+    ax.plot(c.x, c.y, marker="s", markersize=3.2, **kwargs)
+
+
 def main():
     modelo = ifcopenshell.open(IFC_PATH)
     niveles = sorted(modelo.by_type("IfcBuildingStorey"), key=lambda s: s.Elevation)
@@ -90,22 +107,59 @@ def main():
             for r in rels:
                 elementos.extend(r.RelatedElements)
 
+            # IfcSpace en este archivo NO llega por IfcRelContainedInSpatialStructure
+            # (como muros/puertas) sino por IfcRelAggregates (decomposicion del
+            # nivel) -- confirmado inspeccionando Space.Decomposes directamente.
+            # Un extractor que solo mire "contained in" pierde el 100% de los
+            # recintos en silencio. Se agregan aparte, vía la utilidad que
+            # cubre ambos mecanismos.
+            espacios = [e for e in ifcopenshell.util.element.get_decomposition(nivel, is_recursive=False)
+                        if e.is_a("IfcSpace")]
+            elementos.extend(espacios)
+
             por_tipo = {}
             for el in elementos:
                 t = el.is_a()
                 if t in ESTILOS:
                     por_tipo.setdefault(t, []).append(el)
 
-            fig, ax = plt.subplots(figsize=(11.69, 8.27))  # A4 apaisado
+            fig, ax = plt.subplots(figsize=(16.54, 11.69))  # A3 apaisado -- mas espacio para detalle
+
+            from shapely.affinity import translate
 
             for tipo in ORDEN_DIBUJO:
                 for el in por_tipo.get(tipo, []):
                     geom = footprint_2d(el)
                     if geom is None:
                         continue
-                    from shapely.affinity import translate
                     geom = translate(geom, xoff=-ox, yoff=-oy)
                     dibujar_geom(ax, geom, {k: v for k, v in ESTILOS[tipo].items() if k != "label"})
+                    if tipo == "IfcColumn":
+                        marcar_centroide(ax, geom, color="black", zorder=6)
+
+            # Nombres de recinto (IfcSpace) -- no se dibuja su poligono (taparia
+            # el resto), solo el texto, para dar la referencia funcional que
+            # tiene un plano real sin saturar el dibujo de lineas.
+            # Se etiqueta cada NOMBRE distinto como maximo 3 veces por pagina --
+            # con 176 IfcSpace en un solo nivel (ej. PS1, estacionamiento),
+            # repetir "APARCAMIENTO COCHE" 176 veces es ruido, no detalle.
+            espacios = [e for e in elementos if e.is_a("IfcSpace")]
+            conteo_nombre = {}
+            for sp in espacios:
+                nombre = (sp.LongName or sp.Name or "").strip()
+                if not nombre:
+                    continue
+                conteo_nombre[nombre] = conteo_nombre.get(nombre, 0) + 1
+                if conteo_nombre[nombre] > 3:
+                    continue
+                geom = footprint_2d(sp)
+                if geom is None:
+                    continue
+                geom = translate(geom, xoff=-ox, yoff=-oy)
+                c = geom.centroid
+                ax.text(c.x, c.y, nombre, fontsize=4.5, ha="center", va="center",
+                        zorder=7, color="#111827",
+                        bbox=dict(boxstyle="round,pad=0.15", facecolor="white", edgecolor="none", alpha=0.7))
 
             ax.set_aspect("equal")
             ax.autoscale()
