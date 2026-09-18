@@ -1,0 +1,14 @@
+{
+  "proyecto": "DuplexHouse (IFC de ejemplo, piloto BIM ArchiCheck)",
+  "dpi": 150,
+  "entry_idx": 0,
+  "pagina": 1,
+  "fname_tag": "T/FDN",
+  "imagen_w_px": 1753,
+  "imagen_h_px": 1240,
+  "mpp": null,
+  "muros_geo": [],
+  "puertas_geo": [],
+  "muros_descartados": [],
+  "png_origen": "DuplexHouse_pagina1_T_FDN_20260918_152003.png"
+}

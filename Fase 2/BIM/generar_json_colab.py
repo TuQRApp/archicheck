@@ -88,7 +88,7 @@ def main():
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     carpeta_png = origen.parent
     paginas = []
-    total_puertas = total_ventanas = 0
+    total_puertas = total_ventanas = total_escaleras = 0
 
     for idx, nivel in enumerate(niveles):
         rels = [r for r in modelo.by_type("IfcRelContainedInSpatialStructure")
@@ -109,6 +109,14 @@ def main():
         puertas = [e for e in elementos if e.is_a("IfcDoor")]
         ventanas = [e for e in elementos if e.is_a("IfcWindow")]
         muros = [e for e in elementos if e.is_a("IfcWall")]
+        # Bug real encontrado 2026-09-18 al revisar el informe final generado por
+        # el portal con este JSON: escaleras quedaba fija en 0 (nunca se contaban
+        # IfcStairFlight/IfcStair reales) -- DuplexHouse.ifc SI tiene 2 de cada
+        # una. No invalida el incumplimiento que el informe genero sobre la
+        # escalera (la geometria de la escalera de todos modos nunca se carga en
+        # muros_geo, sigue sin representacion grafica), pero era una cuenta
+        # incorrecta que debia corregirse antes de reusar este adaptador.
+        escaleras = [e for e in elementos if e.is_a("IfcStairFlight") or e.is_a("IfcStair")]
 
         ventanas_geo_nivel = []
         for v in ventanas:
@@ -161,6 +169,7 @@ def main():
 
         total_puertas += len(puertas)
         total_ventanas += len(ventanas)
+        total_escaleras += len(escaleras)
 
         paginas.append({
             "pagina": idx + 1,
@@ -174,7 +183,7 @@ def main():
                 "incumplimientos_oguc": [],  # ver nota de cabecera -- no se fabrican candidatas
                 "elementos_detectados": {
                     "puertas": len(puertas), "ventanas": len(ventanas),
-                    "escaleras": 0, "salidas_emergencia": 0,
+                    "escaleras": len(escaleras), "salidas_emergencia": 0,
                 },
             },
             "mediciones_geometricas": mediciones_geometricas,
@@ -193,7 +202,7 @@ def main():
             "incumplimientos_geo_total": sum(len(p["incumplimientos_geo"]) for p in paginas),
             "puertas_detectadas": total_puertas,
             "ventanas_detectadas": total_ventanas,
-            "escaleras_detectadas": 0,
+            "escaleras_detectadas": total_escaleras,
             "rampas_detectadas": 0,
         },
     }
