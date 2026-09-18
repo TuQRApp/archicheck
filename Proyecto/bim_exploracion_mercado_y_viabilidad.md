@@ -306,4 +306,60 @@ Siguiendo el mecanismo ya establecido en el proyecto (`Fase 2/Herramientas_CubiC
 
 ---
 
-*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación. Secciones 7 y 8 agregadas el 2026-09-18 en sesión de Claude Code, tras un piloto real sobre un IFC español (no se encontró IFC chileno público) usando el visor Altiro. Secciones 9 y 10 agregadas el mismo día: piloto real de `IfcTester`/IDS con reglas OGUC ya verificadas, y generador de plano PDF directo desde geometría IFC. Sección 11 agregada el mismo día: evaluación de brecha entre lo probado y el objetivo final de análisis normativo completo por IFC. Sección 12 agregada el mismo día: segundo IFC de prueba (`BasicHouse.ifc`) para cross-validar hallazgos contra un exportador distinto — confirma el vacío de `FireRating` como patrón real, matiza el problema de Qto no estándar como exportador-dependiente, y suma el primer caso con ventanas reales y mobiliario. Secciones 13 y 14 agregadas el mismo día: primer ejercicio real de análisis normativo (JSON + reglas) sobre 4 IFC distintos, y revisión cruzada de ese código con Codex/DeepSeek — 2 bugs reales de "dato ausente vs. no cumple" corregidos, y 2 falsos positivos masivos evitados con resguardos de aplicabilidad.*
+## 15. Dataset LTU, validación de niveles, y un cuello de botella real de rendimiento (2026-09-18)
+
+**Regla nueva del usuario, aplicada desde esta sección en adelante:** cada vez que se revisa un IFC, se genera siempre el plano PDF de cada nivel Y se valida que la cantidad de niveles sea la correcta (no solo lo que declara `IfcBuildingStorey`). Implementado como `validar_niveles()` en `generar_plano_pdf.py`: cruza cada nivel contra elementos "sustantivos" (muros/losas/columnas/vigas/cubierta/escalera), detecta cotas duplicadas, y cuenta elementos físicos sin ningún nivel asignado (huérfanos, fuera de `IfcRelContainedInSpatialStructure`).
+
+**Resultado al aplicarlo a todo lo ya procesado — hallazgo real, no cosmético:** todos los archivos con arquitectura real tienen elementos huérfanos, en proporciones que van de moderadas a alarmantes:
+
+| Archivo | Huérfanos | Del total del archivo |
+|---|---|---|
+| Administrativo (ES) | 452 | — |
+| BasicHouse | 30 | — |
+| FZK-Haus | 20 | — |
+| DuplexHouse | 61 | — |
+| LTU K-modell | 644 | — |
+| **LTU redesign** | **3419** | **>35% del edificio** |
+
+Esto confirma con datos reales, a escala, la razón de ser de la regla que pidió el usuario: contar `IfcBuildingStorey` sin cruzar contra el contenido real puede subestimar gravemente cuánto del edificio efectivamente "vive" en algún nivel.
+
+**Segundo IFC de referencia académica encontrado: `AC20-FZK-Haus.ifc`** (KIT, Alemania) — ver sección 12 y 13 para sus resultados (recintos con nombre real, ventilación calculable de punta a punta).
+
+**Dataset LTU (Lulea University of Technology, Suecia) — 9 archivos multi-disciplina** extraídos de `LTU_A-House_2014-09-25_ifc.zip`: `K-modell` (estructura: 413 muros, 95 puertas, 204 ventanas) y `redesign` (arquitectura completa: 2623 muros, 606 puertas, 976 ventanas, 5 niveles) tienen contenido arquitectónico real; los otros 7 (`Air`, `Cooling`, `Ducting`, `Heating`, `Plumbing`, `Sanitation`, `VOIDS`) son instalaciones puras (MEP) — miles de `IfcFlowSegment`/`IfcFlowFitting`/`IfcFlowTerminal`, sin un solo muro. Se agregó un **modo "instalaciones"** a `generar_plano_pdf.py` (`generar_mep()`): en vez de triangular geometría sólida, ubica cada elemento por su punto de inserción real (`ObjectPlacement` resuelto, sin geometría) y lo dibuja como punto de color por clase — mucho más rápido a la escala de estos archivos (hasta 60.884 elementos en `Plumbing.ifc`) y sigue siendo una verificación visual real de dónde está el trazado.
+
+**Corrección importante: `DuplexHouse.ifc` dejó de ser el duplicado de `BasicHouse.ifc`.** La sección 13 documentó (correctamente, en su momento) que ambos archivos eran MD5-idénticos. Al reprocesarlo hoy para esta sección, **el archivo en disco había cambiado** (52.7 MB → 2.4 MB, MD5 distinto) sin que nadie lo señalara explícitamente — es ahora un archivo real y distinto (la "Duplex House" pública de Autodesk: 4 niveles T/FDN·Level 1·Level 2·Roof, 21 recintos con nombre real, superficie vía Pset `GSA Space Areas`/`GSA BIM Area` — una convención estadounidense (GSA) que ninguna clave anterior cubría, agregada a `CLAVES_AREA_RECINTO`). Reverificado con `hashlib.md5` antes de asumir que seguía siendo el duplicado — la lección de esta sesión ("verificar, no asumir") aplicada a un hallazgo propio de hace unas horas, no solo a datos de terceros.
+
+**`DuplexHouse` resultó ser el mejor caso de prueba de toda la sesión:**
+- Primer archivo con **incumplimientos reales de ancho de puerta**: 4 de 14 puertas miden 0.762 m (30", tamaño estándar de puerta de clóset en EE.UU.) — bajo el mínimo de 0.80 m. Dato confiable: `OverallWidth` coincide exactamente con el nombre del tipo de puerta (`M_Single-Flush:0762 x 2032mm`), a diferencia del caso ambiguo de la sección 9.
+- Segundo archivo (después de FZK-Haus) con **ventilación natural calculable de punta a punta**, y con un patrón que valida la calidad del vínculo: dormitorios/living/cocina pasan holgado (19-54%), baños/pasillo/utility/escalera/cubierta dan 0% — exactamente lo esperable en un diseño real (esos recintos no tienen ventana), no un artefacto de vínculo roto como en el edificio español o HouseZ.
+
+**Cuello de botella de rendimiento real, encontrado y corregido en el camino:** al intentar generar el plano de `redesign.ifc` (2623 muros, 976 ventanas, 5 niveles), el proceso quedó **"Not Responding" en Windows con 7+ minutos de CPU y 2 GB de RAM** — confirmado con `tasklist`, terminado a mano. Dos fixes aplicados, en orden:
+1. **`footprint_2d()` reemplazado**: de "un `Polygon` por triángulo + `buffer(0)` + `unary_union`" (el patrón que la revisión cruzada de la sección 14 ya había marcado como riesgo de escala) a **un solo `convex hull` sobre todos los vértices del elemento** — una operación en vez de cientos, inmune al bug de winding-order que señaló DeepSeek. Verificado que el resultado es visualmente idéntico en un caso ya conocido (DuplexHouse) y ~40× más rápido (0.7 s vs. varios segundos por nivel).
+2. Con ese fix, `redesign.ifc` **seguía** colgado — el cuello de botella real no estaba en el post-procesado de Python sino en la triangulación de `ifcopenshell.geom` en sí, específicamente la resta booleana (CSG) de cada vano en cada muro (2785 `IfcOpeningElement` sobre 2623 muros). Se desactivó con `settings.set("disable-opening-subtractions", True)` — sin impacto visual en este script porque puertas/ventanas ya se dibujan aparte, encima del muro. Con ambos fixes, `redesign.ifc` terminó en **299 segundos** (2 niveles con >2000 elementos sustantivos cada uno).
+
+---
+
+## 16. Intento de flujo completo en el portal — hasta dónde se llegó (2026-09-18)
+
+Se probó si un IFC podía llegar hasta el informe final real de ArchiCheck (Claude + GPT-4o en el portal), no solo hasta el JSON/reglas propias de las secciones 9-15.
+
+**El portal no abría — causa real, no ambigua:** la sesión se había movido de carpeta de trabajo a mitad de conversación (al `cd` a `archicheck`), y la herramienta de preview seguía buscando `.claude/launch.json` en el workspace original (vacío). Solucionado creando el `launch.json` correcto ahí, apuntando a `npm run dev` en la ruta real del proyecto vía `cmd /c cd /d ...`.
+
+**Corrección importante sobre el flujo, verificada leyendo `src/App.jsx` en vivo, no asumida:** el botón "Analizar expediente" exige, en este orden, **dos requisitos obligatorios**, no uno:
+1. JSON + al menos un PNG de "Resultados Colab" (`handleColabPngs` bloquea con error explícito si falta).
+2. Una **revisión gráfica interactiva** (`revisionConfirmada`, marcada igual "requerido para analizar") donde el arquitecto confirma/corrige cada muro/puerta/ventana detectado sobre cada PNG — es la etapa 8 (verificación humana) del pipeline, por diseño, no un trámite salteable.
+
+La validación del JSON en sí es floja (`handleColabJson` solo exige una clave `paginas` o `tabla_cruzada` en la raíz) — no valida el esquema interno completo al subir.
+
+**Se construyó `Fase 2/BIM/generar_json_colab.py`**: adapta los datos reales de `DuplexHouse.ifc` (mismo método que `analizar_todos.py`, desglosado por nivel) al esquema exacto que `buildColabTexto()` consume — `paginas[]` con `analisis_semantico.recintos` (nombre, área real, `cumple_oguc`, observación de ventilación), `mediciones_geometricas`, `incumplimientos_geo` (los 2 anchos de puerta reales bajo 0.80m) — más un PNG por nivel (4 páginas, generado con el mismo `footprint_2d`, sin ejes ni ticks para parecerse más a un plano subido real).
+
+**Límites honestos de este adaptador, declarados en el propio script:**
+- `muros_geo`/`puertas_geo` quedan vacíos a propósito: ese campo espera segmentos en coordenadas de píxel sobre el PNG (formato de detección OpenCV), no geometría 3D real — la revisión gráfica del portal no tendrá nada que revisar ahí.
+- `FireRating` de muros no tiene ningún campo natural en este esquema (pensado para hallazgos de recinto/puerta, no de muro individual) — se omite, no se fuerza.
+- Ventilación (%) no se mete en `incumplimientos_geo` (esa lista asume metros/m², un porcentaje ahí sería engañoso) — va como `cumple_oguc` + `observacion` por recinto, el campo que el prompt real ya lee para ese propósito.
+
+**Dónde quedó, por decisión explícita del usuario:** en vez de automatizar la inyección de archivos y el click-through de la revisión gráfica (compleja e incierta vía navegador, sin selector de archivos nativo disponible), se optó por dejar el JSON + los 4 PNG + el PDF ya generados y que el usuario complete la subida y la revisión gráfica a mano en el portal — el mismo patrón que con Altiro (sección 7): cuando la automatización del navegador choca con un límite real (sin `<input type=file>` accesible, o un paso que exige juicio humano por diseño), se entrega el trabajo preparado en vez de forzarla.
+
+---
+
+*Este documento consolida investigación con fuentes web (búsquedas y fetches de septiembre 2026). Migrado desde el Proyecto "Archicheck" de Claude en la nube al repo local el 2026-09-18, por decisión de dejar de usar ese proyecto en la nube para esta documentación. Secciones 7 y 8 agregadas el 2026-09-18 en sesión de Claude Code, tras un piloto real sobre un IFC español (no se encontró IFC chileno público) usando el visor Altiro. Secciones 9 y 10 agregadas el mismo día: piloto real de `IfcTester`/IDS con reglas OGUC ya verificadas, y generador de plano PDF directo desde geometría IFC. Sección 11 agregada el mismo día: evaluación de brecha entre lo probado y el objetivo final de análisis normativo completo por IFC. Sección 12 agregada el mismo día: segundo IFC de prueba (`BasicHouse.ifc`) para cross-validar hallazgos contra un exportador distinto — confirma el vacío de `FireRating` como patrón real, matiza el problema de Qto no estándar como exportador-dependiente, y suma el primer caso con ventanas reales y mobiliario. Secciones 13 y 14 agregadas el mismo día: primer ejercicio real de análisis normativo (JSON + reglas) sobre 4 IFC distintos, y revisión cruzada de ese código con Codex/DeepSeek — 2 bugs reales de "dato ausente vs. no cumple" corregidos, y 2 falsos positivos masivos evitados con resguardos de aplicabilidad. Secciones 15 y 16 agregadas el mismo día: dataset LTU completo + validación de niveles + fix de rendimiento real (convex hull + resta de vanos desactivada), y el intento de flujo completo hasta el portal — corrección de que `DuplexHouse.ifc` ya no es duplicado de `BasicHouse.ifc`, y JSON+PNG reales dejados listos para que el usuario complete la revisión gráfica manual.*

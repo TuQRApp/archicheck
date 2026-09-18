@@ -36,11 +36,28 @@ ARCHIVOS = [
     ("BasicHouse", "Archivos ejemplo/Basic House/BasicHouse.ifc"),
     ("FZK-Haus", "Archivos ejemplo/FZK/AC20-FZK-Haus.ifc"),
     ("HouseZ", "Archivos ejemplo/HouseZ/ISSUE_034_HouseZ.ifc"),
-    # DuplexHouse.ifc se omite a proposito: MD5 identico a BasicHouse.ifc
-    # (mismo archivo duplicado con otro nombre, confirmado 2026-09-18).
+    # DuplexHouse.ifc: el 2026-09-18 se confirmo MD5 identico a BasicHouse.ifc
+    # (mismo archivo duplicado). Mas tarde, el mismo dia, el archivo en disco
+    # cambio (tamano 52.7MB -> 2.4MB, MD5 distinto) sin que nadie lo anunciara
+    # -- es un archivo real y distinto ahora (4 niveles: T/FDN, Level 1,
+    # Level 2, Roof -- la "Duplex House" publica de Autodesk). Reverificado
+    # antes de asumir que seguia siendo el duplicado.
+    ("DuplexHouse", "Archivos ejemplo/Duplex house/DuplexHouse.ifc"),
+    # Dataset LTU (proyecto sueco multi-disciplina): solo K-modell y redesign
+    # tienen muros/puertas/ventanas -- los otros 7 archivos del dataset son
+    # instalaciones puras (MEP), sin nada que aporte a estas 3 reglas
+    # (puerta/muro/ventilacion son todas de arquitectura), se omiten aca a
+    # proposito (si se agregaran, `muros`/`puertas`/`ventanas` darian 0 en
+    # los 7 sin ningun valor informativo nuevo).
+    ("LTU K-modell", "Archivos ejemplo/Dataset LTU/extraidos/LTU_A-House_K-modell.ifc"),
+    ("LTU redesign", "Archivos ejemplo/Dataset LTU/extraidos/LTU_A-House_redesign.ifc"),
 ]
 
-CLAVES_AREA_RECINTO = ["NetFloorArea", "GrossFloorArea", "Area", "Fläche", "Flache", "NetArea"]
+# "GSA BIM Area" agregado 2026-09-18: encontrado en DuplexHouse.ifc (convencion
+# de EE.UU. -- GSA = General Services Administration), en un Pset propio
+# ("GSA Space Areas") que ninguna clave anterior cubria -- otra convención
+# mas de nombrar lo mismo, confirmando el patron de toda la sesion.
+CLAVES_AREA_RECINTO = ["NetFloorArea", "GrossFloorArea", "Area", "Fläche", "Flache", "NetArea", "GSA BIM Area"]
 
 
 def buscar_area(qtos: dict):

@@ -1,0 +1,444 @@
+{
+  "proyecto": "DuplexHouse (IFC de ejemplo, piloto BIM ArchiCheck)",
+  "dpi": 150,
+  "generado_desde": "IFC via ifcopenshell (no PDF/Colab-OpenCV) -- ver Proyecto/bim_exploracion_mercado_y_viabilidad.md",
+  "paginas": [
+    {
+      "pagina": 1,
+      "entry_idx": 0,
+      "fname_tag": "T/FDN",
+      "escala": "1:50 (nominal -- dibujo generado a escala real en metros desde IFC, no impreso a escala de papel)",
+      "imagen_w_px": 1753,
+      "imagen_h_px": 1240,
+      "mpp": null,
+      "analisis_semantico": {
+        "tipo_plano": "planta",
+        "nivel": "T/FDN",
+        "recintos": [],
+        "incumplimientos_oguc": [],
+        "elementos_detectados": {
+          "puertas": 0,
+          "ventanas": 0,
+          "escaleras": 0,
+          "salidas_emergencia": 0
+        }
+      },
+      "mediciones_geometricas": [],
+      "incumplimientos_geo": [],
+      "muros_geo": [],
+      "puertas_geo": []
+    },
+    {
+      "pagina": 2,
+      "entry_idx": 1,
+      "fname_tag": "Level 1",
+      "escala": "1:50 (nominal -- dibujo generado a escala real en metros desde IFC, no impreso a escala de papel)",
+      "imagen_w_px": 1753,
+      "imagen_h_px": 1240,
+      "mpp": null,
+      "analisis_semantico": {
+        "tipo_plano": "planta",
+        "nivel": "Level 1",
+        "recintos": [
+          {
+            "nombre": "Foyer",
+            "tipo": "recinto",
+            "area_estimada_m2": 17.94,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Living Room",
+            "tipo": "recinto",
+            "area_estimada_m2": 30.14,
+            "cumple_oguc": true,
+            "observacion": "Ventilación natural medida desde IFC: 44.3% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Kitchen",
+            "tipo": "recinto",
+            "area_estimada_m2": 13.9,
+            "cumple_oguc": true,
+            "observacion": "Ventilación natural medida desde IFC: 11.9% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Room",
+            "tipo": "recinto",
+            "area_estimada_m2": 4.92,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Stair",
+            "tipo": "recinto",
+            "area_estimada_m2": 4.92,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Bathroom 1",
+            "tipo": "recinto",
+            "area_estimada_m2": 4.0,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Living Room",
+            "tipo": "recinto",
+            "area_estimada_m2": 30.14,
+            "cumple_oguc": true,
+            "observacion": "Ventilación natural medida desde IFC: 44.3% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Bathroom 1",
+            "tipo": "recinto",
+            "area_estimada_m2": 4.0,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Foyer",
+            "tipo": "recinto",
+            "area_estimada_m2": 17.94,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Kitchen",
+            "tipo": "recinto",
+            "area_estimada_m2": 13.9,
+            "cumple_oguc": true,
+            "observacion": "Ventilación natural medida desde IFC: 11.9% de la superficie (mínimo OGUC 10%)."
+          }
+        ],
+        "incumplimientos_oguc": [],
+        "elementos_detectados": {
+          "puertas": 6,
+          "ventanas": 4,
+          "escaleras": 0,
+          "salidas_emergencia": 0
+        }
+      },
+      "mediciones_geometricas": [
+        {
+          "nombre": "Foyer",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 17.94,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Living Room",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 30.14,
+          "cumple_geo": true
+        },
+        {
+          "nombre": "Kitchen",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 13.9,
+          "cumple_geo": true
+        },
+        {
+          "nombre": "Room",
+          "id": "10mjSDZJ",
+          "tipo": "recinto",
+          "area_m2": 4.92,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Stair",
+          "id": "10mjSDZJ",
+          "tipo": "recinto",
+          "area_m2": 4.92,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Bathroom 1",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 4.0,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Living Room",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 30.14,
+          "cumple_geo": true
+        },
+        {
+          "nombre": "Bathroom 1",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 4.0,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Foyer",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 17.94,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Kitchen",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 13.9,
+          "cumple_geo": true
+        }
+      ],
+      "incumplimientos_geo": [
+        {
+          "tipo": "ancho",
+          "recinto": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150173",
+          "medido": 0.76,
+          "minimo": 0.8,
+          "ref": "OGUC Art. 4.1.7 N°6 (ancho libre mínimo accesibilidad)"
+        },
+        {
+          "tipo": "ancho",
+          "recinto": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150257",
+          "medido": 0.76,
+          "minimo": 0.8,
+          "ref": "OGUC Art. 4.1.7 N°6 (ancho libre mínimo accesibilidad)"
+        }
+      ],
+      "muros_geo": [],
+      "puertas_geo": []
+    },
+    {
+      "pagina": 3,
+      "entry_idx": 2,
+      "fname_tag": "Level 2",
+      "escala": "1:50 (nominal -- dibujo generado a escala real en metros desde IFC, no impreso a escala de papel)",
+      "imagen_w_px": 1753,
+      "imagen_h_px": 1240,
+      "mpp": null,
+      "analisis_semantico": {
+        "tipo_plano": "planta",
+        "nivel": "Level 2",
+        "recintos": [
+          {
+            "nombre": "Bedroom 2",
+            "tipo": "recinto",
+            "area_estimada_m2": 26.18,
+            "cumple_oguc": true,
+            "observacion": "Ventilación natural medida desde IFC: 36.8% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Bedroom 1",
+            "tipo": "recinto",
+            "area_estimada_m2": 26.12,
+            "cumple_oguc": true,
+            "observacion": "Ventilación natural medida desde IFC: 54.1% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Bedroom 2",
+            "tipo": "recinto",
+            "area_estimada_m2": 26.18,
+            "cumple_oguc": true,
+            "observacion": "Ventilación natural medida desde IFC: 36.8% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Bedroom 1",
+            "tipo": "recinto",
+            "area_estimada_m2": 26.12,
+            "cumple_oguc": true,
+            "observacion": "Ventilación natural medida desde IFC: 54.1% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Bathroom 2",
+            "tipo": "recinto",
+            "area_estimada_m2": 5.44,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Utility",
+            "tipo": "recinto",
+            "area_estimada_m2": 1.75,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Bathroom 2",
+            "tipo": "recinto",
+            "area_estimada_m2": 5.42,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Hallway",
+            "tipo": "recinto",
+            "area_estimada_m2": 7.8,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Utility",
+            "tipo": "recinto",
+            "area_estimada_m2": 1.73,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          },
+          {
+            "nombre": "Hallway",
+            "tipo": "recinto",
+            "area_estimada_m2": 7.8,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          }
+        ],
+        "incumplimientos_oguc": [],
+        "elementos_detectados": {
+          "puertas": 8,
+          "ventanas": 18,
+          "escaleras": 0,
+          "salidas_emergencia": 0
+        }
+      },
+      "mediciones_geometricas": [
+        {
+          "nombre": "Bedroom 2",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 26.18,
+          "cumple_geo": true
+        },
+        {
+          "nombre": "Bedroom 1",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 26.12,
+          "cumple_geo": true
+        },
+        {
+          "nombre": "Bedroom 2",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 26.18,
+          "cumple_geo": true
+        },
+        {
+          "nombre": "Bedroom 1",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 26.12,
+          "cumple_geo": true
+        },
+        {
+          "nombre": "Bathroom 2",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 5.44,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Utility",
+          "id": "2gRXFgjR",
+          "tipo": "recinto",
+          "area_m2": 1.75,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Bathroom 2",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 5.42,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Hallway",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 7.8,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Utility",
+          "id": "2gRXFgjR",
+          "tipo": "recinto",
+          "area_m2": 1.73,
+          "cumple_geo": false
+        },
+        {
+          "nombre": "Hallway",
+          "id": "0BTBFw6f",
+          "tipo": "recinto",
+          "area_m2": 7.8,
+          "cumple_geo": false
+        }
+      ],
+      "incumplimientos_geo": [
+        {
+          "tipo": "ancho",
+          "recinto": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:203720",
+          "medido": 0.76,
+          "minimo": 0.8,
+          "ref": "OGUC Art. 4.1.7 N°6 (ancho libre mínimo accesibilidad)"
+        },
+        {
+          "tipo": "ancho",
+          "recinto": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:204034",
+          "medido": 0.76,
+          "minimo": 0.8,
+          "ref": "OGUC Art. 4.1.7 N°6 (ancho libre mínimo accesibilidad)"
+        }
+      ],
+      "muros_geo": [],
+      "puertas_geo": []
+    },
+    {
+      "pagina": 4,
+      "entry_idx": 3,
+      "fname_tag": "Roof",
+      "escala": "1:50 (nominal -- dibujo generado a escala real en metros desde IFC, no impreso a escala de papel)",
+      "imagen_w_px": 1753,
+      "imagen_h_px": 1240,
+      "mpp": null,
+      "analisis_semantico": {
+        "tipo_plano": "planta",
+        "nivel": "Roof",
+        "recintos": [
+          {
+            "nombre": "Roof",
+            "tipo": "recinto",
+            "area_estimada_m2": 145.72,
+            "cumple_oguc": false,
+            "observacion": "Ventilación natural medida desde IFC: 0.0% de la superficie (mínimo OGUC 10%)."
+          }
+        ],
+        "incumplimientos_oguc": [],
+        "elementos_detectados": {
+          "puertas": 0,
+          "ventanas": 2,
+          "escaleras": 0,
+          "salidas_emergencia": 0
+        }
+      },
+      "mediciones_geometricas": [
+        {
+          "nombre": "Roof",
+          "id": "0pNy6pOy",
+          "tipo": "recinto",
+          "area_m2": 145.72,
+          "cumple_geo": false
+        }
+      ],
+      "incumplimientos_geo": [],
+      "muros_geo": [],
+      "puertas_geo": []
+    }
+  ],
+  "resumen_global": {
+    "incumplimientos_geo_total": 4,
+    "puertas_detectadas": 14,
+    "ventanas_detectadas": 24,
+    "escaleras_detectadas": 0,
+    "rampas_detectadas": 0
+  }
+}

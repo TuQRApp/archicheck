@@ -1,0 +1,1346 @@
+{
+  "archivo_origen": "DuplexHouse.ifc",
+  "generado": "2026-09-18T14:29:09",
+  "resumen_global": {
+    "muros": 57,
+    "muros_con_fire_rating": 0,
+    "puertas": 14,
+    "puertas_ok_0_80m": 10,
+    "puertas_sin_dato_ancho": 0,
+    "ventanas": 24,
+    "recintos": 21,
+    "recintos_con_area": 21,
+    "recintos_con_chequeo_ventilacion_posible": 21,
+    "ventilacion_aplicable_al_edificio": true,
+    "ventilacion_nota": null
+  },
+  "muros_geo": [
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKau",
+      "nombre": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:143239",
+      "clase": "IfcWall",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNld",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):138584",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNbT",
+      "nombre": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139234",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKRi",
+      "nombre": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139347",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKRH",
+      "nombre": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139374",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKIu",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):139783",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKGS",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):139939",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK80",
+      "nombre": "Basic Wall:Foundation - Concrete (417mm):140479",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK9N",
+      "nombre": "Basic Wall:Foundation - Concrete (417mm):140520",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKEr",
+      "nombre": "Basic Wall:Foundation - Concrete (417mm):140554",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKE5",
+      "nombre": "Basic Wall:Foundation - Concrete (417mm):140602",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK3E",
+      "nombre": "Basic Wall:Foundation - Concrete (435mm):140913",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK04",
+      "nombre": "Basic Wall:Foundation - Concrete (435mm):140987",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK1b",
+      "nombre": "Basic Wall:Foundation - Concrete (435mm):141018",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLMr",
+      "nombre": "Basic Wall:Interior - Plumbing (152mm Stud):144138",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLKI",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):144301",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLEJ",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):144684",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLCm",
+      "nombre": "Basic Wall:Interior - Plumbing (152mm Stud):144783",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNqI",
+      "nombre": "Basic Wall:Exterior - Brick on Block:138157",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNhv",
+      "nombre": "Basic Wall:Exterior - Brick on Block:138310",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLQD",
+      "nombre": "Basic Wall:Exterior - Brick on Block:143410",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLOH",
+      "nombre": "Basic Wall:Exterior - Brick on Block:143534",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKST",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):139682",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNau",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):139143",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLTF",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):143856",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FL8v",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):144518",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLJd",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):143960",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FL96",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):144633",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLIE",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):143921",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FL9r",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):144586",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNtn",
+      "nombre": "Basic Wall:Exterior - Brick on Block:138062",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNr2",
+      "nombre": "Basic Wall:Exterior - Brick on Block:138237",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLR9",
+      "nombre": "Basic Wall:Exterior - Brick on Block:143478",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLPP",
+      "nombre": "Basic Wall:Exterior - Brick on Block:143590",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0jf0rYHfX3RAB3bSIRjmmy",
+      "nombre": "Basic Wall:Exterior - Brick on Block:184944",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0jf0rYHfX3RAB3bSIRjmpw",
+      "nombre": "Basic Wall:Exterior - Brick on Block:185014",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0jf0rYHfX3RAB3bSIRjmoa",
+      "nombre": "Basic Wall:Exterior - Brick on Block:185064",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0jf0rYHfX3RAB3bSIRjmr1",
+      "nombre": "Basic Wall:Exterior - Brick on Block:185101",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jZ1",
+      "nombre": "Basic Wall:Interior - Furring (152 mm Stud):189074",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4j_U",
+      "nombre": "Basic Wall:Interior - Furring (152 mm Stud):189901",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jpl",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):190140",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jDb",
+      "nombre": "Basic Wall:Interior - Furring (152 mm Stud):190774",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jE6",
+      "nombre": "Basic Wall:Interior - Furring (152 mm Stud):190933",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0dxE1Sy6nDqfpDb5vIMNiA",
+      "nombre": "Basic Wall:Interior - Furring (152 mm Stud):193247",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "0dxE1Sy6nDqfpDb5vIMN_Z",
+      "nombre": "Basic Wall:Interior - Furring (152 mm Stud):194166",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKpvt",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):203347",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKpZw",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):203998",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKpee",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):204300",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKphf",
+      "nombre": "Basic Wall:Interior - Partition (92mm Stud):204493",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3Y4YRln2r91vflHcHE5IVS",
+      "nombre": "Basic Wall:Interior - Furring (38 mm Stud):217414",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3Y4YRln2r91vflHcHE5IVT",
+      "nombre": "Basic Wall:Interior - Furring (38 mm Stud):217415",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3Y4YRln2r91vflHcHE5IVI",
+      "nombre": "Basic Wall:Interior - Furring (38 mm Stud):217416",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3Y4YRln2r91vflHcHE5IVJ",
+      "nombre": "Basic Wall:Interior - Furring (38 mm Stud):217417",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3Y4YRln2r91vflHcHE5ITp",
+      "nombre": "Basic Wall:Interior - Furring (38 mm Stud):217577",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3Y4YRln2r91vflHcHE5ITm",
+      "nombre": "Basic Wall:Interior - Furring (38 mm Stud):217578",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3Y4YRln2r91vflHcHE5ITn",
+      "nombre": "Basic Wall:Interior - Furring (38 mm Stud):217579",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    },
+    {
+      "id": "3Y4YRln2r91vflHcHE5ITs",
+      "nombre": "Basic Wall:Interior - Furring (38 mm Stud):217580",
+      "clase": "IfcWallStandardCase",
+      "fire_rating": null,
+      "fire_rating_declarado": false
+    }
+  ],
+  "puertas_geo": [
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRGQ",
+      "nombre": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146596",
+      "ancho_m": 1.25,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRH8",
+      "nombre": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146678",
+      "ancho_m": 1.25,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS8Z",
+      "nombre": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150173",
+      "ancho_m": 0.7619999999999989,
+      "cumple_ancho_min_0_80m": false,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS9F",
+      "nombre": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150257",
+      "ancho_m": 0.762,
+      "cumple_ancho_min_0_80m": false,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSFK",
+      "nombre": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150378",
+      "ancho_m": 0.8639999999999999,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSDm",
+      "nombre": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150478",
+      "ancho_m": 0.8639999999999995,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUuXp",
+      "nombre": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159734",
+      "ancho_m": 0.8639999999999995,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvVV",
+      "nombre": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159834",
+      "ancho_m": 0.8639999999999995,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvR4",
+      "nombre": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160065",
+      "ancho_m": 0.8639999999999985,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvPL",
+      "nombre": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160208",
+      "ancho_m": 0.8639999999999995,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1s1jVhK8z0pgKYcr9jt781",
+      "nombre": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171853",
+      "ancho_m": 0.8129999999999998,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1s1jVhK8z0pgKYcr9jt7AB",
+      "nombre": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171975",
+      "ancho_m": 0.8129999999999993,
+      "cumple_ancho_min_0_80m": true,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKp$i",
+      "nombre": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:203720",
+      "ancho_m": 0.762,
+      "cumple_ancho_min_0_80m": false,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKpac",
+      "nombre": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:204034",
+      "ancho_m": 0.762,
+      "cumple_ancho_min_0_80m": false,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    }
+  ],
+  "ventanas_geo": [
+    {
+      "id": "1hOSvn6df7F8_7GcBWlR72",
+      "nombre": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:145788",
+      "ancho_m": 4.834999999999996,
+      "alto_m": 2.419999999999998,
+      "area_m2": 11.700699999999982
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRBU",
+      "nombre": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:146016",
+      "ancho_m": 4.834999999999997,
+      "alto_m": 2.419999999999998,
+      "area_m2": 11.700699999999985
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRLx",
+      "nombre": "M_Fixed:750mm x 2200mm:750mm x 2200mm:146885",
+      "ancho_m": 0.7499999999999996,
+      "alto_m": 2.199999999999996,
+      "area_m2": 1.6499999999999961
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRRL",
+      "nombre": "M_Fixed:750mm x 2200mm:750mm x 2200mm:147051",
+      "ancho_m": 0.7499999999999984,
+      "alto_m": 2.199999999999996,
+      "area_m2": 1.6499999999999937
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSXO",
+      "nombre": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:147686",
+      "ancho_m": 2.8,
+      "alto_m": 2.409999999999996,
+      "area_m2": 6.747999999999989
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSga",
+      "nombre": "M_Fixed:819mm x 759mm:819mm x 759mm:147994",
+      "ancho_m": 0.8189999999999998,
+      "alto_m": 0.758999999999998,
+      "area_m2": 0.6216209999999982
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSp1",
+      "nombre": "M_Casement:819mm x 759mm:819mm x 759mm:148607",
+      "ancho_m": 0.819,
+      "alto_m": 0.7590000000000007,
+      "area_m2": 0.6216210000000005
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSnC",
+      "nombre": "M_Fixed:819mm x 759mm:819mm x 759mm:148722",
+      "ancho_m": 0.8189999999999995,
+      "alto_m": 0.7589999999999986,
+      "area_m2": 0.6216209999999984
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS_W",
+      "nombre": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:149278",
+      "ancho_m": 2.8,
+      "alto_m": 2.409999999999996,
+      "area_m2": 6.747999999999989
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS2V",
+      "nombre": "M_Fixed:819mm x 759mm:819mm x 759mm:149537",
+      "ancho_m": 0.8190000000000001,
+      "alto_m": 0.758999999999998,
+      "area_m2": 0.6216209999999984
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS1M",
+      "nombre": "M_Casement:819mm x 759mm:819mm x 759mm:149736",
+      "ancho_m": 0.8190000000000001,
+      "alto_m": 0.7590000000000007,
+      "area_m2": 0.6216210000000006
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS4Q",
+      "nombre": "M_Fixed:819mm x 759mm:819mm x 759mm:149924",
+      "ancho_m": 0.8190000000000001,
+      "alto_m": 0.758999999999998,
+      "area_m2": 0.6216209999999984
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4$e",
+      "nombre": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:180318",
+      "ancho_m": 2.8,
+      "alto_m": 2.409999999999996,
+      "area_m2": 6.747999999999989
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4u1",
+      "nombre": "M_Fixed:819mm x 759mm:819mm x 759mm:180663",
+      "ancho_m": 0.8190000000000001,
+      "alto_m": 0.758999999999998,
+      "area_m2": 0.6216209999999984
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4qs",
+      "nombre": "M_Fixed:819mm x 759mm:819mm x 759mm:180864",
+      "ancho_m": 0.8190000000000001,
+      "alto_m": 0.7589999999999986,
+      "area_m2": 0.6216209999999989
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4oq",
+      "nombre": "M_Casement:819mm x 759mm:819mm x 759mm:180994",
+      "ancho_m": 0.8190000000000001,
+      "alto_m": 0.7590000000000007,
+      "area_m2": 0.6216210000000006
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4pU",
+      "nombre": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:181096",
+      "ancho_m": 2.8,
+      "alto_m": 2.409999999999996,
+      "area_m2": 6.747999999999989
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4kJ",
+      "nombre": "M_Fixed:819mm x 759mm:819mm x 759mm:181285",
+      "ancho_m": 0.8189999999999995,
+      "alto_m": 0.758999999999998,
+      "area_m2": 0.621620999999998
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4gQ",
+      "nombre": "M_Casement:819mm x 759mm:819mm x 759mm:181548",
+      "ancho_m": 0.8190000000000001,
+      "alto_m": 0.7590000000000007,
+      "area_m2": 0.6216210000000006
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4hv",
+      "nombre": "M_Fixed:819mm x 759mm:819mm x 759mm:181583",
+      "ancho_m": 0.8189999999999995,
+      "alto_m": 0.7589999999999986,
+      "area_m2": 0.6216209999999984
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4aS",
+      "nombre": "M_Fixed:750mm x 2200mm:750mm x 2200mm:181930",
+      "ancho_m": 0.7499999999999984,
+      "alto_m": 2.199999999999997,
+      "area_m2": 1.6499999999999944
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4ZZ",
+      "nombre": "M_Fixed:750mm x 2200mm:750mm x 2200mm:182101",
+      "ancho_m": 0.7499999999999996,
+      "alto_m": 2.199999999999997,
+      "area_m2": 1.6499999999999968
+    },
+    {
+      "id": "1Eo2$BaHX42AEkDvQQDocD",
+      "nombre": "M_Skylight:1180 x 1170mm:1180 x 1170mm:185337",
+      "ancho_m": 1.172537682966587,
+      "alto_m": 0.6348000000000008,
+      "area_m2": 0.7443269211471903
+    },
+    {
+      "id": "1Eo2$BaHX42AEkDvQQDoy2",
+      "nombre": "M_Skylight:1180 x 1170mm:1180 x 1170mm:185718",
+      "ancho_m": 1.172537682966587,
+      "alto_m": 0.6348000000000008,
+      "area_m2": 0.7443269211471903
+    }
+  ],
+  "recintos_geo": [
+    {
+      "nombre": "Foyer",
+      "area_m2": 17.93623674999977,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Hallway",
+      "area_m2": 7.799954699999879,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Bathroom 1",
+      "area_m2": 3.997752000000072,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Foyer",
+      "area_m2": 17.93623674999994,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Hallway",
+      "area_m2": 7.799954699999977,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Utility",
+      "area_m2": 1.754048598688885,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Utility",
+      "area_m2": 1.72839494131539,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Stair",
+      "area_m2": 4.922172500000023,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Room",
+      "area_m2": 4.92217250000005,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Roof",
+      "area_m2": 145.7216889999995,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Living Room",
+      "area_m2": 30.14164524999997,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 2,
+      "ventanas_con_area_valida": 2,
+      "area_ventanas_m2": 13.351,
+      "pct_ventilacion": 44.3,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Living Room",
+      "area_m2": 30.14164524999992,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 2,
+      "ventanas_con_area_valida": 2,
+      "area_ventanas_m2": 13.351,
+      "pct_ventilacion": 44.3,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Kitchen",
+      "area_m2": 13.89750099999989,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 1,
+      "ventanas_con_area_valida": 1,
+      "area_ventanas_m2": 1.65,
+      "pct_ventilacion": 11.9,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Kitchen",
+      "area_m2": 13.89750099999979,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 1,
+      "ventanas_con_area_valida": 1,
+      "area_ventanas_m2": 1.65,
+      "pct_ventilacion": 11.9,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Bathroom 2",
+      "area_m2": 5.441473058684557,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Bathroom 2",
+      "area_m2": 5.415819401311199,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Bathroom 1",
+      "area_m2": 3.997752000000053,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 0,
+      "ventanas_con_area_valida": 0,
+      "area_ventanas_m2": 0.0,
+      "pct_ventilacion": 0.0,
+      "cumple_ventilacion_10pct": false
+    },
+    {
+      "nombre": "Bedroom 2",
+      "area_m2": 26.17799424999995,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 4,
+      "ventanas_con_area_valida": 4,
+      "area_ventanas_m2": 9.641,
+      "pct_ventilacion": 36.8,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Bedroom 1",
+      "area_m2": 26.11931424999996,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 3,
+      "ventanas_con_area_valida": 3,
+      "area_ventanas_m2": 14.118,
+      "pct_ventilacion": 54.1,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Bedroom 1",
+      "area_m2": 26.11931424999977,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 3,
+      "ventanas_con_area_valida": 3,
+      "area_ventanas_m2": 14.118,
+      "pct_ventilacion": 54.1,
+      "cumple_ventilacion_10pct": true
+    },
+    {
+      "nombre": "Bedroom 2",
+      "area_m2": 26.17799424999996,
+      "area_campo_origen": "GSA BIM Area",
+      "num_ventanas_vinculadas": 4,
+      "ventanas_con_area_valida": 4,
+      "area_ventanas_m2": 9.641,
+      "pct_ventilacion": 36.8,
+      "cumple_ventilacion_10pct": true
+    }
+  ],
+  "incumplimientos_geo": [
+    {
+      "tipo": "puerta_ancho_insuficiente",
+      "elemento": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150173",
+      "valor": 0.7619999999999989,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "tipo": "puerta_ancho_insuficiente",
+      "elemento": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150257",
+      "valor": 0.762,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "tipo": "puerta_ancho_insuficiente",
+      "elemento": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:203720",
+      "valor": 0.762,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "tipo": "puerta_ancho_insuficiente",
+      "elemento": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:204034",
+      "valor": 0.762,
+      "referencia": "OGUC Art. 4.1.7 N6"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:143239",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):138584",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139234",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139347",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139374",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):139783",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):139939",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Foundation - Concrete (417mm):140479",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Foundation - Concrete (417mm):140520",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Foundation - Concrete (417mm):140554",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Foundation - Concrete (417mm):140602",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Foundation - Concrete (435mm):140913",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Foundation - Concrete (435mm):140987",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Foundation - Concrete (435mm):141018",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Plumbing (152mm Stud):144138",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):144301",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):144684",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Plumbing (152mm Stud):144783",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:138157",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:138310",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:143410",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:143534",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):139682",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):139143",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):143856",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):144518",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):143960",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):144633",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):143921",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):144586",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:138062",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:138237",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:143478",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:143590",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:184944",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:185014",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:185064",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Exterior - Brick on Block:185101",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (152 mm Stud):189074",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (152 mm Stud):189901",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):190140",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (152 mm Stud):190774",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (152 mm Stud):190933",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (152 mm Stud):193247",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (152 mm Stud):194166",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):203347",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):203998",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):204300",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Partition (92mm Stud):204493",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (38 mm Stud):217414",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (38 mm Stud):217415",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (38 mm Stud):217416",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (38 mm Stud):217417",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (38 mm Stud):217577",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (38 mm Stud):217578",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (38 mm Stud):217579",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "muro_fire_rating_no_declarado",
+      "elemento": "Basic Wall:Interior - Furring (38 mm Stud):217580",
+      "referencia": "OGUC Art. 4.3.3",
+      "severidad": "dato_faltante"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Foyer",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Hallway",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Bathroom 1",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Foyer",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Hallway",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Utility",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Utility",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Stair",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Room",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Roof",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Bathroom 2",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Bathroom 2",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    },
+    {
+      "tipo": "ventilacion_insuficiente",
+      "elemento": "Bathroom 1",
+      "pct_ventilacion": 0.0,
+      "referencia": "reglas_verificacion.json: ventilacion_iluminacion (>=10%)"
+    }
+  ]
+}
