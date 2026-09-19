@@ -12,6 +12,7 @@
 # incluidos muros curvos o plates no rectangulares.
 
 import datetime
+import math
 from collections import Counter
 from pathlib import Path
 
@@ -19,6 +20,7 @@ import ifcopenshell
 import ifcopenshell.geom
 import ifcopenshell.util.element
 import ifcopenshell.util.placement
+import ifcopenshell.util.unit
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.patches import Polygon as MplPolygon
@@ -83,12 +85,22 @@ ESTILOS = {
     "IfcCurtainWall": dict(facecolor="#93c5fd", edgecolor="#1d4ed8", linewidth=0.5, zorder=2, label="Muro cortina"),
     "IfcPlate": dict(facecolor="#bfdbfe", edgecolor="#60a5fa", linewidth=0.3, zorder=1, label="Paño vidrio"),
     "IfcStairFlight": dict(facecolor="#f59e0b", edgecolor="black", linewidth=0.6, zorder=3, label="Escalera"),
+    # IfcStair agregado (2026-09-19, hallazgo real en Schependomlaan): 3 de
+    # sus IfcStair NO tienen ningun IfcStairFlight hijo (decomposicion vacia),
+    # pero el propio IfcStair SI tiene geometria 3D real y usable
+    # (footprint_2d funciona directo sobre el, 2.2-3.9 m2) -- antes esa
+    # geometria nunca se dibujaba porque "IfcStair" no estaba en este catalogo,
+    # aunque el contador de escaleras (elementos.py/analizar_todos.py) ya lo
+    # contaba bien via el fallback de conteo. Mismo estilo que IfcStairFlight
+    # a proposito: es la MISMA escalera, solo que este archivo no modelo el
+    # tramo como objeto separado.
+    "IfcStair": dict(facecolor="#f59e0b", edgecolor="black", linewidth=0.6, zorder=3, label="Escalera"),
     "IfcRailing": dict(facecolor="none", edgecolor="#9333ea", linewidth=0.8, zorder=5, label="Baranda"),
     "IfcWindow": dict(facecolor="#7dd3fc", edgecolor="#0369a1", linewidth=0.8, zorder=4, label="Ventana"),
     "IfcFurnishingElement": dict(facecolor="#d9c9a3", edgecolor="#78350f", linewidth=0.3, zorder=2, label="Mobiliario"),
 }
 ORDEN_DIBUJO = ["IfcPlate", "IfcCurtainWall", "IfcFurnishingElement", "IfcWallStandardCase", "IfcWall", "IfcColumn",
-                "IfcStairFlight", "IfcDoor", "IfcWindow", "IfcRailing"]
+                "IfcStairFlight", "IfcStair", "IfcDoor", "IfcWindow", "IfcRailing"]
 
 settings = ifcopenshell.geom.settings()
 settings.set("use-world-coords", True)
@@ -189,6 +201,100 @@ def etiquetar_recintos(ax, elementos, ox, oy):
         ax.text(c.x, c.y, nombre, fontsize=4.5, ha="center", va="center",
                 zorder=7, color="#111827",
                 bbox=dict(boxstyle="round,pad=0.15", facecolor="white", edgecolor="none", alpha=0.7))
+
+
+# Sentido de apertura de puertas (2026-09-19, pedido explicito del usuario).
+# Algunos exportadores (ej. ~40% de las puertas de Schependomlaan, con nombres
+# tipo "D1R") ya modelan el arco de giro como parte de la geometria 3D del
+# propio IfcDoor -- footprint_2d lo capta solo con el convex hull, sin
+# necesitar nada de esto (ver seccion del roadmap 2026-09-19). Estas funciones
+# son el RESPALDO para puertas con geometria simple (solo la hoja cerrada,
+# caso de las 14/14 puertas de DuplexHouse) -- se sintetiza el simbolo
+# estandar (arco de 90 grados + linea de la hoja abierta) a partir de
+# IfcDoorStyle.OperationType.
+#
+# Convencion verificada de forma EMPIRICA (no solo leida en el texto de la
+# especificacion) contra una puerta real de Schependomlaan que SI trae el
+# arco en su geometria: se transformaron sus vertices reales al sistema de
+# coordenadas LOCAL de la puerta (su ObjectPlacement) y se confirmo que la
+# bisagra queda en X local = 0 (el extremo que buildingSMART llama
+# "izquierdo", visto mirando hacia +Y local) y el barrido va hacia +Y local
+# ("hacia afuera") -- consistente con la definicion oficial de
+# IfcDoorStyleOperationEnum (standards.buildingsmart.org). Puertas dobles
+# (2 hojas) quedan sin arco por ahora -- alcance acotado a SINGLE_SWING_*,
+# que es lo unico que se encontro declarado en los archivos de esta sesion.
+OPERACIONES_SWING_SOPORTADAS = {"SINGLE_SWING_LEFT": 0.0, "SINGLE_SWING_RIGHT": 1.0}
+
+
+def mapa_operacion_puertas(modelo):
+    """GlobalId de IfcDoor -> OperationType declarado en su IfcDoorStyle
+    vinculado (via IfcRelDefinesByType). NOTDEFINED/USERDEFINED quedan en el
+    mapa tal cual (son valores reales, informan que se reviso y no traia
+    dato util) -- una puerta sin ninguna relacion a IfcDoorStyle simplemente
+    no aparece en el mapa."""
+    mapa = {}
+    for r in modelo.by_type("IfcRelDefinesByType"):
+        if not r.RelatingType.is_a("IfcDoorStyle"):
+            continue
+        op = r.RelatingType.OperationType
+        for obj in r.RelatedObjects:
+            if obj.is_a("IfcDoor"):
+                mapa[obj.GlobalId] = op
+    return mapa
+
+
+def arco_apertura_puerta(puerta, operation_type, escala_m, n_segmentos=8):
+    """Puntos (x,y) en coordenadas de MUNDO (antes de restar ox,oy) que trazan
+    el simbolo estandar de apertura: arco de 90 grados centrado en la bisagra
+    + linea recta de la hoja abierta. None si falta el dato (ancho, placement,
+    o tipo de operacion no soportado)."""
+    if operation_type not in OPERACIONES_SWING_SOPORTADAS:
+        return None
+    ancho = puerta.OverallWidth
+    if ancho is None or ancho <= 0:
+        return None
+    ancho_m = ancho * escala_m
+    try:
+        mat = ifcopenshell.util.placement.get_local_placement(puerta.ObjectPlacement)
+    except Exception:
+        return None
+    origen = mat[:2, 3] * escala_m
+    eje_x, eje_y = mat[:2, 0], mat[:2, 1]
+
+    h = OPERACIONES_SWING_SOPORTADAS[operation_type] * ancho_m  # bisagra: 0 (izq) o ancho_m (der)
+
+    def a_mundo(lx, ly):
+        return origen + lx * eje_x + ly * eje_y
+
+    # Arco centrado en la bisagra (h, 0) local, radio = ancho de la hoja --
+    # de angulo 0 (h=0, hoja cerrada) o 180 (h=ancho_m) hasta 90 (siempre
+    # hacia +Y local = "hacia afuera", ver nota de cabecera).
+    ang_cerrado = 0.0 if h == 0 else math.pi
+    ang_abierto = math.pi / 2
+    puntos = []
+    for i in range(n_segmentos + 1):
+        t = i / n_segmentos
+        ang = ang_cerrado + (ang_abierto - ang_cerrado) * t
+        puntos.append(a_mundo(h + ancho_m * math.cos(ang), ancho_m * math.sin(ang)))
+    puntos.append(a_mundo(h, 0.0))  # linea de la hoja abierta, de vuelta a la bisagra
+    return puntos
+
+
+def marcar_apertura_sin_dato(ax, geom_trasladada):
+    """Marca "?" roja sobre la puerta cuando NO se pudo determinar el sentido
+    de apertura (OperationType ausente/NOTDEFINED, puerta doble no soportada,
+    o falta OverallWidth/placement) -- pedido explicito del usuario
+    (2026-09-19): "el sentido de apertura debe quedar siempre señalado en el
+    pdf/png", nunca ausente en silencio. Mismo principio de "incertidumbre
+    transparente" que ya rige otros elementos sinteticos/sin dato del
+    proyecto (ver App.jsx, elementos con posicion sintetica se dibujan
+    punteados en vez de ocultarse). `geom_trasladada` es el footprint de la
+    puerta ya trasladado (-ox,-oy), para no recalcularlo en el llamador."""
+    if geom_trasladada is None or geom_trasladada.is_empty:
+        return
+    c = geom_trasladada.centroid
+    ax.text(c.x, c.y, "?", fontsize=6, ha="center", va="center", zorder=8,
+            color="#DC2626", fontweight="bold")
 
 
 CLASES_SUSTANTIVAS_NIVEL = {"IfcWall", "IfcWallStandardCase", "IfcSlab", "IfcColumn",
@@ -356,6 +462,14 @@ def main(ifc_path):
         generar_mep(modelo, niveles, out_pdf, ox, oy)
         return
 
+    # Sentido de apertura de puertas (2026-09-19) -- ver nota de cabecera junto
+    # a arco_apertura_puerta(). escala_m convierte valores crudos del IFC
+    # (OverallWidth, ObjectPlacement) a metros segun la unidad declarada por
+    # ESTE archivo -- nunca asumir mm (algunos exportadores usan metros como
+    # unidad base directamente).
+    escala_m = ifcopenshell.util.unit.calculate_unit_scale(modelo)
+    mapa_ops = mapa_operacion_puertas(modelo)
+
     with PdfPages(out_pdf) as pdf:
         for nivel in niveles:
             rels = [r for r in modelo.by_type("IfcRelContainedInSpatialStructure")
@@ -380,10 +494,25 @@ def main(ifc_path):
             # ya daba bien), pero el IfcStairFlight real -- con geometria
             # dibujable -- esta anidado DENTRO de el via IfcRelAggregates. Sin
             # este paso la escalera se cuenta pero nunca se dibuja (footprint_2d
-            # sobre un IfcStair contenedor no da nada util).
-            flights_escalera = [h for st in elementos if st.is_a("IfcStair")
-                                 for h in ifcopenshell.util.element.get_decomposition(st, is_recursive=False)
-                                 if h.is_a("IfcStairFlight")]
+            # sobre un IfcStair contenedor no da nada util) -- EXCEPTO cuando
+            # el contenedor no tiene ningun tramo hijo (hallazgo real en
+            # Schependomlaan, 2026-09-19: 3 IfcStair con decomposicion VACIA,
+            # pero con geometria 3D propia y usable, footprint_2d funciona
+            # directo sobre ellos). Cuando SI hay tramos, se dibujan esos y se
+            # saca el contenedor de `elementos` (ahora que IfcStair tambien
+            # esta en ESTILOS, dejarlo adentro dibujaria 2 veces la misma
+            # escalera, superpuestas). Cuando NO hay tramos, el contenedor se
+            # queda y se dibuja el solo -- unica geometria disponible.
+            stairs_contenidos = [e for e in elementos if e.is_a("IfcStair")]
+            flights_escalera = []
+            ids_stairs_con_flight = set()
+            for st in stairs_contenidos:
+                hijos = [h for h in ifcopenshell.util.element.get_decomposition(st, is_recursive=False)
+                         if h.is_a("IfcStairFlight")]
+                if hijos:
+                    flights_escalera.extend(hijos)
+                    ids_stairs_con_flight.add(st.GlobalId)
+            elementos = [e for e in elementos if not (e.is_a("IfcStair") and e.GlobalId in ids_stairs_con_flight)]
             elementos.extend(flights_escalera)
 
             por_tipo = {}
@@ -393,6 +522,7 @@ def main(ifc_path):
                     por_tipo.setdefault(t, []).append(el)
 
             fig, ax = plt.subplots(figsize=(16.54, 11.69))  # A3 apaisado -- mas espacio para detalle
+            hubo_puerta_sin_dato = False
 
             for tipo in ORDEN_DIBUJO:
                 for el in por_tipo.get(tipo, []):
@@ -403,6 +533,32 @@ def main(ifc_path):
                     dibujar_geom(ax, geom, {k: v for k, v in ESTILOS[tipo].items() if k != "label"})
                     if tipo == "IfcColumn":
                         marcar_centroide(ax, geom, color="black", zorder=6)
+                    if tipo == "IfcDoor":
+                        # Siempre que haya OperationType util se dibuja el
+                        # simbolo estandar sintetizado -- se probo (2026-09-19)
+                        # que contar vertices del hull (">=8 = ya trae arco
+                        # real") da falsos positivos: varias puertas con
+                        # geometria simple (hoja cerrada, sin arco) igual
+                        # generan 8 vertices por artefactos de triangulacion.
+                        # Dibujar el simbolo sintetizado encima no daña a las
+                        # pocas puertas que SI traen su propio arco detallado
+                        # en la geometria (ej. "D1R" en Schependomlaan) -- solo
+                        # agrega la linea estandar sobre lo que ya se dibuja.
+                        op = mapa_ops.get(el.GlobalId)
+                        puntos = arco_apertura_puerta(el, op, escala_m)
+                        if puntos:
+                            xs = [p[0] - ox for p in puntos]
+                            ys = [p[1] - oy for p in puntos]
+                            ax.plot(xs, ys, color=ESTILOS["IfcDoor"]["edgecolor"],
+                                     linewidth=0.5, zorder=4)
+                        else:
+                            # Regla del proyecto (2026-09-19): el sentido de
+                            # apertura debe quedar SIEMPRE señalado -- si no
+                            # se pudo sintetizar (sin OperationType util, sin
+                            # ancho, puerta doble no soportada), se marca la
+                            # ausencia en vez de dejar la puerta muda.
+                            marcar_apertura_sin_dato(ax, geom)
+                            hubo_puerta_sin_dato = True
 
             etiquetar_recintos(ax, elementos, ox, oy)
 
@@ -415,6 +571,9 @@ def main(ifc_path):
             handles = [MplPolygon([(0, 0)], closed=True, facecolor=ESTILOS[t]["facecolor"],
                                    edgecolor=ESTILOS[t].get("edgecolor", "none"), label=ESTILOS[t]["label"])
                        for t in ORDEN_DIBUJO if por_tipo.get(t)]
+            if hubo_puerta_sin_dato:
+                handles.append(plt.Line2D([0], [0], marker="$?$", color="#DC2626", linestyle="none",
+                                           markersize=8, label="Puerta: sentido de apertura sin dato"))
             if handles:
                 ax.legend(handles=handles, loc="upper right", fontsize=7, framealpha=0.9)
             fig.tight_layout()

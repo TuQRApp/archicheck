@@ -17,11 +17,19 @@
 # ventana (mismo footprint_2d que ya usa generar_plano_pdf.py) y se
 # proyectan a pixeles, quedando en el MISMO lugar donde se ven dibujados.
 #
+# Fix 2026-09-19 (pedido explicito del usuario, sentido de apertura de
+# puertas): ademas del contorno (footprint) real de la hoja, ahora se agrega
+# el simbolo estandar de apertura (arco de 90 grados + linea de la hoja
+# abierta) como segmentos extra en puertas_geo, sintetizado a partir de
+# IfcDoorStyle.OperationType (SINGLE_SWING_LEFT/RIGHT) y el ObjectPlacement
+# de cada puerta -- ver arco_apertura_puerta() en generar_plano_pdf.py para
+# la convencion geometrica (verificada contra la especificacion oficial de
+# buildingSMART y contra geometria real de Schependomlaan). Puertas sin
+# OperationType util (NOTDEFINED, o sin IfcDoorStyle vinculado) o de tipo
+# doble hoja quedan solo con el contorno, sin arco -- limite honesto que
+# sigue vigente, no se fuerza un sentido que no esta declarado.
+#
 # Limites honestos que siguen vigentes:
-# - Puerta se exporta como el contorno (footprint) real de la hoja, no el
-#   arco de giro que reconoceria un clasificador geometrico sobre un PDF
-#   real (ver nota P04 del roadmap) -- es una simplificacion util para
-#   ubicar la puerta en el plano, no un sustituto de ese clasificador.
 # - FireRating de muros no tiene ningun campo natural en este esquema (esta
 #   pensado para hallazgos de recinto/puerta, no de muro individual) -- se
 #   omite, no se fuerza a un campo que no le corresponde.
@@ -39,6 +47,7 @@ from pathlib import Path
 
 import ifcopenshell
 import ifcopenshell.util.element as elutil
+import ifcopenshell.util.unit
 import matplotlib.pyplot as plt
 import numpy as np
 from shapely.affinity import translate
@@ -46,6 +55,12 @@ from shapely.affinity import translate
 import generar_plano_pdf as g
 import analizar_todos as a
 
+# Regla del proyecto (2026-09-19): generalizado para recibir cualquier IFC
+# (antes tenia "DuplexHouse" harcodeado en varios lugares: titulo del PNG,
+# nombre de archivo, campo "proyecto" del JSON) -- pedido explicito del
+# usuario al pasar de un solo archivo de prueba a varios (DuplexHouse,
+# Schependomlaan). IFC_PATH sigue existiendo como default para `python
+# generar_json_colab.py` sin argumentos.
 IFC_PATH = r"Archivos ejemplo/Duplex house/DuplexHouse.ifc"
 
 # Clase IFC -> categoria del portal, solo para los tipos que el portal sabe
@@ -66,13 +81,24 @@ CATEGORIA_POR_CLASE = {
     "IfcDoor": "puerta",
     "IfcWindow": "ventana",
     "IfcStairFlight": "escalera",
+    # IfcStair agregado (2026-09-19, hallazgo real en Schependomlaan): 3 de
+    # sus escaleras no tienen NINGUN IfcStairFlight hijo, pero el propio
+    # IfcStair si tiene geometria 3D usable -- ver ESTILOS["IfcStair"] en
+    # generar_plano_pdf.py. Sin esto, esas 3 escaleras se contaban bien pero
+    # jamas se posicionaban (0/3 en el portal). El main() de aca abajo saca
+    # TODO IfcStair de `elementos` crudo sin excepcion (tenga o no tramos) --
+    # `escaleras` ya trae la representacion correcta de cada una (tramo real
+    # o contenedor como fallback, nunca ambos); dejar el contenedor tambien
+    # en `elementos` duplicaba la escalera (bug real de la primera version de
+    # este fix, ver comentario junto a `elementos = [... not e.is_a("IfcStair")]`).
+    "IfcStair": "escalera",
 }
 # Categorias que exportan segmentos (muro/puerta/ventana, mismo shape) vs.
 # bounding box relativo (escalera, forma "rectangulo" en CATEGORIAS_ELEMENTO).
 CATEGORIAS_SEGMENTOS = {"muro", "puerta", "ventana"}
 
 
-def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png):
+def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_ops, nombre_corto):
     por_tipo = {}
     for el in elementos:
         t = el.is_a()
@@ -85,6 +111,11 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png):
     # forzar el layout final (autoscale/tight_layout), para que la
     # transformacion coincida exactamente con lo que terminara en el PNG.
     geoms_por_categoria = {"muro": [], "puerta": [], "ventana": [], "escalera": []}
+    # Sentido de apertura de puertas (2026-09-19) -- puntos del arco YA
+    # trasladados (-ox,-oy), uno por GlobalId de puerta, para proyectar a
+    # pixeles junto con el resto (mismo criterio que geoms_por_categoria, ver
+    # arco_apertura_puerta/mapa_operacion_puertas en generar_plano_pdf.py).
+    arcos_puerta = {}
     for tipo in g.ORDEN_DIBUJO:
         for el in por_tipo.get(tipo, []):
             geom = g.footprint_2d(el)
@@ -94,6 +125,18 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png):
             g.dibujar_geom(ax, geom, {k: v for k, v in g.ESTILOS[tipo].items() if k != "label"})
             if tipo == "IfcColumn":
                 g.marcar_centroide(ax, geom, color="black", zorder=6)
+            if tipo == "IfcDoor":
+                puntos = g.arco_apertura_puerta(el, mapa_ops.get(el.GlobalId), escala_m)
+                if puntos:
+                    puntos_t = [(px - ox, py - oy) for px, py in puntos]
+                    xs, ys = zip(*puntos_t)
+                    ax.plot(xs, ys, color=g.ESTILOS["IfcDoor"]["edgecolor"], linewidth=0.5, zorder=4)
+                    arcos_puerta[el.GlobalId] = puntos_t
+                else:
+                    # Regla del proyecto (2026-09-19): el sentido de apertura
+                    # debe quedar SIEMPRE señalado en el PNG -- mismo criterio
+                    # que generar_plano_pdf.py.
+                    g.marcar_apertura_sin_dato(ax, geom)
             categoria = CATEGORIA_POR_CLASE.get(tipo)
             if categoria is not None:
                 geoms_por_categoria[categoria].append((el.GlobalId, geom))
@@ -109,7 +152,7 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png):
     ax.autoscale()
     ax.axis("off")  # sin ejes/ticks -- se parece mas a un plano real subido por un arquitecto
     elev_txt = f"{nivel.Elevation:.2f} m" if nivel.Elevation is not None else "sin cota"
-    ax.set_title(f"{nivel.Name} · cota {elev_txt} · generado desde IFC (DuplexHouse)", fontsize=9)
+    ax.set_title(f"{nivel.Name} · cota {elev_txt} · generado desde IFC ({nombre_corto})", fontsize=9)
     fig.tight_layout()
 
     dpi = 150
@@ -137,21 +180,52 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png):
                 # Escalera (forma "rectangulo" en CATEGORIAS_ELEMENTO, App.jsx) --
                 # p1_relativo/p2_relativo son las 2 esquinas del bounding box,
                 # como fraccion de la imagen (0-1), ver resolverPuntosElemento.
+                #
+                # cx_relativo/cy_relativo agregados (fix 2026-09-19, bug real
+                # encontrado subiendo Schependomlaan al portal: el dibujo en el
+                # canvas SI funcionaba con solo p1/p2 -- resolverPuntosElemento
+                # los usa directo -- pero getElementosPuntualesConPosicion (la
+                # funcion que cuenta "marcadas" para el badge y decide que
+                # entra en la lista de "dudas") filtra por
+                # typeof cx_relativo === "number", que esta categoria nunca
+                # traia. Resultado: "Escalera (0/3)" en el portal pese a que
+                # las 3 SI estaban dibujadas en el lugar correcto -- mismo
+                # patron de "el dato esta pero no en el campo que se necesita"
+                # que ya se vio con otros elementos esta sesion.
                 xs = [x for x, _ in coords_px_img]
                 ys = [y for _, y in coords_px_img]
+                x1, x2 = min(xs) / w_px, max(xs) / w_px
+                y1, y2 = min(ys) / h_px, max(ys) / h_px
                 geo_pixeles[categoria].append({
                     "id": global_id,
-                    "p1_relativo": {"x": min(xs) / w_px, "y": min(ys) / h_px},
-                    "p2_relativo": {"x": max(xs) / w_px, "y": max(ys) / h_px},
+                    "p1_relativo": {"x": x1, "y": y1},
+                    "p2_relativo": {"x": x2, "y": y2},
+                    "cx_relativo": (x1 + x2) / 2, "cy_relativo": (y1 + y2) / 2,
                 })
+
+    # Arco de apertura (2026-09-19) -- se proyecta con la MISMA transformacion
+    # que el resto (transData ya fijo) y se agrega como segmentos EXTRA al
+    # registro de esa puerta en puertas_geo, para que quede seleccionable/
+    # visible en el portal igual que el contorno de la hoja.
+    puertas_por_id = {p["id"]: p for p in geo_pixeles["puerta"]}
+    for global_id, puntos_datos in arcos_puerta.items():
+        p = puertas_por_id.get(global_id)
+        if p is None:
+            continue
+        coords_px = ax.transData.transform(np.array(puntos_datos))
+        coords_px_img = [(float(x), float(h_px - y)) for x, y in coords_px]
+        p["segmentos"].extend({"p1": list(coords_px_img[i]), "p2": list(coords_px_img[i + 1])}
+                               for i in range(len(coords_px_img) - 1))
 
     fig.savefig(ruta_png, dpi=dpi, facecolor="white")
     plt.close(fig)
     return w_px, h_px, dpi, geo_pixeles
 
 
-def main():
-    modelo = ifcopenshell.open(IFC_PATH)
+def main(ifc_path=IFC_PATH, nombre_corto=None):
+    if nombre_corto is None:
+        nombre_corto = Path(ifc_path).stem
+    modelo = ifcopenshell.open(ifc_path)
     niveles = sorted(modelo.by_type("IfcBuildingStorey"),
                       key=lambda s: s.Elevation if s.Elevation is not None else 0.0)
 
@@ -164,6 +238,11 @@ def main():
         except Exception:
             pass
         break
+
+    # Sentido de apertura de puertas (2026-09-19) -- ver nota de cabecera junto
+    # a g.arco_apertura_puerta(). Se calcula UNA vez para todo el edificio.
+    escala_m = ifcopenshell.util.unit.calculate_unit_scale(modelo)
+    mapa_ops = g.mapa_operacion_puertas(modelo)
 
     # Resguardo de ventilacion a nivel EDIFICIO -- fix 2026-09-19, hallazgo real
     # de la revision cruzada Codex+DeepSeek: este adaptador calculaba pct/cumple
@@ -193,7 +272,7 @@ def main():
                 break
         ventilacion_aplicable = ventilacion_aplicable and enlace_funciona
 
-    origen = Path(IFC_PATH)
+    origen = Path(ifc_path)
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     carpeta_png = origen.parent
     paginas = []
@@ -257,15 +336,31 @@ def main():
             if h.GlobalId not in ids_escalera_contados:
                 ids_escalera_contados.add(h.GlobalId)
                 escaleras.append(h)
+        # IfcStair sin ningun IfcStairFlight hijo resuelto -- lejos de ser
+        # "raro" (comentario anterior), es EXACTAMENTE el caso de 3 de las 6
+        # escaleras de Schependomlaan (hallazgo real 2026-09-19: decomposicion
+        # vacia, pero el propio IfcStair SI tiene geometria 3D usable --
+        # footprint_2d funciona directo sobre el, 2.2-3.9 m2). Antes se
+        # contaban pero jamas se dibujaban ("IfcStair no esta en g.ESTILOS a
+        # proposito" -- ya no es cierto, se agrego). Se cuenta el contenedor
+        # para no perder la escalera por completo.
         for st in stairs_contenidos:
-            # IfcStair sin ningun IfcStairFlight hijo resuelto (raro) -- se
-            # cuenta el contenedor para no perder la escalera por completo,
-            # aunque no tendra geometria dibujable (IfcStair no esta en
-            # g.ESTILOS a proposito).
             if not flights_por_stair[st.GlobalId] and st.GlobalId not in ids_escalera_contados:
                 ids_escalera_contados.add(st.GlobalId)
                 escaleras.append(st)
 
+        # TODO IfcStair contenido queda en `elementos` crudo (por contencion),
+        # con o sin tramos -- ahora que IfcStair tambien esta en g.ESTILOS,
+        # dejarlo adentro duplicaria la escalera: 1 vez via `elementos` (el
+        # contenedor) y otra vez via `escaleras` arriba (el tramo real O el
+        # mismo contenedor como fallback). Bug real encontrado en la primera
+        # version de este fix (2026-09-19): al sacar de `elementos` SOLO los
+        # que tenian tramo, las escaleras SIN tramo quedaban duplicadas (2x)
+        # en vez de arregladas -- confirmado en Schependomlaan (3 escaleras
+        # reales, escaleras_detalle daba 6). `escaleras` ya es la
+        # representacion completa y correcta (tramo o contenedor, nunca
+        # ambos), asi que TODO IfcStair sale de `elementos` sin excepcion.
+        elementos = [e for e in elementos if not e.is_a("IfcStair")]
         elementos_con_espacios = elementos + espacios_nivel + escaleras
 
         # PNG del nivel, junto al IFC (misma convencion de nombres: origen + timestamp)
@@ -274,8 +369,9 @@ def main():
         # real de la revision cruzada (Codex): sin el fallback, un nivel sin
         # nombre rompe toda la corrida con TypeError en el join().
         nombre_nivel_seguro = "".join(c if c.isalnum() else "_" for c in (nivel.Name or "SinNombre"))
-        ruta_png = carpeta_png / f"DuplexHouse_pagina{idx + 1}_{nombre_nivel_seguro}_{timestamp}.png"
-        w_px, h_px, dpi, geo_pixeles = render_nivel_png(modelo, nivel, elementos_con_espacios, ox, oy, ruta_png)
+        ruta_png = carpeta_png / f"{nombre_corto}_pagina{idx + 1}_{nombre_nivel_seguro}_{timestamp}.png"
+        w_px, h_px, dpi, geo_pixeles = render_nivel_png(modelo, nivel, elementos_con_espacios, ox, oy, ruta_png,
+                                                          escala_m, mapa_ops, nombre_corto)
 
         # Reemplaza el GlobalId (usado internamente para deduplicar/proyectar)
         # por el id corto MU-01/P-01/V-01/ES-01 -- ver comentario junto a
@@ -400,7 +496,7 @@ def main():
               f"{len(ventanas)} ventanas, {len(espacios_nivel)} recintos -> {ruta_png.name}")
 
     resultado = {
-        "proyecto": "DuplexHouse (IFC de ejemplo, piloto BIM ArchiCheck)",
+        "proyecto": f"{nombre_corto} (IFC de ejemplo, piloto BIM ArchiCheck)",
         "dpi": 150,
         "generado_desde": "IFC via ifcopenshell (no PDF/Colab-OpenCV) -- ver Proyecto/bim_exploracion_mercado_y_viabilidad.md",
         "paginas": paginas,
@@ -417,7 +513,7 @@ def main():
         },
     }
 
-    ruta_json = carpeta_png / f"DuplexHouse_colab_{timestamp}.json"
+    ruta_json = carpeta_png / f"{nombre_corto}_colab_{timestamp}.json"
     with open(ruta_json, "w", encoding="utf-8") as f:
         json.dump(resultado, f, ensure_ascii=False, indent=2)
     print(f"\nJSON listo: {ruta_json}")
