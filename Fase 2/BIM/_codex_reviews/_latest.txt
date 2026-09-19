@@ -1,0 +1,26 @@
+Aquí van los hallazgos **reales** que sí vale la pena corregir:
+
+1. **Archivo:** `Fase 2/BIM/generar_plano_pdf.py`  
+   **Función:** `arco_apertura_puerta()`  
+   **Qué está mal:** se multiplica por `escala_m` tanto `OverallWidth` como `ObjectPlacement` (`origen = mat[:2,3] * escala_m`), pero `get_local_placement()` ya devuelve coordenadas en unidades del modelo coherentes con la geometría que dibujas (igual que `footprint_2d`/`create_shape`).  
+   **Por qué importa:** puedes mezclar sistemas de unidades en el mismo plano (contorno de puerta en una escala, arco en otra), desplazando/arco mal dimensionado cuando la unidad no es metro. Es un bug geométrico visible y también se propaga a `generar_json_colab.py` porque reutiliza esa función.
+
+2. **Archivo:** `Fase 2/BIM/piloto_ids_oguc.py`  
+   **Regla 2 (muros FireRating)**  
+   **Qué está mal:** aplicabilidad sólo a `IFCWALLSTANDARDCASE`.  
+   **Por qué importa:** en tus propios IFC hay mezcla `IfcWall` + `IfcWallStandardCase` (ej. Schependomlaan), por lo que se omiten muros reales del chequeo. Es inconsistencia directa con `analizar_todos.py` (que sí usa `IfcWall`).
+
+3. **Archivo:** `Fase 2/BIM/piloto_ids_oguc.py`  
+   **Regla 3 (ancho escalera)**  
+   **Qué está mal:** usa `ids.Property` sobre `Qto_StairFlightBaseQuantities.Width`. Eso es quantity set (Qto), no property set (Pset).  
+   **Por qué importa:** dependiendo de IfcTester/IDS, puede no evaluar nada o evaluar mal (falsos “falta dato”/“no cumple”). Si querías probar viabilidad declarativa de umbral numérico en ancho, aquí el test puede estar invalidado por modelado IDS incorrecto del tipo de dato.
+
+4. **Archivo:** `Fase 2/BIM/analizar_todos.py`  
+   **Bloque:** extracción de recintos (`recintos = modelo.by_type("IfcSpace")`)  
+   **Qué está mal:** no replica el criterio robusto que sí usas en otros scripts para obtener espacios por descomposición/nivel cuando no vienen por contención.  
+   **Por qué importa:** aunque `by_type("IfcSpace")` los encuentra globalmente, luego el cálculo de ventilación depende de `BoundedBy`; si el exportador tiene espacios fuera del árbol espacial esperado o con estructura parcial, puedes mezclar recintos no operativos/duplicados de vistas y distorsionar el resumen normativo (aplicable/no aplicable). Es un riesgo de supuesto IFC no universal en este piloto.
+
+5. **Archivo:** `Fase 2/BIM/generar_json_colab.py`  
+   **Bloque:** `paginas.append(... "fname_tag": nivel.Name, "nivel": nivel.Name ...)`  
+   **Qué está mal:** ya blindaste `nivel.Name` para nombre de PNG (`nombre_nivel_seguro`), pero no aquí.  
+   **Por qué importa:** `None` en `fname_tag`/`nivel` no rompe siempre, pero puede romper consumo aguas abajo (portal/prompts que esperan string) o generar páginas sin etiqueta legible. Es inconsistencia con el propio fix de robustez aplicado unas líneas antes.

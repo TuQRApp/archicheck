@@ -126,12 +126,15 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_
             if tipo == "IfcColumn":
                 g.marcar_centroide(ax, geom, color="black", zorder=6)
             if tipo == "IfcDoor":
-                puntos = g.arco_apertura_puerta(el, mapa_ops.get(el.GlobalId), escala_m)
-                if puntos:
-                    puntos_t = [(px - ox, py - oy) for px, py in puntos]
-                    xs, ys = zip(*puntos_t)
-                    ax.plot(xs, ys, color=g.ESTILOS["IfcDoor"]["edgecolor"], linewidth=0.5, zorder=4)
-                    arcos_puerta[el.GlobalId] = puntos_t
+                arcos = g.arco_apertura_puerta(el, mapa_ops.get(el.GlobalId), escala_m)
+                if arcos:
+                    arcos_t = []
+                    for puntos in arcos:
+                        puntos_t = [(px - ox, py - oy) for px, py in puntos]
+                        xs, ys = zip(*puntos_t)
+                        ax.plot(xs, ys, color=g.ESTILOS["IfcDoor"]["edgecolor"], linewidth=0.5, zorder=4)
+                        arcos_t.append(puntos_t)
+                    arcos_puerta[el.GlobalId] = arcos_t
                 else:
                     # Regla del proyecto (2026-09-19): el sentido de apertura
                     # debe quedar SIEMPRE señalado en el PNG -- mismo criterio
@@ -208,14 +211,18 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_
     # registro de esa puerta en puertas_geo, para que quede seleccionable/
     # visible en el portal igual que el contorno de la hoja.
     puertas_por_id = {p["id"]: p for p in geo_pixeles["puerta"]}
-    for global_id, puntos_datos in arcos_puerta.items():
+    for global_id, arcos_datos in arcos_puerta.items():
         p = puertas_por_id.get(global_id)
         if p is None:
             continue
-        coords_px = ax.transData.transform(np.array(puntos_datos))
-        coords_px_img = [(float(x), float(h_px - y)) for x, y in coords_px]
-        p["segmentos"].extend({"p1": list(coords_px_img[i]), "p2": list(coords_px_img[i + 1])}
-                               for i in range(len(coords_px_img) - 1))
+        # Un arco por hoja (2 en DOUBLE_DOOR_SINGLE_SWING) -- se proyecta y
+        # segmenta CADA arco por separado para no unir con una linea espuria
+        # el punto final de una hoja con el punto inicial de la otra.
+        for puntos_datos in arcos_datos:
+            coords_px = ax.transData.transform(np.array(puntos_datos))
+            coords_px_img = [(float(x), float(h_px - y)) for x, y in coords_px]
+            p["segmentos"].extend({"p1": list(coords_px_img[i]), "p2": list(coords_px_img[i + 1])}
+                                   for i in range(len(coords_px_img) - 1))
 
     fig.savefig(ruta_png, dpi=dpi, facecolor="white")
     plt.close(fig)

@@ -239,14 +239,22 @@ def etiquetar_recintos(ax, elementos, ox, oy):
 
 
 # Sentido de apertura de puertas (2026-09-19, pedido explicito del usuario).
-# Algunos exportadores (ej. ~40% de las puertas de Schependomlaan, con nombres
-# tipo "D1R") ya modelan el arco de giro como parte de la geometria 3D del
-# propio IfcDoor -- footprint_2d lo capta solo con el convex hull, sin
-# necesitar nada de esto (ver seccion del roadmap 2026-09-19). Estas funciones
-# son el RESPALDO para puertas con geometria simple (solo la hoja cerrada,
-# caso de las 14/14 puertas de DuplexHouse) -- se sintetiza el simbolo
-# estandar (arco de 90 grados + linea de la hoja abierta) a partir de
-# IfcDoorStyle.OperationType.
+# Algunos exportadores (ej. la familia "D1R"/"D2R" de Schependomlaan) ya
+# modelan el arco de giro como parte de la geometria 3D del propio IfcDoor --
+# footprint_2d lo capta solo con el convex hull. PERO (2026-09-19, corregido
+# el mismo dia): se probo detectar esos casos por vertices/ancho del
+# rectangulo minimo para NO dibujar "?" encima, y no hay separacion
+# confiable -- "D1R" (arco real confirmado a mano, transformando sus
+# vertices al sistema local) da un lado corto de 0.17 m, exactamente en el
+# mismo rango (0.11-0.20 m) que puertas SIN ningun indicio real. No existe
+# hoy una señal barata y confiable para saber si el hull "rico" de una
+# puerta es un arco real o solo detalle de marco/jamba -- se prefiere seguir
+# marcando "?" en esos casos (incertidumbre transparente) antes que
+# arriesgarse a ocultar la ausencia de dato por error.
+#
+# Estas funciones son el RESPALDO para puertas sin arco propio en la
+# geometria: sintetizan el simbolo estandar (arco de 90 grados + linea de la
+# hoja abierta) a partir de IfcDoorStyle.OperationType.
 #
 # Convencion verificada de forma EMPIRICA (no solo leida en el texto de la
 # especificacion) contra una puerta real de Schependomlaan que SI trae el
@@ -255,10 +263,17 @@ def etiquetar_recintos(ax, elementos, ox, oy):
 # bisagra queda en X local = 0 (el extremo que buildingSMART llama
 # "izquierdo", visto mirando hacia +Y local) y el barrido va hacia +Y local
 # ("hacia afuera") -- consistente con la definicion oficial de
-# IfcDoorStyleOperationEnum (standards.buildingsmart.org). Puertas dobles
-# (2 hojas) quedan sin arco por ahora -- alcance acotado a SINGLE_SWING_*,
-# que es lo unico que se encontro declarado en los archivos de esta sesion.
-OPERACIONES_SWING_SOPORTADAS = {"SINGLE_SWING_LEFT": 0.0, "SINGLE_SWING_RIGHT": 1.0}
+# IfcDoorStyleOperationEnum (standards.buildingsmart.org).
+#
+# DOUBLE_DOOR_SINGLE_SWING agregado (2026-09-19, hallazgo real: 5 de 35
+# puertas del piso base de Schependomlaan declaran este tipo -- dato real,
+# no ausente, que antes caia a "?" solo por no estar implementado) -- 2
+# hojas, cada una la mitad del ancho total, bisagras en los 2 extremos
+# opuestos del vano, ambas abriendo hacia +Y local (definicion oficial:
+# "una abre hacia la izquierda, la otra hacia la derecha").
+OPERACIONES_SWING_SIMPLE = {"SINGLE_SWING_LEFT": 0.0, "SINGLE_SWING_RIGHT": 1.0}
+OPERACIONES_SWING_DOBLE = {"DOUBLE_DOOR_SINGLE_SWING"}
+OPERACIONES_SWING_SOPORTADAS = set(OPERACIONES_SWING_SIMPLE) | OPERACIONES_SWING_DOBLE
 
 
 def mapa_operacion_puertas(modelo):
@@ -279,10 +294,12 @@ def mapa_operacion_puertas(modelo):
 
 
 def arco_apertura_puerta(puerta, operation_type, escala_m, n_segmentos=8):
-    """Puntos (x,y) en coordenadas de MUNDO (antes de restar ox,oy) que trazan
-    el simbolo estandar de apertura: arco de 90 grados centrado en la bisagra
-    + linea recta de la hoja abierta. None si falta el dato (ancho, placement,
-    o tipo de operacion no soportado)."""
+    """Lista de arcos -- uno por hoja (1 para puerta simple, 2 para
+    DOUBLE_DOOR_SINGLE_SWING) -- cada uno una lista de puntos (x,y) en
+    coordenadas de MUNDO (antes de restar ox,oy) que trazan el simbolo
+    estandar de apertura: arco de 90 grados centrado en la bisagra + linea
+    recta de la hoja abierta. None si falta el dato (ancho, placement, o
+    tipo de operacion no soportado)."""
     if operation_type not in OPERACIONES_SWING_SOPORTADAS:
         return None
     ancho = puerta.OverallWidth
@@ -296,23 +313,32 @@ def arco_apertura_puerta(puerta, operation_type, escala_m, n_segmentos=8):
     origen = mat[:2, 3] * escala_m
     eje_x, eje_y = mat[:2, 0], mat[:2, 1]
 
-    h = OPERACIONES_SWING_SOPORTADAS[operation_type] * ancho_m  # bisagra: 0 (izq) o ancho_m (der)
-
     def a_mundo(lx, ly):
         return origen + lx * eje_x + ly * eje_y
 
-    # Arco centrado en la bisagra (h, 0) local, radio = ancho de la hoja --
-    # de angulo 0 (h=0, hoja cerrada) o 180 (h=ancho_m) hasta 90 (siempre
-    # hacia +Y local = "hacia afuera", ver nota de cabecera).
-    ang_cerrado = 0.0 if h == 0 else math.pi
-    ang_abierto = math.pi / 2
-    puntos = []
-    for i in range(n_segmentos + 1):
-        t = i / n_segmentos
-        ang = ang_cerrado + (ang_abierto - ang_cerrado) * t
-        puntos.append(a_mundo(h + ancho_m * math.cos(ang), ancho_m * math.sin(ang)))
-    puntos.append(a_mundo(h, 0.0))  # linea de la hoja abierta, de vuelta a la bisagra
-    return puntos
+    def arco_de_una_hoja(h, radio):
+        # Arco centrado en la bisagra (h, 0) local, radio = ancho de ESA
+        # hoja -- de angulo 0 (bisagra en el extremo izquierdo del tramo que
+        # le corresponde) o 180 (extremo derecho) hasta 90 (siempre hacia
+        # +Y local = "hacia afuera", ver nota de cabecera).
+        ang_cerrado = 0.0 if h <= ancho_m / 2 else math.pi
+        ang_abierto = math.pi / 2
+        puntos = []
+        for i in range(n_segmentos + 1):
+            t = i / n_segmentos
+            ang = ang_cerrado + (ang_abierto - ang_cerrado) * t
+            puntos.append(a_mundo(h + radio * math.cos(ang), radio * math.sin(ang)))
+        puntos.append(a_mundo(h, 0.0))  # linea de la hoja abierta, de vuelta a la bisagra
+        return puntos
+
+    if operation_type in OPERACIONES_SWING_SIMPLE:
+        h = OPERACIONES_SWING_SIMPLE[operation_type] * ancho_m  # bisagra: 0 (izq) o ancho_m (der)
+        return [arco_de_una_hoja(h, ancho_m)]
+
+    # DOUBLE_DOOR_SINGLE_SWING: 2 hojas de ancho_m/2 cada una, bisagras en
+    # los 2 extremos opuestos del vano completo (ver nota de cabecera).
+    mitad = ancho_m / 2
+    return [arco_de_una_hoja(0.0, mitad), arco_de_una_hoja(ancho_m, mitad)]
 
 
 def marcar_apertura_sin_dato(ax, geom_trasladada):
@@ -593,12 +619,13 @@ def main(ifc_path):
                         # en la geometria (ej. "D1R" en Schependomlaan) -- solo
                         # agrega la linea estandar sobre lo que ya se dibuja.
                         op = mapa_ops.get(el.GlobalId)
-                        puntos = arco_apertura_puerta(el, op, escala_m)
-                        if puntos:
-                            xs = [p[0] - ox for p in puntos]
-                            ys = [p[1] - oy for p in puntos]
-                            ax.plot(xs, ys, color=ESTILOS["IfcDoor"]["edgecolor"],
-                                     linewidth=0.5, zorder=4)
+                        arcos = arco_apertura_puerta(el, op, escala_m)
+                        if arcos:
+                            for puntos in arcos:
+                                xs = [p[0] - ox for p in puntos]
+                                ys = [p[1] - oy for p in puntos]
+                                ax.plot(xs, ys, color=ESTILOS["IfcDoor"]["edgecolor"],
+                                         linewidth=0.5, zorder=4)
                         else:
                             # Regla del proyecto (2026-09-19): el sentido de
                             # apertura debe quedar SIEMPRE señalado -- si no
