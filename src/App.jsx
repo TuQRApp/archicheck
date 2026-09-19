@@ -1584,11 +1584,16 @@ const SNAP_RADIO_PANTALLA_PX = 10;
 function RevisionGeometricaCanvas({
   png, mediciones, elementosPuntuales, imagenWPx, imagenHPx, mpp,
   tool, selectedId, linePoints = [], zoom = 1, snapPoints = [],
-  onSeleccionar, onLinePoint, onMoverDestino, onToggleFusion,
+  onSeleccionar, onLinePoint, onMoverDestino, onToggleFusion, panContainerRef,
 }) {
   const canvasRef = useRef();
   const imgRef = useRef();
   const previewRef = useRef(null);
+  // Pan con click-y-arrastre (2026-09-19, pedido explícito del usuario) -- antes solo existía el
+  // scroll nativo del navegador (barras/wheel) sobre `panContainerRef` (el div contenedor en
+  // RevisionModal). En un ref, no en useState, a propósito: se actualiza en cada mousemove durante
+  // el arrastre y no debe re-renderizar el componente (mismo criterio que `previewRef` arriba).
+  const panRef = useRef({ arrastrando: false, movido: false, startX: 0, startY: 0, startScrollLeft: 0, startScrollTop: 0 });
 
   const redibujar = useCallback((previewOverride) => {
     const canvas = canvasRef.current, img = imgRef.current;
@@ -1638,7 +1643,36 @@ function RevisionGeometricaCanvas({
     return null;
   }
 
+  // Escucha en `window` (no solo en el <canvas>) mientras dura el arrastre -- a zoom alto el mouse
+  // suele salirse del área del canvas/imagen antes de que el arquitecto suelte el botón, y con
+  // listeners solo en el canvas el pan se "trababa" ahí. Se agregan al vuelo en mousedown y se
+  // sacan en mouseup, para no dejar listeners globales activos el resto del tiempo.
+  function handleMouseDown(e) {
+    if (e.button !== 0) return; // solo click izquierdo -- click derecho/medio no inician pan
+    const cont = panContainerRef?.current;
+    if (!cont) return;
+    panRef.current = {
+      arrastrando: true, movido: false,
+      startX: e.clientX, startY: e.clientY,
+      startScrollLeft: cont.scrollLeft, startScrollTop: cont.scrollTop,
+    };
+    const onWindowMouseMove = (ev) => handleMouseMove(ev);
+    const onWindowMouseUp = () => {
+      panRef.current.arrastrando = false;
+      if (canvasRef.current) canvasRef.current.style.cursor = cursor;
+      window.removeEventListener("mousemove", onWindowMouseMove);
+      window.removeEventListener("mouseup", onWindowMouseUp);
+    };
+    window.addEventListener("mousemove", onWindowMouseMove);
+    window.addEventListener("mouseup", onWindowMouseUp);
+  }
+
   function handleClick(e) {
+    // Si el mousedown->mouseup que acaba de terminar fue un arrastre (pan), este click es
+    // "fantasma" (el navegador SIEMPRE dispara click tras mouseup, se haya movido o no el mouse
+    // entre medio) -- se descarta para no disparar además la acción de la herramienta activa
+    // (seleccionar/agregar punto/etc) encima del punto donde soltó el arrastre.
+    if (panRef.current.movido) { panRef.current.movido = false; return; }
     const pt = puntoDesdeEvento(e);
     if (tool === "seleccionar") {
       // Elementos puntuales primero: casi siempre están DENTRO del bbox de un recinto,
@@ -1665,6 +1699,22 @@ function RevisionGeometricaCanvas({
   }
 
   function handleMouseMove(e) {
+    const pan = panRef.current;
+    if (pan.arrastrando) {
+      const dx = e.clientX - pan.startX, dy = e.clientY - pan.startY;
+      if (!pan.movido && Math.hypot(dx, dy) > 4) {
+        pan.movido = true;
+        if (canvasRef.current) canvasRef.current.style.cursor = "grabbing";
+      }
+      if (pan.movido) {
+        const cont = panContainerRef?.current;
+        if (cont) {
+          cont.scrollLeft = pan.startScrollLeft - dx;
+          cont.scrollTop = pan.startScrollTop - dy;
+        }
+        return; // arrastrando la vista -- no seguir con el preview de la herramienta activa
+      }
+    }
     const ptRaw = puntoDesdeEvento(e);
     const snapHighlight = snapParaHerramienta(ptRaw);
     const ptEfectivo = snapHighlight || ptRaw;
@@ -1708,7 +1758,8 @@ function RevisionGeometricaCanvas({
   const altoCss = imagenHPx ? Math.round(imagenHPx * zoom) : undefined;
 
   return (
-    <canvas ref={canvasRef} onClick={handleClick} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
+    <canvas ref={canvasRef} onClick={handleClick} onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
       style={{ width: anchoCss, height: altoCss, display: "block", borderRadius: 6, border: "1px solid #D1D9EE", cursor }} />
   );
 }
@@ -1865,6 +1916,7 @@ function TablaDudas({ dudas, onIrADuda }) {
 function LeyendaHerramientas({
   tool, onChangeTool, elementosDetectados, muroPuntosCount, onConfirmarMuro, recintoSeleccionado,
   fusionSet = [], onConfirmarFusion, areasExcluidasCount = 0,
+  capasOcultas = new Set(), onToggleCapa,
 }) {
   const base = [
     { id: "seleccionar", label: "Seleccionar" },
@@ -1887,10 +1939,27 @@ function LeyendaHerramientas({
       {CATEGORIAS_ELEMENTO.map(cat => {
         const col = COLORES_ELEMENTO_PUNTUAL[cat.id];
         const det = elementosDetectados?.[cat.id];
+        const oculto = capasOcultas.has(cat.id);
         return (
-          <button key={cat.id} style={btnStyle(tool === cat.id, col)} onClick={() => onChangeTool(cat.id)}>
-            {cat.label}{det ? ` (${det.marcadas}/${det.total})` : ""}
-          </button>
+          <span key={cat.id} style={{ display: "inline-flex", alignItems: "stretch", gap: 2 }}>
+            <button style={{ ...btnStyle(tool === cat.id, col), opacity: oculto ? 0.45 : 1 }} onClick={() => onChangeTool(cat.id)}>
+              {cat.label}{det ? ` (${det.marcadas}/${det.total})` : ""}
+            </button>
+            {/* Mostrar/ocultar capa (2026-09-19, pedido explícito del usuario) -- independiente del
+                click del botón de arriba, que sigue seleccionando la herramienta para agregar un
+                elemento nuevo a mano. No afecta el conteo "(x/x)": eso sigue viniendo de
+                elementosDetectados, calculado sobre TODOS los elementos, oculten o no. */}
+            <button
+              onClick={() => onToggleCapa?.(cat.id)}
+              title={oculto ? `Mostrar ${cat.label.toLowerCase()}s` : `Ocultar ${cat.label.toLowerCase()}s`}
+              style={{
+                border: `1px solid ${oculto ? "#D1D9EE" : col}`, borderRadius: 6, padding: "6px 8px", fontSize: 11,
+                fontFamily: "inherit", cursor: "pointer", background: "#fff", color: oculto ? "#9AA5B8" : col,
+              }}
+            >
+              {oculto ? "🙈" : "👁"}
+            </button>
+          </span>
         );
       })}
       {tool === "muro" && muroPuntosCount >= 2 && (
@@ -1988,12 +2057,28 @@ function RevisionModal({
   const containerRef = useRef();
   const [zoom, setZoom] = useState(1);
   const [focusPoint, setFocusPoint] = useState(null);
+  // Mostrar/ocultar por categoría (2026-09-19, pedido explícito del usuario) -- Set de cat.id
+  // actualmente OCULTOS. Empieza vacío (todo visible) cada vez que se abre el modal.
+  const [capasOcultas, setCapasOcultas] = useState(() => new Set());
+  const toggleCapa = useCallback((catId) => {
+    setCapasOcultas(prev => {
+      const next = new Set(prev);
+      next.has(catId) ? next.delete(catId) : next.add(catId);
+      return next;
+    });
+  }, []);
 
   const entryIdx = entriesConPng[stepIndex];
   const png = colabPngs.find(p => p.entryIdx === entryIdx);
   const pagJson = colabJson?.paginas?.find(p => p.entry_idx === entryIdx);
   const mediciones = entryIdx != null ? getMedicionesPorPagina(colabJson, correcciones, entryIdx) : [];
   const elementosPuntuales = entryIdx != null ? getElementosPuntualesConPosicion(colabJson, correcciones, entryIdx) : [];
+  // Solo para dibujar/clickear en el canvas -- calculos de conteo (elementosDetectados), snap y
+  // selección siguen usando `elementosPuntuales` completo, para que ocultar una capa no cambie el
+  // "(x/x)" reportado ni impida que una herramienta nueva enganche (snap) a un elemento oculto.
+  const elementosPuntualesVisibles = capasOcultas.size
+    ? elementosPuntuales.filter(e => !capasOcultas.has(e.categoria))
+    : elementosPuntuales;
   // Candidatos de Snap (2026-08-29): se recalcula en cada render de RevisionModal (no hay useMemo
   // real posible — elementosPuntuales ya se recalcula sin memoizar en cada render, así que memoizar
   // esto encima no ahorra nada) — pero eso está acotado a acciones del arquitecto (cambiar de
@@ -2063,17 +2148,18 @@ function RevisionModal({
           muroPuntosCount={linePoints.length} onConfirmarMuro={onConfirmarMuro}
           recintoSeleccionado={selectedTipo === "recinto" ? selectedId : null}
           fusionSet={fusionSet} onConfirmarFusion={onConfirmarFusion}
-          areasExcluidasCount={areasExcluidasCount} />
+          areasExcluidasCount={areasExcluidasCount}
+          capasOcultas={capasOcultas} onToggleCapa={toggleCapa} />
       </div>
 
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
         <div ref={containerRef} style={{ flex: 1, overflow: "auto", background: "#20242E", padding: 16 }}>
           <RevisionGeometricaCanvas
-            png={png} mediciones={mediciones} elementosPuntuales={elementosPuntuales}
+            png={png} mediciones={mediciones} elementosPuntuales={elementosPuntualesVisibles}
             imagenWPx={pagJson.imagen_w_px} imagenHPx={pagJson.imagen_h_px} mpp={pagJson.mpp}
             tool={tool} selectedId={selectedId} linePoints={linePoints} zoom={zoom} snapPoints={snapPoints}
             onSeleccionar={onSeleccionar} onLinePoint={onLinePoint} onMoverDestino={onMoverDestino}
-            onToggleFusion={onToggleFusion}
+            onToggleFusion={onToggleFusion} panContainerRef={containerRef}
           />
         </div>
         <div style={{ width: 320, background: "#fff", borderLeft: "1px solid #D1D9EE", padding: 14, overflowY: "auto" }}>

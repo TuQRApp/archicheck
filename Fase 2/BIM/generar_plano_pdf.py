@@ -22,6 +22,7 @@ import ifcopenshell.util.placement
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.patches import Polygon as MplPolygon
+from shapely.affinity import translate
 from shapely.geometry import MultiPoint
 
 # Regla del proyecto (2026-09-18): todo archivo generado a partir de un IFC/BIM
@@ -155,6 +156,39 @@ def marcar_centroide(ax, geom, **kwargs):
         return
     c = geom.centroid
     ax.plot(c.x, c.y, marker="s", markersize=3.2, **kwargs)
+
+
+def etiquetar_recintos(ax, elementos, ox, oy):
+    """Nombre de cada IfcSpace en el plano, en letra pequena -- no se dibuja
+    su poligono (taparia el resto), solo el texto, para dar la referencia
+    funcional que tiene un plano real sin saturar el dibujo de lineas.
+
+    Regla del proyecto (2026-09-19): todo plano generado desde IFC debe
+    llevar SIEMPRE los nombres de recinto, en letra pequena -- aplica a
+    cualquier script que dibuje una planta (generar_plano_pdf.py,
+    generar_json_colab.py, y los que vengan despues). Se etiqueta cada
+    NOMBRE distinto como maximo 3 veces por pagina -- con cientos de
+    IfcSpace repetidos (ej. 176 "APARCAMIENTO COCHE" en un solo nivel de
+    redesign.ifc), repetir el mismo texto cientos de veces es ruido, no
+    detalle.
+    """
+    espacios = [e for e in elementos if e.is_a("IfcSpace")]
+    conteo_nombre = {}
+    for sp in espacios:
+        nombre = (sp.LongName or sp.Name or "").strip()
+        if not nombre:
+            continue
+        conteo_nombre[nombre] = conteo_nombre.get(nombre, 0) + 1
+        if conteo_nombre[nombre] > 3:
+            continue
+        geom = footprint_2d(sp)
+        if geom is None:
+            continue
+        geom = translate(geom, xoff=-ox, yoff=-oy)
+        c = geom.centroid
+        ax.text(c.x, c.y, nombre, fontsize=4.5, ha="center", va="center",
+                zorder=7, color="#111827",
+                bbox=dict(boxstyle="round,pad=0.15", facecolor="white", edgecolor="none", alpha=0.7))
 
 
 CLASES_SUSTANTIVAS_NIVEL = {"IfcWall", "IfcWallStandardCase", "IfcSlab", "IfcColumn",
@@ -340,6 +374,18 @@ def main(ifc_path):
                         if e.is_a("IfcSpace")]
             elementos.extend(espacios)
 
+            # Mismo patron de bug que IfcSpace, encontrado despues (2026-09-19,
+            # DuplexHouse.ifc): IfcStair SI llega por "contained in" (por eso
+            # el conteo de escaleras en analizar_todos.py/generar_json_colab.py
+            # ya daba bien), pero el IfcStairFlight real -- con geometria
+            # dibujable -- esta anidado DENTRO de el via IfcRelAggregates. Sin
+            # este paso la escalera se cuenta pero nunca se dibuja (footprint_2d
+            # sobre un IfcStair contenedor no da nada util).
+            flights_escalera = [h for st in elementos if st.is_a("IfcStair")
+                                 for h in ifcopenshell.util.element.get_decomposition(st, is_recursive=False)
+                                 if h.is_a("IfcStairFlight")]
+            elementos.extend(flights_escalera)
+
             por_tipo = {}
             for el in elementos:
                 t = el.is_a()
@@ -347,8 +393,6 @@ def main(ifc_path):
                     por_tipo.setdefault(t, []).append(el)
 
             fig, ax = plt.subplots(figsize=(16.54, 11.69))  # A3 apaisado -- mas espacio para detalle
-
-            from shapely.affinity import translate
 
             for tipo in ORDEN_DIBUJO:
                 for el in por_tipo.get(tipo, []):
@@ -360,29 +404,7 @@ def main(ifc_path):
                     if tipo == "IfcColumn":
                         marcar_centroide(ax, geom, color="black", zorder=6)
 
-            # Nombres de recinto (IfcSpace) -- no se dibuja su poligono (taparia
-            # el resto), solo el texto, para dar la referencia funcional que
-            # tiene un plano real sin saturar el dibujo de lineas.
-            # Se etiqueta cada NOMBRE distinto como maximo 3 veces por pagina --
-            # con 176 IfcSpace en un solo nivel (ej. PS1, estacionamiento),
-            # repetir "APARCAMIENTO COCHE" 176 veces es ruido, no detalle.
-            espacios = [e for e in elementos if e.is_a("IfcSpace")]
-            conteo_nombre = {}
-            for sp in espacios:
-                nombre = (sp.LongName or sp.Name or "").strip()
-                if not nombre:
-                    continue
-                conteo_nombre[nombre] = conteo_nombre.get(nombre, 0) + 1
-                if conteo_nombre[nombre] > 3:
-                    continue
-                geom = footprint_2d(sp)
-                if geom is None:
-                    continue
-                geom = translate(geom, xoff=-ox, yoff=-oy)
-                c = geom.centroid
-                ax.text(c.x, c.y, nombre, fontsize=4.5, ha="center", va="center",
-                        zorder=7, color="#111827",
-                        bbox=dict(boxstyle="round,pad=0.15", facecolor="white", edgecolor="none", alpha=0.7))
+            etiquetar_recintos(ax, elementos, ox, oy)
 
             ax.set_aspect("equal")
             ax.autoscale()

@@ -30,6 +30,7 @@ Contexto de cada script:
 - generar_plano_pdf.py: triangula la geometría 3D de cada elemento IFC (ifcopenshell.geom), proyecta los triángulos al plano XY con shapely, y dibuja un plano en planta por nivel con matplotlib, guardado en PDF.
 - analizar_todos.py: extrae muros/puertas/ventanas/recintos de varios IFC de ejemplo, arma un JSON con esa info, y aplica 3 reglas normativas (ancho de puerta ≥0.80m, resistencia al fuego declarada en muros, ventilación natural ≥10% de la superficie del recinto vía IfcRelSpaceBoundary).
 - piloto_ids_oguc.py: usa IfcTester (IDS) para las mismas 2 primeras reglas de forma declarativa.
+- generar_json_colab.py: adaptador que reempaqueta los mismos datos reales del IFC (por nivel, no agregados) en el JSON exacto que espera el portal web de ArchiCheck ("Resultados Colab", subido a mano por el arquitecto para la revisión gráfica antes de generar el informe final con Claude+GPT-4o). Novedad de hoy: antes exportaba muros_geo/puertas_geo/ventanas_*/escaleras_detalle vacíos (sin posición); ahora proyecta la geometría 2D real de cada elemento a coordenadas de PÍXEL sobre el PNG que el propio script genera con matplotlib, usando ax.transData.transform() capturado justo antes de guardar la figura (para que la transformación coincida exactamente con el PNG final). Además descompone IfcStair (contenedor) para sacar el IfcStairFlight real (mismo patrón de bug que IfcSpace: geometría no siempre llega por IfcRelContainedInSpatialStructure, a veces hay que bajar un nivel más vía IfcRelAggregates), y usa el GlobalId completo como id de recinto (antes truncado a 8 caracteres, lo que colapsaba ~16 de 21 recintos de un archivo real bajo el mismo id por colisión de prefijo).
 
 Estos IFC son de ejemplo (Autodesk/ArchiCAD/KIT — ninguno chileno), y el objetivo hoy es solo probar viabilidad técnica, no un sistema en producción.
 
@@ -42,6 +43,7 @@ const grupos = [
       ["Fase 2/BIM/piloto_ids_oguc.py", path.join(__dirname, "piloto_ids_oguc.py")],
       ["Fase 2/BIM/generar_plano_pdf.py", path.join(__dirname, "generar_plano_pdf.py")],
       ["Fase 2/BIM/analizar_todos.py", path.join(__dirname, "analizar_todos.py")],
+      ["Fase 2/BIM/generar_json_colab.py", path.join(__dirname, "generar_json_colab.py")],
     ],
   },
 ];
