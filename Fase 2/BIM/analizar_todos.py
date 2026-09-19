@@ -51,6 +51,7 @@ ARCHIVOS = [
     # los 7 sin ningun valor informativo nuevo).
     ("LTU K-modell", "Archivos ejemplo/Dataset LTU/extraidos/LTU_A-House_K-modell.ifc"),
     ("LTU redesign", "Archivos ejemplo/Dataset LTU/extraidos/LTU_A-House_redesign.ifc"),
+    ("Schependomlaan", "Archivos ejemplo/Schependomlaan/IFC_Schependomlaan.ifc"),
 ]
 
 # "GSA BIM Area" agregado 2026-09-18: encontrado en DuplexHouse.ifc (convencion
@@ -187,7 +188,17 @@ def analizar(nombre_corto, ifc_path):
     # vinculo espacial simplemente no existe en este exportador. Se exige que
     # AL MENOS un recinto del edificio haya logrado vincular una ventana antes
     # de confiar en el 0% de cualquier otro recinto del mismo edificio.
-    enlace_funciona = any(r["num_ventanas_vinculadas"] > 0 for r in recintos_geo)
+    #
+    # Tercer hallazgo del mismo tipo (2026-09-19), en Schependomlaan: el
+    # vinculo SI existe para 2 de 100 recintos (num_ventanas_vinculadas > 0),
+    # pero esas ventanas vinculadas no tienen OverallWidth/OverallHeight --
+    # ventanas_con_area_valida da 0 igual, y las 100 salas (incluidos
+    # dormitorios y living con ventanas reales de sobra en la casa) daban 0%
+    # "real". El resguardo anterior solo miraba si habia VINCULO, no si ese
+    # vinculo traia un AREA calculable -- exactamente el mismo tipo de falla
+    # a la que hay que estar atento en esta seccion completa: no basta con
+    # que el dato exista, tiene que servir para lo que se le pide.
+    enlace_funciona = any(r["ventanas_con_area_valida"] > 0 for r in recintos_geo)
     ventilacion_aplicable = ventilacion_aplicable and enlace_funciona
     for r in recintos_geo:
         area = r["area_m2"]
@@ -235,6 +246,10 @@ def analizar(nombre_corto, ifc_path):
                 "Chequeo de ventilacion desactivado: hay IfcWindow pero ningun IfcSpace.BoundedBy "
                 "las vincula a un recinto en todo el edificio -- el exportador no genera boundaries "
                 "de nivel 2 (o no los genera en absoluto), no es que los recintos no tengan ventanas."
+                if not any(r["num_ventanas_vinculadas"] > 0 for r in recintos_geo) else
+                "Chequeo de ventilacion desactivado: hay vinculo recinto-ventana en al menos un caso, "
+                "pero ninguna ventana vinculada tiene OverallWidth/OverallHeight declarado (area "
+                "calculable) -- el dato de dimension de ventana falta, no el vinculo espacial."
             ),
         },
         "muros_geo": muros_geo,

@@ -52,6 +52,10 @@ ARCHIVOS = [
     r"Archivos ejemplo/Dataset LTU/extraidos/LTU_A-House_Plumbing.ifc",
     r"Archivos ejemplo/Dataset LTU/extraidos/LTU_A-House_Sanitation.ifc",
     r"Archivos ejemplo/Dataset LTU/extraidos/LTU_A-House_VOIDS.ifc",
+    # Schependomlaan (residencial holandes, dataset academico muy citado) --
+    # agregado 2026-09-19. 6 niveles reales, 100 IfcSpace, mezcla IfcWall (652)
+    # + IfcWallStandardCase (282) en el mismo archivo.
+    r"Archivos ejemplo/Schependomlaan/IFC_Schependomlaan.ifc",
 ]
 
 
