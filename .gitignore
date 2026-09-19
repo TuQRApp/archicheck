@@ -27,6 +27,12 @@ dist-ssr
 /Fase 2/Desarrollos/Test/Temas al roadmap.txt
 /Fase 2/Gastos BIG12.txt
 
+# Documentacion societaria/legal y material de postulacion a Start-Up Chile
+# (certificados de accionistas, constitucion de sociedad, etc.) -- nunca se
+# comitea, pedido explicito del usuario (2026-09-19)
+/Startup Chile/Program/
+/Startup Chile/StartupChile/
+
 # Archivos temporales de Word/Office (se crean solos al tener un .docx abierto)
 ~$*
 

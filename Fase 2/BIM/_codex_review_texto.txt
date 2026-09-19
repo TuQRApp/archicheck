@@ -1,0 +1,19 @@
+- **Archivo:** `Fase 2/BIM/piloto_ids_oguc.py` (regla 2, `s2.applicability`)  
+  **Qué está mal:** La regla de FireRating aplica solo a `IFCWALLSTANDARDCASE`, no a `IFCWALL`.  
+  **Por qué importa:** En varios IFC reales del propio set (p. ej. Schependomlaan/HouseZ) hay mezcla o uso predominante de `IfcWall` genérico. Así se te escapan muros sin revisar y el cumplimiento queda falsamente alto/incompleto respecto de `analizar_todos.py` (que sí usa `modelo.by_type("IfcWall")`).
+
+- **Archivo:** `Fase 2/BIM/analizar_todos.py` y `Fase 2/BIM/generar_json_colab.py` (extracción de recintos)  
+  **Qué está mal:** Ambos toman recintos con `modelo.by_type("IfcSpace")` o `get_decomposition(nivel, ...)`, pero no unifican ambos mecanismos de pertenencia por nivel cuando el exportador usa contención directa (`IfcRelContainedInSpatialStructure`) para algunos espacios y agregación para otros.  
+  **Por qué importa:** Ya identificaron este patrón en sentido inverso; en modelos híbridos puedes perder recintos silenciosamente en uno u otro script, afectando ventilación, conteos y consistencia entre PDF/JSON.
+
+- **Archivo:** `Fase 2/BIM/generar_json_colab.py` (bloque `paginas.append`, campo `fname_tag`)  
+  **Qué está mal:** `fname_tag` se guarda como `nivel.Name` sin fallback, pero más arriba ya reconocen que puede ser `None`.  
+  **Por qué importa:** Si el portal o postproceso espera string (muy probable para tags/filtros), meter `null` puede romper render/filtros o generar colisiones raras entre páginas “sin nombre”.
+
+- **Archivo:** `Fase 2/BIM/generar_plano_pdf.py` (función `arco_apertura_puerta`, división por `n_segmentos`)  
+  **Qué está mal:** No hay guardia para `n_segmentos <= 0` y se divide por cero en `t = i / n_segmentos`.  
+  **Por qué importa:** Hoy usan default 8, pero la función quedó compartida y reutilizada; cualquier llamada futura con 0 (config externa/error) rompe toda la generación de plano/JSON. Es bug funcional de borde fácil de blindar.
+
+- **Archivo:** `Fase 2/BIM/piloto_ids_oguc.py` (consistencia de consolidación OGUC)  
+  **Qué está mal:** Comentarios declaran que las reglas consolidadas son `puerta_ancho_libre` y `muro_fire_rating`, pero el script mantiene además una regla 3 (escaleras 1.10 m) que no está en ese bloque de consolidación y puede interpretarse como “también consolidada”.  
+  **Por qué importa:** No rompe ejecución, pero sí rompe trazabilidad normativa entre scripts: en `analizar_todos.py` solo hay 3 reglas donde la tercera es ventilación, acá la tercera es escalera. Para comparación de resultados entre motores (Python vs IDS) induce lecturas erróneas de cobertura/regresión.
