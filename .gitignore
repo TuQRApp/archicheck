@@ -33,6 +33,10 @@ dist-ssr
 /Startup Chile/Program/
 /Startup Chile/StartupChile/
 
+# Logs de corridas locales de prueba (Celda4_log_*.txt) -- 561 archivos/253 MB,
+# no vale la pena comitearlos al historial de git (2026-09-19)
+/Fase 2/Desarrollos/Test/**/_run_local_05sep/
+
 # Archivos temporales de Word/Office (se crean solos al tener un .docx abierto)
 ~$*
 
