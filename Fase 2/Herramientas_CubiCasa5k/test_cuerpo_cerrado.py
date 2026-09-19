@@ -9,6 +9,10 @@ equipo).
 
 Uso: python test_cuerpo_cerrado.py
 """
+import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from cuerpo_cerrado import cuerpo_cerrado_fusiona, identificar_hojas_de_puerta, ancho_por_emparejamiento, clasificar_no_muro
 
 MPX = 0.00588  # metros/px, misma corrida real (log Celda 4 pdv.txt)
