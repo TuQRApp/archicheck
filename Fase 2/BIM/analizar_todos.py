@@ -6,16 +6,23 @@
 # umbral nuevo para este ejercicio.
 #
 # Reglas aplicadas (ids y umbrales ya existentes en el proyecto, no nuevos):
-#   - puerta_ancho_libre: OGUC Art. 4.1.7 N6, ancho >= 0.80 m
-#     (Fase 2/Herramientas_CubiCasa5k/_celda4_actual.py no trae esta exacta,
-#      se usa la misma que se probo con IDS en la sesion de hoy)
+#   - puerta_ancho_libre: OGUC Art. 4.1.7 N6, ancho >= 0.80 m -- CONSOLIDADO
+#     2026-09-19 en OGUC_REGLAS['puerta_ancho_libre']
+#     (Fase 2/Herramientas_CubiCasa5k/_celda4_actual.py). Antes de esa fecha
+#     este umbral se habia verificado de forma independiente (piloto IDS) sin
+#     agregarse de vuelta a la fuente compartida -- ver auditoria completa en
+#     Fase 2/Convenciones_BIM.md seccion E. Sin import directo posible (ese
+#     archivo no es un modulo limpio); el valor de abajo es copia manual,
+#     debe corregirse en ambos lados si cambia.
 #   - muro_fire_rating: OGUC Art. 4.3.3, exige Pset_WallCommon.FireRating
-#     declarado (chequeo de dato faltante, no de valor)
+#     declarado (chequeo de dato faltante, no de valor) -- CONSOLIDADO
+#     2026-09-19 en OGUC_REGLAS['muro_fire_rating'], mismo archivo, mismo
+#     motivo y misma limitacion de sincronizacion que la regla de arriba.
 #   - ventilacion_iluminacion: normativa/nacional/reglas_verificacion.json,
 #     ventana >= 10% de la superficie del recinto (regla generica registrada
 #     en el proyecto, sin auditar articulo por articulo -- se usa tal cual
 #     esta documentada, no se sube el rigor mas alla de lo que ArchiCheck ya
-#     tiene hoy)
+#     tiene hoy) -- esta SI era compartida desde antes, mismo id y umbral.
 #
 # Robustez aprendida HOY mismo, aplicada aca:
 #   - IfcWall (no solo IfcWallStandardCase) -- HouseZ usa la clase generica

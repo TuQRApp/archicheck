@@ -92,6 +92,34 @@ OGUC_REGLAS = {
     # simplificacion, no la regla general. Ver tambien el fix de PENDIENTE mas abajo
     # en el bloque "if tipo == 'rampa':", que SI se corrigio a la formula real.
     'rampa'     : (None, 1.50, 'Art. 4.1.7 N°2 OGUC — ancho min 1,50 m (supone ruta a recinto con atencion de publico; puede ser 0,90-1,50 m segun el caso, ver comentario)'),
+
+    # Reglas de ELEMENTO (puerta, muro) -- no de recinto, agregadas 2026-09-19
+    # para consolidar con el piloto BIM (Fase 2/BIM/piloto_ids_oguc.py,
+    # analizar_todos.py). El loop que consume este diccionario mas abajo solo
+    # busca por `tipo` de RECINTO clasificado por Claude Vision (dormitorio,
+    # pasillo, escalera, etc.) -- "puerta_ancho_libre" y "muro_fire_rating"
+    # nunca calzan con un `tipo` de recinto real, asi que estas 2 entradas NO
+    # se consumen por ese loop hoy. Existen aca para que sean la FUENTE UNICA
+    # del valor + la referencia normativa: el piloto BIM verifico estos 2
+    # valores de forma independiente contra el texto OGUC (via BCN/LeyChile)
+    # y nunca los habia agregado de vuelta a este diccionario compartido --
+    # ver auditoria completa en Fase 2/Convenciones_BIM.md seccion E. Si algun
+    # dia el pipeline PDF implementa su propio chequeo de ancho de puerta o
+    # FireRating de muro, debe leer el valor de aca, no hardcodear uno nuevo.
+    #
+    # NOTA DE SINCRONIZACION: este archivo es un espejo LOCAL de la celda 4
+    # real, que sigue corriendo en el notebook de Colab (ver roadmap BIM,
+    # seccion 19) -- no hay import directo posible entre este archivo y los
+    # scripts de Fase 2/BIM/ (viven en carpetas distintas, y este archivo no
+    # es un modulo limpio, tiene codigo de nivel superior que llama al Worker).
+    # Mismo patron de sincronizacion manual que ya existe entre este espejo y
+    # el notebook de Colab -- si se corrige un valor aca, corregirlo tambien
+    # en Fase 2/BIM/piloto_ids_oguc.py y analizar_todos.py.
+    'puerta_ancho_libre': (None, 0.80, 'OGUC Art. 4.1.7 N°6 — ancho libre minimo 0,80 m (accesibilidad universal)'),
+    'muro_fire_rating': {
+        'campo_requerido': 'Pset_WallCommon.FireRating',
+        'ref': 'OGUC Art. 4.3.3 — resistencia al fuego segun destino/altura (chequeo de dato declarado, no de valor numerico)',
+    },
 }
 
 def mejorar_contraste_nitidez(img_rgb):

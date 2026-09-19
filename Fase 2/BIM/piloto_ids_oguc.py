@@ -6,6 +6,16 @@
 # Objetivo: comprobar si IfcTester/IDS sirve como motor declarativo para el
 # subconjunto de OGUC_REGLAS que son umbrales numericos simples, sin escribir
 # Python a mano por cada regla.
+#
+# CONSOLIDACION 2026-09-19 (ver Fase 2/Convenciones_BIM.md seccion E): antes
+# de esta fecha, "puerta ancho libre 0.80m" y "muro FireRating" NO estaban
+# realmente en OGUC_REGLAS pese a lo que decia este comentario -- se habian
+# verificado de forma independiente contra el texto OGUC (BCN/LeyChile) pero
+# nunca se agregaron de vuelta a la fuente compartida. Ahora SI viven en
+# OGUC_REGLAS['puerta_ancho_libre'] / OGUC_REGLAS['muro_fire_rating']
+# (_celda4_actual.py). No hay import directo posible (ese archivo no es un
+# modulo limpio, es un espejo local de una celda de Colab) -- los valores de
+# abajo son una COPIA manual, deben corregirse en ambos lados si cambian.
 
 import ifcopenshell
 from ifctester import ids, reporter
@@ -19,6 +29,7 @@ specs = ids.Ids(
 )
 
 # --- Regla 1: Puertas -- ancho libre minimo 0.80 m -----------------------
+# Valor y referencia: OGUC_REGLAS['puerta_ancho_libre'] en _celda4_actual.py.
 # OGUC Art. 4.1.7 N6 (accesibilidad universal): "puerta con vano 0,90 m /
 # ancho libre 0,80 m". Chequeamos OverallWidth (atributo nativo IfcDoor) como
 # aproximacion al ancho libre.
@@ -38,6 +49,7 @@ s1.requirements.append(
 specs.specifications.append(s1)
 
 # --- Regla 2: Muros -- FireRating declarado ------------------------------
+# Campo y referencia: OGUC_REGLAS['muro_fire_rating'] en _celda4_actual.py.
 # OGUC Art. 4.3.3: los elementos deben cumplir resistencia al fuego segun
 # destino y altura. Pset_WallCommon.FireRating es el campo IFC estandar para
 # declararlo. No filtramos por LoadBearing: la regla real de OGUC aplica
