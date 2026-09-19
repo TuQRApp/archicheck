@@ -103,6 +103,44 @@ def filtrar_vanos_reales(elementos_de_un_tipo):
     ids_con_dimension = {e.GlobalId for e in con_dimension}
     return [e for e in elementos_de_un_tipo if e.GlobalId in ids_con_dimension]
 
+
+# Bug real encontrado 2026-09-19 (revision cruzada DeepSeek, sobre el codigo de
+# hoy): analizar_todos.py y generar_json_colab.py comparaban OverallWidth
+# CRUDO (sin escala_m) contra el umbral OGUC de 0.80 m -- en archivos cuya
+# unidad de longitud es milimetros (BasicHouse, HouseZ, Schependomlaan: 3 de
+# los 6 archivos con arquitectura real de esta sesion), cualquier ancho crudo
+# (ej. 680) es siempre >= 0.80, asi que el chequeo NUNCA podia fallar sin
+# importar el ancho real. Verificado con datos: Schependomlaan tiene 12
+# puertas reales bajo 0.80 m real (0.63-0.68 m) que el JSON generado antes de
+# este fix reportaba con CERO incumplimientos de ancho.
+#
+# La misma clase de bug NO aplica igual al AREA de un recinto (Qto de
+# superficie): IFC permite declarar AREAUNIT de forma INDEPENDIENTE de
+# LENGTHUNIT -- confirmado con evidencia real (no asumido): BasicHouse y
+# Schependomlaan declaran LENGTHUNIT=milimetro pero AREAUNIT=metro_cuadrado
+# explicito (patron real de exportadores Revit: longitud en mm por precision,
+# area en m2 por legibilidad) -- sus areas de recinto YA estan en m2
+# correctos, aplicarles escala_m**2 las habria roto (0.72 m2 reales
+# convertidos, por error, a 0.00000072). HouseZ no declara ningun AREAUNIT
+# propio -- para ese caso (sin caso de ventilacion calculable todavia en
+# ningun archivo de esta sesion, asi que sin impacto visible hoy) se deriva
+# como el cuadrado de la escala de longitud, comportamiento correcto segun el
+# estandar IFC cuando AREAUNIT no se declara aparte.
+def escala_area(modelo):
+    """Factor de escala para valores de AREA (ej. NetFloorArea de un Qto de
+    recinto) a m2 real -- NUNCA asumir que es escala_m**2, ver nota de
+    cabecera: usa el AREAUNIT propio del proyecto si existe, y solo deriva de
+    LENGTHUNIT al cuadrado cuando el proyecto no declara AREAUNIT en
+    absoluto."""
+    proyectos = modelo.by_type("IfcProject")
+    contexto_unidades = proyectos[0].UnitsInContext if proyectos else None
+    tiene_area_unit = bool(contexto_unidades) and any(
+        getattr(u, "UnitType", None) == "AREAUNIT" for u in contexto_unidades.Units
+    )
+    if tiene_area_unit:
+        return ifcopenshell.util.unit.calculate_unit_scale(modelo, "AREAUNIT")
+    return ifcopenshell.util.unit.calculate_unit_scale(modelo) ** 2
+
 ESTILOS = {
     # linewidth aca es a proposito MAS grueso que el espesor real del muro:
     # a escala de edificio completo (~60-70 m) en una pagina A3, un muro de
@@ -325,12 +363,25 @@ def mapa_operacion_puertas(modelo):
 # distinto de un arco con dato declarado (ver "fuente" en
 # arco_apertura_puerta) y nunca se presenta como si fuera un dato cierto.
 UMBRAL_ASIMETRIA_BISAGRA_M = 0.02
+# Guardia contra falsos positivos (2026-09-19, hallazgo real de la revision
+# cruzada con DeepSeek sobre este mismo metodo): la separacion izquierda/
+# derecha usa el ancho NOMINAL declarado (ancho_m/2), no el rango real de X
+# del hull -- si el hull se extiende bastante mas alla de [0, ancho_m] (por
+# marco/jamba, o por cualquier asimetria que no tenga nada que ver con un
+# arco de giro real: bisagra fisica embebida, tope de piso), la asimetria de
+# Y medida puede no corresponder en absoluto a la bisagra real. Calibrado
+# contra D1R: su hull real va de -0.0575 a 0.970 m (ancho_m=0.93) -- una
+# desviacion maxima de ~0.058 m respecto de [0, ancho_m], que este margen
+# deja pasar con holgura. Si el hull se extiende MAS que este margen, se
+# descarta la señal por completo (no se arriesga una bisagra mal inferida).
+UMBRAL_MARGEN_HULL_M = 0.08
 COLOR_ARCO_GEOMETRIA = "#D97706"  # ambar -- distinto de "#1d4ed8" (puerta con dato declarado) y "#DC2626" (sin dato en absoluto)
 
 
 def bisagra_por_geometria(puerta, ancho_m, origen, eje_x, eje_y):
     """None si no hay señal utilizable (footprint simetrico, sin geometria,
-    o eje degenerado); si no, la posicion local de la bisagra: 0.0 (extremo
+    eje degenerado, o footprint que se extiende mucho mas alla del ancho
+    nominal del vano); si no, la posicion local de la bisagra: 0.0 (extremo
     izquierdo) o ancho_m (extremo derecho) -- ver nota de cabecera."""
     geom = footprint_2d(puerta)
     if geom is None:
@@ -342,6 +393,8 @@ def bisagra_por_geometria(puerta, ancho_m, origen, eje_x, eje_y):
     coords = np.array(geom.exterior.coords)
     locales = (coords - origen) @ eje_inv.T
     xs, ys = locales[:, 0], locales[:, 1]
+    if xs.min() < -UMBRAL_MARGEN_HULL_M or xs.max() > ancho_m + UMBRAL_MARGEN_HULL_M:
+        return None
     mitad = ancho_m / 2
     y_izq = ys[xs < mitad]
     y_der = ys[xs >= mitad]
@@ -365,6 +418,8 @@ def arco_apertura_puerta(puerta, operation_type, escala_m, n_segmentos=8):
     si fuera un dato cierto). (None, None) si no se pudo determinar nada
     (falta ancho/placement, y ni el dato declarado ni la geometria dan
     señal)."""
+    if n_segmentos <= 0:  # guardia defensiva (Codex, 2026-09-19) -- ningun llamado actual usa otro valor que el default
+        return None, None
     ancho = puerta.OverallWidth
     if ancho is None or ancho <= 0:
         return None, None

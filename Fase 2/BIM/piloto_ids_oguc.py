@@ -55,20 +55,35 @@ specs.specifications.append(s1)
 # declararlo. No filtramos por LoadBearing: la regla real de OGUC aplica
 # segun destino/altura del edificio, no solo a muros estructurales, y el
 # piloto manual ya encontro FireRating vacio incluso en un muro cualquiera.
-s2 = ids.Specification(
-    name="Muros -- FireRating declarado (OGUC Art. 4.3.3)",
-    instructions="Todo muro debe declarar Pset_WallCommon.FireRating (resistencia al fuego segun destino/altura).",
-)
-s2.applicability.append(ids.Entity(name="IFCWALLSTANDARDCASE"))
-s2.requirements.append(
-    ids.Property(
-        propertySet="Pset_WallCommon",
-        baseName="FireRating",
-        cardinality="required",
-        instructions="OGUC Art. 4.3.3 -- resistencia al fuego debe estar declarada",
+# Fix 2026-09-19 (Codex, revision cruzada): ids.Entity hace match EXACTO de
+# clase (inst.is_a().upper() == self.name, verificado leyendo el codigo
+# fuente de ifctester.facet.Entity.__call__) -- NO incluye subtipos como si
+# hace ifcopenshell.util.by_type("IfcWall"). Antes esta regla solo aplicaba a
+# IFCWALLSTANDARDCASE, dejando afuera cualquier archivo que use IfcWall
+# generico (HouseZ, 140/140 muros; parte de Schependomlaan/Administrativo ES)
+# -- discrepancia real con analizar_todos.py, que si cubre ambas clases via
+# modelo.by_type("IfcWall"). Se agrega una segunda Specification identica
+# para IFCWALL en vez de asumir que 2 Entity en la misma applicability se
+# combinan con OR (no verificado, mas seguro no arriesgarlo).
+def _regla_fire_rating(nombre_entidad):
+    s = ids.Specification(
+        name=f"Muros ({nombre_entidad}) -- FireRating declarado (OGUC Art. 4.3.3)",
+        instructions="Todo muro debe declarar Pset_WallCommon.FireRating (resistencia al fuego segun destino/altura).",
     )
-)
-specs.specifications.append(s2)
+    s.applicability.append(ids.Entity(name=nombre_entidad))
+    s.requirements.append(
+        ids.Property(
+            propertySet="Pset_WallCommon",
+            baseName="FireRating",
+            cardinality="required",
+            instructions="OGUC Art. 4.3.3 -- resistencia al fuego debe estar declarada",
+        )
+    )
+    return s
+
+
+specs.specifications.append(_regla_fire_rating("IFCWALLSTANDARDCASE"))
+specs.specifications.append(_regla_fire_rating("IFCWALL"))
 
 # --- Regla 3: Escaleras -- ancho de tramo minimo 1.10 m ------------------
 # OGUC Art. 4.2.10: ancho minimo de escalera de evacuacion, piso 1.10 m

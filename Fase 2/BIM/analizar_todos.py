@@ -37,6 +37,7 @@ from pathlib import Path
 
 import ifcopenshell
 import ifcopenshell.util.element as elutil
+import ifcopenshell.util.unit
 
 import generar_plano_pdf as g
 
@@ -89,8 +90,26 @@ def num_o_none(v):
     return v if isinstance(v, (int, float)) else None
 
 
+def num_o_none_escalado(v, escala_m):
+    """Como num_o_none, pero convierte a metros -- OverallWidth/OverallHeight
+    son atributos de LONGITUD (siempre en la unidad cruda que declara el
+    archivo, sin excepcion posible via AREAUNIT/VOLUMEUNIT propio, a
+    diferencia del area de un recinto -- ver g.escala_area()). Bug real
+    corregido 2026-09-19 (revision cruzada DeepSeek): antes se comparaba el
+    valor CRUDO contra el umbral de 0.80 m -- en archivos con LENGTHUNIT en
+    milimetros (BasicHouse, HouseZ, Schependomlaan: 3 de los 6 archivos con
+    arquitectura real de esta sesion), cualquier ancho crudo (ej. 680) es
+    siempre >= 0.80, asi que el chequeo NUNCA podia fallar sin importar el
+    ancho real. Verificado con datos: Schependomlaan tiene 12 puertas reales
+    bajo 0.80 m real (0.63-0.68 m) que quedaban sin reportar por este bug."""
+    v = num_o_none(v)
+    return v * escala_m if v is not None else None
+
+
 def analizar(nombre_corto, ifc_path):
     modelo = ifcopenshell.open(ifc_path)
+    escala_m = ifcopenshell.util.unit.calculate_unit_scale(modelo)
+    escala_a = g.escala_area(modelo)
 
     muros = modelo.by_type("IfcWall")  # incluye IfcWallStandardCase (subtipo)
     # Descarta vanos que no son aberturas reales (marcos de obra en hormigon
@@ -126,7 +145,7 @@ def analizar(nombre_corto, ifc_path):
 
     puertas_geo = []
     for d in puertas:
-        ancho = num_o_none(d.OverallWidth)
+        ancho = num_o_none_escalado(d.OverallWidth, escala_m)
         # OJO: None es "sin dato", no "no cumple" -- HouseZ no declara OverallWidth
         # en ninguna puerta, y confundir ambos casos es exactamente el error que
         # este proyecto existe para evitar (ver DF-01/DF-02 del pipeline PDF).
@@ -147,8 +166,8 @@ def analizar(nombre_corto, ifc_path):
     # explicitamente en todos lados de este bloque.
     ventanas_geo = []
     for v in ventanas:
-        ancho = num_o_none(v.OverallWidth)
-        alto = num_o_none(v.OverallHeight)
+        ancho = num_o_none_escalado(v.OverallWidth, escala_m)
+        alto = num_o_none_escalado(v.OverallHeight, escala_m)
         ventanas_geo.append({
             "id": v.GlobalId, "nombre": v.Name, "ancho_m": ancho, "alto_m": alto,
             "area_m2": (ancho * alto) if (ancho is not None and alto is not None) else None,
@@ -159,6 +178,7 @@ def analizar(nombre_corto, ifc_path):
     for sp in recintos:
         qtos = elutil.get_psets(sp, qtos_only=True)
         area, campo_area = buscar_area(qtos)
+        area = area * escala_a if area is not None else None
         # OJO (DeepSeek, 2026-09-18): IfcRelSpaceBoundary "nivel 1" (el mas
         # comun) suele apuntar al MURO que delimita el recinto, no a la
         # ventana -- la ventana solo aparece aca si el exportador genera
@@ -166,11 +186,28 @@ def analizar(nombre_corto, ifc_path):
         # es garantia general). Verificado con datos reales que SI funciona
         # para FZK-Haus -- no asumir que funciona igual en otro exportador
         # sin volver a verificar.
+        # Fix 2026-09-19 (revision cruzada DeepSeek): antes se contaba
+        # CUALQUIER IfcWindow vinculado, incluidos los ya descartados por
+        # filtrar_vanos_reales (vanos de obra sin terminar) -- inflaba
+        # num_ventanas_vinculadas con vanos falsos, lo que podia cambiar de
+        # forma incorrecta el mensaje diagnostico de mas abajo (aunque el
+        # gate real de ventilacion, basado en ventanas_con_area_valida, ya
+        # estaba filtrado bien). Ahora solo cuenta ventanas REALES.
         ventanas_del_recinto = []
         for b in sp.BoundedBy:
             el = b.RelatedBuildingElement
-            if el is not None and el.is_a("IfcWindow"):
+            if el is not None and el.is_a("IfcWindow") and el.GlobalId in ventanas_por_id:
                 ventanas_del_recinto.append(el.GlobalId)
+        # Fix 2026-09-19 (revision cruzada DeepSeek): distingue "este recinto
+        # no tiene NINGUN IfcRelSpaceBoundary" (el exportador no intento
+        # vincularlo -- dato ausente para ESTE recinto puntual) de "tiene
+        # boundaries pero ninguno es ventana" (señal mas fuerte de que
+        # genuinamente no tiene ventanas). El resguardo de mas abajo
+        # (enlace_funciona) es a nivel EDIFICIO -- sirve para saber si el
+        # MECANISMO de vinculo funciona en este archivo en absoluto, pero no
+        # protege a un recinto puntual sin boundaries de que le apliquen un
+        # 0% que en realidad es "no se intento vincular este recinto".
+        tiene_boundary = len(sp.BoundedBy) > 0
         area_ventanas = 0.0
         ventanas_con_area_valida = 0
         for vid in ventanas_del_recinto:
@@ -191,6 +228,7 @@ def analizar(nombre_corto, ifc_path):
             "num_ventanas_vinculadas": len(ventanas_del_recinto),
             "ventanas_con_area_valida": ventanas_con_area_valida,
             "area_ventanas_m2": round(area_ventanas, 3),
+            "tiene_boundary": tiene_boundary,
         })
 
     # Segundo hallazgo del mismo tipo (2026-09-18), esta vez en HouseZ: tiene
@@ -214,7 +252,18 @@ def analizar(nombre_corto, ifc_path):
     ventilacion_aplicable = ventilacion_aplicable and enlace_funciona
     for r in recintos_geo:
         area = r["area_m2"]
-        pct = (r["area_ventanas_m2"] / area * 100) if (ventilacion_aplicable and area is not None and area > 0) else None
+        # Fix 2026-09-19 (revision cruzada DeepSeek): el resguardo
+        # `ventilacion_aplicable` es a nivel EDIFICIO (confirma que el
+        # MECANISMO de vinculo funciona en este archivo) -- pero un recinto
+        # SIN ningun IfcRelSpaceBoundary propio (`tiene_boundary=False`) no
+        # tiene ningun dato para evaluar, aunque el edificio en general si
+        # tenga el mecanismo funcionando en otros recintos. Antes, ese
+        # recinto recibia pct=0.0/cumple=False (incumplimiento espurio) en
+        # vez de "sin dato" -- exactamente el patron "dato ausente vs no
+        # cumple" que este proyecto existe para evitar, aplicado aca a nivel
+        # de recinto individual, no solo de edificio completo.
+        se_puede_evaluar = ventilacion_aplicable and r["tiene_boundary"] and area is not None and area > 0
+        pct = (r["area_ventanas_m2"] / area * 100) if se_puede_evaluar else None
         r["pct_ventilacion"] = round(pct, 1) if pct is not None else None
         r["cumple_ventilacion_10pct"] = (pct >= 10.0) if pct is not None else None
 

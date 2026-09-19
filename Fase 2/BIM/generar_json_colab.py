@@ -263,6 +263,7 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
     # Sentido de apertura de puertas (2026-09-19) -- ver nota de cabecera junto
     # a g.arco_apertura_puerta(). Se calcula UNA vez para todo el edificio.
     escala_m = ifcopenshell.util.unit.calculate_unit_scale(modelo)
+    escala_a = g.escala_area(modelo)
     mapa_ops = g.mapa_operacion_puertas(modelo)
 
     # Ids de puertas/ventanas que SI son aberturas reales -- calculado UNA vez
@@ -436,8 +437,13 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
 
         ventanas_geo_nivel = []
         for v in ventanas:
-            ancho = a.num_o_none(v.OverallWidth)
-            alto = a.num_o_none(v.OverallHeight)
+            # escala_m aplicada (fix 2026-09-19, mismo bug de unidades que
+            # analizar_todos.py -- ver num_o_none_escalado): OverallWidth/
+            # OverallHeight son atributos de LONGITUD, siempre en la unidad
+            # cruda del archivo, nunca en el AREAUNIT propio que sí puede
+            # tener el area de un recinto (ver escala_a mas abajo).
+            ancho = a.num_o_none_escalado(v.OverallWidth, escala_m)
+            alto = a.num_o_none_escalado(v.OverallHeight, escala_m)
             ventanas_geo_nivel.append({
                 "id": v.GlobalId,
                 "area_m2": (ancho * alto) if (ancho is not None and alto is not None) else None,
@@ -449,6 +455,7 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
         for sp in espacios_nivel:
             qtos = elutil.get_psets(sp, qtos_only=True)
             area, _ = a.buscar_area(qtos)
+            area = area * escala_a if area is not None else None
             nombre = (sp.LongName or sp.Name or "").strip() or f"Recinto {sp.GlobalId[:6]}"
             area_ventanas = 0.0
             for b in sp.BoundedBy:
@@ -493,7 +500,10 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
 
         incumplimientos_geo = []
         for d in puertas:
-            ancho = a.num_o_none(d.OverallWidth)
+            # escala_m aplicada (fix 2026-09-19) -- mismo bug de unidades que
+            # analizar_todos.py: comparar el OverallWidth crudo contra 0.80
+            # nunca podia fallar en archivos con LENGTHUNIT en milimetros.
+            ancho = a.num_o_none_escalado(d.OverallWidth, escala_m)
             if ancho is not None and ancho < 0.80:
                 incumplimientos_geo.append({
                     "tipo": "ancho", "recinto": d.Name or "Puerta",
@@ -508,7 +518,11 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
         paginas.append({
             "pagina": idx + 1,
             "entry_idx": idx,
-            "fname_tag": nivel.Name,
+            # Fix 2026-09-19 (Codex): nivel.Name puede venir None en un IFC
+            # valido (mismo caso ya blindado para nombre_nivel_seguro arriba)
+            # -- sin fallback, el JSON llevaba null en vez de string, y el
+            # portal probablemente espera string para tags/filtros.
+            "fname_tag": nivel.Name or "SinNombre",
             "escala": "1:50 (nominal -- dibujo generado a escala real en metros desde IFC, no impreso a escala de papel)",
             "imagen_w_px": w_px, "imagen_h_px": h_px, "mpp": None,
             "analisis_semantico": {
