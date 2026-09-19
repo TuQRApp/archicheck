@@ -116,6 +116,12 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_
     # pixeles junto con el resto (mismo criterio que geoms_por_categoria, ver
     # arco_apertura_puerta/mapa_operacion_puertas en generar_plano_pdf.py).
     arcos_puerta = {}
+    # fuente de cada arco sintetizado (2026-09-19) -- "declarado" (dato de
+    # IfcDoorStyle.OperationType) o "geometria" (ultimo recurso, ver
+    # bisagra_por_geometria en generar_plano_pdf.py) -- se propaga al JSON
+    # del portal para que quede visible cual sentido de apertura es un dato
+    # cierto y cual una inferencia a confirmar con el arquitecto.
+    fuentes_puerta = {}
     for tipo in g.ORDEN_DIBUJO:
         for el in por_tipo.get(tipo, []):
             geom = g.footprint_2d(el)
@@ -126,15 +132,19 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_
             if tipo == "IfcColumn":
                 g.marcar_centroide(ax, geom, color="black", zorder=6)
             if tipo == "IfcDoor":
-                arcos = g.arco_apertura_puerta(el, mapa_ops.get(el.GlobalId), escala_m)
+                arcos, fuente = g.arco_apertura_puerta(el, mapa_ops.get(el.GlobalId), escala_m)
                 if arcos:
+                    color = g.ESTILOS["IfcDoor"]["edgecolor"] if fuente == "declarado" else g.COLOR_ARCO_GEOMETRIA
+                    estilo_linea = "-" if fuente == "declarado" else "--"
                     arcos_t = []
                     for puntos in arcos:
                         puntos_t = [(px - ox, py - oy) for px, py in puntos]
                         xs, ys = zip(*puntos_t)
-                        ax.plot(xs, ys, color=g.ESTILOS["IfcDoor"]["edgecolor"], linewidth=0.5, zorder=4)
+                        ax.plot(xs, ys, color=color, linestyle=estilo_linea,
+                                 linewidth=0.5 if fuente == "declarado" else 0.7, zorder=4)
                         arcos_t.append(puntos_t)
                     arcos_puerta[el.GlobalId] = arcos_t
+                    fuentes_puerta[el.GlobalId] = fuente
                 else:
                     # Regla del proyecto (2026-09-19): el sentido de apertura
                     # debe quedar SIEMPRE señalado en el PNG -- mismo criterio
@@ -215,6 +225,10 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_
         p = puertas_por_id.get(global_id)
         if p is None:
             continue
+        # Deja trazable en el JSON si el sentido de apertura es un dato
+        # declarado en el IFC o una inferencia por geometria (ultimo recurso,
+        # a confirmar con el arquitecto) -- ver nota de cabecera arriba.
+        p["arco_apertura_fuente"] = fuentes_puerta[global_id]
         # Un arco por hoja (2 en DOUBLE_DOOR_SINGLE_SWING) -- se proyecta y
         # segmenta CADA arco por separado para no unir con una linea espuria
         # el punto final de una hoja con el punto inicial de la otra.

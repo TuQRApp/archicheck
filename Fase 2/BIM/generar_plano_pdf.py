@@ -22,6 +22,7 @@ import ifcopenshell.util.element
 import ifcopenshell.util.placement
 import ifcopenshell.util.unit
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.patches import Polygon as MplPolygon
 from shapely.affinity import translate
@@ -273,7 +274,6 @@ def etiquetar_recintos(ax, elementos, ox, oy):
 # "una abre hacia la izquierda, la otra hacia la derecha").
 OPERACIONES_SWING_SIMPLE = {"SINGLE_SWING_LEFT": 0.0, "SINGLE_SWING_RIGHT": 1.0}
 OPERACIONES_SWING_DOBLE = {"DOUBLE_DOOR_SINGLE_SWING"}
-OPERACIONES_SWING_SOPORTADAS = set(OPERACIONES_SWING_SIMPLE) | OPERACIONES_SWING_DOBLE
 
 
 def mapa_operacion_puertas(modelo):
@@ -293,23 +293,86 @@ def mapa_operacion_puertas(modelo):
     return mapa
 
 
-def arco_apertura_puerta(puerta, operation_type, escala_m, n_segmentos=8):
-    """Lista de arcos -- uno por hoja (1 para puerta simple, 2 para
-    DOUBLE_DOOR_SINGLE_SWING) -- cada uno una lista de puntos (x,y) en
-    coordenadas de MUNDO (antes de restar ox,oy) que trazan el simbolo
-    estandar de apertura: arco de 90 grados centrado en la bisagra + linea
-    recta de la hoja abierta. None si falta el dato (ancho, placement, o
-    tipo de operacion no soportado)."""
-    if operation_type not in OPERACIONES_SWING_SOPORTADAS:
+# Bisagra por geometria -- ULTIMO recurso cuando no hay OperationType util
+# (2026-09-19, mismo dia, pedido explicito del usuario tras revisar la
+# pagina 5 del PDF: "todas abren para el lado que sobresale el trapezoide...
+# seguro no hay datos y se deberia hacer por geometria?"). Distinto del
+# heuristico ya descartado arriba (ese buscaba "esta puerta ya trae arco
+# propio, para no dibujar el sintetizado encima" -- aca la pregunta es otra:
+# "el footprint YA disponible, sin arco identificable, ¿de todos modos
+# insinua hacia que lado se abre?").
+#
+# Calibrado contra el UNICO caso de verdad conocida en este archivo: "D1R"
+# (GlobalId 3BDarYIf1EXRuu7o6glIV$), la puerta cuyo arco real (bisagra en X
+# local=0, barrido hacia +Y local) ya se habia verificado a mano. Esa misma
+# puerta, con el metodo de abajo (separar el footprint en mitad
+# izquierda/derecha del ancho y comparar el rango de Y de cada mitad), da
+# una asimetria clara y consistente con ese dato conocido: mitad cercana a
+# la bisagra real, rango_y=0.120 m; mitad lejana (donde la hoja barre al
+# abrir), rango_y=0.173 m -- la mitad de MENOR rango es la bisagra. Decenas
+# de puertas de Schependomlaan comparten esta misma geometria "rica"
+# (~500-514 vertices, misma magnitud de asimetria ~0.05 m) via un
+# IfcRepresentationMap reutilizado -- sugiere que SI tienen el mismo arco
+# embebido en su propia geometria que D1R, solo que sin OperationType
+# declarado para saberlo por el camino normal.
+#
+# ADVERTENCIA (por eso se usa solo como ultimo recurso): es una calibracion
+# de UN SOLO caso, no una validacion estadistica -- no hay en este archivo
+# ninguna otra puerta con OperationType DECLARADO que ademas tenga esta
+# geometria "rica" para cruzar el resultado de forma independiente. El
+# propio usuario pidio explicitamente dejar esto como ultima opcion, detras
+# de preguntarle al arquitecto -- por eso el resultado se marca SIEMPRE
+# distinto de un arco con dato declarado (ver "fuente" en
+# arco_apertura_puerta) y nunca se presenta como si fuera un dato cierto.
+UMBRAL_ASIMETRIA_BISAGRA_M = 0.02
+COLOR_ARCO_GEOMETRIA = "#D97706"  # ambar -- distinto de "#1d4ed8" (puerta con dato declarado) y "#DC2626" (sin dato en absoluto)
+
+
+def bisagra_por_geometria(puerta, ancho_m, origen, eje_x, eje_y):
+    """None si no hay señal utilizable (footprint simetrico, sin geometria,
+    o eje degenerado); si no, la posicion local de la bisagra: 0.0 (extremo
+    izquierdo) o ancho_m (extremo derecho) -- ver nota de cabecera."""
+    geom = footprint_2d(puerta)
+    if geom is None:
         return None
+    eje = np.array([eje_x, eje_y]).T
+    if abs(np.linalg.det(eje)) < 1e-9:
+        return None
+    eje_inv = np.linalg.inv(eje)
+    coords = np.array(geom.exterior.coords)
+    locales = (coords - origen) @ eje_inv.T
+    xs, ys = locales[:, 0], locales[:, 1]
+    mitad = ancho_m / 2
+    y_izq = ys[xs < mitad]
+    y_der = ys[xs >= mitad]
+    if len(y_izq) == 0 or len(y_der) == 0:
+        return None
+    rango_izq = y_izq.max() - y_izq.min()
+    rango_der = y_der.max() - y_der.min()
+    if abs(rango_izq - rango_der) < UMBRAL_ASIMETRIA_BISAGRA_M:
+        return None
+    return 0.0 if rango_izq < rango_der else ancho_m
+
+
+def arco_apertura_puerta(puerta, operation_type, escala_m, n_segmentos=8):
+    """(arcos, fuente) -- arcos es una lista de arcos (uno por hoja: 1 para
+    puerta simple, 2 para DOUBLE_DOOR_SINGLE_SWING), cada uno una lista de
+    puntos (x,y) en coordenadas de MUNDO (antes de restar ox,oy) que trazan
+    el simbolo estandar de apertura: arco de 90 grados centrado en la
+    bisagra + linea recta de la hoja abierta. fuente es "declarado"
+    (IfcDoorStyle.OperationType util) o "geometria" (ULTIMO recurso, ver
+    bisagra_por_geometria -- debe marcarse distinto en el dibujo, nunca como
+    si fuera un dato cierto). (None, None) si no se pudo determinar nada
+    (falta ancho/placement, y ni el dato declarado ni la geometria dan
+    señal)."""
     ancho = puerta.OverallWidth
     if ancho is None or ancho <= 0:
-        return None
+        return None, None
     ancho_m = ancho * escala_m
     try:
         mat = ifcopenshell.util.placement.get_local_placement(puerta.ObjectPlacement)
     except Exception:
-        return None
+        return None, None
     origen = mat[:2, 3] * escala_m
     eje_x, eje_y = mat[:2, 0], mat[:2, 1]
 
@@ -333,18 +396,27 @@ def arco_apertura_puerta(puerta, operation_type, escala_m, n_segmentos=8):
 
     if operation_type in OPERACIONES_SWING_SIMPLE:
         h = OPERACIONES_SWING_SIMPLE[operation_type] * ancho_m  # bisagra: 0 (izq) o ancho_m (der)
-        return [arco_de_una_hoja(h, ancho_m)]
+        return [arco_de_una_hoja(h, ancho_m)], "declarado"
 
-    # DOUBLE_DOOR_SINGLE_SWING: 2 hojas de ancho_m/2 cada una, bisagras en
-    # los 2 extremos opuestos del vano completo (ver nota de cabecera).
-    mitad = ancho_m / 2
-    return [arco_de_una_hoja(0.0, mitad), arco_de_una_hoja(ancho_m, mitad)]
+    if operation_type in OPERACIONES_SWING_DOBLE:
+        # DOUBLE_DOOR_SINGLE_SWING: 2 hojas de ancho_m/2 cada una, bisagras
+        # en los 2 extremos opuestos del vano completo (ver nota de cabecera).
+        mitad = ancho_m / 2
+        return [arco_de_una_hoja(0.0, mitad), arco_de_una_hoja(ancho_m, mitad)], "declarado"
+
+    # Sin OperationType util -- ultimo recurso, ver nota de cabecera de
+    # bisagra_por_geometria.
+    h = bisagra_por_geometria(puerta, ancho_m, origen, eje_x, eje_y)
+    if h is None:
+        return None, None
+    return [arco_de_una_hoja(h, ancho_m)], "geometria"
 
 
 def marcar_apertura_sin_dato(ax, geom_trasladada):
     """Marca "?" roja sobre la puerta cuando NO se pudo determinar el sentido
-    de apertura (OperationType ausente/NOTDEFINED, puerta doble no soportada,
-    o falta OverallWidth/placement) -- pedido explicito del usuario
+    de apertura (OperationType ausente/NOTDEFINED, falta OverallWidth/
+    placement, y tampoco dio señal el ultimo recurso por geometria -- ver
+    bisagra_por_geometria) -- pedido explicito del usuario
     (2026-09-19): "el sentido de apertura debe quedar siempre señalado en el
     pdf/png", nunca ausente en silencio. Mismo principio de "incertidumbre
     transparente" que ya rige otros elementos sinteticos/sin dato del
@@ -597,6 +669,7 @@ def main(ifc_path):
 
             fig, ax = plt.subplots(figsize=(16.54, 11.69))  # A3 apaisado -- mas espacio para detalle
             hubo_puerta_sin_dato = False
+            hubo_arco_por_geometria = False
 
             for tipo in ORDEN_DIBUJO:
                 for el in por_tipo.get(tipo, []):
@@ -619,19 +692,29 @@ def main(ifc_path):
                         # en la geometria (ej. "D1R" en Schependomlaan) -- solo
                         # agrega la linea estandar sobre lo que ya se dibuja.
                         op = mapa_ops.get(el.GlobalId)
-                        arcos = arco_apertura_puerta(el, op, escala_m)
+                        arcos, fuente = arco_apertura_puerta(el, op, escala_m)
                         if arcos:
+                            # "geometria" (ultimo recurso, ver
+                            # bisagra_por_geometria) se dibuja SIEMPRE distinto
+                            # de "declarado" -- punteado y en color de alerta,
+                            # nunca como si fuera un dato cierto.
+                            color = (ESTILOS["IfcDoor"]["edgecolor"] if fuente == "declarado"
+                                     else COLOR_ARCO_GEOMETRIA)
+                            estilo_linea = "-" if fuente == "declarado" else "--"
                             for puntos in arcos:
                                 xs = [p[0] - ox for p in puntos]
                                 ys = [p[1] - oy for p in puntos]
-                                ax.plot(xs, ys, color=ESTILOS["IfcDoor"]["edgecolor"],
-                                         linewidth=0.5, zorder=4)
+                                ax.plot(xs, ys, color=color, linewidth=0.7 if fuente == "geometria" else 0.5,
+                                         linestyle=estilo_linea, zorder=4)
+                            if fuente == "geometria":
+                                hubo_arco_por_geometria = True
                         else:
                             # Regla del proyecto (2026-09-19): el sentido de
                             # apertura debe quedar SIEMPRE señalado -- si no
                             # se pudo sintetizar (sin OperationType util, sin
-                            # ancho, puerta doble no soportada), se marca la
-                            # ausencia en vez de dejar la puerta muda.
+                            # ancho, puerta doble no soportada, y tampoco dio
+                            # señal la geometria), se marca la ausencia en vez
+                            # de dejar la puerta muda.
                             marcar_apertura_sin_dato(ax, geom)
                             hubo_puerta_sin_dato = True
 
@@ -646,6 +729,9 @@ def main(ifc_path):
             handles = [MplPolygon([(0, 0)], closed=True, facecolor=ESTILOS[t]["facecolor"],
                                    edgecolor=ESTILOS[t].get("edgecolor", "none"), label=ESTILOS[t]["label"])
                        for t in ORDEN_DIBUJO if por_tipo.get(t)]
+            if hubo_arco_por_geometria:
+                handles.append(plt.Line2D([0], [0], color=COLOR_ARCO_GEOMETRIA, linestyle="--", linewidth=1.2,
+                                           label="Puerta: apertura inferida por geometría (sin dato, confirmar con arquitecto)"))
             if hubo_puerta_sin_dato:
                 handles.append(plt.Line2D([0], [0], marker="$?$", color="#DC2626", linestyle="none",
                                            markersize=8, label="Puerta: sentido de apertura sin dato"))
