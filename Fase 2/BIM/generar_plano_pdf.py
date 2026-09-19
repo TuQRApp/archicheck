@@ -67,6 +67,41 @@ def ruta_salida(ifc_path: str) -> str:
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     return str(origen.parent / f"{origen.stem}_plano_{timestamp}.pdf")
 
+
+# Filtro de vanos "no reales" (marcos de obra sin terminar, hardware no
+# transitable) -- hallazgo real 2026-09-19: el usuario desconfio con razon de
+# "80 puertas, 84 ventanas" en una sola planta de Schependomlaan. Resultaron
+# ser "stelkozijn" (holandes: contramarco de OBRA en hormigon, previo a
+# instalar la puerta/ventana final -- Psets de hormigon armado,
+# "betonkwaliteit"/"wapening kg/m3", 65 de 205 IfcDoor + 182 de 259
+# IfcWindow en todo el edificio) y "liftdeur" (panel del mecanismo de un
+# ascensor, geometria de 0.039 m2 rotada, no una puerta de circulacion).
+#
+# La primera version de este filtro fue por NOMBRE ("stelkozijn"/"liftdeur")
+# -- el usuario senalo con razon (2026-09-19) que eso es especifico del
+# exportador holandes de ESTE archivo y no serviria para un IFC chileno con
+# los mismos nombres en espanol. Reemplazado por una señal geometrica, sin
+# depender de idioma: en Schependomlaan, "tiene OverallWidth O OverallHeight
+# declarado" separa EXACTO las 104 puertas reales de las 101 falsas (0 casos
+# se cuelan en ningun sentido, verificado) -- pero eso solo es una señal
+# valida cuando ALGUNOS elementos del archivo SI declaran dimension. HouseZ
+# tiene sus 15 puertas y 22 ventanas reales con CERO dimension declarada en
+# TODAS -- ahi la ausencia no distingue nada, es como exporta ese archivo
+# (dato ausente legitimo, ya contabilizado como real en toda la sesion). Por
+# eso el filtro es adaptativo POR ARCHIVO Y POR CATEGORIA (puerta y ventana
+# por separado): si existe al menos un elemento con dimension, los que no
+# tienen ninguna se excluyen; si NINGUNO la tiene, se mantienen todos.
+def filtrar_vanos_reales(elementos_de_un_tipo):
+    """Filtra una lista de IfcDoor o de IfcWindow (todos del MISMO tipo,
+    typicamente `modelo.by_type("IfcDoor")` completo) dejando solo los que
+    son aberturas reales -- ver nota de cabecera arriba. Devuelve una nueva
+    lista; no muta la de entrada."""
+    con_dimension = [e for e in elementos_de_un_tipo if e.OverallWidth is not None or e.OverallHeight is not None]
+    if not con_dimension:
+        return list(elementos_de_un_tipo)  # sin señal en este archivo -- se mantienen todos
+    ids_con_dimension = {e.GlobalId for e in con_dimension}
+    return [e for e in elementos_de_un_tipo if e.GlobalId in ids_con_dimension]
+
 ESTILOS = {
     # linewidth aca es a proposito MAS grueso que el espesor real del muro:
     # a escala de edificio completo (~60-70 m) en una pagina A3, un muro de
@@ -470,6 +505,13 @@ def main(ifc_path):
     escala_m = ifcopenshell.util.unit.calculate_unit_scale(modelo)
     mapa_ops = mapa_operacion_puertas(modelo)
 
+    # Ids de puertas/ventanas que SI son aberturas reales -- calculado UNA vez
+    # para todo el edificio (ver filtrar_vanos_reales arriba), no por nivel:
+    # la señal ("¿existe algun elemento del archivo con dimension declarada?")
+    # es una propiedad del archivo/exportador, no de un nivel en particular.
+    ids_puertas_reales = {e.GlobalId for e in filtrar_vanos_reales(modelo.by_type("IfcDoor"))}
+    ids_ventanas_reales = {e.GlobalId for e in filtrar_vanos_reales(modelo.by_type("IfcWindow"))}
+
     with PdfPages(out_pdf) as pdf:
         for nivel in niveles:
             rels = [r for r in modelo.by_type("IfcRelContainedInSpatialStructure")
@@ -477,6 +519,12 @@ def main(ifc_path):
             elementos = []
             for r in rels:
                 elementos.extend(r.RelatedElements)
+
+            # Descarta vanos que no son aberturas reales -- hallazgo real
+            # 2026-09-19 en Schependomlaan (ver filtrar_vanos_reales arriba).
+            elementos = [e for e in elementos
+                         if (not e.is_a("IfcDoor") or e.GlobalId in ids_puertas_reales)
+                         and (not e.is_a("IfcWindow") or e.GlobalId in ids_ventanas_reales)]
 
             # IfcSpace en este archivo NO llega por IfcRelContainedInSpatialStructure
             # (como muros/puertas) sino por IfcRelAggregates (decomposicion del

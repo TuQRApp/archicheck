@@ -244,6 +244,12 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
     escala_m = ifcopenshell.util.unit.calculate_unit_scale(modelo)
     mapa_ops = g.mapa_operacion_puertas(modelo)
 
+    # Ids de puertas/ventanas que SI son aberturas reales -- calculado UNA vez
+    # para todo el edificio (ver g.filtrar_vanos_reales), no por nivel: la
+    # señal es una propiedad del archivo/exportador, no de un nivel puntual.
+    ids_puertas_reales = {e.GlobalId for e in g.filtrar_vanos_reales(modelo.by_type("IfcDoor"))}
+    ids_ventanas_reales = {e.GlobalId for e in g.filtrar_vanos_reales(modelo.by_type("IfcWindow"))}
+
     # Resguardo de ventilacion a nivel EDIFICIO -- fix 2026-09-19, hallazgo real
     # de la revision cruzada Codex+DeepSeek: este adaptador calculaba pct/cumple
     # por recinto sin ningun resguardo, expuesto al mismo patron de falso
@@ -254,7 +260,11 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
     # habia propagado a este archivo. Se calcula UNA vez para todo el edificio
     # (no por nivel/pagina), mismo criterio que analizar_todos.py, para que
     # ambos scripts sean comparables sobre el mismo IFC.
-    todas_ventanas_edificio = modelo.by_type("IfcWindow")
+    # Filtradas a ventanas reales (ver ids_ventanas_reales arriba) -- si no,
+    # un edificio con solo vanos de obra sin terminar (ej. Schependomlaan
+    # antes del fix 2026-09-19) podia dar "ventilacion_aplicable=True" por
+    # tener IfcWindow > 0, aunque ninguna fuera una ventana real.
+    todas_ventanas_edificio = [v for v in modelo.by_type("IfcWindow") if v.GlobalId in ids_ventanas_reales]
     ventilacion_aplicable = len(todas_ventanas_edificio) > 0
     if ventilacion_aplicable:
         anchos_altos_edificio = {v.GlobalId: (a.num_o_none(v.OverallWidth), a.num_o_none(v.OverallHeight))
@@ -302,6 +312,21 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
         elementos = []
         for r in rels:
             elementos.extend(r.RelatedElements)
+
+        # Descarta vanos que no son aberturas reales -- hallazgo real
+        # 2026-09-19: el usuario desconfio con razon de "80 puertas, 84
+        # ventanas" en una sola planta de Schependomlaan. Eran marcos de obra
+        # en hormigon sin terminar y paneles de mecanismo de ascensor,
+        # clasificados como IfcDoor/IfcWindow por el exportador pero sin
+        # ninguna dimension declarada -- ver g.filtrar_vanos_reales (señal
+        # geometrica, no por nombre/idioma: el usuario tambien senalo con
+        # razon que un filtro por nombre en holandes no serviria para un IFC
+        # chileno). ids_puertas_reales/ids_ventanas_reales ya se calcularon
+        # una vez para todo el edificio, arriba.
+        elementos = [e for e in elementos
+                     if (not e.is_a("IfcDoor") or e.GlobalId in ids_puertas_reales)
+                     and (not e.is_a("IfcWindow") or e.GlobalId in ids_ventanas_reales)]
+
         espacios_nivel = [e for e in ifcopenshell.util.element.get_decomposition(nivel, is_recursive=False)
                           if e.is_a("IfcSpace")]
         # Mismo patron de bug ya conocido con IfcSpace (ver comentario en

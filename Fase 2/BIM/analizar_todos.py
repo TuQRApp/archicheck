@@ -31,6 +31,8 @@ from pathlib import Path
 import ifcopenshell
 import ifcopenshell.util.element as elutil
 
+import generar_plano_pdf as g
+
 ARCHIVOS = [
     ("Administrativo (ES)", "Archivos ejemplo/04N02-36_GVA_NNN-NNN_AR_M3D_NN_02_Administrativo.ifc"),
     ("BasicHouse", "Archivos ejemplo/Basic House/BasicHouse.ifc"),
@@ -84,8 +86,11 @@ def analizar(nombre_corto, ifc_path):
     modelo = ifcopenshell.open(ifc_path)
 
     muros = modelo.by_type("IfcWall")  # incluye IfcWallStandardCase (subtipo)
-    puertas = modelo.by_type("IfcDoor")
-    ventanas = modelo.by_type("IfcWindow")
+    # Descarta vanos que no son aberturas reales (marcos de obra en hormigon
+    # sin terminar, hardware de ascensor) -- hallazgo real 2026-09-19, ver
+    # filtrar_vanos_reales() en generar_plano_pdf.py.
+    puertas = g.filtrar_vanos_reales(modelo.by_type("IfcDoor"))
+    ventanas = g.filtrar_vanos_reales(modelo.by_type("IfcWindow"))
     recintos = modelo.by_type("IfcSpace")
 
     # Encontrado al corregir el bug None/0.0 de ventilacion (2026-09-18): sin
