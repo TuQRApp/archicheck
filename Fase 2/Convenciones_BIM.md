@@ -268,6 +268,8 @@ A diferencia de CAD (donde la referencia es una imagen recortada de un plano), e
 
 Cada IFC de ejemplo queda guardado en `Fase 2/BIM/Archivos ejemplo/`, junto a sus derivados (`{origen}_{descripción}_{timestamp}.{ext}`) — mismo criterio de guardado ya fijado como convención de nombres del proyecto.
 
+**Convención de nombres para capturas de comparación en Altiro (fijada 2026-09-20)**: para todo ejemplo BIM nuevo donde se genere un PNG propio (pipeline `generar_json_colab.py`) Y se capture el mismo nivel en Altiro para comparación visual cruzada, la captura de Altiro se guarda en la MISMA carpeta que el PNG de origen, con el MISMO nombre, agregando el sufijo `_Altiro` antes de la extensión (ej. `Schependomlaan_pagina2_00_begane_grond_20260919_211035.png` → `Schependomlaan_pagina2_00_begane_grond_20260919_211035_Altiro.png`). Ver sección 29 de `Proyecto/bim_exploracion_mercado_y_viabilidad.md` para el detalle de cómo se obtienen estas capturas (Claude en Chrome real, no el panel sandboxed — ese está bloqueado para descargas/clipboard/fetch local).
+
 ---
 
 ## Pendiente de definir (el usuario irá indicando caso a caso)
