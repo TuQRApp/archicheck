@@ -98,7 +98,7 @@ CATEGORIA_POR_CLASE = {
 CATEGORIAS_SEGMENTOS = {"muro", "puerta", "ventana"}
 
 
-def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_ops, nombre_corto):
+def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_ops, nombre_corto, es_cubierta=False):
     por_tipo = {}
     for el in elementos:
         t = el.is_a()
@@ -122,7 +122,12 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_
     # del portal para que quede visible cual sentido de apertura es un dato
     # cierto y cual una inferencia a confirmar con el arquitecto.
     fuentes_puerta = {}
-    for tipo in g.ORDEN_DIBUJO:
+    # Pisos/cubiertas SOLO en el nivel de cubierta -- mismo criterio y misma
+    # razon que generar_plano_pdf.py (ver ORDEN_DIBUJO_CUBIERTA ahi): estas 3
+    # clases existen en cantidades mucho mayores en el resto de los niveles y
+    # ahi se siguen ignorando a proposito.
+    orden_nivel = g.ORDEN_DIBUJO_CUBIERTA if es_cubierta else g.ORDEN_DIBUJO
+    for tipo in orden_nivel:
         for el in por_tipo.get(tipo, []):
             geom = g.footprint_2d(el)
             if geom is None:
@@ -418,7 +423,8 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
         nombre_nivel_seguro = "".join(c if c.isalnum() else "_" for c in (nivel.Name or "SinNombre"))
         ruta_png = carpeta_png / f"{nombre_corto}_pagina{idx + 1}_{nombre_nivel_seguro}_{timestamp}.png"
         w_px, h_px, dpi, geo_pixeles = render_nivel_png(modelo, nivel, elementos_con_espacios, ox, oy, ruta_png,
-                                                          escala_m, mapa_ops, nombre_corto)
+                                                          escala_m, mapa_ops, nombre_corto,
+                                                          es_cubierta=g.es_nivel_cubierta(nivel, niveles))
 
         # Reemplaza el GlobalId (usado internamente para deduplicar/proyectar)
         # por el id corto MU-01/P-01/V-01/ES-01 -- ver comentario junto a

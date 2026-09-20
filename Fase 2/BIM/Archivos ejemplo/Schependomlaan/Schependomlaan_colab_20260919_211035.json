@@ -2345,135 +2345,9 @@
         "nivel": "00 begane grond",
         "recintos": [
           {
-            "nombre": "slaapkamer 2",
-            "tipo": "recinto",
-            "area_estimada_m2": 9.28,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "slaapkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 13.06,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "keuken",
-            "tipo": "recinto",
-            "area_estimada_m2": 8.14,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.55,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "entree",
-            "tipo": "recinto",
-            "area_estimada_m2": 3.84,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "gang",
-            "tipo": "recinto",
-            "area_estimada_m2": 8.24,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "entree",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.94,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "berging",
-            "tipo": "recinto",
-            "area_estimada_m2": 3.7,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "instal. ruimte",
-            "tipo": "recinto",
-            "area_estimada_m2": 2.39,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "toilet",
-            "tipo": "recinto",
-            "area_estimada_m2": 1.71,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "woonkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 44.86,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "toilet",
-            "tipo": "recinto",
-            "area_estimada_m2": 1.28,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "woonkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 43.66,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "instal. ruimte",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.72,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "instal. ruimte",
-            "tipo": "recinto",
-            "area_estimada_m2": 2.04,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "gang",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.12,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "keuken",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.5,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
             "nombre": "slaapkamer 1",
             "tipo": "recinto",
             "area_estimada_m2": 11.38,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "slaapkamer 1",
-            "tipo": "recinto",
-            "area_estimada_m2": 14.39,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -2492,6 +2366,13 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "toilet",
+            "tipo": "recinto",
+            "area_estimada_m2": 1.28,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "keuken",
             "tipo": "recinto",
             "area_estimada_m2": 5.36,
@@ -2506,30 +2387,9 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "woonkamer",
+            "nombre": "slaapkamer 1",
             "tipo": "recinto",
-            "area_estimada_m2": 43.01,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "entree",
-            "tipo": "recinto",
-            "area_estimada_m2": 20.35,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "mk",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.27,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.54,
+            "area_estimada_m2": 14.39,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -2555,6 +2415,97 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "slaapkamer 2",
+            "tipo": "recinto",
+            "area_estimada_m2": 9.3,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "slaapkamer 2",
+            "tipo": "recinto",
+            "area_estimada_m2": 9.28,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "woonkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 43.01,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 20.35,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "mk",
+            "tipo": "recinto",
+            "area_estimada_m2": 0.27,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "keuken",
+            "tipo": "recinto",
+            "area_estimada_m2": 8.14,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "badkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.55,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 3.84,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "badkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.54,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.94,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "gang",
+            "tipo": "recinto",
+            "area_estimada_m2": 8.24,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "berging",
+            "tipo": "recinto",
+            "area_estimada_m2": 3.7,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "instal. ruimte",
+            "tipo": "recinto",
+            "area_estimada_m2": 2.39,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "badkamer",
             "tipo": "recinto",
             "area_estimada_m2": 6.18,
@@ -2562,9 +2513,58 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "slaapkamer 2",
+            "nombre": "woonkamer",
             "tipo": "recinto",
-            "area_estimada_m2": 9.3,
+            "area_estimada_m2": 44.86,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "woonkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 43.66,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "instal. ruimte",
+            "tipo": "recinto",
+            "area_estimada_m2": 0.72,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "instal. ruimte",
+            "tipo": "recinto",
+            "area_estimada_m2": 2.04,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "slaapkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 13.06,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "gang",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.12,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "toilet",
+            "tipo": "recinto",
+            "area_estimada_m2": 1.71,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "keuken",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.5,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           }
@@ -2621,136 +2621,10 @@
       },
       "mediciones_geometricas": [
         {
-          "nombre": "slaapkamer 2",
-          "id": "0OqmHrrnL18wpVdVYaE6Eq",
-          "tipo": "recinto",
-          "area_m2": 9.28,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "slaapkamer",
-          "id": "3m0eaNZIj4WuqLA61vp_PJ",
-          "tipo": "recinto",
-          "area_m2": 13.06,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "keuken",
-          "id": "2rpp3iZFTCVwGEE7x9qiQ8",
-          "tipo": "recinto",
-          "area_m2": 8.14,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "badkamer",
-          "id": "2GXKgJyIfAhxPinRH3xm0N",
-          "tipo": "recinto",
-          "area_m2": 6.55,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "entree",
-          "id": "1G43xnpGf8ReA8Ux2AmH0Y",
-          "tipo": "recinto",
-          "area_m2": 3.84,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "gang",
-          "id": "3o3cJaPf51HPH9CUJnfi0W",
-          "tipo": "recinto",
-          "area_m2": 8.24,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "entree",
-          "id": "0Dj6N$QAjCa8$dcIusb5Sm",
-          "tipo": "recinto",
-          "area_m2": 6.94,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "berging",
-          "id": "3ZMk1e17XESP$vROePi38_",
-          "tipo": "recinto",
-          "area_m2": 3.7,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "instal. ruimte",
-          "id": "0P4aIRXgD9XPdxJodXPmsI",
-          "tipo": "recinto",
-          "area_m2": 2.39,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "toilet",
-          "id": "0bNesd_3DCrhdyKRJV7k4U",
-          "tipo": "recinto",
-          "area_m2": 1.71,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "woonkamer",
-          "id": "3RW6tpuaLA5fXODOX3rOlb",
-          "tipo": "recinto",
-          "area_m2": 44.86,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "toilet",
-          "id": "0IOcqFv1vCWwJz5c1VnoNe",
-          "tipo": "recinto",
-          "area_m2": 1.28,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "woonkamer",
-          "id": "1sCG2cUVb49PxJaBBE81Kw",
-          "tipo": "recinto",
-          "area_m2": 43.66,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "instal. ruimte",
-          "id": "22lJvI_rz50umvUizzyEQi",
-          "tipo": "recinto",
-          "area_m2": 0.72,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "instal. ruimte",
-          "id": "02NK$DEdTDwuguIz00UqtE",
-          "tipo": "recinto",
-          "area_m2": 2.04,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "gang",
-          "id": "1GBaX8Qs19WPwcdIjq6ONn",
-          "tipo": "recinto",
-          "area_m2": 6.12,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "keuken",
-          "id": "1S5uZBEqz97vGlKIzp8YFh",
-          "tipo": "recinto",
-          "area_m2": 6.5,
-          "cumple_geo": null
-        },
-        {
           "nombre": "slaapkamer 1",
           "id": "39NQt7$3b1Mxn97UesaLDi",
           "tipo": "recinto",
           "area_m2": 11.38,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "slaapkamer 1",
-          "id": "0ajLK6DXHAaeMk704HiMsX",
-          "tipo": "recinto",
-          "area_m2": 14.39,
           "cumple_geo": null
         },
         {
@@ -2768,6 +2642,13 @@
           "cumple_geo": null
         },
         {
+          "nombre": "toilet",
+          "id": "0IOcqFv1vCWwJz5c1VnoNe",
+          "tipo": "recinto",
+          "area_m2": 1.28,
+          "cumple_geo": null
+        },
+        {
           "nombre": "keuken",
           "id": "10$IVtAgz3gvaL1AC5hF6m",
           "tipo": "recinto",
@@ -2782,31 +2663,10 @@
           "cumple_geo": null
         },
         {
-          "nombre": "woonkamer",
-          "id": "3vdzRMAWL66B6ew5$sjOj$",
+          "nombre": "slaapkamer 1",
+          "id": "0ajLK6DXHAaeMk704HiMsX",
           "tipo": "recinto",
-          "area_m2": 43.01,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "entree",
-          "id": "2dFicWHgz1KPbr5tHWzMcP",
-          "tipo": "recinto",
-          "area_m2": 20.35,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "mk",
-          "id": "0asyuu9T1AaPR7AmNDL1_c",
-          "tipo": "recinto",
-          "area_m2": 0.27,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "badkamer",
-          "id": "0Jkjl8tTH5TBBcOqrZRjc0",
-          "tipo": "recinto",
-          "area_m2": 6.54,
+          "area_m2": 14.39,
           "cumple_geo": null
         },
         {
@@ -2831,6 +2691,97 @@
           "cumple_geo": null
         },
         {
+          "nombre": "slaapkamer 2",
+          "id": "2lSz4lYYD0yPZfZ0iQzeVj",
+          "tipo": "recinto",
+          "area_m2": 9.3,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "slaapkamer 2",
+          "id": "0OqmHrrnL18wpVdVYaE6Eq",
+          "tipo": "recinto",
+          "area_m2": 9.28,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "woonkamer",
+          "id": "3vdzRMAWL66B6ew5$sjOj$",
+          "tipo": "recinto",
+          "area_m2": 43.01,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "2dFicWHgz1KPbr5tHWzMcP",
+          "tipo": "recinto",
+          "area_m2": 20.35,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "mk",
+          "id": "0asyuu9T1AaPR7AmNDL1_c",
+          "tipo": "recinto",
+          "area_m2": 0.27,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "keuken",
+          "id": "2rpp3iZFTCVwGEE7x9qiQ8",
+          "tipo": "recinto",
+          "area_m2": 8.14,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "badkamer",
+          "id": "2GXKgJyIfAhxPinRH3xm0N",
+          "tipo": "recinto",
+          "area_m2": 6.55,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "1G43xnpGf8ReA8Ux2AmH0Y",
+          "tipo": "recinto",
+          "area_m2": 3.84,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "badkamer",
+          "id": "0Jkjl8tTH5TBBcOqrZRjc0",
+          "tipo": "recinto",
+          "area_m2": 6.54,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "0Dj6N$QAjCa8$dcIusb5Sm",
+          "tipo": "recinto",
+          "area_m2": 6.94,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "gang",
+          "id": "3o3cJaPf51HPH9CUJnfi0W",
+          "tipo": "recinto",
+          "area_m2": 8.24,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "berging",
+          "id": "3ZMk1e17XESP$vROePi38_",
+          "tipo": "recinto",
+          "area_m2": 3.7,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "instal. ruimte",
+          "id": "0P4aIRXgD9XPdxJodXPmsI",
+          "tipo": "recinto",
+          "area_m2": 2.39,
+          "cumple_geo": null
+        },
+        {
           "nombre": "badkamer",
           "id": "2brbBA_o18ffxZ1OJKAEXd",
           "tipo": "recinto",
@@ -2838,10 +2789,59 @@
           "cumple_geo": null
         },
         {
-          "nombre": "slaapkamer 2",
-          "id": "2lSz4lYYD0yPZfZ0iQzeVj",
+          "nombre": "woonkamer",
+          "id": "3RW6tpuaLA5fXODOX3rOlb",
           "tipo": "recinto",
-          "area_m2": 9.3,
+          "area_m2": 44.86,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "woonkamer",
+          "id": "1sCG2cUVb49PxJaBBE81Kw",
+          "tipo": "recinto",
+          "area_m2": 43.66,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "instal. ruimte",
+          "id": "22lJvI_rz50umvUizzyEQi",
+          "tipo": "recinto",
+          "area_m2": 0.72,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "instal. ruimte",
+          "id": "02NK$DEdTDwuguIz00UqtE",
+          "tipo": "recinto",
+          "area_m2": 2.04,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "slaapkamer",
+          "id": "3m0eaNZIj4WuqLA61vp_PJ",
+          "tipo": "recinto",
+          "area_m2": 13.06,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "gang",
+          "id": "1GBaX8Qs19WPwcdIjq6ONn",
+          "tipo": "recinto",
+          "area_m2": 6.12,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "toilet",
+          "id": "0bNesd_3DCrhdyKRJV7k4U",
+          "tipo": "recinto",
+          "area_m2": 1.71,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "keuken",
+          "id": "1S5uZBEqz97vGlKIzp8YFh",
+          "tipo": "recinto",
+          "area_m2": 6.5,
           "cumple_geo": null
         }
       ],
@@ -27364,128 +27364,16 @@
         "nivel": "01 eerste verdieping",
         "recintos": [
           {
-            "nombre": "instal. ruimte",
-            "tipo": "recinto",
-            "area_estimada_m2": 3.31,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "toilet",
-            "tipo": "recinto",
-            "area_estimada_m2": 1.4,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "entree",
-            "tipo": "recinto",
-            "area_estimada_m2": 9.3,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "keuken",
-            "tipo": "recinto",
-            "area_estimada_m2": 8.97,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "mk",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.26,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "mk",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.27,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "slaapkamer 2",
-            "tipo": "recinto",
-            "area_estimada_m2": 5.88,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "slaapkamer 1",
-            "tipo": "recinto",
-            "area_estimada_m2": 15.91,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "woonkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 43.95,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "instal. ruimte",
-            "tipo": "recinto",
-            "area_estimada_m2": 3.54,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "keuken",
-            "tipo": "recinto",
-            "area_estimada_m2": 9.3,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "mk",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.27,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "woonkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 48.56,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 5.52,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "kast",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.26,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "overloop",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.81,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.94,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
             "nombre": "entree",
             "tipo": "recinto",
             "area_estimada_m2": 5.86,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "keuken",
+            "tipo": "recinto",
+            "area_estimada_m2": 9.3,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -27504,16 +27392,16 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "instal. ruimte",
+            "nombre": "badkamer",
             "tipo": "recinto",
-            "area_estimada_m2": 2.98,
+            "area_estimada_m2": 5.52,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "slaapkamer 1",
+            "nombre": "kast",
             "tipo": "recinto",
-            "area_estimada_m2": 13.16,
+            "area_estimada_m2": 0.26,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -27539,9 +27427,9 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "entree",
+            "nombre": "badkamer",
             "tipo": "recinto",
-            "area_estimada_m2": 13.14,
+            "area_estimada_m2": 6.94,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -27553,6 +27441,62 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "keuken",
+            "tipo": "recinto",
+            "area_estimada_m2": 5.36,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "instal. ruimte",
+            "tipo": "recinto",
+            "area_estimada_m2": 3.31,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "instal. ruimte",
+            "tipo": "recinto",
+            "area_estimada_m2": 2.98,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "slaapkamer 1",
+            "tipo": "recinto",
+            "area_estimada_m2": 13.16,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "keuken",
+            "tipo": "recinto",
+            "area_estimada_m2": 8.97,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "mk",
+            "tipo": "recinto",
+            "area_estimada_m2": 0.26,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 13.14,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "slaapkamer 2",
+            "tipo": "recinto",
+            "area_estimada_m2": 5.88,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "slaapkamer 1",
             "tipo": "recinto",
             "area_estimada_m2": 11.54,
@@ -27560,9 +27504,65 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "keuken",
+            "nombre": "slaapkamer 1",
             "tipo": "recinto",
-            "area_estimada_m2": 5.36,
+            "area_estimada_m2": 15.91,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "woonkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 43.95,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "mk",
+            "tipo": "recinto",
+            "area_estimada_m2": 0.27,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "instal. ruimte",
+            "tipo": "recinto",
+            "area_estimada_m2": 3.54,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "mk",
+            "tipo": "recinto",
+            "area_estimada_m2": 0.27,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "toilet",
+            "tipo": "recinto",
+            "area_estimada_m2": 1.4,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 9.3,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "woonkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 48.56,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "overloop",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.81,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           }
@@ -27619,73 +27619,10 @@
       },
       "mediciones_geometricas": [
         {
-          "nombre": "instal. ruimte",
-          "id": "09fo1jWjfFtQMbiri1ZVQ3",
-          "tipo": "recinto",
-          "area_m2": 3.31,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "toilet",
-          "id": "0OFDZWgvrCbvU2AvmpKDKA",
-          "tipo": "recinto",
-          "area_m2": 1.4,
-          "cumple_geo": null
-        },
-        {
           "nombre": "entree",
-          "id": "2WflCt48T2yQbjDADsjk3X",
+          "id": "2UFJkHK4XCxgqVrTwxYwA7",
           "tipo": "recinto",
-          "area_m2": 9.3,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "keuken",
-          "id": "2eUwuV6Q14GRH$hdaTX4hB",
-          "tipo": "recinto",
-          "area_m2": 8.97,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "mk",
-          "id": "0hW2P55_n5cOR9ThNgO3e6",
-          "tipo": "recinto",
-          "area_m2": 0.26,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "mk",
-          "id": "0tv9iZwmX3QhOwYgrkdylc",
-          "tipo": "recinto",
-          "area_m2": 0.27,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "slaapkamer 2",
-          "id": "3F3COwDdj5LRVbWzGorFc7",
-          "tipo": "recinto",
-          "area_m2": 5.88,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "slaapkamer 1",
-          "id": "0up7RAxwfAqvoyCE1kDxpy",
-          "tipo": "recinto",
-          "area_m2": 15.91,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "woonkamer",
-          "id": "0BsqHll2P5vhJOAHEDwAwi",
-          "tipo": "recinto",
-          "area_m2": 43.95,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "instal. ruimte",
-          "id": "2GOGL_EpT9BOLi26H$n8Y1",
-          "tipo": "recinto",
-          "area_m2": 3.54,
+          "area_m2": 5.86,
           "cumple_geo": null
         },
         {
@@ -27693,55 +27630,6 @@
           "id": "1PBqvLnRDDUATdl_lvNYMh",
           "tipo": "recinto",
           "area_m2": 9.3,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "mk",
-          "id": "1bpdPR8RjDwuwW5iXv63ud",
-          "tipo": "recinto",
-          "area_m2": 0.27,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "woonkamer",
-          "id": "0kg640irz75hysOImfQ5Ff",
-          "tipo": "recinto",
-          "area_m2": 48.56,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "badkamer",
-          "id": "3EcQs2ERfA495F4sseU_w4",
-          "tipo": "recinto",
-          "area_m2": 5.52,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "kast",
-          "id": "2so3nbcb13Ig9Yd7gOPiH$",
-          "tipo": "recinto",
-          "area_m2": 0.26,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "overloop",
-          "id": "0ldLkGDpv5wRT1Q$Q3V2M1",
-          "tipo": "recinto",
-          "area_m2": 6.81,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "badkamer",
-          "id": "1dQmRhr_nEmea8aisHAkCQ",
-          "tipo": "recinto",
-          "area_m2": 6.94,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "entree",
-          "id": "2UFJkHK4XCxgqVrTwxYwA7",
-          "tipo": "recinto",
-          "area_m2": 5.86,
           "cumple_geo": null
         },
         {
@@ -27759,17 +27647,17 @@
           "cumple_geo": null
         },
         {
-          "nombre": "instal. ruimte",
-          "id": "1KHE8Hn6vAPe5Gw9Zrubuh",
+          "nombre": "badkamer",
+          "id": "3EcQs2ERfA495F4sseU_w4",
           "tipo": "recinto",
-          "area_m2": 2.98,
+          "area_m2": 5.52,
           "cumple_geo": null
         },
         {
-          "nombre": "slaapkamer 1",
-          "id": "1RPMriui52lBriSIaCeUCC",
+          "nombre": "kast",
+          "id": "2so3nbcb13Ig9Yd7gOPiH$",
           "tipo": "recinto",
-          "area_m2": 13.16,
+          "area_m2": 0.26,
           "cumple_geo": null
         },
         {
@@ -27794,10 +27682,10 @@
           "cumple_geo": null
         },
         {
-          "nombre": "entree",
-          "id": "1AtrO37LT8iQg1RDVAeoCA",
+          "nombre": "badkamer",
+          "id": "1dQmRhr_nEmea8aisHAkCQ",
           "tipo": "recinto",
-          "area_m2": 13.14,
+          "area_m2": 6.94,
           "cumple_geo": null
         },
         {
@@ -27808,6 +27696,62 @@
           "cumple_geo": null
         },
         {
+          "nombre": "keuken",
+          "id": "3_e7IngdDBjOHVpCs_T3bC",
+          "tipo": "recinto",
+          "area_m2": 5.36,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "instal. ruimte",
+          "id": "09fo1jWjfFtQMbiri1ZVQ3",
+          "tipo": "recinto",
+          "area_m2": 3.31,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "instal. ruimte",
+          "id": "1KHE8Hn6vAPe5Gw9Zrubuh",
+          "tipo": "recinto",
+          "area_m2": 2.98,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "slaapkamer 1",
+          "id": "1RPMriui52lBriSIaCeUCC",
+          "tipo": "recinto",
+          "area_m2": 13.16,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "keuken",
+          "id": "2eUwuV6Q14GRH$hdaTX4hB",
+          "tipo": "recinto",
+          "area_m2": 8.97,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "mk",
+          "id": "0hW2P55_n5cOR9ThNgO3e6",
+          "tipo": "recinto",
+          "area_m2": 0.26,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "1AtrO37LT8iQg1RDVAeoCA",
+          "tipo": "recinto",
+          "area_m2": 13.14,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "slaapkamer 2",
+          "id": "3F3COwDdj5LRVbWzGorFc7",
+          "tipo": "recinto",
+          "area_m2": 5.88,
+          "cumple_geo": null
+        },
+        {
           "nombre": "slaapkamer 1",
           "id": "3SPT$EB8r0aBxVBsVnHu5U",
           "tipo": "recinto",
@@ -27815,10 +27759,66 @@
           "cumple_geo": null
         },
         {
-          "nombre": "keuken",
-          "id": "3_e7IngdDBjOHVpCs_T3bC",
+          "nombre": "slaapkamer 1",
+          "id": "0up7RAxwfAqvoyCE1kDxpy",
           "tipo": "recinto",
-          "area_m2": 5.36,
+          "area_m2": 15.91,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "woonkamer",
+          "id": "0BsqHll2P5vhJOAHEDwAwi",
+          "tipo": "recinto",
+          "area_m2": 43.95,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "mk",
+          "id": "0tv9iZwmX3QhOwYgrkdylc",
+          "tipo": "recinto",
+          "area_m2": 0.27,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "instal. ruimte",
+          "id": "2GOGL_EpT9BOLi26H$n8Y1",
+          "tipo": "recinto",
+          "area_m2": 3.54,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "mk",
+          "id": "1bpdPR8RjDwuwW5iXv63ud",
+          "tipo": "recinto",
+          "area_m2": 0.27,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "toilet",
+          "id": "0OFDZWgvrCbvU2AvmpKDKA",
+          "tipo": "recinto",
+          "area_m2": 1.4,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "2WflCt48T2yQbjDADsjk3X",
+          "tipo": "recinto",
+          "area_m2": 9.3,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "woonkamer",
+          "id": "0kg640irz75hysOImfQ5Ff",
+          "tipo": "recinto",
+          "area_m2": 48.56,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "overloop",
+          "id": "0ldLkGDpv5wRT1Q$Q3V2M1",
+          "tipo": "recinto",
+          "area_m2": 6.81,
           "cumple_geo": null
         }
       ],
@@ -48515,41 +48515,6 @@
         "nivel": "02 tweede verdieping",
         "recintos": [
           {
-            "nombre": "kast",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.26,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "mk",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.27,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "overloop",
-            "tipo": "recinto",
-            "area_estimada_m2": 7.45,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "entree",
-            "tipo": "recinto",
-            "area_estimada_m2": 5.86,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "slaapkamer 1",
-            "tipo": "recinto",
-            "area_estimada_m2": 15.91,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
             "nombre": "badkamer",
             "tipo": "recinto",
             "area_estimada_m2": 6.18,
@@ -48564,34 +48529,6 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "keuken",
-            "tipo": "recinto",
-            "area_estimada_m2": 9.3,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "toilet",
-            "tipo": "recinto",
-            "area_estimada_m2": 1.91,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "woonkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 40.02,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.94,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
             "nombre": "instal. ruimte",
             "tipo": "recinto",
             "area_estimada_m2": 3.31,
@@ -48599,16 +48536,16 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "slaapkamer 2",
+            "nombre": "instal. ruimte",
             "tipo": "recinto",
-            "area_estimada_m2": 5.88,
+            "area_estimada_m2": 2.98,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "instal. ruimte",
+            "nombre": "toilet",
             "tipo": "recinto",
-            "area_estimada_m2": 2.98,
+            "area_estimada_m2": 1.91,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -48634,9 +48571,51 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "slaapkamer 2",
+            "tipo": "recinto",
+            "area_estimada_m2": 5.88,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "toilet",
+            "tipo": "recinto",
+            "area_estimada_m2": 1.4,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "kast",
+            "tipo": "recinto",
+            "area_estimada_m2": 0.26,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "mk",
+            "tipo": "recinto",
+            "area_estimada_m2": 0.27,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "keuken",
             "tipo": "recinto",
             "area_estimada_m2": 8.97,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "overloop",
+            "tipo": "recinto",
+            "area_estimada_m2": 7.45,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "slaapkamer 1",
+            "tipo": "recinto",
+            "area_estimada_m2": 15.91,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -48648,9 +48627,30 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "toilet",
+            "nombre": "keuken",
             "tipo": "recinto",
-            "area_estimada_m2": 1.4,
+            "area_estimada_m2": 9.3,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "woonkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 40.02,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "badkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.94,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 5.86,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           }
@@ -48707,41 +48707,6 @@
       },
       "mediciones_geometricas": [
         {
-          "nombre": "kast",
-          "id": "0sEYZPVdXAZAaorrZw2LKy",
-          "tipo": "recinto",
-          "area_m2": 0.26,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "mk",
-          "id": "2j8_gVWpbACxOVmNDi6bGE",
-          "tipo": "recinto",
-          "area_m2": 0.27,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "overloop",
-          "id": "2Nn5OYLeT9FBcLTcY8oegS",
-          "tipo": "recinto",
-          "area_m2": 7.45,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "entree",
-          "id": "0m66n5BInC6fBzFb8EWwyE",
-          "tipo": "recinto",
-          "area_m2": 5.86,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "slaapkamer 1",
-          "id": "2q_kN3Luf7wwPVcXYQjBxR",
-          "tipo": "recinto",
-          "area_m2": 15.91,
-          "cumple_geo": null
-        },
-        {
           "nombre": "badkamer",
           "id": "1mzKtLlF9B0824gzkkIWlz",
           "tipo": "recinto",
@@ -48756,34 +48721,6 @@
           "cumple_geo": null
         },
         {
-          "nombre": "keuken",
-          "id": "3QKc$p$NXEvRNG3pdlAj02",
-          "tipo": "recinto",
-          "area_m2": 9.3,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "toilet",
-          "id": "2taKN3SF5AqhoJgBEDOiLL",
-          "tipo": "recinto",
-          "area_m2": 1.91,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "woonkamer",
-          "id": "1stYdhm21EUQMz3jV6WdHc",
-          "tipo": "recinto",
-          "area_m2": 40.02,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "badkamer",
-          "id": "0CJDgHLZLCWu7DbuOU80VN",
-          "tipo": "recinto",
-          "area_m2": 6.94,
-          "cumple_geo": null
-        },
-        {
           "nombre": "instal. ruimte",
           "id": "3KeJCNzFv2cPjuyq2Kb61z",
           "tipo": "recinto",
@@ -48791,17 +48728,17 @@
           "cumple_geo": null
         },
         {
-          "nombre": "slaapkamer 2",
-          "id": "3gmZJjQND96w5a6Ee$z2ah",
-          "tipo": "recinto",
-          "area_m2": 5.88,
-          "cumple_geo": null
-        },
-        {
           "nombre": "instal. ruimte",
           "id": "1s8ejb3fH1wA$G6dYM5GgC",
           "tipo": "recinto",
           "area_m2": 2.98,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "toilet",
+          "id": "2taKN3SF5AqhoJgBEDOiLL",
+          "tipo": "recinto",
+          "area_m2": 1.91,
           "cumple_geo": null
         },
         {
@@ -48826,10 +48763,52 @@
           "cumple_geo": null
         },
         {
+          "nombre": "slaapkamer 2",
+          "id": "3gmZJjQND96w5a6Ee$z2ah",
+          "tipo": "recinto",
+          "area_m2": 5.88,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "toilet",
+          "id": "0yLghiaXr4pB6B4YHPBOlT",
+          "tipo": "recinto",
+          "area_m2": 1.4,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "kast",
+          "id": "0sEYZPVdXAZAaorrZw2LKy",
+          "tipo": "recinto",
+          "area_m2": 0.26,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "mk",
+          "id": "2j8_gVWpbACxOVmNDi6bGE",
+          "tipo": "recinto",
+          "area_m2": 0.27,
+          "cumple_geo": null
+        },
+        {
           "nombre": "keuken",
           "id": "3$vxLFFCTCjhIrAHJw7BxO",
           "tipo": "recinto",
           "area_m2": 8.97,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "overloop",
+          "id": "2Nn5OYLeT9FBcLTcY8oegS",
+          "tipo": "recinto",
+          "area_m2": 7.45,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "slaapkamer 1",
+          "id": "2q_kN3Luf7wwPVcXYQjBxR",
+          "tipo": "recinto",
+          "area_m2": 15.91,
           "cumple_geo": null
         },
         {
@@ -48840,10 +48819,31 @@
           "cumple_geo": null
         },
         {
-          "nombre": "toilet",
-          "id": "0yLghiaXr4pB6B4YHPBOlT",
+          "nombre": "keuken",
+          "id": "3QKc$p$NXEvRNG3pdlAj02",
           "tipo": "recinto",
-          "area_m2": 1.4,
+          "area_m2": 9.3,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "woonkamer",
+          "id": "1stYdhm21EUQMz3jV6WdHc",
+          "tipo": "recinto",
+          "area_m2": 40.02,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "badkamer",
+          "id": "0CJDgHLZLCWu7DbuOU80VN",
+          "tipo": "recinto",
+          "area_m2": 6.94,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "0m66n5BInC6fBzFb8EWwyE",
+          "tipo": "recinto",
+          "area_m2": 5.86,
           "cumple_geo": null
         }
       ],
@@ -62091,16 +62091,58 @@
         "nivel": "03 derde verdieping",
         "recintos": [
           {
-            "nombre": "instal. ruimte",
+            "nombre": "woonkamer",
             "tipo": "recinto",
-            "area_estimada_m2": 3.31,
+            "area_estimada_m2": 32.99,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "keuken",
+            "nombre": "badkamer",
             "tipo": "recinto",
-            "area_estimada_m2": 8.97,
+            "area_estimada_m2": 6.51,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "toilet",
+            "tipo": "recinto",
+            "area_estimada_m2": 1.91,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "woonkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 37.14,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "slaapkamer 2",
+            "tipo": "recinto",
+            "area_estimada_m2": 5.49,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 5.86,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "badkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.18,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "instal. ruimte",
+            "tipo": "recinto",
+            "area_estimada_m2": 3.31,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -62119,13 +62161,6 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "woonkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 32.99,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
             "nombre": "entree",
             "tipo": "recinto",
             "area_estimada_m2": 12.78,
@@ -62136,13 +62171,6 @@
             "nombre": "onben. ruimte",
             "tipo": "recinto",
             "area_estimada_m2": 8.42,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.51,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -62175,6 +62203,13 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "keuken",
+            "tipo": "recinto",
+            "area_estimada_m2": 8.97,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "slaapkamer 1",
             "tipo": "recinto",
             "area_estimada_m2": 12.36,
@@ -62185,41 +62220,6 @@
             "nombre": "mk",
             "tipo": "recinto",
             "area_estimada_m2": 0.27,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "entree",
-            "tipo": "recinto",
-            "area_estimada_m2": 5.86,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.18,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "toilet",
-            "tipo": "recinto",
-            "area_estimada_m2": 1.91,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "woonkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 37.14,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "slaapkamer 2",
-            "tipo": "recinto",
-            "area_estimada_m2": 5.49,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           }
@@ -62236,17 +62236,59 @@
       },
       "mediciones_geometricas": [
         {
+          "nombre": "woonkamer",
+          "id": "1Wtl5_cnDDhAIgcPpOxWTl",
+          "tipo": "recinto",
+          "area_m2": 32.99,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "badkamer",
+          "id": "1AlG6Dm9L1h8L4yH9tB8FO",
+          "tipo": "recinto",
+          "area_m2": 6.51,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "toilet",
+          "id": "2Pbv_BJfT8Ev1Sj5Jh4Tgi",
+          "tipo": "recinto",
+          "area_m2": 1.91,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "woonkamer",
+          "id": "0lGZe9hjL5GQNRN2Ku92xr",
+          "tipo": "recinto",
+          "area_m2": 37.14,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "slaapkamer 2",
+          "id": "1ksvb7lcPBt9rmCaSOqIpd",
+          "tipo": "recinto",
+          "area_m2": 5.49,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "00XVyzXGDDQPsHPeNwCNmZ",
+          "tipo": "recinto",
+          "area_m2": 5.86,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "badkamer",
+          "id": "34JLBtlPXEaeJkF7ppuU09",
+          "tipo": "recinto",
+          "area_m2": 6.18,
+          "cumple_geo": null
+        },
+        {
           "nombre": "instal. ruimte",
           "id": "0z1DMNAyb21RRdXtk2yF$a",
           "tipo": "recinto",
           "area_m2": 3.31,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "keuken",
-          "id": "3iG4tbXJ901RkZ0OynKIbL",
-          "tipo": "recinto",
-          "area_m2": 8.97,
           "cumple_geo": null
         },
         {
@@ -62264,13 +62306,6 @@
           "cumple_geo": null
         },
         {
-          "nombre": "woonkamer",
-          "id": "1Wtl5_cnDDhAIgcPpOxWTl",
-          "tipo": "recinto",
-          "area_m2": 32.99,
-          "cumple_geo": null
-        },
-        {
           "nombre": "entree",
           "id": "0c9LSnFgj7OBxwRT4cC9lK",
           "tipo": "recinto",
@@ -62282,13 +62317,6 @@
           "id": "12sKPfqUvDFv$X4w8UYHNK",
           "tipo": "recinto",
           "area_m2": 8.42,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "badkamer",
-          "id": "1AlG6Dm9L1h8L4yH9tB8FO",
-          "tipo": "recinto",
-          "area_m2": 6.51,
           "cumple_geo": null
         },
         {
@@ -62320,6 +62348,13 @@
           "cumple_geo": null
         },
         {
+          "nombre": "keuken",
+          "id": "3iG4tbXJ901RkZ0OynKIbL",
+          "tipo": "recinto",
+          "area_m2": 8.97,
+          "cumple_geo": null
+        },
+        {
           "nombre": "slaapkamer 1",
           "id": "3_fPSW07z7bufHlc3SsUgF",
           "tipo": "recinto",
@@ -62331,41 +62366,6 @@
           "id": "0oEbkL7YDD8AYm6eYpAT4B",
           "tipo": "recinto",
           "area_m2": 0.27,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "entree",
-          "id": "00XVyzXGDDQPsHPeNwCNmZ",
-          "tipo": "recinto",
-          "area_m2": 5.86,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "badkamer",
-          "id": "34JLBtlPXEaeJkF7ppuU09",
-          "tipo": "recinto",
-          "area_m2": 6.18,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "toilet",
-          "id": "2Pbv_BJfT8Ev1Sj5Jh4Tgi",
-          "tipo": "recinto",
-          "area_m2": 1.91,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "woonkamer",
-          "id": "0lGZe9hjL5GQNRN2Ku92xr",
-          "tipo": "recinto",
-          "area_m2": 37.14,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "slaapkamer 2",
-          "id": "1ksvb7lcPBt9rmCaSOqIpd",
-          "tipo": "recinto",
-          "area_m2": 5.49,
           "cumple_geo": null
         }
       ],
@@ -72326,42 +72326,42 @@
           "segmentos": [
             {
               "p1": [
-                297.0692580893915,
-                1085.285916043828
+                672.204318125034,
+                290.9310241403449
               ],
               "p2": [
-                297.0692580893915,
-                1000.5511643925438
+                672.204318125034,
+                274.92049836072965
               ]
             },
             {
               "p1": [
-                297.0692580893915,
-                1000.5511643925438
+                672.204318125034,
+                274.92049836072965
               ],
               "p2": [
-                1456.4307199350078,
-                1000.5511643925438
+                891.264222249865,
+                274.92049836072965
               ]
             },
             {
               "p1": [
-                1456.4307199350078,
-                1000.5511643925438
+                891.264222249865,
+                274.92049836072965
               ],
               "p2": [
-                1456.4307199350078,
-                1085.285916043828
+                891.264222249865,
+                290.9310241403449
               ]
             },
             {
               "p1": [
-                1456.4307199350078,
-                1085.285916043828
+                891.264222249865,
+                290.9310241403449
               ],
               "p2": [
-                297.0692580893915,
-                1085.285916043828
+                672.204318125034,
+                290.9310241403449
               ]
             }
           ],
@@ -72372,42 +72372,42 @@
           "segmentos": [
             {
               "p1": [
-                297.0692580893924,
-                347.2224717541335
+                672.2043181250341,
+                151.47485566743353
               ],
               "p2": [
-                297.0692580893924,
-                307.62679341241073
+                672.2043181250341,
+                143.99330156480937
               ]
             },
             {
               "p1": [
-                297.0692580893924,
-                307.62679341241073
+                672.2043181250341,
+                143.99330156480937
               ],
               "p2": [
-                1456.4307199350078,
-                307.62679341241073
+                891.264222249865,
+                143.99330156480937
               ]
             },
             {
               "p1": [
-                1456.4307199350078,
-                307.62679341241073
+                891.264222249865,
+                143.99330156480937
               ],
               "p2": [
-                1456.4307199350078,
-                347.2224717541335
+                891.264222249865,
+                151.47485566743353
               ]
             },
             {
               "p1": [
-                1456.4307199350078,
-                347.2224717541335
+                891.264222249865,
+                151.47485566743353
               ],
               "p2": [
-                297.0692580893924,
-                347.2224717541335
+                672.2043181250341,
+                151.47485566743353
               ]
             }
           ],
@@ -72418,42 +72418,42 @@
           "segmentos": [
             {
               "p1": [
-                297.0692580893924,
-                1000.5511643925438
+                672.2043181250341,
+                274.92049836072965
               ],
               "p2": [
-                297.0692580893924,
-                347.2224717541326
+                672.2043181250341,
+                151.47485566743353
               ]
             },
             {
               "p1": [
-                297.0692580893924,
-                347.2224717541326
+                672.2043181250341,
+                151.47485566743353
               ],
               "p2": [
-                381.8040097406765,
-                347.2224717541326
+                688.2148439046493,
+                151.47485566743353
               ]
             },
             {
               "p1": [
-                381.8040097406765,
-                347.2224717541326
+                688.2148439046493,
+                151.47485566743353
               ],
               "p2": [
-                381.8040097406765,
-                1000.5511643925438
+                688.2148439046493,
+                274.92049836072965
               ]
             },
             {
               "p1": [
-                381.8040097406765,
-                1000.5511643925438
+                688.2148439046493,
+                274.92049836072965
               ],
               "p2": [
-                297.0692580893924,
-                1000.5511643925438
+                672.2043181250341,
+                274.92049836072965
               ]
             }
           ],
@@ -72464,42 +72464,42 @@
           "segmentos": [
             {
               "p1": [
-                1371.6959682837237,
-                1000.5511643925438
+                875.2536964702497,
+                274.92049836072965
               ],
               "p2": [
-                1371.6959682837237,
-                347.2224717541326
+                875.2536964702497,
+                151.47485566743353
               ]
             },
             {
               "p1": [
-                1371.6959682837237,
-                347.2224717541326
+                875.2536964702497,
+                151.47485566743353
               ],
               "p2": [
-                1456.4307199350078,
-                347.2224717541326
+                891.264222249865,
+                151.47485566743353
               ]
             },
             {
               "p1": [
-                1456.4307199350078,
-                347.2224717541326
+                891.264222249865,
+                151.47485566743353
               ],
               "p2": [
-                1456.4307199350078,
-                1000.5511643925438
+                891.264222249865,
+                274.92049836072965
               ]
             },
             {
               "p1": [
-                1456.4307199350078,
-                1000.5511643925438
+                891.264222249865,
+                274.92049836072965
               ],
               "p2": [
-                1371.6959682837237,
-                1000.5511643925438
+                875.2536964702497,
+                274.92049836072965
               ]
             }
           ],
@@ -72510,42 +72510,42 @@
           "segmentos": [
             {
               "p1": [
-                297.06907395151666,
-                307.62679138571775
+                672.2042833324118,
+                143.99330118186822
               ],
               "p2": [
-                297.0690658664166,
-                278.32598941284414
+                672.2042818047423,
+                138.45695114592672
               ]
             },
             {
               "p1": [
-                297.0690658664166,
-                278.32598941284414
+                672.2042818047423,
+                138.45695114592672
               ],
               "p2": [
-                1456.430833588276,
-                278.3258003248866
+                891.2642437245086,
+                138.4569154179926
               ]
             },
             {
               "p1": [
-                1456.430833588276,
-                278.3258003248866
+                891.2642437245086,
+                138.4569154179926
               ],
               "p2": [
-                1456.4308288094535,
-                307.626602297762
+                891.2642428215559,
+                143.99326545393455
               ]
             },
             {
               "p1": [
-                1456.4308288094535,
-                307.626602297762
+                891.2642428215559,
+                143.99326545393455
               ],
               "p2": [
-                297.06907395151666,
-                307.62679138571775
+                672.2042833324118,
+                143.99330118186822
               ]
             }
           ],
@@ -72556,42 +72556,42 @@
           "segmentos": [
             {
               "p1": [
-                217.877923539932,
-                1124.8815943855502
+                657.2412141019747,
+                298.41257824296906
               ],
               "p2": [
-                217.877923539932,
-                268.0312380509067
+                657.2412141019747,
+                136.51177069914434
               ]
             },
             {
               "p1": [
-                217.877923539932,
-                268.0312380509067
+                657.2412141019747,
+                136.51177069914434
               ],
               "p2": [
-                257.4736018816543,
-                268.0312380509067
+                664.7227682045988,
+                136.51177069914434
               ]
             },
             {
               "p1": [
-                257.4736018816543,
-                268.0312380509067
+                664.7227682045988,
+                136.51177069914434
               ],
               "p2": [
-                257.4736018816543,
-                1124.8815943855502
+                664.7227682045988,
+                298.41257824296906
               ]
             },
             {
               "p1": [
-                257.4736018816543,
-                1124.8815943855502
+                664.7227682045988,
+                298.41257824296906
               ],
               "p2": [
-                217.877923539932,
-                1124.8815943855502
+                657.2412141019747,
+                298.41257824296906
               ]
             }
           ],
@@ -72602,42 +72602,42 @@
           "segmentos": [
             {
               "p1": [
-                267.7684865229835,
-                1085.2861119373556
+                666.6679738343561,
+                290.931061154183
               ],
               "p2": [
-                267.7682638976112,
-                278.3259941746851
+                666.6679317695692,
+                138.4569520456705
               ]
             },
             {
               "p1": [
-                267.7682638976112,
-                278.3259941746851
+                666.6679317695692,
+                138.4569520456705
               ],
               "p2": [
-                297.0690658704839,
-                278.3259860911353
+                672.2042818055107,
+                138.45695051829398
               ]
             },
             {
               "p1": [
-                297.0690658704839,
-                278.3259860911353
+                672.2042818055107,
+                138.45695051829398
               ],
               "p2": [
-                297.06928849585756,
-                1085.286107158462
+                672.2043238702979,
+                290.931060251217
               ]
             },
             {
               "p1": [
-                297.06928849585756,
-                1085.286107158462
+                672.2043238702979,
+                290.931060251217
               ],
               "p2": [
-                267.7684865229835,
-                1085.2861119373556
+                666.6679738343561,
+                290.931061154183
               ]
             }
           ],
@@ -72648,42 +72648,42 @@
           "segmentos": [
             {
               "p1": [
-                217.87816125070958,
-                1124.881565136393
+                657.24125901713,
+                298.4125727163772
               ],
               "p2": [
-                217.87802150137304,
-                268.0314642114663
+                657.2412326116669,
+                136.51181343190046
               ]
             },
             {
               "p1": [
-                217.87802150137304,
-                268.0314642114663
+                657.2412326116669,
+                136.51181343190046
               ],
               "p2": [
-                257.473699843094,
-                268.03145775354596
+                664.7227867142908,
+                136.5118122116844
               ]
             },
             {
               "p1": [
-                257.473699843094,
-                268.03145775354596
+                664.7227867142908,
+                136.5118122116844
               ],
               "p2": [
-                257.4738395924305,
-                1124.8815586784726
+                664.7228131197537,
+                298.41257149616126
               ]
             },
             {
               "p1": [
-                257.4738395924305,
-                1124.8815586784726
+                664.7228131197537,
+                298.41257149616126
               ],
               "p2": [
-                217.87816125070958,
-                1124.881565136393
+                657.24125901713,
+                298.4125727163772
               ]
             }
           ],
@@ -72694,42 +72694,42 @@
           "segmentos": [
             {
               "p1": [
-                217.87816768881476,
-                1164.4772434781162
+                657.2412602336019,
+                305.8941268190015
               ],
               "p2": [
-                217.87816123089442,
-                1124.8815651363952
+                657.2412590133858,
+                298.41257271637767
               ]
             },
             {
               "p1": [
-                217.87816123089442,
-                1124.8815651363952
+                657.2412590133858,
+                298.41257271637767
               ],
               "p2": [
-                1535.6218389077253,
-                1124.8813502168864
+                906.2272855399674,
+                298.4125321076042
               ]
             },
             {
               "p1": [
-                1535.6218389077253,
-                1124.8813502168864
+                906.2272855399674,
+                298.4125321076042
               ],
               "p2": [
-                1535.6218453656456,
-                1164.4770285586083
+                906.2272867601835,
+                305.8940862102281
               ]
             },
             {
               "p1": [
-                1535.6218453656456,
-                1164.4770285586083
+                906.2272867601835,
+                305.8940862102281
               ],
               "p2": [
-                217.87816768881476,
-                1164.4772434781162
+                657.2412602336019,
+                305.8941268190015
               ]
             }
           ],
@@ -72740,42 +72740,42 @@
           "segmentos": [
             {
               "p1": [
-                217.8779235399329,
-                268.03123805486666
+                657.2412141019747,
+                136.51177069989262
               ],
               "p2": [
-                217.8779235399329,
-                228.4355597131439
+                657.2412141019747,
+                129.03021659726846
               ]
             },
             {
               "p1": [
-                217.8779235399329,
-                228.4355597131439
+                657.2412141019747,
+                129.03021659726846
               ],
               "p2": [
-                1535.6220766184529,
-                228.4355597131439
+                906.2273304551134,
+                129.03021659726846
               ]
             },
             {
               "p1": [
-                1535.6220766184529,
-                228.4355597131439
+                906.2273304551134,
+                129.03021659726846
               ],
               "p2": [
-                1535.6220766184529,
-                268.03123805486666
+                906.2273304551134,
+                136.51177069989262
               ]
             },
             {
               "p1": [
-                1535.6220766184529,
-                268.03123805486666
+                906.2273304551134,
+                136.51177069989262
               ],
               "p2": [
-                217.8779235399329,
-                268.03123805486666
+                657.2412141019747,
+                136.51177069989262
               ]
             }
           ],
@@ -72786,42 +72786,42 @@
           "segmentos": [
             {
               "p1": [
-                1496.0261605659862,
-                1124.8813566748245
+                898.74573143734,
+                298.41253332782344
               ],
               "p2": [
-                1496.0263003153218,
-                268.03125574827345
+                898.745757842803,
+                136.51177404303962
               ]
             },
             {
               "p1": [
-                1496.0263003153218,
-                268.03125574827345
+                898.745757842803,
+                136.51177404303962
               ],
               "p2": [
-                1535.6219786570455,
-                268.0312492900839
+                906.2273119454273,
+                136.51177282277285
               ]
             },
             {
               "p1": [
-                1535.6219786570455,
-                268.0312492900839
+                906.2273119454273,
+                136.51177282277285
               ],
               "p2": [
-                1535.6218389077098,
-                1124.8813502168719
+                906.2272855399644,
+                298.41253210760135
               ]
             },
             {
               "p1": [
-                1535.6218389077098,
-                1124.8813502168719
+                906.2272855399644,
+                298.41253210760135
               ],
               "p2": [
-                1496.0261605659862,
-                1124.8813566748245
+                898.74573143734,
+                298.41253332782344
               ]
             }
           ],
@@ -72832,42 +72832,42 @@
           "segmentos": [
             {
               "p1": [
-                1456.43070197226,
-                1085.2859180768796
+                891.2642188558261,
+                290.9310245244875
               ],
               "p2": [
-                1456.43083358471,
-                278.32579075892
+                891.2642437238349,
+                138.45691361051513
               ]
             },
             {
               "p1": [
-                1456.43083358471,
-                278.32579075892
+                891.2642437238349,
+                138.45691361051513
               ],
               "p2": [
-                1485.7316355575836,
-                278.3257955377808
+                896.8005937597763,
+                138.45691451347489
               ]
             },
             {
               "p1": [
-                1485.7316355575836,
-                278.3257955377808
+                896.8005937597763,
+                138.45691451347489
               ],
               "p2": [
-                1485.731503945135,
-                1085.2859132980166
+                896.8005688917681,
+                290.9310236215273
               ]
             },
             {
               "p1": [
-                1485.731503945135,
-                1085.2859132980166
+                896.8005688917681,
+                290.9310236215273
               ],
               "p2": [
-                1456.43070197226,
-                1085.2859180768796
+                891.2642188558261,
+                290.9310245244875
               ]
             }
           ],
@@ -72878,42 +72878,42 @@
           "segmentos": [
             {
               "p1": [
-                1496.02639827673,
-                1124.8815943855502
+                898.7457763524892,
+                298.41257824296906
               ],
               "p2": [
-                1496.02639827673,
-                268.0312380509067
+                898.7457763524892,
+                136.51177069914434
               ]
             },
             {
               "p1": [
-                1496.02639827673,
-                268.0312380509067
+                898.7457763524892,
+                136.51177069914434
               ],
               "p2": [
-                1535.6220766184529,
-                268.0312380509067
+                906.2273304551134,
+                136.51177069914434
               ]
             },
             {
               "p1": [
-                1535.6220766184529,
-                268.0312380509067
+                906.2273304551134,
+                136.51177069914434
               ],
               "p2": [
-                1535.6220766184529,
-                1124.8815943855502
+                906.2273304551134,
+                298.41257824296906
               ]
             },
             {
               "p1": [
-                1535.6220766184529,
-                1124.8815943855502
+                906.2273304551134,
+                298.41257824296906
               ],
               "p2": [
-                1496.02639827673,
-                1124.8815943855502
+                898.7457763524892,
+                298.41257824296906
               ]
             }
           ],
@@ -72924,42 +72924,42 @@
           "segmentos": [
             {
               "p1": [
-                267.7684912951454,
-                1114.586913916532
+                666.6679747360502,
+                296.4674111913156
               ],
               "p2": [
-                267.76848651628416,
-                1085.286111943658
+                666.6679738330902,
+                290.93106115537375
               ]
             },
             {
               "p1": [
-                267.76848651628416,
-                1085.286111943658
+                666.6679738330902,
+                290.93106115537375
               ],
               "p2": [
-                1485.731503945115,
-                1085.2859132980361
+                896.8005688917644,
+                290.93102362153104
               ]
             },
             {
               "p1": [
-                1485.731503945115,
-                1085.2859132980361
+                896.8005688917644,
+                290.93102362153104
               ],
               "p2": [
-                1485.7315087239758,
-                1114.5867152709106
+                896.8005697947242,
+                296.46737365747276
               ]
             },
             {
               "p1": [
-                1485.7315087239758,
-                1114.5867152709106
+                896.8005697947242,
+                296.46737365747276
               ],
               "p2": [
-                267.7684912951454,
-                1114.586913916532
+                666.6679747360502,
+                296.4674111913156
               ]
             }
           ],
@@ -72970,42 +72970,42 @@
           "segmentos": [
             {
               "p1": [
-                217.8779235399329,
-                1164.4772727272725
+                657.2412141019747,
+                305.8941323455932
               ],
               "p2": [
-                217.8779235399329,
-                1124.8815943855502
+                657.2412141019747,
+                298.41257824296906
               ]
             },
             {
               "p1": [
-                217.8779235399329,
-                1124.8815943855502
+                657.2412141019747,
+                298.41257824296906
               ],
               "p2": [
-                1535.6220766184529,
-                1124.8815943855502
+                906.2273304551134,
+                298.41257824296906
               ]
             },
             {
               "p1": [
-                1535.6220766184529,
-                1124.8815943855502
+                906.2273304551134,
+                298.41257824296906
               ],
               "p2": [
-                1535.6220766184529,
-                1164.4772727272725
+                906.2273304551134,
+                305.8941323455932
               ]
             },
             {
               "p1": [
-                1535.6220766184529,
-                1164.4772727272725
+                906.2273304551134,
+                305.8941323455932
               ],
               "p2": [
-                217.8779235399329,
-                1164.4772727272725
+                657.2412141019747,
+                305.8941323455932
               ]
             }
           ],
@@ -73016,42 +73016,42 @@
           "segmentos": [
             {
               "p1": [
-                217.87802149761092,
-                268.0314642374806
+                657.2412326109561,
+                136.51181343681583
               ],
               "p2": [
-                217.87801503969058,
-                228.43578589575964
+                657.24123139074,
+                129.0302593341919
               ]
             },
             {
               "p1": [
-                217.87801503969058,
-                228.43578589575964
+                657.24123139074,
+                129.0302593341919
               ],
               "p2": [
-                1535.6219851345654,
-                228.43557097620123
+                906.2273131693469,
+                129.0302187254092
               ]
             },
             {
               "p1": [
-                1535.6219851345654,
-                228.43557097620123
+                906.2273131693469,
+                129.0302187254092
               ],
               "p2": [
-                1535.6219915924858,
-                268.0312493179231
+                906.2273143895627,
+                136.51177282803292
               ]
             },
             {
               "p1": [
-                1535.6219915924858,
-                268.0312493179231
+                906.2273143895627,
+                136.51177282803292
               ],
               "p2": [
-                217.87802149761092,
-                268.0314642374806
+                657.2412326109561,
+                136.51181343681583
               ]
             }
           ],
@@ -73062,42 +73062,42 @@
           "segmentos": [
             {
               "p1": [
-                1535.6219851524352,
-                289.923196467003
+                906.2273131727231,
+                140.64822897342628
               ],
               "p2": [
-                1535.6219851524352,
-                104.02272933170343
+                906.2273131727231,
+                105.52256726427163
               ]
             },
             {
               "p1": [
-                1535.6219851524352,
-                104.02272933170343
+                906.2273131727231,
+                105.52256726427163
               ],
               "p2": [
-                1536.0179419358515,
-                104.02272933170343
+                906.3021287137492,
+                105.52256726427163
               ]
             },
             {
               "p1": [
-                1536.0179419358515,
-                104.02272933170343
+                906.3021287137492,
+                105.52256726427163
               ],
               "p2": [
-                1536.0179419358515,
-                289.923196467003
+                906.3021287137492,
+                140.64822897342628
               ]
             },
             {
               "p1": [
-                1536.0179419358515,
-                289.923196467003
+                906.3021287137492,
+                140.64822897342628
               ],
               "p2": [
-                1535.6219851524352,
-                289.923196467003
+                906.2273131727231,
+                140.64822897342628
               ]
             }
           ],
@@ -73108,42 +73108,42 @@
           "segmentos": [
             {
               "p1": [
-                217.4820580641499,
-                289.92319440802703
+                657.1664158134123,
+                140.64822858438538
               ],
               "p2": [
-                217.4820580641499,
-                104.02272727272748
+                657.1664158134123,
+                105.5225668752305
               ]
             },
             {
               "p1": [
-                217.4820580641499,
-                104.02272727272748
+                657.1664158134123,
+                105.5225668752305
               ],
               "p2": [
-                217.87801484756665,
-                104.02272727272748
+                657.2412313544385,
+                105.5225668752305
               ]
             },
             {
               "p1": [
-                217.87801484756665,
-                104.02272727272748
+                657.2412313544385,
+                105.5225668752305
               ],
               "p2": [
-                217.87801484756665,
-                289.92319440802703
+                657.2412313544385,
+                140.64822858438538
               ]
             },
             {
               "p1": [
-                217.87801484756665,
-                289.92319440802703
+                657.2412313544385,
+                140.64822858438538
               ],
               "p2": [
-                217.4820580641499,
-                289.92319440802703
+                657.1664158134123,
+                140.64822858438538
               ]
             }
           ],

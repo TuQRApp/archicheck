@@ -172,9 +172,40 @@ ESTILOS = {
     "IfcRailing": dict(facecolor="none", edgecolor="#9333ea", linewidth=0.8, zorder=5, label="Baranda"),
     "IfcWindow": dict(facecolor="#7dd3fc", edgecolor="#0369a1", linewidth=0.8, zorder=4, label="Ventana"),
     "IfcFurnishingElement": dict(facecolor="#d9c9a3", edgecolor="#78350f", linewidth=0.3, zorder=2, label="Mobiliario"),
+    # Pisos/cubiertas (2026-09-19, hallazgo real investigando Schependomlaan
+    # nivel "04 dak" contra Altiro: nuestro PDF dibujaba solo 22 elementos ahi
+    # -- las 3 clases de abajo triangulan bien (148/158, 9/9, 11/11
+    # verificado), nunca fue limite de geometria, era que no estaban en este
+    # catalogo). A pedido explicito del usuario, estas 3 se agregan SOLO para
+    # el nivel de cubierta -- existen en cantidades mucho mayores en TODOS
+    # los demas niveles del edificio (ej. planta baja de Schependomlaan:
+    # 252 IfcCovering + 80 IfcSlab + 24 IfcBeam) y ahi se siguen ignorando a
+    # proposito: un piso/cubrimiento a pagina completa taparia muros/puertas/
+    # ventanas en una planta normal. Ver ORDEN_DIBUJO_CUBIERTA y
+    # es_nivel_cubierta() mas abajo -- la seleccion de CUAL nivel es la
+    # cubierta es geometrica (el de mayor cota), nunca por nombre/idioma.
+    "IfcSlab": dict(facecolor="#94a3b8", edgecolor="#475569", linewidth=0.4, zorder=1, label="Losa/cubierta"),
+    "IfcCovering": dict(facecolor="#d6d3d1", edgecolor="#78716c", linewidth=0.3, zorder=2, label="Revestimiento/cubierta"),
+    "IfcBeam": dict(facecolor="#b45309", edgecolor="#78350f", linewidth=0.5, zorder=3, label="Viga"),
 }
 ORDEN_DIBUJO = ["IfcPlate", "IfcCurtainWall", "IfcFurnishingElement", "IfcWallStandardCase", "IfcWall", "IfcColumn",
                 "IfcStairFlight", "IfcStair", "IfcDoor", "IfcWindow", "IfcRailing"]
+# Nivel de cubierta = el de mayor cota (Elevation) del edificio, unico criterio
+# geometrico disponible sin depender de nombre/idioma del nivel (mismo
+# principio que el resto del proyecto: nunca filtrar por nombre cuando hay
+# una senal estructural). No es infalible (un atico/terraza intermedia bajo
+# una cubierta real quedaria mal clasificado), pero es la mejor senal
+# disponible sin inventar una heuristica de nombre -- documentado como tal.
+ORDEN_DIBUJO_CUBIERTA = ["IfcSlab", "IfcCovering"] + ORDEN_DIBUJO + ["IfcBeam"]
+
+
+def es_nivel_cubierta(nivel, niveles):
+    """True si `nivel` es el de mayor Elevation entre `niveles` (lista ya
+    ordenada o no) -- ver nota de cabecera de ORDEN_DIBUJO_CUBIERTA."""
+    cotas = [n.Elevation for n in niveles if n.Elevation is not None]
+    if not cotas or nivel.Elevation is None:
+        return False
+    return nivel.Elevation == max(cotas)
 
 settings = ifcopenshell.geom.settings()
 settings.set("use-world-coords", True)
@@ -722,11 +753,13 @@ def main(ifc_path):
                 if t in ESTILOS:
                     por_tipo.setdefault(t, []).append(el)
 
+            orden_nivel = ORDEN_DIBUJO_CUBIERTA if es_nivel_cubierta(nivel, niveles) else ORDEN_DIBUJO
+
             fig, ax = plt.subplots(figsize=(16.54, 11.69))  # A3 apaisado -- mas espacio para detalle
             hubo_puerta_sin_dato = False
             hubo_arco_por_geometria = False
 
-            for tipo in ORDEN_DIBUJO:
+            for tipo in orden_nivel:
                 for el in por_tipo.get(tipo, []):
                     geom = footprint_2d(el)
                     if geom is None:
@@ -783,7 +816,7 @@ def main(ifc_path):
             ax.set_ylabel("m")
             handles = [MplPolygon([(0, 0)], closed=True, facecolor=ESTILOS[t]["facecolor"],
                                    edgecolor=ESTILOS[t].get("edgecolor", "none"), label=ESTILOS[t]["label"])
-                       for t in ORDEN_DIBUJO if por_tipo.get(t)]
+                       for t in orden_nivel if por_tipo.get(t)]
             if hubo_arco_por_geometria:
                 handles.append(plt.Line2D([0], [0], color=COLOR_ARCO_GEOMETRIA, linestyle="--", linewidth=1.2,
                                            label="Puerta: apertura inferida por geometría (sin dato, confirmar con arquitecto)"))
@@ -795,7 +828,14 @@ def main(ifc_path):
             fig.tight_layout()
             pdf.savefig(fig)
             plt.close(fig)
-            print(f"Nivel {nivel.Name}: {sum(len(v) for v in por_tipo.values())} elementos dibujados")
+            # Bug real encontrado 2026-09-19, mismo dia que se agrego
+            # ORDEN_DIBUJO_CUBIERTA: por_tipo se arma filtrando solo por
+            # pertenencia a ESTILOS (agnostico del nivel), asi que sumar TODOS
+            # sus valores conto elementos que jamas se dibujaron en pisos que
+            # no son cubierta (IfcSlab/IfcCovering/IfcBeam quedan en por_tipo
+            # pero orden_nivel para un piso normal no los itera). El conteo
+            # real debe sumar solo lo que orden_nivel efectivamente recorrio.
+            print(f"Nivel {nivel.Name}: {sum(len(por_tipo.get(t, [])) for t in orden_nivel)} elementos dibujados")
 
     print(f"\nListo: {out_pdf}")
 
