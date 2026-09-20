@@ -35,6 +35,10 @@ Revisión de que las correcciones ya aplicadas siguen siendo correctas y tienen 
 - Inferencia de puertas sin dato por footprint — memoria `project_archicheck_bim_puertas_sin_dato_geometria`: calibrada con N=1, pendiente de revalidar por archivo
 - Heurística `bisagra_por_geometria` (`UMBRAL_ASIMETRIA_BISAGRA_M = 0.02 m`) — también N=1, mencionada como pregunta abierta en el brief de Ing SW (§7.5)
 
+## 6. Revisión profunda de marco normativo con cofounders
+
+Sesión de revisión del marco normativo (OGUC/LGUC/DDU/PRC y cómo se traduce a reglas del producto) junto con los cofounders — no un ejercicio solo técnico/de auditoría de datos como el punto 4, sino una revisión conjunta de criterio normativo. Relacionar con item 4 (completar normativa) y con la auditoría de integridad ya hecha (memoria `project_archicheck_normativa_auditoria_integridad`) como insumo de partida para esa sesión.
+
 ---
 
 **Nota de proceso**: según las instrucciones del proyecto, esta documentación vive en el repo local (`Proyecto/`), no en el Proyecto de Claude en la nube.
