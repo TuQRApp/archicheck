@@ -21,6 +21,7 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { clasificar } from './clasificar_normativa.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 
@@ -75,19 +76,29 @@ function fragmentar(texto, codigo, maxChars = MAX_CHARS) {
 
 // ── Construir chunks desde cada fuente ────────────────────────────────────────
 
+// NOTA 2026-09-21 (Backlog_Macro.md item 8, taxonomia multidimensional): las
+// 3 funciones de abajo ahora llaman a clasificar() (clasificar_normativa.mjs)
+// para poblar metadata con la taxonomia real desde el momento de la carga --
+// antes solo guardaban bookkeeping minimo (ley/version, ddu/titulo_doc,
+// comuna/archivo). Fuente unica compartida con backfill_metadata.mjs, para
+// no repetir el problema real de reglas_verificacion.json vs. schema.sql
+// (misma info, 2 copias, desincronizadas) encontrado hoy mismo.
+
 function chunksLey(json, fuente, prefijo) {
   const chunks = [];
   for (const art of json.articulos) {
     const codigo = `${prefijo}-${art.numero}`;
     const texto = art.texto?.trim();
     if (!texto || texto.length < 10) continue;
+    const metadataBase = { ley: json.ley || json.nombre, version: json.ultima_version };
+    const taxonomia = clasificar(fuente, codigo, metadataBase);
     for (const frag of fragmentar(texto, codigo)) {
       chunks.push({
         fuente,
         codigo:  frag.codigo,
         titulo:  `Art. ${art.numero}`,
         texto:   frag.texto,
-        metadata: { ley: json.ley || json.nombre, version: json.ultima_version },
+        metadata: { ...metadataBase, ...taxonomia },
       });
     }
   }
@@ -103,13 +114,15 @@ function chunksDDU(json) {
     // Antes truncaba con .substring(0, MAX_CHARS) — perdía el resto de secciones
     // largas en silencio. Usa fragmentar() como chunksLey/chunksPRC, misma
     // constante MAX_CHARS/SOLAP para las 4 fuentes en vez de una regla aparte.
+    const metadataBase = { ddu: json.numero, titulo_doc: json.titulo };
+    const taxonomia = clasificar('DDU', s.codigo, metadataBase);
     for (const frag of fragmentar(texto, s.codigo)) {
       chunks.push({
         fuente:   'DDU',
         codigo:   frag.codigo,
         titulo:   s.titulo || '',
         texto:    frag.texto,
-        metadata: { ddu: json.numero, titulo_doc: json.titulo },
+        metadata: { ...metadataBase, ...taxonomia },
       });
     }
   }
@@ -128,13 +141,15 @@ function chunksPRC(comunaDir) {
       const codigo = `${prefijo}-${art.numero || art.id}`;
       const texto = (art.texto || art.contenido || '').trim();
       if (!texto) continue;
+      const metadataBase = { comuna, archivo };
+      const taxonomia = clasificar(prefijo, codigo, metadataBase);
       for (const frag of fragmentar(texto, codigo)) {
         chunks.push({
-          fuente:   'PRC',
+          fuente:   prefijo,
           codigo:   frag.codigo,
           titulo:   art.titulo || `Art. ${art.numero}`,
           texto:    frag.texto,
-          metadata: { comuna, archivo },
+          metadata: { ...metadataBase, ...taxonomia },
         });
       }
     }

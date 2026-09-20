@@ -18,7 +18,7 @@
     {
       "id": "recepcion_final_obligatoria",
       "descripcion": "Toda edificación requiere recepción final antes de ser habitada o usada",
-      "referencia": "LGUC Art. 118",
+      "referencia": "LGUC Art. 145 -- CORREGIDO 2026-09-21: 'LGUC Art. 118' era una cita FALSA (verificado texto integro: el Art. 118 regula el PLAZO de la DOM para pronunciarse sobre permisos -30/60 dias- y el silencio administrativo, no la recepcion final). El articulo real, que coincide textualmente con la descripcion de esta regla, es el Art. 145: 'Ninguna obra podra ser habitada o destinada a uso alguno antes de su recepcion definitiva, parcial o total, o del archivo de la declaracion jurada a que se refiere el articulo 144 bis.'",
       "aplica_a": [
         "obra_nueva",
         "ampliacion"
@@ -28,7 +28,7 @@
     {
       "id": "accesibilidad_universal",
       "descripcion": "Todo edificio de uso público y vía pública debe cumplir condiciones de accesibilidad universal",
-      "referencia": "OGUC Art. 4.1.1 – 4.1.7",
+      "referencia": "OGUC Art. 4.1.7 -- PRECISADO 2026-09-21: el rango previo '4.1.1-4.1.7' sobrestimaba la cita -- verificado que 4.1.1 (altura de piso a cielo), 4.1.2-4.1.4 (ventilacion/iluminacion) y 4.1.5-4.1.6 (acustica) son temas distintos, no de accesibilidad. Solo el 4.1.7 es el articulo de accesibilidad universal (ya curado en detalle en Fase 2/reglas_normativas.py: puerta_ancho_libre, rampa, circulo_giro_accesible_m)",
       "aplica_a": [
         "equipamiento",
         "comercio",
@@ -37,7 +37,7 @@
         "salud",
         "cultura"
       ],
-      "verificacion": "Verificar rampas, pasillos mínimos 1.5m, baños accesibles, estacionamientos discapacidad"
+      "verificacion": "Verificar rampas, ancho de pasillos accesibles (ver Fase 2/reglas_normativas.py OGUC_REGLAS['pasillo'] -- valor SIN VERIFICAR hoy, corregido 2026-09-21: '1.5m' no tenia respaldo en el texto de OGUC), baños accesibles, estacionamientos discapacidad"
     },
     {
       "id": "carga_ocupacion",
@@ -60,7 +60,7 @@
     {
       "id": "vias_evacuacion",
       "descripcion": "Todo edificio debe contar con vías de evacuación y escaleras de emergencia según OGUC",
-      "referencia": "OGUC Art. 4.3.4 – 4.3.5",
+      "referencia": "CORREGIDO 2026-09-21: 'OGUC Art. 4.3.4 - 4.3.5' era una cita FALSA -- verificado el texto integro, esos 2 articulos son las tablas de TIPO de resistencia al fuego (a/b/c/d) segun superficie/pisos, no vias de evacuacion. Las vias de evacuacion son el Capitulo 2 completo del Titulo 4 (empieza en Art. 4.2.1, ambito de aplicacion); dentro de ese capitulo, los anchos especificos ya estan cubiertos con cita real en Fase 2/reglas_normativas.py: Art. 4.2.3 (dimensionamiento por carga de ocupacion), Art. 4.2.5 (pasillo, SIN VERIFICAR -- ver ese archivo), Art. 4.2.10 (escalera, tabla real por carga de ocupacion)",
       "aplica_a": [
         "todos"
       ],
@@ -69,17 +69,17 @@
     {
       "id": "ventilacion_iluminacion",
       "descripcion": "Todo recinto habitable debe tener ventilación e iluminación natural mínima",
-      "referencia": "OGUC Art. 4.2.5 – 4.2.6",
+      "referencia": "SIN VERIFICAR -- corregido 2026-09-21: 'OGUC Art. 4.2.5 - 4.2.6' era una cita FALSA (verificado el texto integro de ambos, tratan de ancho/altura de vias de evacuacion, no de ventanas). El articulo real (4.1.2) exige 'al menos una ventana' de forma cualitativa, sin fijar un porcentaje. El 10% de 'verificacion' abajo es una convencion de diseño, no una cita OGUC -- ver Fase 2/reglas_normativas.py, OGUC_REGLAS['ventilacion_iluminacion_pct']",
       "aplica_a": [
         "residencial",
         "equipamiento"
       ],
-      "verificacion": "Verificar superficies de ventana ≥ 10% superficie del recinto"
+      "verificacion": "Verificar superficies de ventana ≥ 10% superficie del recinto (umbral de convencion, no normativo)"
     },
     {
       "id": "altura_minima_pisos",
-      "descripcion": "Altura mínima libre de piso a cielo: 2.30m en recintos habitables, 2.20m en baños y cocinas",
-      "referencia": "OGUC Art. 4.2.7",
+      "descripcion": "Altura mínima libre de piso a cielo: 2.30m en recintos habitables (2.20m en baños y cocinas -- ver nota, NO confirmado)",
+      "referencia": "CORREGIDO 2026-09-21: 'OGUC Art. 4.2.7' era una cita FALSA -- verificado el texto integro, ese articulo es sobre barandas/antepechos en aberturas a mas de 1m de altura, no altura de piso a cielo. El 2,30 m para locales habitables SI es real, en Art. 4.1.1 ('Los locales habitables tendran una altura minima de piso a cielo... de 2,30 m'). El '2,20 m en baños y cocinas' NO se encontro en ninguna de las 770 secciones de OGUC (busqueda exhaustiva de '2,20 m' -- los unicos usos reales de esa medida son altura de cabina de ascensor Art. 4.1.11 y altura de piso en estacionamientos Art. 4.11.1, ninguno aplicable a baños/cocinas) -- SIN VERIFICAR, posible invencion, revisar antes de confiar",
       "aplica_a": [
         "residencial",
         "equipamiento"
@@ -99,7 +99,7 @@
     {
       "id": "cambio_destino",
       "descripcion": "El cambio de destino de una edificación requiere cumplir normas del nuevo uso y tramitación ante DOM",
-      "referencia": "LGUC Art. 57 – 59",
+      "referencia": "OGUC Art. 4.2.2 -- CORREGIDO 2026-09-21: 'LGUC Art. 57-59' era una cita FALSA -- verificado el texto integro, esos 3 articulos de LGUC tratan de concordancia de patentes municipales con el plan regulador (57-58) y declaratoria de utilidad publica de terrenos (59), nada sobre cambio de destino de una edificacion. El articulo real, encontrado en esta misma revision, es OGUC Art. 4.2.2, que dice textualmente: 'Para solicitar autorizacion de cambio de destino de una edificacion... debera adjuntarse un informe suscrito por profesional competente que acredite el cumplimiento de las disposiciones... aplicables al nuevo destino, salvo... carga de ocupacion inferior a 30 personas'",
       "aplica_a": [
         "cambio_destino"
       ],
@@ -108,7 +108,7 @@
     {
       "id": "urbanizacion_previa",
       "descripcion": "Todo proyecto que contemple nuevos lotes debe contar con urbanización completa previa a la edificación",
-      "referencia": "OGUC Art. 3.2.1 – 3.2.3",
+      "referencia": "OGUC Art. 3.2.1 – 3.2.3 (VERIFICADO PARCIAL 2026-09-21: los 3 articulos son reales y del capitulo correcto -- 3.2.1/3.2.2 obras de agua potable/alcantarillado, 3.2.3 electrificacion/alumbrado publico/gas, todas a cargo del urbanizador -- pero el texto leido no establece explicitamente el requisito TEMPORAL 'previa a la edificacion' de la descripcion; ese requisito probablemente vive en otro articulo de LGUC/OGUC Titulo 3 no revisado todavia)",
       "aplica_a": [
         "loteo",
         "subdivision"
@@ -117,12 +117,12 @@
     },
     {
       "id": "proteccion_patrimonio",
-      "descripcion": "Intervenciones en inmuebles o zonas de conservación histórica requieren autorización del CMN o DOM según corresponda",
-      "referencia": "LGUC Art. 60",
+      "descripcion": "Intervenciones en inmuebles declarados Monumento Nacional requieren autorizacion del Consejo de Monumentos Nacionales (Ley 17.288); intervenciones en inmuebles o zonas de conservacion historica definidos por el Plan Regulador (categoria distinta, sin declaratoria de Monumento) requieren autorizacion de la SEREMI de Vivienda y Urbanismo -- NO de la DOM (la DOM solo recibe la declaracion y resuelve procedencia de demolicion, no es quien autoriza la intervencion patrimonial en si)",
+      "referencia": "RESUELTO 2026-09-21 (verificacion completa, ya no SIN VERIFICAR): 'LGUC Art. 60' era una cita FALSA -- confirmado, ese articulo trata de zonas de riesgo/restriccion, no de patrimonio. La cadena real, verificada con texto verbatim de oguc_pdf.json: (1) OGUC Art. 2.1.43 define que califica como 'zona de conservacion historica' o 'inmueble de conservacion historica' (categoria distinta de Monumento Nacional/Monumento Historico, que se rige por Ley 17.288 aparte), citando como habilitante 'el inciso segundo del articulo 60 de la LGUC' -- ese cruce especifico de OGUC 2.1.43 (Decreto 177 de 2003) puede estar desactualizado, porque el texto VIGENTE de LGUC Art. 60 disponible en este repo (lguc_pdf.json) ya no muestra ese inciso sobre conservacion historica -- fue reordenado/desplazado por modificaciones posteriores (Ley 21744 de 2025, Ley 21807 de 2026, sobre zonas de riesgo/humedales urbanos) -- no verificado a cual articulo se movio. (2) OGUC Art. 2.6.4 letra b) numeral 3 y Art. 5.1.4 (letra e) establecen el mecanismo real, textual: intervenir un Monumento Nacional exige 'autorizacion previa del Consejo de Monumentos Nacionales, conforme a la Ley N.17.288'; intervenir un inmueble/zona de conservacion historica (definido por el Plan Regulador, sin declaratoria de Monumento) exige 'autorizacion previa de la Secretaria Regional Ministerial de Vivienda y Urbanismo' -- la DOM NO es quien autoriza en ningun caso, solo tramita/recibe declaraciones (ver Art. 5.1.4-i para demoliciones). La descripcion de esta regla se corrigio para reflejar esto -- ver Fase 2/Convenciones_BIM.md seccion E para el detalle completo",
       "aplica_a": [
         "patrimonio"
       ],
-      "verificacion": "Verificar si predio está en zona o inmueble patrimonial y si cuenta con autorización correspondiente"
+      "verificacion": "Verificar si predio esta declarado Monumento Nacional (Ley 17.288, autoriza CMN) o definido como inmueble/zona de conservacion historica por el PRC (autoriza SEREMI MINVU) -- son 2 categorias y 2 autoridades distintas, no intercambiables"
     }
   ]
 }

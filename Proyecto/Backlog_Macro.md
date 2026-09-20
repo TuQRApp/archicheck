@@ -57,20 +57,34 @@ Otras preguntas propuestas para el mismo paso (a validar con el usuario):
 
 Relacionado con: item 4 (normativa por tipo de destino), tabla de divergencia BIM/CAD del brief de Ing SW (§3, fila "Cruce con cuadro de superficies declarado").
 
-## 8. Indexación de artículos normativos para mejorar la búsqueda
+## 8. Indexación de artículos normativos para mejorar la búsqueda — ✅ IMPLEMENTADO 2026-09-21
 
-Hoy `normativa_chunks` (Supabase pgvector, ver [supabase_schema.sql](../normativa/supabase_schema.sql)) solo filtra por `fuente` (OGUC/LGUC/LEY19300/DDU) antes de la búsqueda semántica — `match_normativa()` no acepta ningún otro filtro, y la columna `metadata jsonb` existe pero no se usa para filtrar. Objetivo: indexar cada chunk por múltiples dimensiones para que el RAG recupere el artículo correcto sin depender solo de similaridad semántica. Dimensiones propuestas (a validar, agregar las que falten):
+**Estado**: ejecutado en vivo contra la base Supabase real (a pedido explícito del usuario, "prefiero dejarlo ejecutado ya" en vez de dejarlo en el backlog). Las 7 dimensiones propuestas están implementadas sobre la columna `metadata jsonb` que ya existía (sin columnas nuevas), y las 1.608 filas ya cargadas fueron actualizadas con la taxonomía real.
 
-- **Tipo de edificación/destino** (escolar, residencial, salud, comercio, oficinas, industrial, deportivo, etc.) — la más pedida explícitamente. Se conecta directo con la pregunta de "tipo de construcción" que se agregará en la interfaz de carga BIM (item 7) y con OGUC Art. 4.5.1 (reglas específicas por tipo de establecimiento).
-- **Tipo de norma/materia** (ventilación, iluminación, accesibilidad, evacuación/circulación, estructural, superficies mínimas, urbanística — constructibilidad/COS/altura/rasante —, estacionamientos, resistencia al fuego).
-- **Fuente normativa** (ya existe como columna `fuente`).
-- **Ámbito territorial**: nacional vs. comunal/PRC, más comuna específica y zona dentro del PRC (ej. ZC3, ZE) para los chunks de PRC.
-- **Etapa del pipeline / tipo de observación**: mapear cada chunk a las categorías que el producto ya usa (OBS-G/E/V/M de Capa 1, OBS-N/INC de Capa 2) — permitiría recuperar exactamente el artículo relevante para cada chequeo que el motor ya corre, en vez de depender solo de similaridad semántica del texto de la observación.
-- **Vigencia**: vigente/derogada/modificada + fecha — crítico porque las circulares DDU se actualizan y hoy no hay forma de filtrar por vigencia (riesgo real de citar norma derogada).
-- **Canal aplicable**: CAD, BIM o ambos — porque algunas reglas se verifican de forma distinta según el canal de extracción (ver tabla de divergencia del brief de Ing SW, §3).
-- **Jerarquía normativa**: para resolver conflictos cuando un PRC es más restrictivo o más permisivo que la OGUC en el mismo punto.
+**Archivos nuevos** (`normativa/`):
+- `taxonomia_articulos.json` — tabla de clasificación: `articulos` (precisa, por número exacto, para los ~46 artículos OGUC ya leídos a fondo el 2026-09-21 — capítulos 4.1.x y 4.2.x completos, más 2.1.43/2.6.4/5.1.4 de patrimonio) marcada `clasificacion_metodo: "verificado"`; `capitulos_fallback` (heurística por prefijo de capítulo para el resto) marcada `"heuristica_no_verificada"` — nunca mezcladas sin distinguir.
+- `clasificar_normativa.mjs` — función `clasificar()` única, importada tanto por `indexar_normativa.mjs` (cargas futuras) como por `backfill_metadata.mjs` (actualiza filas ya cargadas sin regenerar embeddings) — evita la duplicación que causó el problema real de `reglas_verificacion.json` vs. `nacional/schema.sql` encontrado en el camino (ver abajo).
+- `migracion_taxonomia_metadata.sql` — índice GIN sobre `metadata`, `match_normativa()` extendida con 6 filtros nuevos opcionales (retrocompatible: la firma de 3 argumentos original sigue existiendo, el Worker actual no necesita cambios), y `articulos_por_etapa()` nueva (recupera por código OBS-N sin pasar por similaridad semántica). **Ejecutado y verificado en vivo** vía conexión directa a Postgres (Session Pooler, la conexión "Direct" falló por ser IPv6-only y este entorno no tiene ruta IPv6).
+- `backfill_metadata.mjs` — corrida real: 1.608/1.608 filas actualizadas, 0 errores (2 corridas: la primera con un bug real -- la fuente de Providencia en la tabla es `PRC-PRV`, no `PRC`, corregido y verificado en la segunda).
 
-Implementación probable: usar la columna `metadata jsonb` ya existente para estos campos (en vez de agregar columnas nuevas por cada dimensión) y extender `match_normativa()` para aceptar filtros adicionales sobre `metadata`, no solo sobre `fuente`. Relacionado con item 4 (completar cobertura normativa) — conviene definir la taxonomía de indexación antes o junto con cargar lo que falta, para no tener que re-indexar todo dos veces.
+**Las 7 dimensiones implementadas**: tipo_edificacion, tipo_norma (vocabulario controlado), ámbito+comuna+zona, etapa_pipeline (códigos OBS-N reales del producto), vigencia+fecha, canal (CAD/BIM/ambos), jerarquía (`piso_nacional_no_derogable` / `marco_nacional_ajustable_por_prc` / `exclusivo_comunal` — los 3 valores reales para resolver PRC vs. OGUC). Verificado en vivo: `articulos_por_etapa('OBS-N05')` devuelve exactamente los 3 artículos reales de ventilación (4.1.2/4.1.3/4.1.4); filtro por `tipo_norma=accesibilidad` devuelve resultados reales coherentes.
+
+**Hallazgos reales encontrados en el camino** (no buscados, aparecieron haciendo el trabajo):
+1. `normativa/nacional/schema.sql` tenía una copia duplicada y desactualizada de las 12 reglas de `reglas_verificacion.json` (con las citas viejas ya corregidas hoy mismo en la auditoría de integridad) — corregida en el archivo. Verificado que esa tabla (`reglas_verificacion_nacional`) **nunca se creó en la base real** — el archivo nunca se había ejecutado, cero drift en producción, solo el archivo local estaba obsoleto.
+2. **Pendiente real para item 4**: la base Supabase viva fue indexada desde `normativa/nacional/Fuentes/oguc.json` (644 artículos) y `lguc.json` (234), NO desde `oguc_pdf.json` (770) / `lguc_pdf.json` (245) — las extracciones más completas que se usaron para curar todas las correcciones de hoy. Esto significa que el RAG en producción probablemente está indexado con ~126 artículos OGUC de menos que la fuente más completa ya disponible en el repo. Pendiente re-indexar desde las fuentes `_pdf.json` en vez de `Fuentes/*.json`.
+3. Curando manualmente el capítulo 4.2 (vías de evacuación) se encontró que el **ancho mínimo real de pasillo es 1,10 m** (Art. 4.2.18, piso de tabla por carga de ocupación, mismo patrón que escaleras) — distinto del 1,20 m que hoy vive marcado `SIN VERIFICAR` en `OGUC_REGLAS['pasillo']` (`Fase 2/reglas_normativas.py`). Pendiente decidir si se corrige, con el mismo rigor que la corrección de `puerta_ancho_libre` (0.80→0.90m) de hoy.
+
+**Cobertura OGUC en curso** (regla de 100% de `Diseno_Funcional_ArchiCheck.md` §3.17): ver `Fase 2/cobertura_oguc.csv` — capítulos 4.1 (17 artículos) y 4.2 (29 artículos) completos hoy, con varios candidatos nuevos identificados sin conectar todavía (ascensor cabina 4.1.11, ducto ventilación 4.1.3, puerta de escape 0,85m fija de 4.2.24, distanciamiento entre fachadas 4.1.13-15). Quedan ~724 artículos OGUC + 245 LGUC + resto de DDU/PRC por revisar.
+
+**Revisión Ing SW Paso 2 corrida sobre todo esto (2026-09-21, DeepSeek+Codex, 9 hallazgos reales, todos verificados contra el código antes de aceptar)**:
+- **Crítico (Codex)**: `Fase 2/BIM/generar_json_colab.py` seguía con la puerta hardcodeada en 0.80m/N°6 — el fix a 0.90m/N°4 de esa misma sesión nunca se había propagado a este 3er consumidor. Corregido.
+- `reglas_verificacion.json`/`schema.sql`: "pasillos mínimos 1.5m" sin base real — corregido.
+- **`vigencia` hardcodeada a `'vigente'` para las 1.608 filas, sin ninguna rama que la sobreescribiera** — `p_solo_vigentes` no filtraba nada real. Corregido en el archivo (`clasificar_normativa.mjs` → `'sin_verificar'` en DDU/PRC; DDL sin `coalesce`) y **re-ejecutado en vivo el mismo día** (DDL + backfill, 1608/1608 filas, 0 errores) — verificado con query real: 185 DDU + 281 PRC-PRV en `sin_verificar`, resto en `vigente`; `articulos_por_etapa(..., true)` ya filtra de verdad. Credenciales guardadas en `.env.supabase.local` (gitignored, mismo patrón que las de OpenAI/DeepSeek).
+- `backfill_metadata.mjs`: `clasificar()` fuera del `try/catch` (hallazgo coincidente de DeepSeek y Codex) — corregido.
+- PRC con comuna no mapeada caía en silencio — corregido con warning + `clasificacion_metodo` explícito. Cache de taxonomía ignoraba `ruta` — corregido. Comentario de `schema.sql` describía un mecanismo inexistente — corregido. Docstring de `verificar_hardcodeo_normativo.py` sobre-prometía su alcance — corregido.
+- Sin forzar fix (documentado como riesgo, no bug hoy): escalado de `match_normativa()` a mayor escala; posible divergencia silenciosa `etapa_pipeline` vs. motor BIM real.
+
+Detalle completo en memoria (`project_archicheck_taxonomia_normativa_supabase`) y `Proyecto/Roadmap_Revision_Dossier_ArchiCheck.md`.
 
 ---
 

@@ -515,10 +515,16 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
             # varias veces en el proyecto) -- inofensivo en la practica porque
             # ambos casos ya daban pct=None, pero es el idiom equivocado.
             pct = (area_ventanas / area * 100) if (ventilacion_aplicable and area is not None and area > 0) else None
-            cumple = (pct >= 10.0) if pct is not None else None
+            # CORREGIDO 2026-09-21 (curacion OGUC completa, ver reglas_normativas.py
+            # OGUC_REGLAS['ventilacion_iluminacion_pct']): el 10% NO es una cita OGUC
+            # real (verificado contra el texto integro de los articulos que se
+            # citaban antes) -- se mantiene el valor pero el texto que ve el
+            # arquitecto ya no afirma una fuente OGUC que no existe.
+            cumple = (pct >= a._VENTILACION_MIN_PCT) if pct is not None else None
             obs = None
             if pct is not None:
-                obs = f"Ventilación natural medida desde IFC: {pct:.1f}% de la superficie (mínimo OGUC 10%)."
+                obs = (f"Ventilación natural medida desde IFC: {pct:.1f}% de la superficie "
+                       f"(mínimo de referencia {a._VENTILACION_MIN_PCT:.0f}%, sin cita OGUC verificada -- ver Convenciones_BIM.md).")
             elif not ventilacion_aplicable:
                 obs = ("Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún "
                        "vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo "
@@ -546,12 +552,19 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
             # escala_m aplicada (fix 2026-09-19) -- mismo bug de unidades que
             # analizar_todos.py: comparar el OverallWidth crudo contra 0.80
             # nunca podia fallar en archivos con LENGTHUNIT en milimetros.
-            ancho = a.num_o_none_escalado(d.OverallWidth, escala_m)
-            if ancho is not None and ancho < 0.80:
+            # Umbral/cita 2026-09-21 (curacion OGUC completa, ver
+            # reglas_normativas.py) -- este bloque seguia con 0.80/N°6
+            # hardcodeado a mano pese a que analizar_todos.py ya se corrigio
+            # a 0.90/N°4 (N°6 letra b) es el caso de bano accesible, no el
+            # general) -- hallazgo real de Revision Ing SW Paso 2 (Codex,
+            # 2026-09-21): un adapter mas de generar_json_colab.py habia
+            # quedado desincronizado de la fuente unica, mismo patron que
+            # motivo la extension del chequeo de hardcodeo a normativa/.
+            if ancho is not None and ancho < a._ANCHO_MIN_PUERTA_M:
                 incumplimientos_geo.append({
                     "tipo": "ancho", "recinto": d.Name or "Puerta",
-                    "medido": round(ancho, 2), "minimo": 0.80,
-                    "ref": "OGUC Art. 4.1.7 N°6 (ancho libre mínimo accesibilidad)",
+                    "medido": round(ancho, 2), "minimo": a._ANCHO_MIN_PUERTA_M,
+                    "ref": a.OGUC_REGLAS['puerta_ancho_libre'][2],
                 })
 
         total_puertas += len(puertas)

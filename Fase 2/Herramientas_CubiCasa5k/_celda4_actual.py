@@ -107,14 +107,18 @@ OGUC_REGLAS = {
     # dia el pipeline PDF implementa su propio chequeo de ancho de puerta o
     # FireRating de muro, debe leer el valor de aca, no hardcodear uno nuevo.
     #
-    # NOTA DE SINCRONIZACION: este archivo es un espejo LOCAL de la celda 4
-    # real, que sigue corriendo en el notebook de Colab (ver roadmap BIM,
-    # seccion 19) -- no hay import directo posible entre este archivo y los
-    # scripts de Fase 2/BIM/ (viven en carpetas distintas, y este archivo no
-    # es un modulo limpio, tiene codigo de nivel superior que llama al Worker).
-    # Mismo patron de sincronizacion manual que ya existe entre este espejo y
-    # el notebook de Colab -- si se corrige un valor aca, corregirlo tambien
-    # en Fase 2/BIM/piloto_ids_oguc.py y analizar_todos.py.
+    # FUENTE CANONICA 2026-09-20: este dict (con todo su historial de
+    # verificacion, ver comentarios arriba) ahora vive de forma unica en
+    # Fase 2/reglas_normativas.py -- Fase 2/BIM/analizar_todos.py y
+    # piloto_ids_oguc.py ya importan de ahi directo (son scripts locales
+    # sin restriccion de Colab). Este archivo (_celda4_actual.py) sigue con
+    # los valores en linea, IDENTICOS a los de reglas_normativas.py, porque
+    # es un espejo LOCAL de la celda 4 real que corre pegada en el notebook
+    # de Colab -- Colab no tiene acceso al filesystem de este repo (sin git
+    # clone ni drive.mount, verificado), asi que la celda real no puede
+    # hacer `import`. Si se corrige un valor, corregirlo PRIMERO en
+    # Fase 2/reglas_normativas.py y despues copiarlo aca y al notebook --
+    # nunca al reves.
     'puerta_ancho_libre': (None, 0.80, 'OGUC Art. 4.1.7 N°6 — ancho libre minimo 0,80 m (accesibilidad universal)'),
     'muro_fire_rating': {
         'campo_requerido': 'Pset_WallCommon.FireRating',
@@ -1116,6 +1120,28 @@ for (PAGINA_PLANTA, ESCALA_MANUAL, crop) in entries:
                     # que Revi calculo con ella (9,5%/9,60% en vez de los ~10,53%/
                     # ~10,40% que da la formula real para 4,25/4,50 m). Se corrige
                     # aqui a la formula real.
+                    #
+                    # CANONICO 2026-09-20 (punto 3, Proyecto/Diseno_Funcional_
+                    # ArchiCheck.md S3.15): esta misma formula vive ahora migrada en
+                    # Fase 2/reglas_normativas.py, pendiente_maxima_rampa_pct() --
+                    # Colab no puede importarla (ver limitacion documentada al inicio
+                    # de ese archivo), por eso se mantiene inline aca, pero
+                    # reglas_normativas.py es la fuente de verdad para cualquier
+                    # cambio futuro al umbral/formula (copiar de ahi, no editar aca
+                    # de memoria).
+                    #
+                    # DISCREPANCIA REAL detectada al migrar (no corregida aca hoy,
+                    # fuera de alcance de punto 3 que es solo BIM): cuando
+                    # `desarrollo` es None, ESTE codigo asume `max_pendiente = 8.0`
+                    # (el maximo mas estricto) en silencio, en vez de marcar la
+                    # pendiente como dato_faltante/no evaluable. La version canonica
+                    # en reglas_normativas.py NO hace ese supuesto -- devuelve None
+                    # explicito para "no se puede evaluar sin desarrollo_m", siguiendo
+                    # el principio de "nunca fallar en silencio" / distinguir dato
+                    # ausente de no-cumple. Queda como gap conocido del lado CAD, no
+                    # tocado hoy por el mismo motivo que el resto de Celda 4 se toca
+                    # con extremo cuidado (ver revisiones previas de cuerpo_cerrado.py
+                    # revertidas por regresiones).
                     if desarrollo is None:
                         max_pendiente = 8.0
                     elif desarrollo <= 1.5:
@@ -1138,6 +1164,15 @@ for (PAGINA_PLANTA, ESCALA_MANUAL, crop) in entries:
         # demostro leer el circulo de giro en su analisis, pero solo lo
         # transcribe. Aqui ademas se convierte en una regla real (DDU 351 /
         # Art. 4.1.7 OGUC exige 1,50 m de diametro libre en recintos accesibles).
+        # FUENTE CANONICA 2026-09-20: el valor 1.50 vive tambien en
+        # Fase 2/reglas_normativas.py (OGUC_REGLAS['circulo_giro_accesible_m']),
+        # migrado a la vez que se implemento el chequeo equivalente en BIM
+        # (Fase 2/BIM/analizar_todos.py) -- ver Proyecto/Diseno_Funcional_
+        # ArchiCheck.md S3.15. El MECANISMO de deteccion sigue siendo distinto
+        # a proposito (aca es lectura visual de Claude Vision -- el arquitecto
+        # dibujo/roturo el circulo o no; en BIM se calcula geometricamente si
+        # el circulo cabe de verdad) -- solo el umbral (1.50 m) es compartido.
+        # Si se corrige este valor, corregirlo PRIMERO en reglas_normativas.py.
         if rc and rc.get('es_accesible_universal') and rc.get('circulo_giro_1_50_detectado') is False:
             incumplimientos_geo.append({
                 'tipo': 'circulo_giro', 'pagina': PAGINA_PLANTA,
