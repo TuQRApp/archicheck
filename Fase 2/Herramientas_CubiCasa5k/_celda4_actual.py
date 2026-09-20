@@ -71,10 +71,26 @@ OGUC_REGLAS = {
     #     superficie que sirve"), pero el valor especifico "1,20 m para corredores
     #     de uso comun" que veniamos usando NO aparece textualmente en el articulo
     #     -- no se encontro en esta pasada la tabla equivalente a la de escaleras
-    #     (4.2.10) para pasillos/corredores generales. Se mantiene el valor por
-    #     ahora (es un minimo de uso muy extendido en la practica) pero queda
-    #     marcado como parcialmente verificado, no confirmado al 100%.
-    'pasillo'   : (None, 1.20, 'Art. 4.2.5 OGUC — ancho min corredores de uso comun 1,20 m (cita y tema confirmados; valor exacto no verificado al 100% -- ver comentario)'),
+    #     (4.2.10) para pasillos/corredores generales.
+    #
+    # CORREGIDO 2026-09-21 (ver Fase 2/reglas_normativas.py, misma correccion,
+    # este archivo es el espejo manual para Colab -- mantener sincronizado a
+    # mano, exento del chequeo automatico de hardcodeo por eso mismo). La
+    # linea de arriba seguia con "cita y tema confirmados" pese a que su
+    # propio comentario ya habia descartado esa cita -- doble desync
+    # (comentario vs. codigo EN EL MISMO archivo, ademas de vs.
+    # reglas_normativas.py). Se encontro el articulo real: Art. 4.2.18 --
+    # "Los pasillos tendran un ancho libre minimo de medio centimetro por
+    # persona, calculado conforme a la carga de ocupacion de la superficie
+    # servida, con un ancho minimo de 1,10 m [...] Cuando se trate de
+    # ocupaciones menores de 50 personas, o en caso de pisos subterraneos
+    # destinados a estacionamientos, bodegas o instalaciones de servicio, el
+    # ancho minimo sera de 1,10 m." Mismo patron que 'escalera' (tabla por
+    # carga de ocupacion con piso de 1,10 m); se usa el piso por no calcular
+    # carga de ocupacion real todavia. El 1,20 m anterior era MAS estricto
+    # que el minimo real -- menos falsos positivos con el fix, no menos
+    # falsos negativos.
+    'pasillo'   : (None, 1.10, 'Art. 4.2.18 OGUC — 0,5 cm por persona segun carga de ocupacion de la superficie servida, con piso minimo de 1,10 m (aplica siempre en ocupaciones <50 personas o subterraneos de estacionamiento/bodega/servicio); puede exigir mas de 1,10 m segun ocupacion, no calculado todavia'),
     'escalera'  : (None, 1.10, 'Art. 4.2.10 OGUC — tabla por carga de ocupacion, 1,10 m es el piso minimo (hasta 50 personas); puede exigir hasta 1,50 m o 2 escaleras segun ocupacion, no calculado todavia'),
     # FIX 2026-07-26 (c) -- CORRECCION IMPORTANTE tras auditar contra oguc_pdf.json
     # (extraccion completa del PDF oficial, 770 articulos, distinta de la fuente

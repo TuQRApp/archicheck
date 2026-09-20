@@ -37,7 +37,7 @@
         "salud",
         "cultura"
       ],
-      "verificacion": "Verificar rampas, ancho de pasillos accesibles (ver Fase 2/reglas_normativas.py OGUC_REGLAS['pasillo'] -- valor SIN VERIFICAR hoy, corregido 2026-09-21: '1.5m' no tenia respaldo en el texto de OGUC), baños accesibles, estacionamientos discapacidad"
+      "verificacion": "Verificar rampas, ancho de pasillos accesibles (1,10 m minimo, OGUC Art. 4.2.18 -- ver Fase 2/reglas_normativas.py OGUC_REGLAS['pasillo']; corregido 2026-09-21, el '1.5m' anterior no tenia respaldo en el texto de OGUC), baños accesibles, estacionamientos discapacidad"
     },
     {
       "id": "carga_ocupacion",

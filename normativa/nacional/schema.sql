@@ -89,7 +89,7 @@ INSERT INTO reglas_verificacion_nacional (id, descripcion, referencia, aplica_a,
  'Todo edificio de uso público debe cumplir condiciones de accesibilidad universal',
  'OGUC Art. 4.1.7 (precisado 2026-09-21; el rango 4.1.1-4.1.7 anterior sobrestimaba -- 4.1.1-4.1.6 son altura/ventilación/acústica, temas distintos)',
  ARRAY['equipamiento','comercio','servicios','educacion','salud','cultura'],
- 'Verificar rampas, ancho de pasillos accesibles (ver Fase 2/reglas_normativas.py OGUC_REGLAS[''pasillo''] -- valor SIN VERIFICAR hoy, corregido 2026-09-21: 1.5m no tenia respaldo en el texto de OGUC), baños accesibles, estacionamientos discapacidad'),
+ 'Verificar rampas, ancho de pasillos accesibles (1,10 m minimo, OGUC Art. 4.2.18 -- ver Fase 2/reglas_normativas.py OGUC_REGLAS[''pasillo'']; corregido 2026-09-21, el 1.5m anterior no tenia respaldo en el texto de OGUC), baños accesibles, estacionamientos discapacidad'),
 
 ('carga_ocupacion',
  'Todo proyecto debe calcular la carga de ocupación para determinar salidas y estacionamientos',

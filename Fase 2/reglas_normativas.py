@@ -109,21 +109,30 @@ OGUC_REGLAS = {
     #
     # RE-VERIFICADO 2026-09-21 (curacion OGUC completa, busqueda exhaustiva
     # sobre las 770 secciones de oguc_pdf.json por "pasillo"/"corredor" +
-    # "1,20"): CONFIRMADO que no existe una tabla general equivalente a la
-    # de escaleras (4.2.10) para pasillos -- Art. 4.2.5 efectivamente deja
-    # el ancho de pasillo librado a la carga de ocupacion, sin numero fijo.
-    # Los UNICOS usos reales de "1,20 m" + "pasillo" encontrados en todo el
-    # texto son: Art. 4.7.22 (pasillos de platea en salas de espectaculos
-    # con cabida >500 personas, caso muy acotado, no general) y Art. 6.4.2
-    # (pasillos dentro de una VIVIENDA accesible/adaptable: 0,90 m general,
-    # 1,05 m si hay giro de silla de ruedas, reducible a 0,95 m si el giro
-    # ensancha a 1,20 m -- tampoco es un pasillo de circulacion comun de
-    # edificio). Ninguno de los 2 respalda "1,20 m para corredores de uso
-    # comun" como esta redactado hoy. Se mantiene el valor 1,20 m (sigue
-    # siendo un minimo de uso extendido en la practica de diseño, y no hay
-    # evidencia de que sea insuficiente), pero la cita se corrige para no
-    # afirmar una fuente que la busqueda exhaustiva no respalda.
-    'pasillo'   : (None, 1.20, 'SIN VERIFICAR -- 1,20 m es un minimo de uso extendido en la practica, pero NO se encontro en OGUC (770 articulos revisados) una tabla general de ancho de pasillo equivalente a la de escaleras (Art. 4.2.10); Art. 4.2.5 remite a carga de ocupacion sin numero fijo'),
+    # "1,20"): esa busqueda concluyo -- por error -- que no existia tabla
+    # general para pasillos, porque el termino de busqueda combinaba
+    # "pasillo" CON "1,20" -- pero el articulo real (Art. 4.2.18) da 1,10 m,
+    # no 1,20 m, asi que nunca calzaba con esa combinacion de terminos. Se
+    # encontro despues (misma sesion, cobertura articulo-por-articulo de
+    # 4.1/4.2 completos, ver Fase 2/cobertura_oguc.csv) y se corrige ahora
+    # (2026-09-21, segunda pasada, mismo rigor que puerta_ancho_libre):
+    # texto verbatim de Art. 4.2.18 -- "Los pasillos tendran un ancho libre
+    # minimo de medio centimetro por persona, calculado conforme a la carga
+    # de ocupacion de la superficie servida, con un ancho minimo de 1,10 m
+    # [...] Cuando se trate de ocupaciones menores de 50 personas, o en
+    # caso de pisos subterraneos destinados a estacionamientos, bodegas o
+    # instalaciones de servicio, el ancho minimo sera de 1,10 m." Mismo
+    # patron que 'escalera' (Art. 4.2.10): tabla por carga de ocupacion
+    # (0,5 cm/persona) con un piso absoluto de 1,10 m -- se usa el piso
+    # como valor conservador porque todavia no se calcula carga de
+    # ocupacion real (requeriria area servida x factor m2/persona del Art.
+    # 4.2.4), igual que ya se documenta para 'escalera'. IMPACTO: el 1,20 m
+    # SIN VERIFICAR anterior era MAS estricto que el minimo real de OGUC --
+    # un pasillo de 1,10-1,19 m que antes se marcaba como incumplimiento
+    # ahora pasa a cumplir (menos falsos positivos, no menos falsos
+    # negativos). Pendiente igual que escalera: implementar carga de
+    # ocupacion real para aplicar la tabla completa en vez de solo el piso.
+    'pasillo'   : (None, 1.10, 'Art. 4.2.18 OGUC — 0,5 cm por persona segun carga de ocupacion de la superficie servida, con piso minimo de 1,10 m (aplica siempre en ocupaciones <50 personas o subterraneos de estacionamiento/bodega/servicio); puede exigir mas de 1,10 m segun ocupacion, no calculado todavia'),
     'escalera'  : (None, 1.10, 'Art. 4.2.10 OGUC — tabla por carga de ocupacion, 1,10 m es el piso minimo (hasta 50 personas); puede exigir hasta 1,50 m o 2 escaleras segun ocupacion, no calculado todavia'),
     # FIX 2026-07-26 (c) -- CORRECCION IMPORTANTE tras auditar contra oguc_pdf.json
     # (extraccion completa del PDF oficial, 770 articulos, distinta de la fuente
