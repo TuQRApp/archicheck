@@ -57,6 +57,21 @@ Otras preguntas propuestas para el mismo paso (a validar con el usuario):
 
 Relacionado con: item 4 (normativa por tipo de destino), tabla de divergencia BIM/CAD del brief de Ing SW (§3, fila "Cruce con cuadro de superficies declarado").
 
+## 8. Indexación de artículos normativos para mejorar la búsqueda
+
+Hoy `normativa_chunks` (Supabase pgvector, ver [supabase_schema.sql](../normativa/supabase_schema.sql)) solo filtra por `fuente` (OGUC/LGUC/LEY19300/DDU) antes de la búsqueda semántica — `match_normativa()` no acepta ningún otro filtro, y la columna `metadata jsonb` existe pero no se usa para filtrar. Objetivo: indexar cada chunk por múltiples dimensiones para que el RAG recupere el artículo correcto sin depender solo de similaridad semántica. Dimensiones propuestas (a validar, agregar las que falten):
+
+- **Tipo de edificación/destino** (escolar, residencial, salud, comercio, oficinas, industrial, deportivo, etc.) — la más pedida explícitamente. Se conecta directo con la pregunta de "tipo de construcción" que se agregará en la interfaz de carga BIM (item 7) y con OGUC Art. 4.5.1 (reglas específicas por tipo de establecimiento).
+- **Tipo de norma/materia** (ventilación, iluminación, accesibilidad, evacuación/circulación, estructural, superficies mínimas, urbanística — constructibilidad/COS/altura/rasante —, estacionamientos, resistencia al fuego).
+- **Fuente normativa** (ya existe como columna `fuente`).
+- **Ámbito territorial**: nacional vs. comunal/PRC, más comuna específica y zona dentro del PRC (ej. ZC3, ZE) para los chunks de PRC.
+- **Etapa del pipeline / tipo de observación**: mapear cada chunk a las categorías que el producto ya usa (OBS-G/E/V/M de Capa 1, OBS-N/INC de Capa 2) — permitiría recuperar exactamente el artículo relevante para cada chequeo que el motor ya corre, en vez de depender solo de similaridad semántica del texto de la observación.
+- **Vigencia**: vigente/derogada/modificada + fecha — crítico porque las circulares DDU se actualizan y hoy no hay forma de filtrar por vigencia (riesgo real de citar norma derogada).
+- **Canal aplicable**: CAD, BIM o ambos — porque algunas reglas se verifican de forma distinta según el canal de extracción (ver tabla de divergencia del brief de Ing SW, §3).
+- **Jerarquía normativa**: para resolver conflictos cuando un PRC es más restrictivo o más permisivo que la OGUC en el mismo punto.
+
+Implementación probable: usar la columna `metadata jsonb` ya existente para estos campos (en vez de agregar columnas nuevas por cada dimensión) y extender `match_normativa()` para aceptar filtros adicionales sobre `metadata`, no solo sobre `fuente`. Relacionado con item 4 (completar cobertura normativa) — conviene definir la taxonomía de indexación antes o junto con cargar lo que falta, para no tener que re-indexar todo dos veces.
+
 ---
 
 **Nota de proceso**: según las instrucciones del proyecto, esta documentación vive en el repo local (`Proyecto/`), no en el Proyecto de Claude en la nube.
