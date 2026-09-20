@@ -169,6 +169,20 @@ ESTILOS = {
     # a proposito: es la MISMA escalera, solo que este archivo no modelo el
     # tramo como objeto separado.
     "IfcStair": dict(facecolor="#f59e0b", edgecolor="black", linewidth=0.6, zorder=3, label="Escalera"),
+    # Rampas (2026-09-20, pedido explicito del usuario tras la auditoria de
+    # cobertura -- ver seccion 30 del diario BIM): IfcRamp/IfcRampFlight
+    # agregados con el MISMO patron ya verificado para escalera/IfcStairFlight
+    # (decomposicion + fallback al contenedor cuando no hay tramo hijo, ver
+    # mas abajo en el loop principal). Color propio (turquesa) para no
+    # confundirse visualmente con escalera en el plano. NINGUN archivo de
+    # ejemplo de esta sesion tiene una IfcRamp real (0/8, ver Convenciones_BIM.md
+    # seccion "Rampas") -- se implementa el mismo mecanismo de dibujo/conteo
+    # que ya esta probado para escaleras, pero SIN chequeo de pendiente/ancho
+    # normativo (OGUC 4.1.7): eso requeriria calibrar contra un caso real, y
+    # este proyecto no inventa un umbral sin evidencia (principio 0.4 de
+    # Convenciones_BIM.md). Queda como deteccion/registro, no como evaluacion.
+    "IfcRampFlight": dict(facecolor="#2dd4bf", edgecolor="#0f766e", linewidth=0.6, zorder=3, label="Rampa"),
+    "IfcRamp": dict(facecolor="#2dd4bf", edgecolor="#0f766e", linewidth=0.6, zorder=3, label="Rampa"),
     "IfcRailing": dict(facecolor="none", edgecolor="#9333ea", linewidth=0.8, zorder=5, label="Baranda"),
     "IfcWindow": dict(facecolor="#7dd3fc", edgecolor="#0369a1", linewidth=0.8, zorder=4, label="Ventana"),
     "IfcFurnishingElement": dict(facecolor="#d9c9a3", edgecolor="#78350f", linewidth=0.3, zorder=2, label="Mobiliario"),
@@ -189,7 +203,7 @@ ESTILOS = {
     "IfcBeam": dict(facecolor="#b45309", edgecolor="#78350f", linewidth=0.5, zorder=3, label="Viga"),
 }
 ORDEN_DIBUJO = ["IfcPlate", "IfcCurtainWall", "IfcFurnishingElement", "IfcWallStandardCase", "IfcWall", "IfcColumn",
-                "IfcStairFlight", "IfcStair", "IfcDoor", "IfcWindow", "IfcRailing"]
+                "IfcStairFlight", "IfcStair", "IfcRampFlight", "IfcRamp", "IfcDoor", "IfcWindow", "IfcRailing"]
 # Nivel de cubierta = el de mayor cota (Elevation) del edificio, unico criterio
 # geometrico disponible sin depender de nombre/idioma del nivel (mismo
 # principio que el resto del proyecto: nunca filtrar por nombre cuando hay
@@ -362,6 +376,44 @@ def mapa_operacion_puertas(modelo):
     return mapa
 
 
+# Salidas de emergencia (2026-09-20, auditoria de cobertura -- ver seccion 30
+# del diario BIM): el catalogo se habia documentado como "0% construido, no
+# existe ningun mecanismo IFC que las etiquete directamente" -- verificado que
+# eso es PARCIALMENTE falso: `Pset_DoorCommon.FireExit` SI es un campo
+# estandar real de IFC (buildingSMART), y aparece declarado en 1 de las 8
+# IFC de ejemplo (FZK-Haus, 1 de 5 puertas, valor False). No resuelve el
+# problema completo (carga de ocupacion + trazado de rutas sigue sin
+# implementar), pero cerrar la parte que SI es dato real evita el hardcode
+# "salidas_emergencia": 0 que antes no distinguia "0 encontradas" de "nunca se
+# evaluo".
+#
+# Hallazgo real al verificar (no solo leer el nombre del campo): DuplexHouse.ifc
+# trae `PSet_Revit_Type_Other.IsFireExit` en TODAS sus puertas, pero el valor
+# declarado es el string "IsFireExit" (el nombre del propio campo) en vez de
+# un booleano -- inspeccionado a mano (`IfcPropertySingleValue('IsFireExit',
+# $, IfcLabel('IsFireExit'), $)`), es un export de Revit roto/mal armado, no
+# nuestro bug. Se filtra explicitamente por `isinstance(valor, bool)` para no
+# tratar ese string como una senal real -- mismo principio del proyecto de
+# nunca confiar en un dato que "existe con un nombre parecido" sin verificar
+# que mide lo que dice medir (ver Convenciones_BIM.md, seccion C, ancho de
+# puerta).
+def mapa_salida_emergencia(modelo):
+    """GlobalId de IfcDoor -> True/False cuando `Pset_DoorCommon.FireExit`
+    (o el equivalente de Revit `IsFireExit`, SOLO si su valor es un booleano
+    real) esta declarado y es utilizable. Una puerta sin ninguno de los 2
+    campos, o con un valor no booleano (ver nota de cabecera), simplemente no
+    aparece en el mapa -- dato ausente, no False."""
+    mapa = {}
+    for d in modelo.by_type("IfcDoor"):
+        psets = ifcopenshell.util.element.get_psets(d, qtos_only=False)
+        valor = psets.get("Pset_DoorCommon", {}).get("FireExit")
+        if not isinstance(valor, bool):
+            valor = psets.get("PSet_Revit_Type_Other", {}).get("IsFireExit")
+        if isinstance(valor, bool):
+            mapa[d.GlobalId] = valor
+    return mapa
+
+
 # Bisagra por geometria -- ULTIMO recurso cuando no hay OperationType util
 # (2026-09-19, mismo dia, pedido explicito del usuario tras revisar la
 # pagina 5 del PDF: "todas abren para el lado que sobresale el trapezoide...
@@ -517,7 +569,8 @@ def marcar_apertura_sin_dato(ax, geom_trasladada):
 
 
 CLASES_SUSTANTIVAS_NIVEL = {"IfcWall", "IfcWallStandardCase", "IfcSlab", "IfcColumn",
-                             "IfcBeam", "IfcRoof", "IfcStairFlight", "IfcStair"}
+                             "IfcBeam", "IfcRoof", "IfcStairFlight", "IfcStair",
+                             "IfcRamp", "IfcRampFlight"}
 
 # Modo "instalaciones" (MEP) -- LTU_A-House_{Air,Cooling,Ducting,Heating,
 # Plumbing,Sanitation,VOIDS}.ifc no tienen NINGUN muro (confirmado por barrido
@@ -746,6 +799,25 @@ def main(ifc_path):
                     ids_stairs_con_flight.add(st.GlobalId)
             elementos = [e for e in elementos if not (e.is_a("IfcStair") and e.GlobalId in ids_stairs_con_flight)]
             elementos.extend(flights_escalera)
+
+            # Rampas (2026-09-20) -- MISMO patron que escalera arriba, sin
+            # ningun caso real de esta sesion para verificarlo empiricamente
+            # (0 IfcRamp en los 8 archivos de ejemplo, ver ESTILOS mas arriba)
+            # -- implementado por consistencia con el mecanismo ya probado de
+            # IfcStair/IfcStairFlight, que es genuinamente el mismo mecanismo
+            # IFC (decomposicion opcional a tramos). Revalidar contra un IFC
+            # real con rampas antes de confiar en esto sin reservas.
+            ramps_contenidos = [e for e in elementos if e.is_a("IfcRamp")]
+            flights_rampa = []
+            ids_ramps_con_flight = set()
+            for rp in ramps_contenidos:
+                hijos = [h for h in ifcopenshell.util.element.get_decomposition(rp, is_recursive=False)
+                         if h.is_a("IfcRampFlight")]
+                if hijos:
+                    flights_rampa.extend(hijos)
+                    ids_ramps_con_flight.add(rp.GlobalId)
+            elementos = [e for e in elementos if not (e.is_a("IfcRamp") and e.GlobalId in ids_ramps_con_flight)]
+            elementos.extend(flights_rampa)
 
             por_tipo = {}
             for el in elementos:

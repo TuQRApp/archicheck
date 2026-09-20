@@ -92,9 +92,13 @@ CATEGORIA_POR_CLASE = {
     # en `elementos` duplicaba la escalera (bug real de la primera version de
     # este fix, ver comentario junto a `elementos = [... not e.is_a("IfcStair")]`).
     "IfcStair": "escalera",
+    # Rampas (2026-09-20, ver g.ESTILOS/mapa_salida_emergencia en
+    # generar_plano_pdf.py para el detalle -- mismo patron que escalera, sin
+    # caso real todavia en ningun IFC de esta sesion).
+    "IfcRamp": "rampa", "IfcRampFlight": "rampa",
 }
 # Categorias que exportan segmentos (muro/puerta/ventana, mismo shape) vs.
-# bounding box relativo (escalera, forma "rectangulo" en CATEGORIAS_ELEMENTO).
+# bounding box relativo (escalera/rampa, forma "rectangulo" en CATEGORIAS_ELEMENTO).
 CATEGORIAS_SEGMENTOS = {"muro", "puerta", "ventana"}
 
 
@@ -110,7 +114,7 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_
     # guarda aca y se proyecta a pixeles recien despues de fijar el dpi y
     # forzar el layout final (autoscale/tight_layout), para que la
     # transformacion coincida exactamente con lo que terminara en el PNG.
-    geoms_por_categoria = {"muro": [], "puerta": [], "ventana": [], "escalera": []}
+    geoms_por_categoria = {"muro": [], "puerta": [], "ventana": [], "escalera": [], "rampa": []}
     # Sentido de apertura de puertas (2026-09-19) -- puntos del arco YA
     # trasladados (-ox,-oy), uno por GlobalId de puerta, para proyectar a
     # pixeles junto con el resto (mismo criterio que geoms_por_categoria, ver
@@ -179,7 +183,7 @@ def render_nivel_png(modelo, nivel, elementos, ox, oy, ruta_png, escala_m, mapa_
     w_px = int(fig.get_size_inches()[0] * dpi)
     h_px = int(fig.get_size_inches()[1] * dpi)
 
-    geo_pixeles = {"muro": [], "puerta": [], "ventana": [], "escalera": []}
+    geo_pixeles = {"muro": [], "puerta": [], "ventana": [], "escalera": [], "rampa": []}
     for categoria, items in geoms_por_categoria.items():
         for global_id, geom in items:
             coords_datos = np.array(geom.exterior.coords)  # anillo cerrado, en metros
@@ -270,6 +274,12 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
     escala_m = ifcopenshell.util.unit.calculate_unit_scale(modelo)
     escala_a = g.escala_area(modelo)
     mapa_ops = g.mapa_operacion_puertas(modelo)
+    # Salidas de emergencia (2026-09-20) -- ver g.mapa_salida_emergencia() para
+    # el detalle de que campo IFC se usa y por que se descarta el valor no
+    # booleano de DuplexHouse. Calculado UNA vez para todo el edificio, mismo
+    # criterio que mapa_ops.
+    mapa_salida = g.mapa_salida_emergencia(modelo)
+    puertas_con_dato_salida = len(mapa_salida)
 
     # Ids de puertas/ventanas que SI son aberturas reales -- calculado UNA vez
     # para todo el edificio (ver g.filtrar_vanos_reales), no por nivel: la
@@ -313,7 +323,7 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     carpeta_png = origen.parent
     paginas = []
-    total_puertas = total_ventanas = total_escaleras = 0
+    total_puertas = total_ventanas = total_escaleras = total_rampas = total_salidas_emergencia = 0
 
     # Ids cortos por elemento (fix 2026-09-19, pedido explicito del usuario:
     # el GlobalId del IFC se usaba tal cual como id, y ese MISMO id es lo que
@@ -326,8 +336,8 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
     # por id en todo el documento (elementosPuntualesEliminados/Editados en
     # App.jsx no llevan entry_idx) -- si "MU-01" se repitiera en 2 niveles
     # distintos, borrar uno borraria tambien el otro.
-    PREFIJO_CORTO = {"muro": "MU", "puerta": "P", "ventana": "V", "escalera": "ES"}
-    contador_id_corto = {"muro": 0, "puerta": 0, "ventana": 0, "escalera": 0}
+    PREFIJO_CORTO = {"muro": "MU", "puerta": "P", "ventana": "V", "escalera": "ES", "rampa": "R"}
+    contador_id_corto = {"muro": 0, "puerta": 0, "ventana": 0, "escalera": 0, "rampa": 0}
 
     def id_corto(categoria):
         contador_id_corto[categoria] += 1
@@ -413,7 +423,28 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
         # representacion completa y correcta (tramo o contenedor, nunca
         # ambos), asi que TODO IfcStair sale de `elementos` sin excepcion.
         elementos = [e for e in elementos if not e.is_a("IfcStair")]
-        elementos_con_espacios = elementos + espacios_nivel + escaleras
+
+        # Rampas (2026-09-20) -- MISMO patron de dedup que escalera arriba,
+        # sin caso real en esta sesion (ver nota de cabecera de
+        # CATEGORIA_POR_CLASE y g.ESTILOS en generar_plano_pdf.py).
+        ramps_contenidos = [e for e in elementos if e.is_a("IfcRamp")]
+        flights_rampa_directos = [e for e in elementos if e.is_a("IfcRampFlight")]
+        flights_por_ramp = {rp.GlobalId: [h for h in ifcopenshell.util.element.get_decomposition(rp, is_recursive=False)
+                                           if h.is_a("IfcRampFlight")]
+                             for rp in ramps_contenidos}
+        rampas = []
+        ids_rampa_contados = set()
+        for h in flights_rampa_directos + [h for hijos in flights_por_ramp.values() for h in hijos]:
+            if h.GlobalId not in ids_rampa_contados:
+                ids_rampa_contados.add(h.GlobalId)
+                rampas.append(h)
+        for rp in ramps_contenidos:
+            if not flights_por_ramp[rp.GlobalId] and rp.GlobalId not in ids_rampa_contados:
+                ids_rampa_contados.add(rp.GlobalId)
+                rampas.append(rp)
+        elementos = [e for e in elementos if not e.is_a("IfcRamp")]
+
+        elementos_con_espacios = elementos + espacios_nivel + escaleras + rampas
 
         # PNG del nivel, junto al IFC (misma convencion de nombres: origen + timestamp)
         # nivel.Name puede venir None en un IFC valido (mismo caso ya blindado
@@ -431,7 +462,7 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
         # id_corto() arriba. En orden de pagina (idx) y de aparicion dentro de
         # cada pagina, no hay un criterio geografico/alfabetico mas "natural"
         # que ese sin agregar complejidad que nadie pidio.
-        for categoria in ("muro", "puerta", "ventana", "escalera"):
+        for categoria in ("muro", "puerta", "ventana", "escalera", "rampa"):
             for item in geo_pixeles[categoria]:
                 item["id"] = id_corto(categoria)
 
@@ -439,7 +470,13 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
         puertas = [e for e in elementos if e.is_a("IfcDoor")]
         ventanas = [e for e in elementos if e.is_a("IfcWindow")]
         muros = [e for e in elementos if e.is_a("IfcWall")]
-        # escaleras ya resuelta arriba (deduplicada, misma fuente que geo_pixeles["escalera"])
+        # escaleras/rampas ya resueltas arriba (deduplicadas, misma fuente que geo_pixeles["escalera"/"rampa"])
+
+        # Salidas de emergencia (2026-09-20) -- cuenta SOLO puertas con
+        # Pset_DoorCommon.FireExit/IsFireExit booleano True (ver
+        # g.mapa_salida_emergencia). Reemplaza el hardcode "salidas_emergencia":
+        # 0 que antes no distinguia "0 encontradas" de "nunca se evaluo".
+        salidas_nivel = sum(1 for d in puertas if mapa_salida.get(d.GlobalId) is True)
 
         ventanas_geo_nivel = []
         for v in ventanas:
@@ -520,6 +557,8 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
         total_puertas += len(puertas)
         total_ventanas += len(ventanas)
         total_escaleras += len(escaleras)
+        total_rampas += len(rampas)
+        total_salidas_emergencia += salidas_nivel
 
         paginas.append({
             "pagina": idx + 1,
@@ -539,6 +578,11 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
                 # en render_nivel_png) -- bounding box real proyectado a pixeles,
                 # no una estimacion; antes esta lista simplemente no existia.
                 "escaleras_detalle": geo_pixeles["escalera"],
+                # Rampas (2026-09-20) -- mismo patron que escaleras_detalle,
+                # leido por App.jsx via CATEGORIAS_ELEMENTO (id="rampa",
+                # campo="rampas_detalle") -- confirmado en el propio codigo
+                # del portal, no asumido.
+                "rampas_detalle": geo_pixeles["rampa"],
                 "elementos_detectados": {
                     # "muros" agregado (fix 2026-09-19, bug real reportado por el
                     # usuario en el portal: mostraba "(21/0)" en vez de "(21/21)")
@@ -547,7 +591,13 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
                     # aunque las 21 posiciones reales (muros_geo) si existieran.
                     "muros": len(muros),
                     "puertas": len(puertas), "ventanas": len(ventanas),
-                    "escaleras": len(escaleras), "salidas_emergencia": 0,
+                    "escaleras": len(escaleras), "rampas": len(rampas),
+                    # salidas_emergencia (2026-09-20): antes hardcodeado a 0
+                    # sin calcular nada -- ver g.mapa_salida_emergencia() y
+                    # resumen_global.salidas_emergencia_nota para el alcance
+                    # real (solo cuenta puertas con dato IFC declarado, NO
+                    # calcula carga de ocupacion ni traza rutas de evacuacion).
+                    "salidas_emergencia": salidas_nivel,
                 },
             },
             "mediciones_geometricas": mediciones_geometricas,
@@ -559,7 +609,8 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
             "ventanas_simples_por_linea_central": geo_pixeles["ventana"],
         })
         print(f"Página {idx + 1} ({nivel.Name}): {len(muros)} muros, {len(puertas)} puertas, "
-              f"{len(ventanas)} ventanas, {len(espacios_nivel)} recintos -> {ruta_png.name}")
+              f"{len(ventanas)} ventanas, {len(escaleras)} escaleras, {len(rampas)} rampas, "
+              f"{len(espacios_nivel)} recintos, {salidas_nivel} salida(s) de emergencia con dato -> {ruta_png.name}")
 
     resultado = {
         "proyecto": f"{nombre_corto} (IFC de ejemplo, piloto BIM ArchiCheck)",
@@ -571,7 +622,31 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
             "puertas_detectadas": total_puertas,
             "ventanas_detectadas": total_ventanas,
             "escaleras_detectadas": total_escaleras,
-            "rampas_detectadas": 0,
+            # Antes hardcodeado a 0 (nunca calculado) -- 2026-09-20, ver
+            # g.ESTILOS/CLASES_SUSTANTIVAS_NIVEL en generar_plano_pdf.py.
+            # NINGUN archivo de ejemplo de esta sesion tiene una IfcRamp real
+            # (0/8) -- el mecanismo de deteccion/dibujo/conteo esta
+            # implementado y sigue el mismo patron ya probado de escalera,
+            # pero no hay caso real todavia para confirmarlo con evidencia.
+            "rampas_detectadas": total_rampas,
+            # Antes hardcodeado a 0 (fix 2026-09-20) -- ahora cuenta puertas
+            # con Pset_DoorCommon.FireExit (o IsFireExit de Revit) declarado
+            # como True. NO es una evaluacion completa de salidas de
+            # emergencia (eso requiere carga de ocupacion + trazado de rutas,
+            # 0% construido, ver Fase 2/Convenciones_BIM.md) -- es solo el
+            # dato de etiquetado que SI existe como campo IFC real.
+            "salidas_emergencia_detectadas": total_salidas_emergencia,
+            "salidas_emergencia_puertas_con_dato": puertas_con_dato_salida,
+            "salidas_emergencia_nota": (
+                "Ninguna puerta del edificio declara Pset_DoorCommon.FireExit/IsFireExit "
+                "como valor booleano -- este conteo no es evaluable en este archivo, "
+                "0 no significa 'sin salidas de emergencia reales', significa 'sin dato'."
+                if puertas_con_dato_salida == 0 else
+                f"{puertas_con_dato_salida} puerta(s) del edificio declaran este campo -- "
+                "el resto no tiene dato (no es lo mismo que 'no son salida'). Este conteo "
+                "NO reemplaza un calculo real de carga de ocupacion/rutas de evacuacion "
+                "(OGUC 4.2.x), que no está implementado."
+            ),
             # Mismo campo que analizar_todos.py (fix 2026-09-19) -- deja
             # trazable POR QUE ningun recinto tiene cumple_oguc/cumple_geo
             # cuando el resguardo de ventilacion desactiva el chequeo.

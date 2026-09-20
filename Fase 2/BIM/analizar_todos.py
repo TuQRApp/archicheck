@@ -118,6 +118,35 @@ def analizar(nombre_corto, ifc_path):
     puertas = g.filtrar_vanos_reales(modelo.by_type("IfcDoor"))
     ventanas = g.filtrar_vanos_reales(modelo.by_type("IfcWindow"))
     recintos = modelo.by_type("IfcSpace")
+    # Rampas (2026-09-20, auditoria de cobertura -- ver seccion 30 del diario
+    # BIM): conteo a nivel de edificio, MISMO mecanismo de deduplicacion que
+    # generar_json_colab.py (tramo real si existe decomposicion, contenedor
+    # como fallback si no) -- construido explicito como lista, no como formula,
+    # para no repetir el bug de doble conteo ya encontrado con escaleras.
+    # Ningun archivo de esta sesion tiene una IfcRamp real -- ver ESTILOS en
+    # generar_plano_pdf.py.
+    rampas_todas_ifc = modelo.by_type("IfcRamp")
+    flights_por_ramp_todo = {rp.GlobalId: [h for h in ifcopenshell.util.element.get_decomposition(rp, is_recursive=False)
+                                            if h.is_a("IfcRampFlight")]
+                              for rp in rampas_todas_ifc}
+    rampas_dedup = []
+    ids_rampa_dedup = set()
+    for rp in rampas_todas_ifc:
+        hijos = flights_por_ramp_todo[rp.GlobalId]
+        if hijos:
+            for h in hijos:
+                if h.GlobalId not in ids_rampa_dedup:
+                    ids_rampa_dedup.add(h.GlobalId)
+                    rampas_dedup.append(h)
+        elif rp.GlobalId not in ids_rampa_dedup:
+            ids_rampa_dedup.add(rp.GlobalId)
+            rampas_dedup.append(rp)
+    total_rampas = len(rampas_dedup)
+    # Salidas de emergencia (2026-09-20) -- ver g.mapa_salida_emergencia()
+    # para el alcance real (solo cuenta el dato IFC de etiquetado que existe,
+    # no reemplaza calculo de carga de ocupacion/rutas de evacuacion).
+    mapa_salida = g.mapa_salida_emergencia(modelo)
+    puertas_salida_emergencia = sum(1 for d in puertas if mapa_salida.get(d.GlobalId) is True)
 
     # Encontrado al corregir el bug None/0.0 de ventilacion (2026-09-18): sin
     # este limite, un edificio sin NINGUNA IfcWindow (ej. el administrativo
@@ -295,6 +324,12 @@ def analizar(nombre_corto, ifc_path):
             "puertas_ok_0_80m": sum(1 for p in puertas_geo if p["cumple_ancho_min_0_80m"] is True),
             "puertas_sin_dato_ancho": sum(1 for p in puertas_geo if p["cumple_ancho_min_0_80m"] is None),
             "ventanas": len(ventanas_geo),
+            "rampas": total_rampas,
+            # Salidas de emergencia (2026-09-20) -- ver g.mapa_salida_emergencia():
+            # solo cuenta el dato de etiquetado IFC real (Pset_DoorCommon.FireExit/
+            # IsFireExit), NO reemplaza un calculo de carga de ocupacion/rutas.
+            "puertas_marcadas_salida_emergencia": puertas_salida_emergencia,
+            "puertas_con_dato_salida_emergencia": len(mapa_salida),
             "recintos": len(recintos_geo),
             "recintos_con_area": sum(1 for r in recintos_geo if r["area_m2"] is not None),
             "recintos_con_chequeo_ventilacion_posible": sum(1 for r in recintos_geo if r["pct_ventilacion"] is not None),
@@ -340,8 +375,10 @@ def main():
         r = resultado["resumen_global"]
         print(f"  muros={r['muros']} (fire_rating={r['muros_con_fire_rating']}) "
               f"puertas={r['puertas']} (ok_0.80m={r['puertas_ok_0_80m']}) "
-              f"ventanas={r['ventanas']} recintos={r['recintos']} "
-              f"(con_area={r['recintos_con_area']}, chequeo_ventilacion_posible={r['recintos_con_chequeo_ventilacion_posible']})")
+              f"ventanas={r['ventanas']} rampas={r['rampas']} recintos={r['recintos']} "
+              f"(con_area={r['recintos_con_area']}, chequeo_ventilacion_posible={r['recintos_con_chequeo_ventilacion_posible']}) "
+              f"salida_emergencia_con_dato={r['puertas_con_dato_salida_emergencia']} "
+              f"(marcadas={r['puertas_marcadas_salida_emergencia']})")
         resumenes.append((nombre_corto, resultado))
 
     print("\n\n=== TABLA CRUZADA ===")

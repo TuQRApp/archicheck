@@ -71,9 +71,20 @@ Mismo principio que `Convenciones_CAD.md` sección 0, aplicado a BIM sin ninguna
 - **Requisito de campo específico del portal, no del IFC**: el registro de escalera necesita `cx_relativo`/`cy_relativo` poblados aunque el dibujo en canvas solo use `p1_relativo`/`p2_relativo` — el contador de "marcadas"/gate de dudas del portal filtra específicamente por `cx_relativo` numérico. Mismo patrón de "el dato está pero no en el campo que se necesita" visto varias veces esta sesión.
 - **Fuente**: Administrativo ES, Schependomlaan (2026-09-18/19).
 
-### Rampas
+### Rampas (`IfcRamp` / `IfcRampFlight`)
 
-- **Sin ningún ejemplo real encontrado todavía en ningún IFC de prueba** — a diferencia de CAD (que ya tiene un ejemplo gráfico documentado), BIM no ha topado con ninguna `IfcRamp` real en los 8 archivos analizados. Queda pendiente, mismo estatus que CAD antes de su primer ejemplo — no se inventa convención sin evidencia.
+- **Sin ningún ejemplo real encontrado todavía en ningún IFC de prueba** — a diferencia de CAD (que ya tiene un ejemplo gráfico documentado), BIM no ha topado con ninguna `IfcRamp` real en los 8 archivos analizados.
+- **🆕 Implementado 2026-09-20 (a pedido explícito del usuario, tras la auditoría de cobertura de la sección 30 del diario BIM) el mecanismo de dibujo/conteo/registro** — mismo patrón ya probado y verificado para `IfcStair`/`IfcStairFlight`: decomposición a tramo hijo cuando existe, contenedor `IfcRamp` como *fallback* cuando no. Agregado a `ESTILOS`/`ORDEN_DIBUJO` (`generar_plano_pdf.py`), a `CATEGORIA_POR_CLASE`/`rampas_detalle` (`generar_json_colab.py`, confirmado contra el propio código del portal — `App.jsx` ya esperaba `id: "rampa"`, `campo: "rampas_detalle"`, `prefijo: "R"` desde antes, sin usarlo nunca porque el backend nunca lo producía) y a `analizar_todos.py`. `resumen_global.rampas_detectadas` pasó de estar hardcodeado en `0` a un conteo real.
+- **⚠️ Límite honesto, explícito a propósito**: el mecanismo se implementó por CONSISTENCIA con el patrón ya probado de escalera, no porque se haya podido calibrar contra un caso real — sigue sin haber ninguna `IfcRamp` en los 8 archivos de esta sesión para confirmarlo empíricamente. **No se implementó ningún chequeo de pendiente/ancho contra OGUC Art. 4.1.7** (fórmula real `i% = 12.8 - 0.5333*L`, ver `App.jsx` línea ~1051) — eso sí requeriría calibrar contra geometría real, y el proyecto no inventa un umbral sin evidencia (principio 0.4). Revalidar el mecanismo de dibujo/conteo en cuanto aparezca un IFC real con rampas, antes de confiar en él sin reservas.
+- **Fuente**: implementación 2026-09-20, sin archivo de calibración todavía.
+
+### Salidas de emergencia
+
+- **🆕 Hallazgo real 2026-09-20 (auditoría de cobertura, sección 30 del diario BIM): la afirmación anterior de este documento ("no existe ningún mecanismo IFC que las etiquete directamente") era PARCIALMENTE incorrecta — no se había verificado a fondo antes de escribirla.** `Pset_DoorCommon.FireExit` es un campo estándar real de IFC (buildingSMART) — declarado en 1 de las 8 IFC de ejemplo (FZK-Haus, 1 de 5 puertas, valor `False`, verificado con el atributo crudo, no solo con el nombre del campo).
+- **🆕 Hallazgo de calidad de dato real, encontrado al verificar (no solo al leer el nombre del campo)**: `DuplexHouse.ifc` trae `PSet_Revit_Type_Other.IsFireExit` en las 14 puertas del archivo, pero el VALOR declarado es el string `"IsFireExit"` (el nombre del propio campo), no un booleano — inspeccionado el atributo IFC crudo: `IfcPropertySingleValue('IsFireExit', $, IfcLabel('IsFireExit'), $)`. Es un export de Revit roto/mal armado en el archivo de origen, no un bug del extractor. `mapa_salida_emergencia()` (`generar_plano_pdf.py`) filtra explícitamente por `isinstance(valor, bool)` para no tratar ese string como una señal real — mismo principio ya aplicado al ancho de puerta (Sección C): "el dato existe con un nombre parecido" no es lo mismo que "el dato mide/dice lo que dice medir/decir".
+- **✅ Implementado 2026-09-20**: `generar_json_colab.py`/`analizar_todos.py` reemplazan el hardcode `"salidas_emergencia": 0` por un conteo real de puertas con `FireExit`/`IsFireExit` booleano `True`, más un campo separado que cuenta cuántas puertas del edificio declaran el campo EN ABSOLUTO (`salidas_emergencia_puertas_con_dato`) — para no confundir "0 encontradas" con "nunca se evaluó", mismo principio de "ausente vs. no cumple" que rige el resto del proyecto.
+- **⚠️ Límite que sigue vigente, sin cambiar**: esto NO es una evaluación completa de salidas de emergencia — eso requiere cálculo de carga de ocupación + trazado de rutas de evacuación (OGUC Art. 4.2.x), que sigue sin implementar, 0% construido. Lo implementado hoy es solo el dato de ETIQUETADO puntual por puerta que sí existe como campo IFC real, cuando el exportador lo declara (raro: 1/8 archivos, 1/5 puertas de ese archivo).
+- **Fuente**: FZK-Haus (dato real usable), DuplexHouse (dato presente pero corrupto/inutilizable) — 2026-09-20.
 
 ### Pilares (`IfcColumn`) / Barandas (`IfcRailing`) / Mobiliario (`IfcFurnishingElement`) / Muro cortina (`IfcCurtainWall`+`IfcPlate`)
 
@@ -274,8 +285,8 @@ Cada IFC de ejemplo queda guardado en `Fase 2/BIM/Archivos ejemplo/`, junto a su
 
 ## Pendiente de definir (el usuario irá indicando caso a caso)
 
-- Rampas: sin ningún ejemplo real en BIM todavía.
-- Salidas de emergencia / ocupación: no existe ningún mecanismo IFC que las etiquete directamente — requiere cálculo de carga de ocupación + trazado de rutas, 0% construido.
+- Rampas: ✅ mecanismo de dibujo/conteo/registro implementado 2026-09-20 (ver sección A) — sin ningún ejemplo real en BIM todavía para calibrar, y sin chequeo de pendiente/ancho contra OGUC 4.1.7 (eso sí requiere evidencia real antes de implementarse).
+- Salidas de emergencia / ocupación: ✅ **parcialmente** resuelto 2026-09-20 (ver sección A) — el dato de etiquetado puntual (`Pset_DoorCommon.FireExit`) SÍ se lee cuando existe (raro: 1/8 archivos). Sigue pendiente, 0% construido, lo que de verdad define una salida de emergencia: cálculo de carga de ocupación + trazado de rutas (OGUC Art. 4.2.x).
 - Cortes y elevaciones: el generador de planos solo hace proyección horizontal (planta) — mismo método aplicaría a un corte (proyección vertical), sin implementar.
 - Muro cortina ↔ chequeo de iluminación/ventilación: sin resolver, ver D.3.
 - Mobiliario: solo 1 de 8 archivos lo trae — sigue sin verificarse con un cliente real si esto es representativo.
