@@ -2345,16 +2345,16 @@
         "nivel": "00 begane grond",
         "recintos": [
           {
-            "nombre": "slaapkamer",
+            "nombre": "slaapkamer 2",
             "tipo": "recinto",
-            "area_estimada_m2": 13.06,
+            "area_estimada_m2": 9.28,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "mk",
+            "nombre": "slaapkamer",
             "tipo": "recinto",
-            "area_estimada_m2": 0.27,
+            "area_estimada_m2": 13.06,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -2380,16 +2380,16 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "entree",
+            "nombre": "gang",
             "tipo": "recinto",
-            "area_estimada_m2": 6.94,
+            "area_estimada_m2": 8.24,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "gang",
+            "nombre": "entree",
             "tipo": "recinto",
-            "area_estimada_m2": 8.24,
+            "area_estimada_m2": 6.94,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -2415,16 +2415,16 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "badkamer",
+            "nombre": "woonkamer",
             "tipo": "recinto",
-            "area_estimada_m2": 6.18,
+            "area_estimada_m2": 44.86,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "woonkamer",
+            "nombre": "toilet",
             "tipo": "recinto",
-            "area_estimada_m2": 44.86,
+            "area_estimada_m2": 1.28,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -2492,13 +2492,6 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "toilet",
-            "tipo": "recinto",
-            "area_estimada_m2": 1.28,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
             "nombre": "keuken",
             "tipo": "recinto",
             "area_estimada_m2": 5.36,
@@ -2516,6 +2509,20 @@
             "nombre": "woonkamer",
             "tipo": "recinto",
             "area_estimada_m2": 43.01,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 20.35,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "mk",
+            "tipo": "recinto",
+            "area_estimada_m2": 0.27,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -2548,23 +2555,16 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "badkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.18,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "slaapkamer 2",
             "tipo": "recinto",
             "area_estimada_m2": 9.3,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "slaapkamer 2",
-            "tipo": "recinto",
-            "area_estimada_m2": 9.28,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "entree",
-            "tipo": "recinto",
-            "area_estimada_m2": 20.35,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           }
@@ -2621,17 +2621,17 @@
       },
       "mediciones_geometricas": [
         {
+          "nombre": "slaapkamer 2",
+          "id": "0OqmHrrnL18wpVdVYaE6Eq",
+          "tipo": "recinto",
+          "area_m2": 9.28,
+          "cumple_geo": null
+        },
+        {
           "nombre": "slaapkamer",
           "id": "3m0eaNZIj4WuqLA61vp_PJ",
           "tipo": "recinto",
           "area_m2": 13.06,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "mk",
-          "id": "0asyuu9T1AaPR7AmNDL1_c",
-          "tipo": "recinto",
-          "area_m2": 0.27,
           "cumple_geo": null
         },
         {
@@ -2656,17 +2656,17 @@
           "cumple_geo": null
         },
         {
-          "nombre": "entree",
-          "id": "0Dj6N$QAjCa8$dcIusb5Sm",
-          "tipo": "recinto",
-          "area_m2": 6.94,
-          "cumple_geo": null
-        },
-        {
           "nombre": "gang",
           "id": "3o3cJaPf51HPH9CUJnfi0W",
           "tipo": "recinto",
           "area_m2": 8.24,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "0Dj6N$QAjCa8$dcIusb5Sm",
+          "tipo": "recinto",
+          "area_m2": 6.94,
           "cumple_geo": null
         },
         {
@@ -2691,17 +2691,17 @@
           "cumple_geo": null
         },
         {
-          "nombre": "badkamer",
-          "id": "2brbBA_o18ffxZ1OJKAEXd",
-          "tipo": "recinto",
-          "area_m2": 6.18,
-          "cumple_geo": null
-        },
-        {
           "nombre": "woonkamer",
           "id": "3RW6tpuaLA5fXODOX3rOlb",
           "tipo": "recinto",
           "area_m2": 44.86,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "toilet",
+          "id": "0IOcqFv1vCWwJz5c1VnoNe",
+          "tipo": "recinto",
+          "area_m2": 1.28,
           "cumple_geo": null
         },
         {
@@ -2768,13 +2768,6 @@
           "cumple_geo": null
         },
         {
-          "nombre": "toilet",
-          "id": "0IOcqFv1vCWwJz5c1VnoNe",
-          "tipo": "recinto",
-          "area_m2": 1.28,
-          "cumple_geo": null
-        },
-        {
           "nombre": "keuken",
           "id": "10$IVtAgz3gvaL1AC5hF6m",
           "tipo": "recinto",
@@ -2793,6 +2786,20 @@
           "id": "3vdzRMAWL66B6ew5$sjOj$",
           "tipo": "recinto",
           "area_m2": 43.01,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "2dFicWHgz1KPbr5tHWzMcP",
+          "tipo": "recinto",
+          "area_m2": 20.35,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "mk",
+          "id": "0asyuu9T1AaPR7AmNDL1_c",
+          "tipo": "recinto",
+          "area_m2": 0.27,
           "cumple_geo": null
         },
         {
@@ -2824,24 +2831,17 @@
           "cumple_geo": null
         },
         {
+          "nombre": "badkamer",
+          "id": "2brbBA_o18ffxZ1OJKAEXd",
+          "tipo": "recinto",
+          "area_m2": 6.18,
+          "cumple_geo": null
+        },
+        {
           "nombre": "slaapkamer 2",
           "id": "2lSz4lYYD0yPZfZ0iQzeVj",
           "tipo": "recinto",
           "area_m2": 9.3,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "slaapkamer 2",
-          "id": "0OqmHrrnL18wpVdVYaE6Eq",
-          "tipo": "recinto",
-          "area_m2": 9.28,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "entree",
-          "id": "2dFicWHgz1KPbr5tHWzMcP",
-          "tipo": "recinto",
-          "area_m2": 20.35,
           "cumple_geo": null
         }
       ],
@@ -27364,6 +27364,27 @@
         "nivel": "01 eerste verdieping",
         "recintos": [
           {
+            "nombre": "instal. ruimte",
+            "tipo": "recinto",
+            "area_estimada_m2": 3.31,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "toilet",
+            "tipo": "recinto",
+            "area_estimada_m2": 1.4,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 9.3,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "keuken",
             "tipo": "recinto",
             "area_estimada_m2": 8.97,
@@ -27378,9 +27399,9 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "entree",
+            "nombre": "mk",
             "tipo": "recinto",
-            "area_estimada_m2": 13.14,
+            "area_estimada_m2": 0.27,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -27388,13 +27409,6 @@
             "nombre": "slaapkamer 2",
             "tipo": "recinto",
             "area_estimada_m2": 5.88,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "slaapkamer 1",
-            "tipo": "recinto",
-            "area_estimada_m2": 11.54,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -27441,6 +27455,13 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "badkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 5.52,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "kast",
             "tipo": "recinto",
             "area_estimada_m2": 0.26,
@@ -27451,13 +27472,6 @@
             "nombre": "overloop",
             "tipo": "recinto",
             "area_estimada_m2": 6.81,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "mk",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.27,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -27486,13 +27500,6 @@
             "nombre": "slaapkamer 2",
             "tipo": "recinto",
             "area_estimada_m2": 9.29,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 5.52,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -27532,6 +27539,13 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "entree",
+            "tipo": "recinto",
+            "area_estimada_m2": 13.14,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "slaapkamer 2",
             "tipo": "recinto",
             "area_estimada_m2": 9.42,
@@ -27539,30 +27553,16 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "slaapkamer 1",
+            "tipo": "recinto",
+            "area_estimada_m2": 11.54,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "keuken",
             "tipo": "recinto",
             "area_estimada_m2": 5.36,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "instal. ruimte",
-            "tipo": "recinto",
-            "area_estimada_m2": 3.31,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "toilet",
-            "tipo": "recinto",
-            "area_estimada_m2": 1.4,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "entree",
-            "tipo": "recinto",
-            "area_estimada_m2": 9.3,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           }
@@ -27619,6 +27619,27 @@
       },
       "mediciones_geometricas": [
         {
+          "nombre": "instal. ruimte",
+          "id": "09fo1jWjfFtQMbiri1ZVQ3",
+          "tipo": "recinto",
+          "area_m2": 3.31,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "toilet",
+          "id": "0OFDZWgvrCbvU2AvmpKDKA",
+          "tipo": "recinto",
+          "area_m2": 1.4,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "entree",
+          "id": "2WflCt48T2yQbjDADsjk3X",
+          "tipo": "recinto",
+          "area_m2": 9.3,
+          "cumple_geo": null
+        },
+        {
           "nombre": "keuken",
           "id": "2eUwuV6Q14GRH$hdaTX4hB",
           "tipo": "recinto",
@@ -27633,10 +27654,10 @@
           "cumple_geo": null
         },
         {
-          "nombre": "entree",
-          "id": "1AtrO37LT8iQg1RDVAeoCA",
+          "nombre": "mk",
+          "id": "0tv9iZwmX3QhOwYgrkdylc",
           "tipo": "recinto",
-          "area_m2": 13.14,
+          "area_m2": 0.27,
           "cumple_geo": null
         },
         {
@@ -27644,13 +27665,6 @@
           "id": "3F3COwDdj5LRVbWzGorFc7",
           "tipo": "recinto",
           "area_m2": 5.88,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "slaapkamer 1",
-          "id": "3SPT$EB8r0aBxVBsVnHu5U",
-          "tipo": "recinto",
-          "area_m2": 11.54,
           "cumple_geo": null
         },
         {
@@ -27696,6 +27710,13 @@
           "cumple_geo": null
         },
         {
+          "nombre": "badkamer",
+          "id": "3EcQs2ERfA495F4sseU_w4",
+          "tipo": "recinto",
+          "area_m2": 5.52,
+          "cumple_geo": null
+        },
+        {
           "nombre": "kast",
           "id": "2so3nbcb13Ig9Yd7gOPiH$",
           "tipo": "recinto",
@@ -27707,13 +27728,6 @@
           "id": "0ldLkGDpv5wRT1Q$Q3V2M1",
           "tipo": "recinto",
           "area_m2": 6.81,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "mk",
-          "id": "0tv9iZwmX3QhOwYgrkdylc",
-          "tipo": "recinto",
-          "area_m2": 0.27,
           "cumple_geo": null
         },
         {
@@ -27742,13 +27756,6 @@
           "id": "0IIWC_MJj0TegDVVevqJ7a",
           "tipo": "recinto",
           "area_m2": 9.29,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "badkamer",
-          "id": "3EcQs2ERfA495F4sseU_w4",
-          "tipo": "recinto",
-          "area_m2": 5.52,
           "cumple_geo": null
         },
         {
@@ -27787,6 +27794,13 @@
           "cumple_geo": null
         },
         {
+          "nombre": "entree",
+          "id": "1AtrO37LT8iQg1RDVAeoCA",
+          "tipo": "recinto",
+          "area_m2": 13.14,
+          "cumple_geo": null
+        },
+        {
           "nombre": "slaapkamer 2",
           "id": "0z1xo3KDX8yQN59ZNuWEoz",
           "tipo": "recinto",
@@ -27794,31 +27808,17 @@
           "cumple_geo": null
         },
         {
+          "nombre": "slaapkamer 1",
+          "id": "3SPT$EB8r0aBxVBsVnHu5U",
+          "tipo": "recinto",
+          "area_m2": 11.54,
+          "cumple_geo": null
+        },
+        {
           "nombre": "keuken",
           "id": "3_e7IngdDBjOHVpCs_T3bC",
           "tipo": "recinto",
           "area_m2": 5.36,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "instal. ruimte",
-          "id": "09fo1jWjfFtQMbiri1ZVQ3",
-          "tipo": "recinto",
-          "area_m2": 3.31,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "toilet",
-          "id": "0OFDZWgvrCbvU2AvmpKDKA",
-          "tipo": "recinto",
-          "area_m2": 1.4,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "entree",
-          "id": "2WflCt48T2yQbjDADsjk3X",
-          "tipo": "recinto",
-          "area_m2": 9.3,
           "cumple_geo": null
         }
       ],
@@ -48515,9 +48515,16 @@
         "nivel": "02 tweede verdieping",
         "recintos": [
           {
-            "nombre": "keuken",
+            "nombre": "kast",
             "tipo": "recinto",
-            "area_estimada_m2": 8.97,
+            "area_estimada_m2": 0.26,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "mk",
+            "tipo": "recinto",
+            "area_estimada_m2": 0.27,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -48543,9 +48550,9 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "woonkamer",
+            "nombre": "badkamer",
             "tipo": "recinto",
-            "area_estimada_m2": 43.95,
+            "area_estimada_m2": 6.18,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -48564,6 +48571,13 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "toilet",
+            "tipo": "recinto",
+            "area_estimada_m2": 1.91,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "woonkamer",
             "tipo": "recinto",
             "area_estimada_m2": 40.02,
@@ -48578,13 +48592,6 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.18,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
             "nombre": "instal. ruimte",
             "tipo": "recinto",
             "area_estimada_m2": 3.31,
@@ -48592,16 +48599,16 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "instal. ruimte",
+            "nombre": "slaapkamer 2",
             "tipo": "recinto",
-            "area_estimada_m2": 2.98,
+            "area_estimada_m2": 5.88,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "toilet",
+            "nombre": "instal. ruimte",
             "tipo": "recinto",
-            "area_estimada_m2": 1.91,
+            "area_estimada_m2": 2.98,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -48627,9 +48634,16 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "slaapkamer 2",
+            "nombre": "keuken",
             "tipo": "recinto",
-            "area_estimada_m2": 5.88,
+            "area_estimada_m2": 8.97,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "woonkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 43.95,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -48637,20 +48651,6 @@
             "nombre": "toilet",
             "tipo": "recinto",
             "area_estimada_m2": 1.4,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "kast",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.26,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "mk",
-            "tipo": "recinto",
-            "area_estimada_m2": 0.27,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           }
@@ -48707,10 +48707,17 @@
       },
       "mediciones_geometricas": [
         {
-          "nombre": "keuken",
-          "id": "3$vxLFFCTCjhIrAHJw7BxO",
+          "nombre": "kast",
+          "id": "0sEYZPVdXAZAaorrZw2LKy",
           "tipo": "recinto",
-          "area_m2": 8.97,
+          "area_m2": 0.26,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "mk",
+          "id": "2j8_gVWpbACxOVmNDi6bGE",
+          "tipo": "recinto",
+          "area_m2": 0.27,
           "cumple_geo": null
         },
         {
@@ -48735,10 +48742,10 @@
           "cumple_geo": null
         },
         {
-          "nombre": "woonkamer",
-          "id": "0a_kF4OBP2GPx5hgvIBSXe",
+          "nombre": "badkamer",
+          "id": "1mzKtLlF9B0824gzkkIWlz",
           "tipo": "recinto",
-          "area_m2": 43.95,
+          "area_m2": 6.18,
           "cumple_geo": null
         },
         {
@@ -48756,6 +48763,13 @@
           "cumple_geo": null
         },
         {
+          "nombre": "toilet",
+          "id": "2taKN3SF5AqhoJgBEDOiLL",
+          "tipo": "recinto",
+          "area_m2": 1.91,
+          "cumple_geo": null
+        },
+        {
           "nombre": "woonkamer",
           "id": "1stYdhm21EUQMz3jV6WdHc",
           "tipo": "recinto",
@@ -48770,13 +48784,6 @@
           "cumple_geo": null
         },
         {
-          "nombre": "badkamer",
-          "id": "1mzKtLlF9B0824gzkkIWlz",
-          "tipo": "recinto",
-          "area_m2": 6.18,
-          "cumple_geo": null
-        },
-        {
           "nombre": "instal. ruimte",
           "id": "3KeJCNzFv2cPjuyq2Kb61z",
           "tipo": "recinto",
@@ -48784,17 +48791,17 @@
           "cumple_geo": null
         },
         {
+          "nombre": "slaapkamer 2",
+          "id": "3gmZJjQND96w5a6Ee$z2ah",
+          "tipo": "recinto",
+          "area_m2": 5.88,
+          "cumple_geo": null
+        },
+        {
           "nombre": "instal. ruimte",
           "id": "1s8ejb3fH1wA$G6dYM5GgC",
           "tipo": "recinto",
           "area_m2": 2.98,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "toilet",
-          "id": "2taKN3SF5AqhoJgBEDOiLL",
-          "tipo": "recinto",
-          "area_m2": 1.91,
           "cumple_geo": null
         },
         {
@@ -48819,10 +48826,17 @@
           "cumple_geo": null
         },
         {
-          "nombre": "slaapkamer 2",
-          "id": "3gmZJjQND96w5a6Ee$z2ah",
+          "nombre": "keuken",
+          "id": "3$vxLFFCTCjhIrAHJw7BxO",
           "tipo": "recinto",
-          "area_m2": 5.88,
+          "area_m2": 8.97,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "woonkamer",
+          "id": "0a_kF4OBP2GPx5hgvIBSXe",
+          "tipo": "recinto",
+          "area_m2": 43.95,
           "cumple_geo": null
         },
         {
@@ -48830,20 +48844,6 @@
           "id": "0yLghiaXr4pB6B4YHPBOlT",
           "tipo": "recinto",
           "area_m2": 1.4,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "kast",
-          "id": "0sEYZPVdXAZAaorrZw2LKy",
-          "tipo": "recinto",
-          "area_m2": 0.26,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "mk",
-          "id": "2j8_gVWpbACxOVmNDi6bGE",
-          "tipo": "recinto",
-          "area_m2": 0.27,
           "cumple_geo": null
         }
       ],
@@ -62093,6 +62093,20 @@
           {
             "nombre": "instal. ruimte",
             "tipo": "recinto",
+            "area_estimada_m2": 3.31,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "keuken",
+            "tipo": "recinto",
+            "area_estimada_m2": 8.97,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
+            "nombre": "instal. ruimte",
+            "tipo": "recinto",
             "area_estimada_m2": 2.98,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
@@ -62126,6 +62140,13 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
+            "nombre": "badkamer",
+            "tipo": "recinto",
+            "area_estimada_m2": 6.51,
+            "cumple_oguc": null,
+            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
+          },
+          {
             "nombre": "keuken",
             "tipo": "recinto",
             "area_estimada_m2": 9.3,
@@ -62154,13 +62175,6 @@
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
           {
-            "nombre": "keuken",
-            "tipo": "recinto",
-            "area_estimada_m2": 8.97,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
             "nombre": "slaapkamer 1",
             "tipo": "recinto",
             "area_estimada_m2": 12.36,
@@ -62184,7 +62198,7 @@
           {
             "nombre": "badkamer",
             "tipo": "recinto",
-            "area_estimada_m2": 6.51,
+            "area_estimada_m2": 6.18,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           },
@@ -62208,20 +62222,6 @@
             "area_estimada_m2": 5.49,
             "cumple_oguc": null,
             "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "badkamer",
-            "tipo": "recinto",
-            "area_estimada_m2": 6.18,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
-          },
-          {
-            "nombre": "instal. ruimte",
-            "tipo": "recinto",
-            "area_estimada_m2": 3.31,
-            "cumple_oguc": null,
-            "observacion": "Ventilación no evaluable: sin IfcWindow reales en el edificio, o sin ningún vínculo recinto-ventana (IfcRelSpaceBoundary) con área calculable en todo el modelo -- ver resumen_global.ventilacion_nota."
           }
         ],
         "incumplimientos_oguc": [],
@@ -62235,6 +62235,20 @@
         }
       },
       "mediciones_geometricas": [
+        {
+          "nombre": "instal. ruimte",
+          "id": "0z1DMNAyb21RRdXtk2yF$a",
+          "tipo": "recinto",
+          "area_m2": 3.31,
+          "cumple_geo": null
+        },
+        {
+          "nombre": "keuken",
+          "id": "3iG4tbXJ901RkZ0OynKIbL",
+          "tipo": "recinto",
+          "area_m2": 8.97,
+          "cumple_geo": null
+        },
         {
           "nombre": "instal. ruimte",
           "id": "0FOLghHZTBOPD8KF6PRrx0",
@@ -62271,6 +62285,13 @@
           "cumple_geo": null
         },
         {
+          "nombre": "badkamer",
+          "id": "1AlG6Dm9L1h8L4yH9tB8FO",
+          "tipo": "recinto",
+          "area_m2": 6.51,
+          "cumple_geo": null
+        },
+        {
           "nombre": "keuken",
           "id": "0thxUtY5D3nQDlN3b_gGVK",
           "tipo": "recinto",
@@ -62299,13 +62320,6 @@
           "cumple_geo": null
         },
         {
-          "nombre": "keuken",
-          "id": "3iG4tbXJ901RkZ0OynKIbL",
-          "tipo": "recinto",
-          "area_m2": 8.97,
-          "cumple_geo": null
-        },
-        {
           "nombre": "slaapkamer 1",
           "id": "3_fPSW07z7bufHlc3SsUgF",
           "tipo": "recinto",
@@ -62328,9 +62342,9 @@
         },
         {
           "nombre": "badkamer",
-          "id": "1AlG6Dm9L1h8L4yH9tB8FO",
+          "id": "34JLBtlPXEaeJkF7ppuU09",
           "tipo": "recinto",
-          "area_m2": 6.51,
+          "area_m2": 6.18,
           "cumple_geo": null
         },
         {
@@ -62352,20 +62366,6 @@
           "id": "1ksvb7lcPBt9rmCaSOqIpd",
           "tipo": "recinto",
           "area_m2": 5.49,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "badkamer",
-          "id": "34JLBtlPXEaeJkF7ppuU09",
-          "tipo": "recinto",
-          "area_m2": 6.18,
-          "cumple_geo": null
-        },
-        {
-          "nombre": "instal. ruimte",
-          "id": "0z1DMNAyb21RRdXtk2yF$a",
-          "tipo": "recinto",
-          "area_m2": 3.31,
           "cumple_geo": null
         }
       ],
