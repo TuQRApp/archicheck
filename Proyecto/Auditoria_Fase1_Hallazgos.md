@@ -155,8 +155,17 @@ Un recinto con 12% de ventana **cumple en BIM y no cumple en CAD**. Mismo edific
 ### ACH-TEST-001 (NUEVO, P2 — YA CORREGIDO)
 `test_cuerpo_cerrado.py` (24 aserciones sobre 9 bugs históricos) **no definía ninguna función `def test_*`**, así que `pytest` no recolectaba nada de ahí, en silencio. Corriendo `pytest` se veía "5 passed" y cualquiera concluía que la regresión había corrido. El docstring del archivo hermano incluso afirmaba que "corre junto al resto" — era falso. Los 24 casos pasan (verificado a mano), así que no había regresión escondida: era un problema de cobertura del runner. **Corregido** con un envoltorio; pytest pasó de 5 a 6 tests y la afirmación del docstring ahora es verdadera.
 
-### ACH-OPS-001 (NUEVO, P2) — el gate de calidad existe en una sola máquina
-Existe un `pre-commit` real y bueno (chequeo de hardcodeo + los 24 casos de regresión + los golden tests contra 3 proyectos reales), activado vía `core.hooksPath = .githooks`. Pero **`.githooks/` no está versionado**: no sobrevive a un clone limpio ni existe para ningún colaborador. Sumado a que no hay CI (`.github/workflows` no existe), toda la verificación automática del motor CAD depende de un archivo sin trackear en un equipo. *Corrección a la Fase 1*: el anexo de motor CAD decía que los golden tests están "excluidos por defecto de cualquier corrida normal" — cierto para `pytest`, pero incompleto: el hook sí los corre.
+### ACH-OPS-001 (NUEVO, P2 — RESUELTO 2026-09-21, commit `0a55a24`)
+Existe un `pre-commit` real y bueno (chequeo de hardcodeo + los 24 casos de regresión + los golden tests contra 3 proyectos reales), activado vía `core.hooksPath = .githooks`. Pero **`.githooks/` no estaba versionado**: no sobrevivía a un clone limpio ni existía para ningún colaborador. Sumado a que no hay CI (`.github/workflows` no existe), toda la verificación automática del motor CAD dependía de un archivo sin trackear en un equipo. *Corrección a la Fase 1*: el anexo de motor CAD decía que los golden tests están "excluidos por defecto de cualquier corrida normal" — cierto para `pytest`, pero incompleto: el hook sí los corre.
+
+**RESUELTO**, y versionarlo destapó 3 problemas que lo habrían hecho inútil para un colaborador:
+1. **Ruta absoluta a una máquina** (`/c/Users/dell/...`) — además de inservible para otro, filtraba usuario y estructura de directorios a un repo **público**.
+2. **El fallback de esa ruta estaba roto en la propia máquina donde se escribió**: probaba `command -v python3` primero y, en Windows, eso resuelve al **stub de Microsoft Store** — existe como ejecutable pero no es Python. Nunca se notó porque la ruta hardcodeada siempre ganaba. Ahora los candidatos se prueban **ejecutándolos**, no con `command -v`, y se puede fijar uno con `ARCHICHECK_PYTHON`.
+3. **Modo ejecutable + finales de línea**: se marcó `100755` y se agregó `.gitattributes` con `eol=lf` para `.githooks/**`. Un script de shell que llega con CRLF falla en Linux/macOS con *"bad interpreter"* — no correría justo donde más importa.
+
+`CLAUDE.md` documenta ahora el paso de instalación (`git config core.hooksPath .githooks`), porque **`core.hooksPath` es config local de git y no viaja con el clon**: versionar el archivo no lo activa. Verificado que las 3 etapas del gate siguen pasando con el intérprete que ahora elige la detección.
+
+**Lo que sigue abierto**: no hay CI. El gate ahora es compartible y reproducible, pero sigue dependiendo de que cada quien lo instale y de que commitee desde una máquina con el entorno armado.
 
 ## Cobertura de esta pasada — qué quedó cubierto al 100% y qué no
 
