@@ -122,7 +122,19 @@ async function main() {
   // de esta Ordenanza"), creando cortes espurios que se comieron un fragmento
   // real del Art. 2.1.4. Lo detectó el control de integridad que compara el
   // texto nuevo contra el anterior, no una lectura a ojo.
-  const RE_ART = /Artículo\s+(\d+\.\d+\.\d+)\.\s*(bis|ter)?\.?/g;
+  // OJO con la CAJA de "bis": el PDF usa las dos. "Artículo 2.1.3. bis." en
+  // minúscula y "Artículo 2.2.4. Bis." en MAYÚSCULA. La versión anterior solo
+  // aceptaba minúscula, así que 2.2.4 Bis y 2.2.5 Bis se capturaban con el
+  // número del artículo BASE y el dedup los descartaba enteros -- exactamente
+  // el mismo mecanismo de ACH-DATA-008 que se creía cerrado. La "A" de
+  // "Artículo" sí sigue exigiéndose en mayúscula, que es lo que excluye las
+  // referencias cruzadas dentro del texto.
+  //
+  // El  tras el sufijo NO es decorativo: sin el, el "Ter" de "Artículo 3.4.1.
+  // Terminadas las obras..." se tomaba como sufijo `ter` y el artículo BASE
+  // desaparecía. Pasó con 3.4.1, 5.2.5 y 7.3.3; lo detectó el control que
+  // compara los números de artículo antes y después.
+  const RE_ART = /Artículo\s+(\d+\.\d+\.\d+)\.\s*([bB]is|[tT]er)?\b\.?/g;
 
   console.log('Detectando artículos...');
   const limites = [];
@@ -131,7 +143,7 @@ async function main() {
     // m[2] es "bis"/"ter" si el encabezado lo trae. Se normaliza a
     // "2.1.3 bis" (un solo espacio, sin el punto intermedio) para que el
     // número quede legible y distinto del artículo base.
-    const numero = m[2] ? `${m[1]} ${m[2]}` : m[1];
+    const numero = m[2] ? `${m[1]} ${m[2].toLowerCase()}` : m[1];
     limites.push({ numero, pos: m.index });
   }
   console.log(`  ${limites.length} artículos encontrados`);
@@ -142,7 +154,7 @@ async function main() {
     const { numero, pos } = limites[i];
     const finPos = i + 1 < limites.length ? limites[i + 1].pos : texto.length;
     const textoArt = texto.substring(pos, finPos)
-      .replace(/^Artículo\s+\d+\.\d+\.\d+\.?\s*(?:bis|ter)?\.?/, '').trim();
+      .replace(/^Artículo\s+\d+\.\d+\.\d+\.?\s*(?:[bB]is|[tT]er)?\b\.?/, '').trim();
 
     const subpartes = partirEnSubpartes(numero, textoArt);
     articulos.push(...subpartes);

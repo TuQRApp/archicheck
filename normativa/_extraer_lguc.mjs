@@ -68,14 +68,14 @@ async function main() {
   // ya las excluye. El "." o "-" final también sigue siendo obligatorio, por la
   // misma razón que en _extraer_oguc.mjs: sin él, el patrón matchea referencias
   // cruzadas escritas con mayúscula y genera cortes espurios.
-  const RE_ART = /Artículo\s+(\d+)\s*[°º]?\s*(?:(bis|ter|qu[áa]ter)\s*([A-I])?)?\s*\)?\s*[\.\-]/g;
+  const RE_ART = /Artículo\s+(\d+)\s*[°º]?\s*(?:([bB]is|[tT]er|[qQ]u[áa]ter)\b\s*([A-I])?)?\s*\)?\s*[\.\-]/g;
   const limites = [];
   let m;
   while ((m = RE_ART.exec(texto)) !== null) {
     // Normalizado a "116 bis" / "28 quáter" / "116 bis A": un solo espacio,
     // sin el ")" del PDF. Así "116 bis" coincide con cómo lo escribe
     // articulos_prompt.json y queda distinto del artículo base.
-    const numero = [m[1], m[2], m[3]].filter(Boolean).join(' ');
+    const numero = [m[1], m[2] && m[2].toLowerCase(), m[3]].filter(Boolean).join(' ');
     limites.push({ numero, pos: m.index });
   }
   console.log(`  ${limites.length} artículos encontrados`);
@@ -84,7 +84,7 @@ async function main() {
   for (let i = 0; i < limites.length; i++) {
     const { numero, pos } = limites[i];
     const finPos = i + 1 < limites.length ? limites[i + 1].pos : texto.length;
-    const textoArt = texto.substring(pos, finPos).replace(/^Artículo\s+\d+\s*[°º]?\s*(?:(?:bis|ter|qu[áa]ter)\s*[A-I]?)?\s*\)?\s*[\.\-]+/, '').trim();
+    const textoArt = texto.substring(pos, finPos).replace(/^Artículo\s+\d+\s*[°º]?\s*(?:(?:[bB]is|[tT]er|[qQ]u[áa]ter)\b\s*[A-I]?)?\s*\)?\s*[\.\-]+/, '').trim();
     articulos.push(...partirLargo(numero, textoArt));
   }
 

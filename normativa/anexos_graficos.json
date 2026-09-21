@@ -1,8 +1,133 @@
 {
   "_que_es": "Manifiesto de imagenes de contenido de los PDF normativos. La transcripcion la hace una lectura con vision y queda en \"transcripcion\"; \"estado\" pasa de PENDIENTE a TRANSCRITO.",
   "_procedencia": "Cada entrada trae pdf + pagina (1-based) + xref, para poder volver a la fuente y verificar.",
-  "total": 131,
+  "total": 215,
   "paginas_con_figuras_vectoriales": [
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 10,
+      "trazos": 97
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 11,
+      "trazos": 220
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 12,
+      "trazos": 181
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 13,
+      "trazos": 181
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 14,
+      "trazos": 181
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 15,
+      "trazos": 181
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 16,
+      "trazos": 194
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 17,
+      "trazos": 220
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 18,
+      "trazos": 182
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 19,
+      "trazos": 171
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 20,
+      "trazos": 259
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 21,
+      "trazos": 560
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 22,
+      "trazos": 751
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 23,
+      "trazos": 808
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 24,
+      "trazos": 787
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 25,
+      "trazos": 748
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 26,
+      "trazos": 753
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 27,
+      "trazos": 734
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 28,
+      "trazos": 756
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 29,
+      "trazos": 618
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 30,
+      "trazos": 218
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 31,
+      "trazos": 170
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 32,
+      "trazos": 445
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 33,
+      "trazos": 513
+    },
+    {
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 34,
+      "trazos": 376
+    },
     {
       "pdf": "normativa/nacional/Fuentes/DDU-447-Circular-Aportes-Tramitacion-permisos-12.11.20.pdf",
       "pagina": 8,
@@ -107,6 +232,381 @@
       "pdf": "normativa/nacional/Fuentes/DDU_LIBRO_COMPLETO.pdf",
       "pagina": 391,
       "trazos": 65
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 1,
+      "trazos": 429
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 2,
+      "trazos": 449
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 3,
+      "trazos": 429
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 4,
+      "trazos": 389
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 5,
+      "trazos": 392
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 6,
+      "trazos": 289
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 7,
+      "trazos": 329
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 8,
+      "trazos": 309
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 9,
+      "trazos": 329
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 10,
+      "trazos": 289
+    },
+    {
+      "pdf": "normativa/nacional/Fuentes/INDICE-CIRCULARES-DDU-ESPECIFICAS.pdf",
+      "pagina": 11,
+      "trazos": 169
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 2,
+      "trazos": 235
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 3,
+      "trazos": 138
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 5,
+      "trazos": 91
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 6,
+      "trazos": 58
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 7,
+      "trazos": 153
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 8,
+      "trazos": 307
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 9,
+      "trazos": 227
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 10,
+      "trazos": 219
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 11,
+      "trazos": 50
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 15,
+      "trazos": 130
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 22,
+      "trazos": 66
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 23,
+      "trazos": 227
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 24,
+      "trazos": 146
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 25,
+      "trazos": 205
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 26,
+      "trazos": 211
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 27,
+      "trazos": 211
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 28,
+      "trazos": 114
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 29,
+      "trazos": 130
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 30,
+      "trazos": 114
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 31,
+      "trazos": 123
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 32,
+      "trazos": 173
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 33,
+      "trazos": 212
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 34,
+      "trazos": 203
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 35,
+      "trazos": 187
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 36,
+      "trazos": 179
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 37,
+      "trazos": 91
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 38,
+      "trazos": 45
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 39,
+      "trazos": 290
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 40,
+      "trazos": 406
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 41,
+      "trazos": 518
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 42,
+      "trazos": 433
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 43,
+      "trazos": 313
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 44,
+      "trazos": 375
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 45,
+      "trazos": 492
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 46,
+      "trazos": 283
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 47,
+      "trazos": 457
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 48,
+      "trazos": 492
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 49,
+      "trazos": 478
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 50,
+      "trazos": 435
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 51,
+      "trazos": 272
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 52,
+      "trazos": 353
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 53,
+      "trazos": 319
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 54,
+      "trazos": 315
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 55,
+      "trazos": 286
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 56,
+      "trazos": 328
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 57,
+      "trazos": 305
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 58,
+      "trazos": 139
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 59,
+      "trazos": 180
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 61,
+      "trazos": 70
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 62,
+      "trazos": 70
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 63,
+      "trazos": 78
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 64,
+      "trazos": 159
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 65,
+      "trazos": 103
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 66,
+      "trazos": 70
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 67,
+      "trazos": 86
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 68,
+      "trazos": 98
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 69,
+      "trazos": 78
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 70,
+      "trazos": 143
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 71,
+      "trazos": 78
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 72,
+      "trazos": 62
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 73,
+      "trazos": 70
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 74,
+      "trazos": 185
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 75,
+      "trazos": 186
+    },
+    {
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 76,
+      "trazos": 49
     },
     {
       "pdf": "normativa/providencia/ordenanza_refundida.pdf",
@@ -412,9 +912,650 @@
       "pdf": "normativa/providencia/prcp_2007_l3_de_4_espacio_privado_zonas_de_uso_de_suelo_refundido_de_trabajo.pdf",
       "pagina": 1,
       "trazos": 22028
+    },
+    {
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 21,
+      "trazos": 44
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 6,
+      "trazos": 419
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 8,
+      "trazos": 431
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 9,
+      "trazos": 478
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 10,
+      "trazos": 178
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 14,
+      "trazos": 43
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 16,
+      "trazos": 159
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 17,
+      "trazos": 251
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 18,
+      "trazos": 339
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 19,
+      "trazos": 332
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 23,
+      "trazos": 411
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 24,
+      "trazos": 405
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 25,
+      "trazos": 404
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 26,
+      "trazos": 585
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 27,
+      "trazos": 553
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 28,
+      "trazos": 518
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 29,
+      "trazos": 448
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 30,
+      "trazos": 183
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 31,
+      "trazos": 595
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 32,
+      "trazos": 694
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 33,
+      "trazos": 672
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 34,
+      "trazos": 650
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 35,
+      "trazos": 672
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 36,
+      "trazos": 683
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 37,
+      "trazos": 672
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 38,
+      "trazos": 716
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 39,
+      "trazos": 694
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 40,
+      "trazos": 639
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 41,
+      "trazos": 661
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 42,
+      "trazos": 617
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 43,
+      "trazos": 639
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 44,
+      "trazos": 617
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 45,
+      "trazos": 617
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 46,
+      "trazos": 555
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 47,
+      "trazos": 878
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 48,
+      "trazos": 835
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 49,
+      "trazos": 847
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 50,
+      "trazos": 945
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 51,
+      "trazos": 849
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 52,
+      "trazos": 818
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 53,
+      "trazos": 628
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 54,
+      "trazos": 608
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 55,
+      "trazos": 124
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 57,
+      "trazos": 458
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 58,
+      "trazos": 333
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 59,
+      "trazos": 251
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 60,
+      "trazos": 126
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 61,
+      "trazos": 241
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 62,
+      "trazos": 255
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 63,
+      "trazos": 162
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 64,
+      "trazos": 431
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 65,
+      "trazos": 382
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 66,
+      "trazos": 222
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 67,
+      "trazos": 261
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 68,
+      "trazos": 208
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 69,
+      "trazos": 184
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 70,
+      "trazos": 364
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 71,
+      "trazos": 326
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 72,
+      "trazos": 229
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 73,
+      "trazos": 288
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 74,
+      "trazos": 401
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 75,
+      "trazos": 180
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 76,
+      "trazos": 436
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 77,
+      "trazos": 371
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 78,
+      "trazos": 264
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 79,
+      "trazos": 392
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 80,
+      "trazos": 275
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 81,
+      "trazos": 260
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 82,
+      "trazos": 189
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 83,
+      "trazos": 394
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 84,
+      "trazos": 353
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 85,
+      "trazos": 415
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 86,
+      "trazos": 409
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 87,
+      "trazos": 444
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 88,
+      "trazos": 409
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 89,
+      "trazos": 277
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 90,
+      "trazos": 462
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 91,
+      "trazos": 236
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 92,
+      "trazos": 344
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 93,
+      "trazos": 237
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 94,
+      "trazos": 91
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 95,
+      "trazos": 269
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 96,
+      "trazos": 139
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 97,
+      "trazos": 42
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 98,
+      "trazos": 287
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 99,
+      "trazos": 271
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 100,
+      "trazos": 319
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 101,
+      "trazos": 335
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 102,
+      "trazos": 311
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 103,
+      "trazos": 351
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 104,
+      "trazos": 535
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 105,
+      "trazos": 50
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 106,
+      "trazos": 535
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 107,
+      "trazos": 66
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 108,
+      "trazos": 199
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 109,
+      "trazos": 535
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 110,
+      "trazos": 106
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 111,
+      "trazos": 70
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 112,
+      "trazos": 201
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 114,
+      "trazos": 51
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 115,
+      "trazos": 228
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 116,
+      "trazos": 76
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 118,
+      "trazos": 818
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 119,
+      "trazos": 750
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 120,
+      "trazos": 554
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 121,
+      "trazos": 536
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 122,
+      "trazos": 597
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 123,
+      "trazos": 667
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 124,
+      "trazos": 817
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 125,
+      "trazos": 857
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 126,
+      "trazos": 409
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 127,
+      "trazos": 534
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 128,
+      "trazos": 916
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 129,
+      "trazos": 882
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 130,
+      "trazos": 542
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 131,
+      "trazos": 795
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 132,
+      "trazos": 1084
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 133,
+      "trazos": 1059
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 134,
+      "trazos": 263
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 135,
+      "trazos": 1224
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 136,
+      "trazos": 645
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 138,
+      "trazos": 488
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 139,
+      "trazos": 393
+    },
+    {
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 140,
+      "trazos": 223
     }
   ],
   "imagenes": [
+    {
+      "id": "OTRO_p0001_x13722",
+      "corpus": "OTRO",
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "pagina": 1,
+      "xref": 13722,
+      "px": [
+        1578,
+        289
+      ],
+      "bbox": [
+        161.2,
+        42.0,
+        439.3,
+        92.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0001_x13722.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
     {
       "id": "DDU_p0001_x3",
       "corpus": "DDU",
@@ -494,7 +1635,7 @@
         511.5,
         663.5
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0011_x19.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -515,7 +1656,7 @@
         511.5,
         396.3
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0011_x18.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -536,7 +1677,7 @@
         497.3,
         608.6
       ],
-      "articulo": "4",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0019_x28.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -557,7 +1698,7 @@
         433.6,
         249.0
       ],
-      "articulo": "4",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0020_x30.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -725,7 +1866,7 @@
         507.1,
         195.7
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0219_x1225.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -746,7 +1887,7 @@
         507.1,
         278.3
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0219_x1224.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -767,7 +1908,7 @@
         507.1,
         360.9
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0219_x1223.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -788,7 +1929,7 @@
         507.1,
         443.5
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0219_x1222.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -809,7 +1950,7 @@
         507.1,
         526.1
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0219_x1221.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -830,7 +1971,7 @@
         507.1,
         608.8
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0219_x1220.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -851,7 +1992,7 @@
         264.8,
         417.7
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0286_x970.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -872,7 +2013,7 @@
         265.6,
         602.4
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0286_x969.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -893,7 +2034,7 @@
         265.6,
         692.9
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0286_x968.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -914,7 +2055,7 @@
         517.3,
         619.3
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0286_x967.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -935,7 +2076,7 @@
         517.3,
         716.5
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0286_x966.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -956,7 +2097,7 @@
         526.7,
         324.6
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0286_x965.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -977,7 +2118,7 @@
         526.7,
         419.8
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0286_x964.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -998,7 +2139,7 @@
         264.8,
         325.7
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0286_x963.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1019,7 +2160,7 @@
         393.1,
         280.9
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0287_x958.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1040,7 +2181,7 @@
         393.1,
         368.6
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0287_x957.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1061,7 +2202,7 @@
         458.2,
         528.7
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0306_x895.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1082,7 +2223,7 @@
         476.6,
         689.2
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0307_x890.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1103,7 +2244,7 @@
         215.8,
         384.5
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0307_x889.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1124,7 +2265,7 @@
         532.6,
         381.4
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0307_x888.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1145,7 +2286,7 @@
         521.6,
         601.0
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0310_x878.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1166,7 +2307,7 @@
         403.3,
         650.4
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0318_x851.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1187,7 +2328,7 @@
         296.1,
         292.5
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0319_x847.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1208,7 +2349,7 @@
         547.4,
         281.8
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0319_x846.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1229,7 +2370,7 @@
         526.3,
         559.8
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0319_x845.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1250,7 +2391,7 @@
         502.1,
         572.8
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0320_x841.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1271,7 +2412,7 @@
         502.3,
         278.8
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0320_x840.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1292,7 +2433,7 @@
         528.3,
         676.7
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0321_x836.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1313,7 +2454,7 @@
         296.0,
         685.1
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0321_x835.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1334,7 +2475,7 @@
         331.9,
         373.6
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0321_x834.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1355,7 +2496,7 @@
         548.1,
         403.6
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0321_x833.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1376,7 +2517,7 @@
         500.7,
         629.2
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0322_x828.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1397,7 +2538,7 @@
         306.7,
         409.7
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0322_x827.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1418,7 +2559,7 @@
         538.5,
         415.3
       ],
-      "articulo": "2",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0322_x826.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1439,7 +2580,7 @@
         466.9,
         346.3
       ],
-      "articulo": "5",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0342_x752.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1460,7 +2601,7 @@
         262.9,
         567.5
       ],
-      "articulo": "5",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0342_x751.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1481,7 +2622,7 @@
         521.2,
         566.4
       ],
-      "articulo": "5",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0342_x750.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1502,7 +2643,7 @@
         505.9,
         368.1
       ],
-      "articulo": "5",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0343_x744.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1523,7 +2664,7 @@
         552.5,
         570.0
       ],
-      "articulo": "5",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0343_x743.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1544,7 +2685,7 @@
         536.9,
         359.1
       ],
-      "articulo": "5",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0344_x739.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1565,7 +2706,7 @@
         492.9,
         603.3
       ],
-      "articulo": "5",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0344_x738.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1586,7 +2727,7 @@
         524.6,
         345.0
       ],
-      "articulo": "5",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0345_x734.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1607,7 +2748,7 @@
         512.0,
         605.1
       ],
-      "articulo": "5",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0345_x733.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1628,7 +2769,7 @@
         532.7,
         653.0
       ],
-      "articulo": "6",
+      "articulo": null,
       "archivo": "anexos_graficos/DDU_p0346_x729.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1649,7 +2790,7 @@
         466.9,
         332.5
       ],
-      "articulo": "5",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0383_x1663.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1670,7 +2811,7 @@
         262.9,
         567.3
       ],
-      "articulo": "5",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0383_x1662.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1691,7 +2832,7 @@
         521.2,
         566.1
       ],
-      "articulo": "5",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0383_x1661.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1712,7 +2853,7 @@
         505.9,
         356.6
       ],
-      "articulo": "5",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0384_x1655.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1733,7 +2874,7 @@
         543.5,
         585.5
       ],
-      "articulo": "5",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0384_x1654.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1754,7 +2895,7 @@
         536.9,
         371.8
       ],
-      "articulo": "5",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0385_x1650.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1775,7 +2916,7 @@
         492.9,
         616.0
       ],
-      "articulo": "5",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0385_x1649.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1796,7 +2937,7 @@
         524.6,
         331.2
       ],
-      "articulo": "5",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0386_x1644.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1817,7 +2958,7 @@
         512.0,
         591.3
       ],
-      "articulo": "5",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0386_x1643.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1838,7 +2979,7 @@
         532.7,
         626.0
       ],
-      "articulo": "6",
+      "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0387_x1639.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1861,6 +3002,27 @@
       ],
       "articulo": null,
       "archivo": "anexos_graficos/LGUC_p0001_x5.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0001_x5",
+      "corpus": "OTRO",
+      "pdf": "normativa/nacional/Fuentes/Ley-19300_09-MAR-1994.pdf",
+      "pagina": 1,
+      "xref": 5,
+      "px": [
+        596,
+        102
+      ],
+      "bbox": [
+        71.1,
+        10.0,
+        304.9,
+        50.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0001_x5.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
@@ -1901,7 +3063,7 @@
         448.5,
         627.9
       ],
-      "articulo": "2.2.5 Bis",
+      "articulo": "2.2.5",
       "archivo": "anexos_graficos/OGUC_p0113_x234.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -1964,7 +3126,7 @@
         448.5,
         309.9
       ],
-      "articulo": "2.6.11",
+      "articulo": "2.6.3",
       "archivo": "anexos_graficos/OGUC_p0147_x305.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2006,7 +3168,7 @@
         448.5,
         527.9
       ],
-      "articulo": "2.1.25",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0195_x403.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2027,7 +3189,7 @@
         448.5,
         425.9
       ],
-      "articulo": "2.1.25",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0197_x408.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2048,7 +3210,7 @@
         448.5,
         473.9
       ],
-      "articulo": "2.1.25",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0198_x411.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2069,7 +3231,7 @@
         448.5,
         437.9
       ],
-      "articulo": "2.1.25",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0199_x414.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2090,7 +3252,7 @@
         405.5,
         473.9
       ],
-      "articulo": "2.1.25",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0200_x418.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2111,7 +3273,7 @@
         448.5,
         180.9
       ],
-      "articulo": "2.1.25",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0200_x417.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2132,7 +3294,7 @@
         448.5,
         686.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0201_x422.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2153,7 +3315,7 @@
         448.5,
         622.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0201_x421.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2174,7 +3336,7 @@
         356.5,
         562.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0202_x425.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2195,7 +3357,7 @@
         375.5,
         294.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0204_x430.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2216,7 +3378,7 @@
         448.5,
         508.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0205_x433.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2237,7 +3399,7 @@
         448.5,
         207.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0206_x436.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2258,7 +3420,7 @@
         409.5,
         264.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0207_x439.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2279,7 +3441,7 @@
         448.5,
         435.9
       ],
-      "articulo": "2.1.33",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0208_x442.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2300,7 +3462,7 @@
         448.5,
         291.9
       ],
-      "articulo": "2.1.33",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0210_x447.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2321,7 +3483,7 @@
         372.5,
         303.9
       ],
-      "articulo": "2.1.33",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0211_x450.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2342,7 +3504,7 @@
         407.5,
         355.9
       ],
-      "articulo": "2.1.33",
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0212_x453.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2363,7 +3525,7 @@
         448.5,
         516.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0213_x456.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2384,7 +3546,7 @@
         419.5,
         221.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0214_x459.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2405,7 +3567,7 @@
         448.5,
         418.9
       ],
-      "articulo": null,
+      "articulo": "4.1.10",
       "archivo": "anexos_graficos/OGUC_p0215_x462.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -2491,6 +3653,48 @@
       ],
       "articulo": "4.5.7",
       "archivo": "anexos_graficos/OGUC_p0257_x551.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0001_x25",
+      "corpus": "OTRO",
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 1,
+      "xref": 25,
+      "px": [
+        152,
+        232
+      ],
+      "bbox": [
+        55.5,
+        27.0,
+        105.2,
+        103.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0001_x25.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0037_x105",
+      "corpus": "OTRO",
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "pagina": 37,
+      "xref": 105,
+      "px": [
+        1025,
+        507
+      ],
+      "bbox": [
+        139.7,
+        84.2,
+        524.0,
+        274.1
+      ],
+      "articulo": "2",
+      "archivo": "anexos_graficos/OTRO_p0037_x105.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
@@ -3163,6 +4367,1686 @@
       ],
       "articulo": null,
       "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0001_x9.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0001_x12",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 1,
+      "xref": 12,
+      "px": [
+        1668,
+        1250
+      ],
+      "bbox": [
+        -0.0,
+        -0.0,
+        720.0,
+        540.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0001_x12.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0001_x13",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 1,
+      "xref": 13,
+      "px": [
+        2500,
+        1406
+      ],
+      "bbox": [
+        -0.0,
+        0.0,
+        720.0,
+        405.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0001_x13.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0003_x35",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 3,
+      "xref": 35,
+      "px": [
+        1583,
+        2048
+      ],
+      "bbox": [
+        340.0,
+        -12.3,
+        582.2,
+        301.2
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0003_x35.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0003_x36",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 3,
+      "xref": 36,
+      "px": [
+        1583,
+        2048
+      ],
+      "bbox": [
+        38.7,
+        104.2,
+        309.8,
+        454.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0003_x36.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0004_x49",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 4,
+      "xref": 49,
+      "px": [
+        1369,
+        2048
+      ],
+      "bbox": [
+        471.8,
+        28.7,
+        691.2,
+        356.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0004_x49.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0005_x56",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 5,
+      "xref": 56,
+      "px": [
+        2048,
+        1303
+      ],
+      "bbox": [
+        361.8,
+        17.5,
+        916.4,
+        370.3
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0005_x56.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0007_x71",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 7,
+      "xref": 71,
+      "px": [
+        699,
+        881
+      ],
+      "bbox": [
+        429.1,
+        27.2,
+        691.6,
+        358.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0007_x71.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0008_x78",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 8,
+      "xref": 78,
+      "px": [
+        1920,
+        1080
+      ],
+      "bbox": [
+        181.3,
+        42.0,
+        766.7,
+        371.3
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0008_x78.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0009_x85",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 9,
+      "xref": 85,
+      "px": [
+        1280,
+        720
+      ],
+      "bbox": [
+        247.7,
+        -16.3,
+        948.5,
+        377.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0009_x85.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0012_x102",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 12,
+      "xref": 102,
+      "px": [
+        467,
+        770
+      ],
+      "bbox": [
+        486.1,
+        83.1,
+        653.2,
+        358.6
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0012_x102.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0014_x116",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 14,
+      "xref": 116,
+      "px": [
+        1403,
+        1977
+      ],
+      "bbox": [
+        492.8,
+        88.8,
+        673.6,
+        343.7
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0014_x116.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0015_x123",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 15,
+      "xref": 123,
+      "px": [
+        2048,
+        1784
+      ],
+      "bbox": [
+        390.0,
+        82.8,
+        523.6,
+        199.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0015_x123.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0015_x124",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 15,
+      "xref": 124,
+      "px": [
+        2048,
+        1828
+      ],
+      "bbox": [
+        388.5,
+        222.4,
+        525.2,
+        344.4
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0015_x124.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0015_x125",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 15,
+      "xref": 125,
+      "px": [
+        2048,
+        1726
+      ],
+      "bbox": [
+        551.7,
+        82.8,
+        689.7,
+        199.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0015_x125.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0015_x126",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 15,
+      "xref": 126,
+      "px": [
+        2048,
+        1817
+      ],
+      "bbox": [
+        549.4,
+        220.6,
+        691.0,
+        346.2
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0015_x126.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0017_x142",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 17,
+      "xref": 142,
+      "px": [
+        2048,
+        1536
+      ],
+      "bbox": [
+        523.4,
+        225.3,
+        677.2,
+        340.7
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0017_x142.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0017_x144",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 17,
+      "xref": 144,
+      "px": [
+        2048,
+        1536
+      ],
+      "bbox": [
+        192.0,
+        225.3,
+        345.9,
+        340.7
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0017_x144.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0017_x145",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 17,
+      "xref": 145,
+      "px": [
+        1280,
+        720
+      ],
+      "bbox": [
+        326.5,
+        225.3,
+        531.7,
+        340.7
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0017_x145.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0017_x146",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 17,
+      "xref": 146,
+      "px": [
+        1280,
+        720
+      ],
+      "bbox": [
+        -0.8,
+        225.3,
+        223.3,
+        351.4
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0017_x146.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0019_x162",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 19,
+      "xref": 162,
+      "px": [
+        632,
+        526
+      ],
+      "bbox": [
+        25.5,
+        185.1,
+        101.1,
+        248.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0019_x162.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0019_x163",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 19,
+      "xref": 163,
+      "px": [
+        611,
+        390
+      ],
+      "bbox": [
+        101.4,
+        185.4,
+        174.2,
+        231.8
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0019_x163.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0019_x164",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 19,
+      "xref": 164,
+      "px": [
+        654,
+        521
+      ],
+      "bbox": [
+        198.1,
+        199.0,
+        274.4,
+        259.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0019_x164.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0019_x165",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 19,
+      "xref": 165,
+      "px": [
+        715,
+        519
+      ],
+      "bbox": [
+        313.9,
+        185.2,
+        400.0,
+        247.7
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0019_x165.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0019_x166",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 19,
+      "xref": 166,
+      "px": [
+        1764,
+        230
+      ],
+      "bbox": [
+        198.1,
+        184.5,
+        308.7,
+        198.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0019_x166.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0019_x167",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 19,
+      "xref": 167,
+      "px": [
+        2048,
+        1536
+      ],
+      "bbox": [
+        423.3,
+        266.8,
+        563.3,
+        371.8
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0019_x167.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0019_x168",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 19,
+      "xref": 168,
+      "px": [
+        766,
+        783
+      ],
+      "bbox": [
+        433.7,
+        183.3,
+        535.5,
+        287.4
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0019_x168.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0019_x169",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 19,
+      "xref": 169,
+      "px": [
+        2048,
+        1152
+      ],
+      "bbox": [
+        186.4,
+        269.0,
+        350.9,
+        361.5
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0019_x169.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0019_x170",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 19,
+      "xref": 170,
+      "px": [
+        2048,
+        1536
+      ],
+      "bbox": [
+        -6.2,
+        228.2,
+        239.2,
+        412.2
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0019_x170.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0021_x190",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 21,
+      "xref": 190,
+      "px": [
+        125,
+        472
+      ],
+      "bbox": [
+        382.1,
+        272.5,
+        413.1,
+        389.6
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0021_x190.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0022_x197",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 22,
+      "xref": 197,
+      "px": [
+        2048,
+        1536
+      ],
+      "bbox": [
+        26.3,
+        111.2,
+        180.9,
+        227.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0022_x197.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0022_x198",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 22,
+      "xref": 198,
+      "px": [
+        1280,
+        720
+      ],
+      "bbox": [
+        -23.6,
+        229.4,
+        234.9,
+        374.8
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0022_x198.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0022_x199",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 22,
+      "xref": 199,
+      "px": [
+        1280,
+        720
+      ],
+      "bbox": [
+        146.2,
+        86.3,
+        392.5,
+        224.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0022_x199.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0022_x200",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 22,
+      "xref": 200,
+      "px": [
+        1280,
+        720
+      ],
+      "bbox": [
+        371.6,
+        111.2,
+        553.9,
+        213.7
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0022_x200.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0022_x201",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 22,
+      "xref": 201,
+      "px": [
+        1280,
+        720
+      ],
+      "bbox": [
+        144.0,
+        226.8,
+        411.8,
+        377.4
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0022_x201.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0022_x202",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 22,
+      "xref": 202,
+      "px": [
+        1280,
+        720
+      ],
+      "bbox": [
+        342.4,
+        238.7,
+        583.4,
+        374.2
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0022_x202.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0023_x214",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 23,
+      "xref": 214,
+      "px": [
+        630,
+        788
+      ],
+      "bbox": [
+        280.3,
+        -100.5,
+        540.5,
+        225.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0023_x214.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0023_x215",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 23,
+      "xref": 215,
+      "px": [
+        633,
+        346
+      ],
+      "bbox": [
+        279.8,
+        217.8,
+        541.5,
+        360.8
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0023_x215.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0025_x228",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 25,
+      "xref": 228,
+      "px": [
+        718,
+        365
+      ],
+      "bbox": [
+        26.5,
+        171.9,
+        193.5,
+        256.8
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0025_x228.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0025_x229",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 25,
+      "xref": 229,
+      "px": [
+        949,
+        754
+      ],
+      "bbox": [
+        212.6,
+        171.9,
+        319.5,
+        256.8
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0025_x229.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0025_x230",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 25,
+      "xref": 230,
+      "px": [
+        1920,
+        1080
+      ],
+      "bbox": [
+        26.5,
+        281.4,
+        177.4,
+        366.3
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0025_x230.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0025_x231",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 25,
+      "xref": 231,
+      "px": [
+        693,
+        600
+      ],
+      "bbox": [
+        220.4,
+        281.4,
+        319.4,
+        367.2
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0025_x231.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0025_x232",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 25,
+      "xref": 232,
+      "px": [
+        900,
+        600
+      ],
+      "bbox": [
+        424.1,
+        176.6,
+        557.6,
+        265.6
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0025_x232.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0025_x233",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 25,
+      "xref": 233,
+      "px": [
+        660,
+        351
+      ],
+      "bbox": [
+        425.9,
+        280.4,
+        566.6,
+        355.2
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0025_x233.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0026_x245",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 26,
+      "xref": 245,
+      "px": [
+        2048,
+        1449
+      ],
+      "bbox": [
+        497.8,
+        215.1,
+        697.0,
+        356.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0026_x245.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0026_x246",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 26,
+      "xref": 246,
+      "px": [
+        2048,
+        1449
+      ],
+      "bbox": [
+        292.5,
+        215.1,
+        491.7,
+        356.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0026_x246.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0026_x247",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 26,
+      "xref": 247,
+      "px": [
+        2048,
+        1449
+      ],
+      "bbox": [
+        381.1,
+        66.2,
+        580.4,
+        207.2
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0026_x247.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0027_x262",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 27,
+      "xref": 262,
+      "px": [
+        2048,
+        1536
+      ],
+      "bbox": [
+        429.7,
+        194.2,
+        653.6,
+        362.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0027_x262.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0027_x263",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 27,
+      "xref": 263,
+      "px": [
+        2048,
+        1361
+      ],
+      "bbox": [
+        198.7,
+        186.2,
+        422.6,
+        335.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0027_x263.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0027_x264",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 27,
+      "xref": 264,
+      "px": [
+        2048,
+        1536
+      ],
+      "bbox": [
+        27.3,
+        194.2,
+        191.5,
+        317.3
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0027_x264.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0029_x278",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 29,
+      "xref": 278,
+      "px": [
+        2048,
+        1583
+      ],
+      "bbox": [
+        27.2,
+        158.6,
+        326.4,
+        389.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0029_x278.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0030_x289",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 30,
+      "xref": 289,
+      "px": [
+        2048,
+        1444
+      ],
+      "bbox": [
+        356.4,
+        209.4,
+        558.8,
+        352.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0030_x289.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0030_x290",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 30,
+      "xref": 290,
+      "px": [
+        350,
+        350
+      ],
+      "bbox": [
+        27.4,
+        209.4,
+        170.1,
+        352.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0030_x290.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0030_x291",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 30,
+      "xref": 291,
+      "px": [
+        823,
+        460
+      ],
+      "bbox": [
+        90.8,
+        209.4,
+        346.2,
+        352.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0030_x291.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0031_x302",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 31,
+      "xref": 302,
+      "px": [
+        618,
+        829
+      ],
+      "bbox": [
+        475.9,
+        192.5,
+        572.6,
+        322.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0031_x302.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0031_x303",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 31,
+      "xref": 303,
+      "px": [
+        2048,
+        874
+      ],
+      "bbox": [
+        27.7,
+        192.4,
+        443.0,
+        369.6
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0031_x303.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0032_x313",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 32,
+      "xref": 313,
+      "px": [
+        602,
+        931
+      ],
+      "bbox": [
+        542.2,
+        146.2,
+        695.6,
+        383.5
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0032_x313.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0032_x314",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 32,
+      "xref": 314,
+      "px": [
+        1875,
+        2500
+      ],
+      "bbox": [
+        236.1,
+        211.2,
+        362.8,
+        380.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0032_x314.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0032_x315",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 32,
+      "xref": 315,
+      "px": [
+        517,
+        320
+      ],
+      "bbox": [
+        15.5,
+        211.2,
+        230.8,
+        344.5
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0032_x315.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0033_x324",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 33,
+      "xref": 324,
+      "px": [
+        972,
+        548
+      ],
+      "bbox": [
+        25.9,
+        214.9,
+        310.0,
+        375.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0033_x324.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0033_x325",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 33,
+      "xref": 325,
+      "px": [
+        2048,
+        1583
+      ],
+      "bbox": [
+        303.3,
+        199.8,
+        516.3,
+        364.4
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0033_x325.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0034_x335",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 34,
+      "xref": 335,
+      "px": [
+        610,
+        409
+      ],
+      "bbox": [
+        225.8,
+        206.2,
+        454.1,
+        359.2
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0034_x335.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0034_x336",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 34,
+      "xref": 336,
+      "px": [
+        1024,
+        768
+      ],
+      "bbox": [
+        27.4,
+        206.2,
+        217.5,
+        348.7
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0034_x336.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0035_x344",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 35,
+      "xref": 344,
+      "px": [
+        1683,
+        948
+      ],
+      "bbox": [
+        301.1,
+        205.6,
+        567.0,
+        355.3
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0035_x344.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0035_x345",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 35,
+      "xref": 345,
+      "px": [
+        1684,
+        949
+      ],
+      "bbox": [
+        26.6,
+        205.5,
+        292.5,
+        355.3
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0035_x345.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0036_x353",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 36,
+      "xref": 353,
+      "px": [
+        853,
+        480
+      ],
+      "bbox": [
+        16.9,
+        259.1,
+        210.0,
+        367.7
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0036_x353.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0036_x354",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 36,
+      "xref": 354,
+      "px": [
+        541,
+        406
+      ],
+      "bbox": [
+        393.2,
+        259.0,
+        538.0,
+        367.7
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0036_x354.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0036_x355",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/resumen_ejecutivo_prcp_2007_PROVIDENCIA.pdf",
+      "pagina": 36,
+      "xref": 355,
+      "px": [
+        2048,
+        985
+      ],
+      "bbox": [
+        161.1,
+        259.8,
+        472.1,
+        409.3
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0036_x355.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0001_x16",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 1,
+      "xref": 16,
+      "px": [
+        248,
+        236
+      ],
+      "bbox": [
+        220.2,
+        211.2,
+        410.0,
+        391.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0001_x16.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0113_x1025",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 113,
+      "xref": 1025,
+      "px": [
+        1229,
+        719
+      ],
+      "bbox": [
+        145.7,
+        274.8,
+        440.6,
+        447.4
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0113_x1025.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0114_x1048",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 114,
+      "xref": 1048,
+      "px": [
+        227,
+        78
+      ],
+      "bbox": [
+        471.6,
+        356.6,
+        526.1,
+        375.4
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0114_x1048.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0114_x1046",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 114,
+      "xref": 1046,
+      "px": [
+        227,
+        78
+      ],
+      "bbox": [
+        75.4,
+        356.6,
+        129.8,
+        375.4
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0114_x1046.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0114_x1044",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 114,
+      "xref": 1044,
+      "px": [
+        376,
+        79
+      ],
+      "bbox": [
+        344.2,
+        332.9,
+        434.4,
+        351.8
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0114_x1044.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0114_x1042",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 114,
+      "xref": 1042,
+      "px": [
+        369,
+        78
+      ],
+      "bbox": [
+        135.4,
+        333.8,
+        223.9,
+        352.6
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0114_x1042.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0114_x1040",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 114,
+      "xref": 1040,
+      "px": [
+        653,
+        50
+      ],
+      "bbox": [
+        309.4,
+        448.6,
+        466.1,
+        460.6
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0114_x1040.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0114_x1038",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 114,
+      "xref": 1038,
+      "px": [
+        466,
+        50
+      ],
+      "bbox": [
+        124.3,
+        448.6,
+        236.2,
+        460.6
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0114_x1038.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0115_x1064",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 115,
+      "xref": 1064,
+      "px": [
+        783,
+        53
+      ],
+      "bbox": [
+        136.8,
+        169.9,
+        324.7,
+        182.6
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0115_x1064.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0115_x1062",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 115,
+      "xref": 1062,
+      "px": [
+        724,
+        53
+      ],
+      "bbox": [
+        331.9,
+        169.9,
+        505.7,
+        182.6
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0115_x1062.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0116_x1079",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 116,
+      "xref": 1079,
+      "px": [
+        250,
+        86
+      ],
+      "bbox": [
+        155.8,
+        376.3,
+        215.8,
+        397.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0116_x1079.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0116_x1078",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 116,
+      "xref": 1078,
+      "px": [
+        249,
+        86
+      ],
+      "bbox": [
+        372.2,
+        240.7,
+        432.0,
+        261.4
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0116_x1078.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OTRO_p0116_x1076",
+      "corpus": "OTRO",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "pagina": 116,
+      "xref": 1076,
+      "px": [
+        250,
+        85
+      ],
+      "bbox": [
+        339.6,
+        339.1,
+        399.6,
+        359.5
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OTRO_p0116_x1076.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     }

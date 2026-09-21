@@ -50,8 +50,19 @@ MIN_AREA_PX = 15000
 
 # Encabezados de articulo de cada cuerpo legal. OGUC usa numeracion decimal;
 # LGUC y las circulares/ordenanzas usan entero. Se acepta bis/ter/quater.
-RE_ART_DEC = re.compile(r'Art[ií]culo\s+(\d+\.\d+\.\d+)\.?\s*(bis|ter)?', re.I)
-RE_ART_INT = re.compile(r'Art[ií]culo\s+(\d+)\s*[°º]?\s*(bis|ter|qu[aá]ter)?\s*[A-I]?\s*[\.\-]', re.I)
+# CORREGIDO 2026-09-21: la primera version matcheaba "Articulo X.Y.Z" en
+# cualquier parte del texto, asi que se quedaba con REFERENCIAS CRUZADAS
+# ("...segun lo dispuesto en el articulo 2.1.25...") en vez del encabezado del
+# articulo que realmente contiene la imagen. Resultado: las tablas de las
+# paginas 195-215, que pertenecen al Art. 4.1.10 (acondicionamiento termico),
+# quedaban atribuidas al 2.1.25 y al 2.1.33. Adjuntar una tabla al articulo
+# equivocado es exactamente el tipo de error que esta auditoria persigue.
+#
+# Ahora se exige que el encabezado abra la linea Y que la A sea mayuscula, que
+# es como el PDF imprime los encabezados y NO como se escriben las referencias
+# cruzadas (en minuscula, en medio de la oracion).
+RE_ART_DEC = re.compile(r'^\s*Artículo\s+(\d+\.\d+\.\d+)\.\s*([bB]is|[tT]er)?\b', re.M)
+RE_ART_INT = re.compile(r'^\s*Artículo\s+(\d+)\s*[°º]?\s*([bB]is|[tT]er|[qQ]u[aá]ter)?\b\s*[A-I]?\s*[\.\-]', re.M)
 
 
 def corpus_de(ruta):
@@ -69,13 +80,19 @@ def corpus_de(ruta):
 
 def articulo_de(doc, pagina, y, re_art):
     """Ultimo encabezado de articulo en o antes de la posicion (pagina, y)."""
-    for p in range(pagina, max(-1, pagina - 6), -1):
+    # Se busca hacia atras SIN LIMITE de paginas. La primera version miraba
+    # solo 6 y eso dejaba 18 imagenes de OGUC sin asignar: las tablas de las
+    # paginas 199-215 pertenecen al Art. 4.1.10, cuyo encabezado esta en la
+    # pagina 193 -- 22 paginas antes, porque es un articulo largo con muchas
+    # tablas. Toda imagen pertenece a algun articulo; el limite solo escondia
+    # los casos dificiles, que son justamente los que importan.
+    for p in range(pagina, -1, -1):
         candidatos = []
         for b in doc[p].get_text('blocks'):  # (x0, y0, x1, y1, texto, ...)
             if p == pagina and b[1] > y:
                 continue  # en la misma pagina, solo lo que esta mas arriba
             for m in re_art.finditer(b[4] or ''):
-                num = m.group(1) + (' ' + m.group(2) if m.group(2) else '')
+                num = m.group(1) + (' ' + m.group(2).lower() if m.group(2) else '')
                 candidatos.append((b[1], num))
         if candidatos:
             return max(candidatos, key=lambda c: c[0])[1]
