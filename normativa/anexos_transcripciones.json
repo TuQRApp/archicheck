@@ -933,6 +933,136 @@
       "verificacion": "Leidas 2026-09-21 renderizando las 5 paginas. La formula S = (axb)+(dxe) y S - Z aparecen SOLO en la figura. Todo este bloque es directamente aplicable al computo de superficies del producto. Las figuras se repiten identicas en las paginas 383 a 387 del mismo libro; los ids duplicados quedan asociados a este mismo anexo.",
       "corpus": "DDU",
       "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-PROVIDENCIA-ordenanza-iconos-zona",
+      "articulo": null,
+      "tipo": "figura",
+      "pdf": "normativa/providencia/ordenanza_refundida.pdf",
+      "paginas": [
+        1,
+        46,
+        48
+      ],
+      "titulo": "Escudo municipal e iconos de zona de los cuadros normativos",
+      "contenido": "Las 3 imagenes de la Ordenanza Local Refundida son: el escudo de la I. Municipalidad de Providencia (portada) y los 2 iconos de trama que encabezan los cuadros normativos de las zonas E5 (C+A) y EA3 / E3. Los iconos solo repiten la trama con que esas zonas se grafican en la lamina L2/4; no aportan valores.\n\nLOS CUADROS NORMATIVOS SI ESTAN EN LA CAPA DE TEXTO y se extraen bien (verificado sobre los Cuadros N 12, N 15 y N 15 bis).\n\nHALLAZGO QUE SI IMPORTA: ver el anexo PRC-PROVIDENCIA-marca-documento-de-trabajo.",
+      "verificacion": "Leidas 2026-09-21 renderizando las paginas 46 y 48.",
+      "imagenes": [
+        "PRC_PROVIDENCIA_p0001_x18623",
+        "PRC_PROVIDENCIA_p0046_x143",
+        "PRC_PROVIDENCIA_p0048_x152"
+      ],
+      "corpus": "PRC_PROVIDENCIA",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-PROVIDENCIA-marca-documento-de-trabajo",
+      "articulo": null,
+      "tipo": "sello",
+      "pdf": "normativa/providencia/ordenanza_refundida.pdf",
+      "paginas": [
+        46,
+        48
+      ],
+      "imagenes": [],
+      "titulo": "Marca de agua DOCUMENTO DE TRABAJO sobre toda la Ordenanza Local Refundida",
+      "contenido": "Todas las paginas de normativa/providencia/ordenanza_refundida.pdf llevan, en diagonal y en gris, la marca de agua:\n\n    DOCUMENTO DE TRABAJO\n\nLas 4 laminas del plano (L1 a L4) llevan la equivalente:\n\n    REFUNDIDO DE TRABAJO\n\nCONSECUENCIA OPERATIVA: este texto refundido NO se presenta a si mismo como la version oficial vigente. Es una consolidacion de trabajo de la Asesoria Urbana. Antes de citar un valor de aqui como norma vigente hay que contrastarlo con la ordenanza publicada y sus decretos de modificacion.",
+      "verificacion": "Verificado 2026-09-21 de dos formas: se ve en el render de las paginas, y NO aparece en la capa de texto (la busqueda de la cadena DOCUMENTO DE TRABAJO sobre el texto de la pagina devuelve False). Es decir, un analisis que lea solo el texto tomaria este documento por la version oficial sin ninguna senal de lo contrario. Mismo patron que el sello de la Zona Z-7 de Nunoa.",
+      "corpus": "PRC_PROVIDENCIA",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-PROVIDENCIA-L1-simbologia",
+      "articulo": null,
+      "tipo": "plano",
+      "pdf": "normativa/providencia/prcp_2007_l1_de_4_espacio_publico_vialidad_y_areas_verdes_publicas_refundido_de_trabajo.pdf",
+      "paginas": [
+        1
+      ],
+      "titulo": "Lamina L1/4. Espacio publico: vialidad y areas verdes publicas, simbologia",
+      "contenido": "Plano de la comuna a escala, con los anchos de via acotados calle por calle (los anchos SI estan en la capa de texto: 11.0, 15.0, 16.0, 17.4, 20.0, 23.0, 25.0 metros, etc.).\n\nSIMBOLOGIA:\n- LINEA OFICIAL DE ENSANCHE\n- LINEA OFICIAL QUE SE MANTIENE\n- LINEA OFICIAL DE APERTURA\n- LINEA OFICIAL DE AREA VERDE\n- CONO DE APROXIMACION AERODROMO EL BOSQUE, segun PRMS RM-PRM-92/1A\n- LIMITE COMUNAL\n\nNOMENCLATURA DE PLAZAS Y AREAS VERDES:\n- PARQUES (Pq): Parques Metropolitanos (PqM), Parques Intercomunales (PqI), Parques Comunales (PqC), Parques Adyacentes a cauces (Pqac)\n- PLAZAS (Pz): Plazas Comunales (PzCom), Plazas Vecinales (PzVec), Plazoletas (Pzt)\n\nNOTA DEL PLANO, normativamente relevante:\n    TODAS LAS VIAS QUE NO PERTENECEN A LA RED VIAL COMUNAL ESTRUCTURANTE MANTIENEN SUS ANCHOS EXISTENTES.\n\nLa lamina incorpora ademas una FE DE ERRATA: rectifica y reemplaza al plano PRCP 2007 - L 1/4 anterior, corrigiendo errores graficos y de impresion detallados en decreto alcaldicio.",
+      "verificacion": "Leida 2026-09-21. La simbologia y la nota se obtuvieron de la CAPA DE TEXTO del plano (117.334 caracteres), filtrando los bloques del cuadro de simbologia por coordenada x, no leyendo pixeles.",
+      "imagenes": [
+        "PRC_PROVIDENCIA_p0001_x269",
+        "PRC_PROVIDENCIA_p0001_x271",
+        "PRC_PROVIDENCIA_p0001_x274",
+        "PRC_PROVIDENCIA_p0001_x276",
+        "PRC_PROVIDENCIA_p0001_x278",
+        "PRC_PROVIDENCIA_p0001_x280",
+        "PRC_PROVIDENCIA_p0001_x282",
+        "PRC_PROVIDENCIA_p0001_x284",
+        "PRC_PROVIDENCIA_p0001_x286",
+        "PRC_PROVIDENCIA_p0001_x288",
+        "PRC_PROVIDENCIA_p0001_x290",
+        "PRC_PROVIDENCIA_p0001_x292",
+        "PRC_PROVIDENCIA_p0001_x294",
+        "PRC_PROVIDENCIA_p0001_x296"
+      ],
+      "corpus": "PRC_PROVIDENCIA",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-PROVIDENCIA-L2-zonas-edificacion",
+      "articulo": null,
+      "tipo": "plano",
+      "pdf": "normativa/providencia/prcp_2007_l2_de_4_espacio_privado_zonas_de_edificacion_refundido_de_trabajo.pdf",
+      "paginas": [
+        1
+      ],
+      "titulo": "Lamina L2/4. Espacio privado: zonas de edificacion, leyenda completa de codigos de zona",
+      "contenido": "ZONAS DE EDIFICACION:\n\n| Codigo | Definicion |\n|---|---|\n| EC 3 | Edif. Continua max. 3 pisos |\n| EC 5 | Edif. Continua max. 5 pisos |\n| EC 7 | Edif. Continua max. 7 pisos |\n| EC 12 | Edif. Continua max. 12 pisos |\n| E5 (C+A) | Edif. max. 5 pisos, Continua mas Aislada |\n| EC 2 + A 8 | Edif. Continua max. 2 pisos, mas Aislada max. 8 pisos |\n| EC 3 + AL | Edif. Continua max. 3 pisos, mas Aislada Libre |\n| EA 3 | Edif. Aislada max. 3 pisos |\n| E3 | Edif. max. 3 pisos; Aislada, Pareada o Continua |\n| EA 5 | Edif. Aislada max. 5 pisos |\n| EA 7 | Edif. Aislada max. 7 pisos |\n| EA 12 | Edif. Aislada max. 12 pisos |\n| EA 5 / pa | Edif. Aislada max. 5 pisos, permite adosamiento |\n| EA 7 / pa | Edif. Aislada max. 7 pisos, permite adosamiento |\n| EA 12 / pa | Edif. Aislada max. 12 pisos, permite adosamiento |\n| EAL / pa | Edif. Aislada Libre, permite adosamiento |\n| ZEP CE1 | Zona de Edificacion Patrimonial Continua con altura Existente 1 |\n| ZEP CE2 | Zona de Edificacion Patrimonial Continua con altura Existente 2 |\n| ZEP AE | Zona de Edificacion Patrimonial Aislada con altura Existente |\n| ZEP A3 | Zona de Edificacion Patrimonial Aislada de max. 3 pisos |\n| ZEP A4 | Zona de Edificacion Patrimonial Aislada de max. 4 pisos |\n| ZEP A7 | Zona de Edificacion Patrimonial Aislada de max. 7 pisos |\n\nAREAS VERDES PRIVADAS (BPP): Pql(p) Parque Intercomunal; AVC Area Verde Complementaria.\n\nZONAS DE EQUIPAMIENTO DE ESCALA METROPOLITANA: ZEMoI Zona Equipamiento Metropolitano e Intercomunal; ZIM Zona de Interes Metropolitano; ZE Zona Especial Ex-CCU; ademas Espacio Publico.\n\nOtros simbolos: Cono de aproximacion Aerodromo El Bosque (segun PRMS RM-PRM-92/1A) y Limite Comunal.\n\nMODIFICACIONES INCORPORADAS en este refundido (nota del plano): N 1 Barrio Las Flores (2014), N 2 Edificacion (2015), N 3 Uso de Suelo (2016), N 4 Patrimonio (2016), N 5 Equipamiento (2019), N 7 Barrio El Aguilucho (2025). Fecha del plano 29-05-2025.",
+      "verificacion": "Leida 2026-09-21. La leyenda esta VECTORIZADA: de todo el cuadro, la capa de texto solo devuelve E5 (C+A) y E3, las 2 zonas que agrego la Modificacion N 7, mas la nota de modificaciones. Las otras 20 definiciones hubo que leerlas renderizando el recuadro a 190 dpi en 2 mitades.",
+      "imagenes": [
+        "PRC_PROVIDENCIA_p0001_x29",
+        "PRC_PROVIDENCIA_p0001_x30",
+        "PRC_PROVIDENCIA_p0001_x31",
+        "PRC_PROVIDENCIA_p0001_x32",
+        "PRC_PROVIDENCIA_p0001_x33",
+        "PRC_PROVIDENCIA_p0001_x34",
+        "PRC_PROVIDENCIA_p0001_x35",
+        "PRC_PROVIDENCIA_p0001_x36",
+        "PRC_PROVIDENCIA_p0001_x37",
+        "PRC_PROVIDENCIA_p0001_x38"
+      ],
+      "corpus": "PRC_PROVIDENCIA",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-PROVIDENCIA-L3-usos-de-suelo",
+      "articulo": null,
+      "tipo": "plano",
+      "pdf": "normativa/providencia/prcp_2007_l3_de_4_espacio_privado_zonas_de_uso_de_suelo_refundido_de_trabajo.pdf",
+      "paginas": [
+        1
+      ],
+      "titulo": "Lamina L3/4. Espacio privado: zonas de uso de suelo, leyenda",
+      "contenido": "ZONAS DE USOS DE SUELO:\n\n| Codigo | Definicion |\n|---|---|\n| UR | Uso Residencial |\n| UpR y Er | Uso preferentemente Residencial y Equipamiento Restringido |\n| UpR y E | Uso preferentemente Residencial y Equipamiento |\n| UpR y ECr | Uso preferentemente Residencial y Equipamiento Comercial Restringido |\n| UpEC | Uso preferentemente Equipamiento Comercial Restringido |\n| ZUSP Cultural Mixta | Zona de Uso Suelo Patrimonial Cultural Mixta |\n| ZUSP Comercial Mixta | Zona de Uso Suelo Patrimonial Comercial Mixta |\n| ZUSP Residencial y de Servicios | Zona de Uso Suelo Patrimonial Residencial y de Servicios |\n| ZUSP Residencial | Zona de Uso Suelo Patrimonial Residencial |\n\nAdemas se grafican: Zona Tipica (LEY 17.288 de Monumentos Nacionales) y Zona de Conservacion Historica (Art. 5.2.04 de la Ordenanza Local).\n\nBase topografica: levantamiento aerofotogrametrico de la Fuerza Aerea de Chile, sensor Ultracam Eagle Mark 3, proyeccion UTM Zona 19, datum WGS84, equidistancia de curvas 50 cm, vuelo de octubre 2019.",
+      "verificacion": "Leida 2026-09-21. La leyenda de esta lamina SI esta en la capa de texto (12.271 caracteres); se extrajo filtrando los bloques del cuadro por coordenada x, sin leer pixeles.",
+      "imagenes": [
+        "PRC_PROVIDENCIA_p0001_x442",
+        "PRC_PROVIDENCIA_p0001_x447",
+        "PRC_PROVIDENCIA_p0001_x452",
+        "PRC_PROVIDENCIA_p0001_x457"
+      ],
+      "corpus": "PRC_PROVIDENCIA",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-PROVIDENCIA-L4-patrimonio-leyenda",
+      "articulo": null,
+      "tipo": "plano",
+      "pdf": "normativa/providencia/prcp_2007_l4_de_4_patrimonio_areas__zonas_e_inmuebles_protegidos_refundido_de_trabajo.pdf",
+      "paginas": [
+        1
+      ],
+      "titulo": "Lamina L4/4. Patrimonio: areas, zonas e inmuebles protegidos, leyenda y catalogos",
+      "contenido": "ZONAS E INMUEBLES PATRIMONIALES:\n\n| Codigo | Definicion |\n|---|---|\n| ZT | Zona Tipica (LEY 17.288 de Monumentos Nacionales) |\n| MH | Monumento Historico (LEY 17.288 de Monumentos Nacionales) |\n| ZCH | Zona de Conservacion Historica (Art. 5.2.04 de la Ordenanza Local) |\n| ICH | Inmueble de Conservacion Historica (Art. 5.2.04 de la Ordenanza Local) |\n\nZONAS DE EQUIPAMIENTO DE ESCALA METROPOLITANA: ZEMoI, ZIM, ZE (Ex-CCU).\nPLANOS DE DETALLE: limite de Plano de Detalle (linea roja segmentada).\nPARQUES (Pq): PqM Metropolitanos, PqI Intercomunales, PqC Comunales, Pqac Adyacentes a Cauces.\nPLAZAS (Pz): PzC Comunales, PzVec Vecinales, Pzt Plazoletas.\nAREAS VERDES PRIVADAS (BPP): Pql(p) Parque Intercomunal.\nOtros: Cono de aproximacion Aerodromo El Bosque (PRMS RM-PRM-92/1A) y Limite Comunal.\n\nMODIFICACIONES INCORPORADAS (nota del plano): N 2 Edificacion (2015), N 3 Uso de Suelo (2016), N 4 Patrimonio (2016), N 7 Barrio El Aguilucho (2025), N 8 ZEMoI de Salud (2024).\n\nLA LAMINA CONTIENE ADEMAS 6 CATALOGOS COMPLETOS, cada uno con el listado nominal de los bienes protegidos y sus direcciones:\n\n| Catalogo | Columnas | Filas (aprox.) |\n|---|---|---|\n| ZT, Zonas Tipicas | N, Fecha DO declaratoria, Nombre, Direccion, Tramo | 9 |\n| MH, Monumentos Historicos | N, Fecha DO declaratoria, Denominacion inmueble, Direccion | 20 |\n| ZCH, Zonas de Conservacion Historica | N, Nombre, Calle, Referencia | 23 |\n| ICH, Inmueble de Conservacion Historica | N, Denominacion inmueble, Direccion | ~100 |\n| ZEMoI, Zonas de Equipamiento Metropolitano o Intercomunal | N, Identificacion, Calle, N | 5 |\n| ZIM, Zonas de Interes Metropolitano | N, Identificacion, Calle, N | ~20 |\n| PD, Planos de Detalle | N, Nombre | 3 |\n\nLos 3 Planos de Detalle listados son: Plano de Detalle N 03 de Poblacion Salvador Legion Militar de Chile, Plano de Detalle N 01 Conjunto calle Triana y Plano de Detalle Barrio El Aguilucho.\n\nESTADO DE LA TRANSCRIPCION DE LOS CATALOGOS: PENDIENTE fila por fila. Ver la verificacion.",
+      "verificacion": "Leida 2026-09-21. ESTA LAMINA ES EL CASO MAS EXTREMO DEL CORPUS: el PDF tiene CERO caracteres en la capa de texto. Todo, leyenda, catalogos, nombres y direcciones de los bienes protegidos, existe unicamente como grafico. Un analisis basado en texto no ve absolutamente nada de esta lamina.\n\nTRANSCRITO en este anexo: la leyenda completa, la estructura y el alcance de los 6 catalogos, las modificaciones incorporadas y los 3 Planos de Detalle. Verificado renderizando la pagina completa a 40 dpi y el recuadro de leyenda a 200 dpi.\n\nPENDIENTE, con alcance acotado: el contenido FILA POR FILA de los catalogos, del orden de 180 direcciones protegidas. Se comprobo que SON LEGIBLES a 200 dpi (se leyeron completas las filas 8 a 68 del catalogo ICH como prueba), asi que es trabajo de transcripcion acotado, no un problema sin resolver. NO se transcribe a medias a proposito: un catalogo de inmuebles protegidos incompleto es peor que ausente, porque induce a creer que una propiedad no esta protegida cuando si lo esta.",
+      "imagenes": [
+        "PRC_PROVIDENCIA_p0001_x9"
+      ],
+      "corpus": "PRC_PROVIDENCIA",
+      "estado": "TRANSCRITO"
     }
   ]
 }
