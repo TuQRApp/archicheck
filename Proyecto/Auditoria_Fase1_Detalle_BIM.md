@@ -132,7 +132,7 @@ Adicionalmente, `"incumplimientos_oguc": []` (línea 589) queda siempre vacío c
 
 ### Otros hallazgos
 - **Líneas 262-270**: mismo patrón de `ox, oy` desde solo el primer muro, con `except Exception: pass` silencioso, duplicado literal de `generar_plano_pdf.py:719-727`.
-- **Línea 622**: `"ventanas_simples_por_linea_central": geo_pixeles["ventana"]` — el nombre de la clave sugiere una línea central simplificada, pero el contenido real (`geo_pixeles["ventana"]`) se construye por el mismo camino que muro/puerta: el contorno completo del polígono como segmentos, no una línea central. No se pudo confirmar el impacto real sin leer `src/App.jsx`. **SIN VERIFICAR** — posible discrepancia nombre/contenido, no bug confirmado.
+- **Línea 622**: `"ventanas_simples_por_linea_central": geo_pixeles["ventana"]` — el nombre de la clave sugiere una línea central simplificada, pero el contenido real (`geo_pixeles["ventana"]`) se construye por el mismo camino que muro/puerta: el contorno completo del polígono como segmentos, no una línea central. **RESUELTO 2026-09-21, no es un bug**: `src/App.jsx:653-662` (`getElementosPuntualesPorPagina`) documenta y consume explícitamente ese campo como array de `segmentos` genérico — "ya trae segmentos (mismo shape que muro/puerta_geo)" — exactamente la forma que produce este script. El nombre de campo es parcialmente engañoso (viene de la tipología histórica "línea central", pero el frontend acepta cualquier fuente de segmentos) — no hay discrepancia funcional real.
 - **Líneas 389-445**: reimplementación propia (tercera copia independiente en el proyecto) de la deduplicación escalera/rampa por decomposición+fallback.
 
 ### Código muerto

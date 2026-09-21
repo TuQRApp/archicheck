@@ -1,0 +1,75 @@
+# Auditoría Fase 1 — Detalle: Infraestructura viva (Cloudflare Worker, Supabase, Vercel)
+
+> Anexo de detalle. Ver síntesis y priorización en [Auditoria_Fase1_Hallazgos.md](Auditoria_Fase1_Hallazgos.md).
+> A diferencia de los otros 3 anexos (lectura de código), este es introspección **en vivo** contra los sistemas reales desplegados — `wrangler` CLI (autenticado, cuenta `nestragues@gmail.com`), conexión Postgres directa a Supabase vía `SUPABASE_DB_URL` (Session Pooler, credenciales de `.env.supabase.local`), y `vercel` CLI (autenticado como `tuqrapp`). Todo verificado 2026-09-21, misma sesión que Fase 1.
+
+## 1. Cloudflare Worker (`archicheck-worker`)
+
+### 1.1 Secrets configurados vs. documentados — HALLAZGO P0
+`wrangler.toml` (11 líneas, completo) documenta en un comentario: `# Secrets (agregar via: wrangler secret put NOMBRE) — ANTHROPIC_API_KEY, OPENAI_API_KEY, SUPABASE_URL, SUPABASE_KEY`. `wrangler secret list` contra el Worker desplegado real devuelve únicamente:
+```json
+[{"name":"ANTHROPIC_API_KEY","type":"secret_text"},{"name":"OPENAI_API_KEY","type":"secret_text"}]
+```
+**`SUPABASE_URL` y `SUPABASE_KEY` no están configurados como secret en el Worker desplegado.** `worker.js:49` (leído completo) gatea el bloque RAG completo con `if (body.ragQuery && env.SUPABASE_URL && env.SUPABASE_KEY && env.OPENAI_API_KEY)` — con `SUPABASE_URL`/`SUPABASE_KEY` ausentes, esta condición es `false` siempre, y el bloque completo (`queryNormativa`, `buildNormativaSystem`, inyección de `NORMATIVA RECUPERADA` al system prompt) **nunca se ejecuta**. No hay ningún log ni señal de este comportamiento — el `catch` interno (línea 58-60) solo loguea errores de *ejecución* de la llamada RAG, no la condición de skip por variables ausentes.
+
+**Consecuencia**: los 1.608 chunks indexados en Supabase, la taxonomía de 7 dimensiones, `match_normativa()`, el fallback PRC-PRV — todo el trabajo documentado en `project_archicheck_taxonomia_normativa_supabase` — **no llega al prompt de ningún análisis en producción hoy**. El análisis normativo depende enteramente de: (a) el texto de normativa hardcodeado directamente en `buildPromptCapa2` (`src/App.jsx`), y (b) el conocimiento propio de Claude/GPT-4o de su entrenamiento — exactamente lo que la instrucción anti-DS50 (`App.jsx:1014`) intenta prevenir para ese decreto específico, pero sin ninguna mitigación equivalente para el resto de la normativa.
+
+**No confirmado por CLI** (limitación de `wrangler secret list`, que solo lista bindings tipo `secret_text`): no se pudo descartar por completo que `SUPABASE_URL`/`SUPABASE_KEY` existan como variables de entorno **planas** (no-secret) configuradas directamente en el dashboard de Cloudflare — esas no aparecerían en este comando. Dado que ambas son credenciales (una apunta a un proyecto Supabase real, la otra es una API key), sería una mala práctica tenerlas como plano en vez de secret, pero la posibilidad no se puede excluir sin revisar el dashboard directamente (`dash.cloudflare.com` → Workers → `archicheck-worker` → Settings → Variables). **Acción recomendada de verificación inmediata**: revisar ese panel; si en efecto faltan, agregarlas vía `wrangler secret put SUPABASE_URL` / `wrangler secret put SUPABASE_KEY` no tiene downside aunque ya existieran como var plana (las reemplaza por la forma correcta).
+
+### 1.2 Worker sin redesplegar hace ~2 meses — HALLAZGO P0/P1
+`wrangler deployments list` (comando documentado como "Displays the 10 most recent deployments") devuelve 10 entradas; la más reciente es **2026-07-23T03:57:22Z**. `wrangler deployments status` confirma la misma versión (`66942851-...`) como la actualmente activa. Es decir: **no hay ningún deploy nuevo desde el 23 de julio**, casi 2 meses antes de esta auditoría (2026-09-21).
+
+Cruce con git del repo `archicheck-worker` (`git log`, 3 archivos): `reglas_aprendidas.js` tiene un commit real posterior, **2026-08-26** ("Sacar nombre de proyecto de prueba del system prompt de reglas aprendidas") — un fix de contenido concreto, documentado, que **nunca se desplegó**. El Worker en producción sigue sirviendo la versión de `reglas_aprendidas.js` anterior a ese fix (con el nombre de proyecto de prueba todavía en el system prompt de "reglas aprendidas" que se inyecta en *cada* análisis, vía `buildReglasAprendidasSystem()`, línea 42 de `worker.js`).
+
+El repo `archicheck-worker` en sí solo tiene git desde 2026-08-19 ("Initial commit") — más de 3 semanas después del último deploy real — así que no se puede confirmar con certeza si el código exacto que corrió el 23-jul es idéntico byte a byte al que hoy vive en el repo git (podría haber habido ediciones locales entre el 23-jul y el 19-ago que sí se commitearon pero nunca desplegaron, o ninguna). Lo que sí es cierto, independiente de esa duda: cualquier cambio a `worker.js`/`reglas_aprendidas.js`/`wrangler.toml` hecho después del 23-jul-2026 está sentado sin desplegar.
+
+### 1.3 Deploy roto si se intenta hoy tal cual — HALLAZGO P2
+`wrangler deploy --dry-run` falla de inmediato: `The directory specified by the "assets.directory" field in your configuration file does not exist: C:\dev\Claude\archicheck-worker\public`. `wrangler.toml` referencia `assets = { directory = "./public" }` con un comentario explicando que debe ser una carpeta vacía (para no subir `node_modules`) — pero una carpeta vacía no se puede versionar en git, así que en un checkout limpio (como este) simplemente no existe. Consecuencia práctica: **cualquier intento de corregir el hallazgo 1.1 con un `wrangler deploy` fallaría en el primer intento** hasta crear manualmente `archicheck-worker/public/` (vacía) antes de desplegar. Bajo impacto (fix de 1 línea de shell), pero es la clase de fricción que puede hacer que alguien abandone el intento de deploy a mitad de camino.
+
+### 1.4 CORS/auth/rate-limit — ya confirmado en pasada anterior de esta sesión
+`worker.js` completo (leído íntegro hoy también, como parte de 1.1-1.2): CORS `Access-Control-Allow-Origin: "*"` en absolutamente todas las respuestas (incluida la de error), sin ninguna verificación de origen, API key de cliente, ni rate limiting — cualquiera con la URL puede invocar el Worker y consumir las API keys de Anthropic/OpenAI del proyecto. Ya reportado como ACH-WORKER-001 en el consolidado del 21-sep anterior; sigue confirmado hoy sin cambios en el código relevante.
+
+### 1.5 Permisos del token OAuth de `wrangler`
+`wrangler whoami` — token con scopes: `workers (write)`, `workers_kv (write)`, `workers_routes (write)`, `workers_scripts (write)`, `d1 (write)`, `pages (write)`, `zone (read)`, `ssl_certs (write)`, `ai (write)`, `queues (write)`, `secrets_store (write)`, entre otros — es el token OAuth personal de la cuenta del usuario (no un token de servicio con scope acotado). No es un hallazgo de seguridad del *proyecto* per se (es normal que el CLI del dueño de la cuenta tenga acceso amplio a su propia cuenta), pero vale la nota: no existe un token de despliegue con permisos acotados solo a este Worker para, por ejemplo, un futuro pipeline de CI.
+
+## 2. Supabase (`xkpvnlvzhdgdisedlelz`) — esquema, RLS, grants, índices
+
+Introspección vía conexión Postgres directa (Session Pooler), consultas a `pg_class`, `pg_policies`, `information_schema.role_table_grants`, `pg_proc`, `pg_extension`, `pg_indexes`.
+
+### 2.1 Única tabla real: `normativa_chunks` (1.608 filas)
+No existe ninguna otra tabla en el esquema `public` — confirma lo ya sabido del roadmap ("Base de datos de proyectos ❌ No implementado"): hoy Supabase solo aloja el corpus normativo, nada de usuarios, proyectos, análisis históricos, etc.
+
+### 2.2 RLS habilitado, pero grants crudos excesivamente amplios — HALLAZGO P1
+- RLS **habilitado** en `normativa_chunks` (`rls_habilitado: true`), con **una sola policy**: `"Lectura publica"` — `PERMISSIVE`, rol `{public}`, comando `SELECT`, `qual: true` (sin restricción). No hay ninguna policy para INSERT/UPDATE/DELETE.
+- **Pero los GRANT crudos de PostgreSQL sobre la tabla, para los roles `anon` y `authenticated`, incluyen: `DELETE`, `INSERT`, `REFERENCES`, `SELECT`, `TRIGGER`, `TRUNCATE`, `UPDATE`** — prácticamente el privilegio completo de una tabla, no solo lectura.
+- **Mitigación real de RLS**: para INSERT/UPDATE/DELETE, cuando RLS está habilitado y no existe una policy que cubra ese comando para el rol que ejecuta, Postgres deniega/afecta 0 filas por defecto — es decir, en la práctica, un `anon`/`authenticated` que intente insertar, actualizar o borrar filas vía la REST API de Supabase (PostgREST) debería fallar o afectar 0 filas, pese al GRANT crudo.
+- **Excepción real, no mitigada por RLS: `TRUNCATE`.** PostgreSQL **no aplica Row-Level Security a `TRUNCATE`** — es una operación de tabla completa, no basada en predicados por fila, y las políticas RLS simplemente no se evalúan para ella. El rol `anon` tiene el privilegio `TRUNCATE` otorgado. Si existiera cualquier camino que permita ejecutar `TRUNCATE normativa_chunks` con las credenciales de `anon` (la REST API estándar de PostgREST no expone un verbo HTTP que mapee a `TRUNCATE` directamente, pero **no se pudo descartar** la existencia de alguna función RPC expuesta que lo hiciera, ni verificar con certeza cómo se comporta cada capa de Supabase ante este caso específico) — sería un borrado total de los 1.608 chunks, sin necesidad de ninguna credencial privilegiada, solo la API key pública `anon`.
+- **Nada de esto es explotable hoy desde el frontend**: confirmado (ver §1.4 y el Worker) que el navegador nunca recibe ni usa una key de Supabase — todo pasa por el Worker con `SUPABASE_KEY` (que, además, hoy ni siquiera está configurada — ver 1.1). El riesgo es real pero **no activo mientras el Worker no tenga la key y mientras nada más use la key `anon` de este proyecto** — igual amerita corregir los grants por higiene y por si el hallazgo 1.1 se corrige agregando la key.
+- **Acción recomendada**: `REVOKE INSERT, UPDATE, DELETE, TRUNCATE, TRIGGER, REFERENCES ON normativa_chunks FROM anon, authenticated;` — dejando solo `SELECT`, que es lo que la policy y el uso real requieren.
+
+### 2.3 Sin índice vectorial sobre `embedding` — HALLAZGO P2, contradice documentación existente
+`pg_indexes` sobre `normativa_chunks` devuelve exactamente 3 índices: `normativa_chunks_pkey` (btree, `id`), `normativa_chunks_codigo_idx` (btree único, `codigo`), `normativa_chunks_metadata_idx` (gin, `metadata`). **No existe ningún índice `ivfflat` ni `hnsw` sobre la columna `embedding`.** Esto confirma y cierra el hallazgo ya documentado en `Auditoria_Fase1_Detalle_Normativa.md` sobre `_fix_ivfflat_probes.mjs`: ese script nunca logró crear/ajustar el índice por HTTP (su propio comentario admite que Supabase no expone SQL arbitrario vía REST), y el mensaje final de `indexar_normativa.mjs` instruye crear el índice manualmente en el SQL Editor de Supabase — **ese paso manual nunca se hizo**.
+
+**Impacto real**: cada llamada a `match_normativa()` hace un escaneo secuencial completo (distancia de coseno contra las 1.608 filas) en vez de una búsqueda aproximada indexada. Con 1.608 filas esto probablemente sigue siendo rápido en la práctica (no es un bug de corrección, los resultados son exactos, no aproximados — de hecho *más* precisos que con un índice IVFFlat/HNSW real, que son aproximados por diseño) — pero es un gap de escalabilidad real si el corpus crece, y sobre todo es una discrepancia directa con múltiples comentarios y scripts del repo que asumen que el índice existe y solo necesita calibración de `probes`.
+
+### 2.4 Funciones RPC: sin `SECURITY DEFINER`, `EXECUTE` abierto a `anon`/`authenticated`
+`match_normativa()` (ambas sobrecargas) y `articulos_por_etapa()` — `security_definer: false` (corren con los privilegios del rol que las invoca, no con los del dueño `postgres`) y tienen `EXECUTE` otorgado a `anon`, `authenticated` y `service_role`. Dado que son funciones de solo lectura (consultan, no escriben) y la tabla subyacente ya es de lectura pública por policy, esto es coherente con el diseño — no es un hallazgo de riesgo, es la configuración esperada para un corpus normativo público. Nota: si en el futuro se agregan tablas con datos no públicos (proyectos de usuarios, por ejemplo), revisar que nuevas funciones RPC sí usen `SECURITY DEFINER` con cuidado o hereden RLS correctamente — hoy no aplica porque no existen esas tablas.
+
+### 2.5 Extensiones instaladas
+`vector` 0.8.0 (pgvector, razonablemente reciente), `pgcrypto` 1.3, `uuid-ossp` 1.1, `pg_stat_statements` 1.11, `supabase_vault` 0.3.1, `plpgsql`. Nada inusual.
+
+### 2.6 Roles
+`anon`, `authenticated`, `service_role` — ninguno con `rolsuper`, ninguno con `rolcanlogin` directo (correcto, se autentican vía `authenticator`, que sí puede loguear). No se consultó específicamente `rolbypassrls` para confirmar si `service_role` tiene bypass de RLS explícito — es la convención estándar de Supabase que lo tenga, pero **no verificado** en esta pasada.
+
+## 3. Vercel (`archicheck`, proyecto `tuqrapps-projects/archicheck`)
+
+- Proyecto real, creado 2026-04-12, Framework Preset **Vite** (coherente con el stack real), Node.js 24.x, sin `Output Directory` custom (usa el default de Vite).
+- `vercel env ls --project archicheck`: **cero variables de entorno configuradas en Vercel.** No es un hallazgo negativo: confirma el diseño esperado — el frontend no llama directamente a ningún servicio con credenciales (todo pasa por el Worker), y el único valor de configuración (`VITE_WORKER_URL`, la URL pública del Worker) vive commiteado en `.env` en la raíz del repo (confirmado con `git ls-files .env`), no como secret de Vercel — razonable, dado que no es un secreto (es una URL pública).
+- No se revisó en esta pasada: dominios custom configurados, protección de deployment (Vercel Authentication/password), ni configuración de `ignoreCommand`/monorepo — **PENDIENTE** si se quiere una Fase 0 de accesos más exhaustiva.
+
+## Resumen de severidad de esta sección
+
+- **P0**: RAG de Supabase completamente inerte en producción (falta `SUPABASE_URL`/`SUPABASE_KEY` como secret del Worker) — es probablemente el hallazgo de mayor impacto de toda la Fase 1, porque invalida el supuesto (usado en el resto de esta auditoría y en trabajo previo del proyecto) de que la normativa indexada en Supabase efectivamente llega a los prompts.
+- **P0/P1**: Worker sin redesplegar hace ~2 meses, con al menos un fix real (`reglas_aprendidas.js`, 26-ago) confirmado sin desplegar.
+- **P1**: grants crudos de `anon`/`authenticated` sobre `normativa_chunks` incluyen `TRUNCATE` (no cubierto por RLS) además de INSERT/UPDATE/DELETE (sí cubiertos por RLS en la práctica, pero mal higienizados).
+- **P2**: sin índice vectorial real (contradice documentación existente); deploy del Worker roto por carpeta `public/` faltante si se intenta hoy tal cual.

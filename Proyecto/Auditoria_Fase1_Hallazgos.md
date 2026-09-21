@@ -6,16 +6,34 @@
 
 > Esta es la Fase 1 (Inventario técnico exhaustivo) de la auditoría de punta a cabo. Cubre 4 de las áreas identificadas como puntos ciegos: `src/App.jsx` (parcial), motor CAD (`Herramientas_CubiCasa5k/`), pipeline BIM (4 scripts sin leer), y scripts de indexación/clasificación de `normativa/`. El Worker (`worker.js`, `reglas_aprendidas.js`) ya se había leído completo en una pasada anterior de esta misma sesión (ver [Prompt_Auditoria_Completa_ArchiCheck.md](Prompt_Auditoria_Completa_ArchiCheck.md), Anexo A) y no se re-verificó en esta pasada — su hallazgo P0 se referencia aquí para que la priorización quede completa.
 >
-> Detalle exhaustivo (línea por línea, con cita de código) en los 3 anexos:
+> Detalle exhaustivo (línea por línea, con cita de código) en los 4 anexos:
 > - [Auditoria_Fase1_Detalle_Normativa.md](Auditoria_Fase1_Detalle_Normativa.md) — `normativa/*.mjs`, ~26 scripts `_*.mjs`, inventario de datos por comuna
-> - [Auditoria_Fase1_Detalle_MotorCAD.md](Auditoria_Fase1_Detalle_MotorCAD.md) — `Herramientas_CubiCasa5k/` (motor `cuerpo_cerrado.py`, `_celda4_actual.py`, tests, 169 archivos)
+> - [Auditoria_Fase1_Detalle_MotorCAD.md](Auditoria_Fase1_Detalle_MotorCAD.md) — `Herramientas_CubiCasa5k/` (motor `cuerpo_cerrado.py`, `_celda4_actual.py`, tests, 169 archivos) + resolución de cuál "Celda 4" corre en vivo
 > - [Auditoria_Fase1_Detalle_BIM.md](Auditoria_Fase1_Detalle_BIM.md) — `analizar_todos.py`, `generar_plano_pdf.py`, `piloto_ids_oguc.py`, `generar_json_colab.py`
+> - [Auditoria_Fase1_Detalle_Infraestructura.md](Auditoria_Fase1_Detalle_Infraestructura.md) — introspección **en vivo** de Cloudflare Worker, Supabase (RLS/grants/índices) y Vercel
 
 ---
 
 ## Resumen ejecutivo
 
-**19 hallazgos** con evidencia directa (archivo:línea), más ~15 de higiene/menores documentados en los anexos. Ningún hallazgo de esta pasada se basó en inferencia sin lectura del código real.
+**27 hallazgos** con evidencia directa (archivo:línea o introspección en vivo), más ~15 de higiene/menores documentados en los anexos. Ningún hallazgo de esta pasada se basó en inferencia sin lectura del código real o consulta directa al sistema desplegado.
+
+### Los 2 hallazgos que más cambian el panorama (2026-09-21, profundización de P0)
+
+1. **El RAG normativo de Supabase está completamente inerte en producción.** El Worker desplegado (`wrangler secret list`, verificado en vivo) solo tiene configurados `ANTHROPIC_API_KEY` y `OPENAI_API_KEY` — **faltan `SUPABASE_URL` y `SUPABASE_KEY`**, las 2 variables que `worker.js:49` exige para siquiera intentar la consulta RAG. Sin ellas, el bloque completo (`queryNormativa`, `match_normativa`, los 1.608 chunks indexados, la taxonomía de 7 dimensiones) nunca se ejecuta, sin ningún log ni señal visible. Todo el análisis normativo depende hoy solo del texto hardcodeado en el prompt de `App.jsx` y del conocimiento propio del modelo. Ver [ACH-INFRA-001](#ach-infra-001-p0).
+2. **Se identificó, con confianza alta, cuál "Celda 4" corre realmente en el Colab del usuario — y está más desincronizada de lo que parecía.** Es la línea que usa `cuerpo_cerrado.py` (no `_celda4_actual.py`). Comparada contra `reglas_normativas.py`, le faltan 4 reglas completas agregadas entre el 19 y el 21 de septiembre (`puerta_ancho_libre` y su variante de baño accesible, `muro_fire_rating`, `ventilacion_iluminacion_pct`), tiene la cita de pasillo vieja (1,20 m / Art. 4.2.5 en vez de 1,10 m / Art. 4.2.18), y el mismo bug de constante truncada en la pendiente de rampa que ya se sabía de `_celda4_actual.py`. El trabajo reciente de consolidación normativa nunca llegó a la línea que efectivamente usa el usuario hoy. Ver [ACH-CAD-002](#ach-cad-002-p0).
+
+Ambos comparten la misma causa raíz que el resto de esta auditoría ya venía señalando: el proyecto tiene el concepto correcto de "una sola fuente de verdad", pero no existe ningún mecanismo que garantice que esa fuente realmente llegue a cada consumidor — incluido, ahora se sabe, el consumidor más importante de todos (lo que el usuario corre en vivo).
+
+### Otros hallazgos relevantes de esta profundización
+- Se fechó con precisión la contradicción DS50 vía `git log -S` sobre `src/App.jsx`: el párrafo "4b. circulaciones..." con la cita prohibida ("Art. 22 o Art. 23") existe desde el commit `8eaf00e2` (2026-06-30); la prohibición explícita se agregó 27 días después en el commit `1f8ac8c9` (2026-07-27); el mismo párrafo se volvió a editar 3 días más tarde (`44e21eb`, 2026-07-30, por un fix no relacionado) sin detectar la contradicción. Lleva 56+ días vigente.
+- El Worker no se redespliega desde el 2026-07-23 (~2 meses) — un fix real de `reglas_aprendidas.js` del 26-ago nunca llegó a producción.
+- `anon`/`authenticated` tienen el privilegio `TRUNCATE` sobre `normativa_chunks` en Supabase — la única operación de escritura que RLS *no* puede bloquear (Postgres no aplica RLS a TRUNCATE), aunque no hay hoy un camino confirmado para explotarlo (el frontend nunca usa una key de Supabase directamente).
+- No existe ningún índice vectorial (ivfflat/hnsw) sobre `normativa_chunks.embedding` — confirma que `_fix_ivfflat_probes.mjs` nunca logró su objetivo; las consultas hacen escaneo secuencial completo (correcto, solo no escalable).
+- Se confirmó que no existe `.github/workflows` (cero CI) — el riesgo de ACH-DATA-001 es 100% de disparo humano.
+- El JSON del pipeline BIM comparte esquema con el que consume `handleColabTexto` en `App.jsx` — el bug de ancho de puerta (ACH-BIM-001) no está aislado, entra directo al prompt de producción en cuanto alguien suba ese JSON.
+- Se resolvió el SIN VERIFICAR sobre `ventanas_simples_por_linea_central`: **no es un bug**, `App.jsx:653-662` lo consume como array de `segmentos` genérico, igual que produce el BIM.
+- 2 hallazgos nuevos de la lectura completa de `App.jsx` (ACH-FRONT-005, ACH-FRONT-006).
 
 **Lo más importante — 3 hallazgos que cambian cómo se debe leer el resto de la lista:**
 
@@ -49,11 +67,13 @@ Estado de todos: **SIN VERIFICAR si no se indica lo contrario** en cuanto a si y
 
 | ID | Resumen | Archivo:línea |
 |---|---|---|
+| ACH-INFRA-001 | El Worker en producción no tiene `SUPABASE_URL`/`SUPABASE_KEY` configuradas — el RAG normativo completo (1.608 chunks, taxonomía) nunca se ejecuta, sin log ni señal visible | `archicheck-worker/worker.js:49` (código) + `wrangler secret list` (introspección en vivo) |
+| ACH-CAD-002 | **Resuelto con confianza alta**: la línea de "Celda 4" que corre en vivo en Colab es la que usa `cuerpo_cerrado.py` — y le faltan 4 reglas completas agregadas 19-21 sep (`puerta_ancho_libre`, variante baño accesible, `muro_fire_rating`, `ventilacion_iluminacion_pct`) más la cita vieja de pasillo (Art. 4.2.5/1.20m) y el bug de constante de rampa | `Fase 2/Desarrollos/Test/Celda 4 - copiar en Colab.py` vs. `Fase 2/reglas_normativas.py`; notebook real: `Fase 2/Desarrollos/Test/ArchiCheck_Base 05sep_2151.ipynb` |
 | ACH-BIM-001 | Ancho de puerta comparado en `generar_json_colab.py` es el de una ventana residual, no el de la puerta evaluada (bug de scope de variable) | `Fase 2/BIM/generar_json_colab.py:551-568` |
-| ACH-FRONT-001 | Contradicción interna en el prompt de producción sobre citar artículos de DS 50/2015 — con síntoma ya confirmado en producción (`sanitizeDS50`) | `src/App.jsx:1014` vs. `:1054`; síntoma en `:443-455` |
-| ACH-CAD-002 | Dos líneas paralelas de "Celda 4" (motor de fusión vs. reglas sincronizadas) no unificadas; no se puede confirmar cuál corre hoy en Colab | `_celda4_actual.py` vs. `Fase 2/Desarrollos/Test/Celda 4 - copiar en Colab.py` |
-| ACH-DATA-001 | Re-ejecutar `indexar_normativa.mjs` regresiona OGUC/LGUC a versiones de menor cobertura y reinserta 1144 secciones DDU sin curar, sin ningún guard | `normativa/indexar_normativa.mjs:253-301` |
-| ACH-WORKER-001 *(referenciado, no re-verificado esta pasada)* | CORS `Access-Control-Allow-Origin: "*"` + sin autenticación + sin rate limit + sin validación de payload en el Worker | `archicheck-worker/worker.js` (leído completo en pasada anterior de esta sesión) |
+| ACH-FRONT-001 | Contradicción interna en el prompt de producción sobre citar artículos de DS 50/2015 — con síntoma ya confirmado en producción (`sanitizeDS50`); fechada por `git log -S`: prohibición agregada 2026-07-27, párrafo contradictorio existe desde 2026-06-30, re-editado 2026-07-30 sin detectarla, 56+ días vigente | `src/App.jsx:1014` vs. `:1054`; síntoma en `:443-455` |
+| ACH-DATA-001 | Re-ejecutar `indexar_normativa.mjs` regresiona OGUC/LGUC a versiones de menor cobertura y reinserta 1144 secciones DDU sin curar, sin ningún guard; sin CI que lo dispare automáticamente (riesgo 100% humano) | `normativa/indexar_normativa.mjs:253-301` |
+| ACH-INFRA-002 | El Worker no se redespliega desde 2026-07-23 (~2 meses) — un fix real de `reglas_aprendidas.js` (26-ago) nunca llegó a producción | `wrangler deployments status` (introspección en vivo) vs. `git log reglas_aprendidas.js` |
+| ACH-WORKER-001 *(referenciado, re-confirmado esta pasada por lectura completa de `worker.js`)* | CORS `Access-Control-Allow-Origin: "*"` + sin autenticación + sin rate limit + sin validación de payload en el Worker | `archicheck-worker/worker.js` |
 
 ### P1 — impacto real, acotado o parcialmente mitigado
 
@@ -61,11 +81,14 @@ Estado de todos: **SIN VERIFICAR si no se indica lo contrario** en cuanto a si y
 |---|---|---|
 | ACH-FRONT-002 | Cita OGUC Art. 4.2.5 para ancho de pasillo/salidas de emergencia en el prompt de producción, no actualizada al Art. 4.2.18 ya corregido en `reglas_normativas.py` | `src/App.jsx:1034, 1036` |
 | ACH-FRONT-003 | `mergeSection(..., tableKey=null)` para la sección "modelo" (accesos/evacuación) siempre favorece la respuesta de Claude; el aporte de GPT-4o a `organizacion_funcional`/`accesos_evacuacion` se descarta en silencio — el cruce entre 2 modelos no ocurre ahí | `src/App.jsx:381-388` (función), `:420` (call site) |
+| ACH-FRONT-005 | Cuando solo Claude o solo GPT-4o responde completo en una fase, el análisis sigue en modo degradado sin ningún indicador visible — la sección "Discrepancias entre modelos" queda vacía igual que cuando ambos modelos coincidieron, indistinguible para el usuario | `src/App.jsx:3324-3357` (`analizar()`, `isComplete`) |
+| ACH-FRONT-006 | "Normativa OGUC verificada" / "Normativa LGUC verificada" se muestran con `ok:true` hardcodeado — no derivado de ningún resultado real — duplicado en la pestaña en pantalla y en el PDF exportado | `src/App.jsx:2684-2685` (PrintReport), `:4583-4584` (vista en pantalla) |
 | ACH-XCUT-001 | Fórmula de pendiente de rampa con constante truncada no propagada — ver [hallazgo transversal](#hallazgo-transversal-fórmula-de-pendiente-de-rampa-no-propagada-3-ubicaciones) | 3 ubicaciones, ver tabla arriba |
 | ACH-CAD-003 | `_celda4_actual.py` mantiene `puerta_ancho_libre` en 0.80m/N°6 (valor viejo); `reglas_normativas.py` ya lo corrigió a 0.90m/N°4 el 21-sep | `_celda4_actual.py:138` vs. `reglas_normativas.py:191` |
 | ACH-CAD-004 | `aplicar_fix_celda4.mjs` usa por defecto `_celda4_nueva.py` (snapshot de 23-jul, reglas OGUC ya identificadas como incorrectas) para pegar sobre el notebook vivo de Colab si se corre sin argumento explícito | `aplicar_fix_celda4.mjs:26` |
 | ACH-BIM-002 | `generar_json_colab.py` no evalúa tipo/área/ancho de recinto, círculo de giro, rampa ni escalera — el campo `cumple_oguc` que llega al portal solo refleja ventilación, sin documentarlo | `Fase 2/BIM/generar_json_colab.py:523-547` |
 | ACH-DATA-006 | 3 comunas marcadas `activa:true` en `comunas.json` y seleccionables en la UI, pero solo Providencia está indexada en Supabase; `santiago/metadata.json` ni siquiera tiene el campo `activa` | `normativa/comunas.json`, `normativa/santiago/metadata.json` |
+| ACH-INFRA-003 | `anon`/`authenticated` tienen grant `TRUNCATE` (y también DELETE/INSERT/UPDATE, mitigados por RLS en la práctica pero no `TRUNCATE`, que Postgres no cubre con RLS) sobre `normativa_chunks` — no explotable hoy porque el frontend nunca usa una key de Supabase directamente, pero mal higienizado | Introspección Postgres en vivo (`pg_policies`, `information_schema.role_table_grants`) |
 
 ### P2 — deuda técnica real, sin síntoma confirmado hoy
 
@@ -79,6 +102,8 @@ Estado de todos: **SIN VERIFICAR si no se indica lo contrario** en cuanto a si y
 | ACH-DATA-003 | `clasificar_normativa.mjs` se declara "fuente única" de taxonomía pero ningún script de carga real (`_idx_*.mjs`) la invoca; la taxonomía se aplicó después, vía `backfill_metadata.mjs` | `normativa/clasificar_normativa.mjs:4-9` |
 | ACH-DATA-004 | URL de Supabase de producción hardcodeada como fallback si falta `SUPABASE_URL` — asimétrico con `SUPABASE_SECRET`, que sí aborta si falta | `normativa/backfill_metadata.mjs:21-23` |
 | ACH-DATA-005 | `extraer_ddu.mjs` trunca texto a 60.000 caracteres antes de enviarlo a Claude sin loguearlo; placeholder de API key hardcodeado como fallback; el JSON de salida no registra si una sección vino de estructuración por Claude o de chunking crudo de fallback | `normativa/extraer_ddu.mjs:19, 105, 229-233` |
+| ACH-INFRA-004 | Sin índice vectorial (ivfflat/hnsw) sobre `normativa_chunks.embedding` — contradice la documentación/scripts existentes que asumen que existe; hoy hace escaneo secuencial completo (correcto, no escalable) | Introspección Postgres en vivo (`pg_indexes`) |
+| ACH-INFRA-005 | `wrangler deploy` del Worker falla de inmediato hoy por falta de la carpeta `public/` (referenciada en `wrangler.toml`, no versionable vacía en git) — cualquier intento de corregir ACH-INFRA-001 tropieza con esto primero | `archicheck-worker/wrangler.toml` + `wrangler deploy --dry-run` (introspección en vivo) |
 
 ### P3 — higiene / menor (detalle completo en los anexos, no repetido aquí)
 
@@ -93,18 +118,21 @@ Imports sin usar (`datetime` en `_celda4_actual.py`), funciones nunca invocadas 
 | `normativa/*.mjs` (scripts de indexación/clasificación, ~26 scripts `_*`) | Completa — 4 archivos principales leídos línea por línea + los 26 secundarios por encabezado/propósito + inventario de las 5 carpetas de datos | Cerrado para esta pasada |
 | `Fase 2/Herramientas_CubiCasa5k/` (motor CAD) | Completa para los archivos núcleo (`cuerpo_cerrado.py`, `catalogo_tipologias.py`, `_celda4_actual.py`, 4 archivos de test, 6 `.py` adicionales) + categorización de los 169 archivos totales | Cerrado para esta pasada; **pendiente** leer `Fase 2/Desarrollos/Test/Celda 4 - copiar en Colab.py` y variantes (fuera de alcance asignado, necesario para resolver ACH-CAD-002) |
 | `Fase 2/BIM/` (pipeline BIM) | Completa — los 4 scripts que faltaban (`analizar_todos.py`, `generar_plano_pdf.py`, `piloto_ids_oguc.py`, `generar_json_colab.py`) leídos línea por línea | Cerrado para esta pasada |
-| `src/App.jsx` (4.636 líneas) | **Parcial** — leídas en profundidad: líneas 1-460 (helpers de merge, `sanitizeDS50`, `buildColabTexto`), 896-1130 (`buildPromptCapa1`/`buildPromptCapa2` completos), más greps dirigidos (`catch`, citas `Art\.`, `TODO/FIXME`) sobre el archivo completo que no arrojaron hallazgos adicionales fuera de lo ya reportado | **PENDIENTE** — quedan sin revisión línea-por-línea profunda las líneas ~1130-4636 (renderizado de UI, exportación, resto de handlers) — los greps dirigidos cubrieron patrones de riesgo conocidos (errores tragados, citas normativas, TODOs) en el archivo completo, pero no reemplazan una lectura estructural completa |
-| Worker (`worker.js`, `reglas_aprendidas.js`) | Completa, pero de una **pasada anterior** de esta misma sesión (no re-verificada hoy) | Ya cerrado antes de esta Fase 1; hallazgo referenciado como ACH-WORKER-001 |
-| Supabase (esquema, RLS, grants, funciones RPC más allá de lo que tocan los scripts) | No cubierto en esta pasada | **PENDIENTE** — Fase 2/3 |
-| Vercel / Cloudflare (configuración real de deploy, no solo código) | No cubierto en esta pasada | **PENDIENTE** — Fase 0/2 (requiere acceso a dashboards) |
+| `src/App.jsx` (4.636 líneas) | **Cerrada para funciones con impacto normativo/de datos** — leídas en profundidad: 1-828 (helpers de merge, `sanitizeDS50`, `buildColabTexto`, cálculo de mediciones/elementos corregidos por el arquitecto), 896-1150 (`buildPromptCapa1`/`buildPromptCapa2` completos), 2262-2706 (`PrintReport` completo), 2758-2822 y 3186-3472 (`resetApp`, `exportPDF`, `exportDatasetMuros`, handlers de confirmación de revisión, `analizar()` completo) — más greps dirigidos (`catch`, citas `Art\.`, `TODO/FIXME`, `ok:true`) sobre el archivo completo | **PENDIENTE, con criterio explícito**: sin leer línea-por-línea 1150-2262 (canvas de dibujo/hit-test, componentes de UI de revisión gráfica) y 3477-4636 (JSX de maquetado/estilos del componente principal) — ambos cubiertos por grep dirigido a los mismos patrones de riesgo sin hallazgos adicionales, pero es UI/interacción, no lógica normativa; se difiere una lectura secuencial completa de esas ~1900 líneas a Fase 2 si se prioriza |
+| Worker (`worker.js`, `reglas_aprendidas.js`) | Completa — leído íntegro en pasada anterior y re-confirmado hoy junto con introspección en vivo (secrets, deployments) | Cerrado — ver ACH-WORKER-001, ACH-INFRA-001, ACH-INFRA-002, ACH-INFRA-005 |
+| Supabase (esquema, RLS, grants, funciones RPC, índices) | Completa vía conexión Postgres directa (Session Pooler) — única tabla (`normativa_chunks`), todas las policies, grants por rol, funciones y su security type, extensiones, índices | Cerrado — ver ACH-INFRA-003, ACH-INFRA-004. No verificado: `rolbypassrls` de `service_role` explícitamente (asumido por convención Supabase, no confirmado con query directa) |
+| Vercel | Completa para lo esencial — proyecto, framework, Node version, variables de entorno (ninguna configurada, confirmado coherente con la arquitectura) | Cerrado. No verificado: dominios custom, protección de deployment, configuración de build avanzada — bajo impacto, PENDIENTE si se quiere exhaustividad |
+| Cloudflare (routes/dominios custom del Worker más allá de `*.workers.dev`) | No verificado con detalle esta pasada | **PENDIENTE**, menor — no bloquea ninguna conclusión de esta Fase 1 |
 | GitHub (branch protection, CI, colaboradores) | Ya verificado en pasada anterior vía `gh api` (ver memoria de proyecto) | Ya cerrado antes de esta Fase 1 |
-| Colab (notebook vivo) | No accesible desde filesystem local — confirmado que `Docs archicheck/Doc prueba/` no tiene ningún `.ipynb` actualmente | **PENDIENTE**, bloqueado sin acceso directo a Colab |
+| Colab (notebook vivo) | **Resuelto indirectamente**: no hay acceso directo al navegador de Colab, pero se identificó con confianza alta cuál línea de código corre ahí (ver ACH-CAD-002) vía el único `.ipynb` no archivado del filesystem local + trazabilidad de commits | Sustancialmente cerrado; matiz honesto: no se puede descartar que se hayan pegado cambios directo en el navegador de Colab después del 13/14-sep sin dejar rastro local |
 
 ---
 
 ## Qué sigue
 
-Esta consolidación es el entregable de Fase 1. Antes de avanzar a Fase 2 (auditoría de código transversal: hardcodeos fuera de las áreas ya cubiertas, cruce CAD-vs-BIM, correr la suite de tests existente) conviene que el usuario revise esta lista y decida:
-1. Si los 5 P0 se abordan ahora (aunque sea investigación adicional, no remediación) antes de seguir inventariando, dado que 3 de ellos son de "no sabemos qué corre en producción" más que "sabemos que está mal".
-2. Si completar la lectura de `src/App.jsx` (líneas 1130-4636) es parte de esta Fase 1 o se difiere a Fase 2.
-3. Si Supabase (RLS/grants) y Vercel/Cloudflare (config real) se investigan ahora con las credenciales ya guardadas ([reference_archicheck_supabase_credenciales]) o quedan para una Fase 0 formal de accesos.
+Las 3 preguntas abiertas del primer checkpoint de Fase 1 ya se resolvieron en esta misma sesión (profundización 2026-09-21): los 5 P0 originales se investigaron a fondo (2 de ellos — Celda 4 y RAG de Supabase — cambiaron de "incertidumbre" a "confirmado y peor de lo esperado"), `App.jsx` quedó cubierto para toda función con impacto normativo/de datos, y Supabase/Vercel/Cloudflare se auditaron en vivo con las credenciales ya guardadas. Fase 1 está ahora sustancialmente completa (7 hallazgos P0, incluidos 2 recién confirmados de infraestructura).
+
+Antes de avanzar a Fase 2 (auditoría de código transversal: hardcodeos fuera de las áreas ya cubiertas, cruce CAD-vs-BIM, correr la suite de tests existente) o saltar directo a remediación de los P0 más urgentes, quedan 3 decisiones reales del usuario:
+1. **¿Remediar primero, o seguir inventariando?** Dos de los P0 (RAG inerte, Worker sin desplegar) tienen fixes de bajo esfuerzo relativo (agregar 2 secrets + 1 deploy; investigar y desplegar la Celda 4 real) pero alto impacto — podría valer la pena resolverlos antes de seguir con Fase 2, en vez de acumular más hallazgos sobre un sistema que ya se sabe que no está corriendo como se pensaba.
+2. **Celda 4**: ¿se corrige agregando las 4 reglas faltantes directo en el notebook de Colab (rápido, pero vuelve a quedar como copia manual sin mecanismo de sync), o se aprovecha para finalmente resolver el problema estructural (una sola fuente real que el notebook importe, no copie)?
+3. Si se quiere cerrar el resto de Vercel (dominios, protección de deployment) y las routes del Worker — bajo impacto, puede quedar para cuando se llegue naturalmente a la Fase de infraestructura/operación.

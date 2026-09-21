@@ -81,7 +81,25 @@ Rastreando `diagnosticar_candidatos`/`relleno_solido_de_contexto` (funciones exc
 
 Por fecha de modificación en git: `_celda4_actual.py` y `reglas_normativas.py` comparten el mismo commit (2026-09-20), mientras que `Celda 4 - copiar en Colab.py` es del 2026-08-29 (3 semanas más viejo) y tiene su **propia copia inline** de `OGUC_REGLAS` (confirmé que no importa `reglas_normativas`) — es decir, ese árbol probablemente arrastra el mismo tipo de desync de `puerta_ancho_libre`/pendiente que se encontró en `_celda4_actual.py`, pero no se leyó completo (está fuera de la carpeta asignada al agente) y no se puede confirmar sin leerlo.
 
-**No se pudo verificar** cuál de los dos árboles es el que realmente corre hoy en el notebook vivo de Colab: se revisó la carpeta externa `Docs archicheck/Doc prueba/` (a la que apunta `aplicar_fix_celda4.mjs` como destino de deploy) y **no hay ningún `.ipynb` ahí actualmente** — el script fallaría si se corriera ahora mismo ("Se esperaba exactamente 1 notebook vivo... se encontraron 0"), lo cual es coherente con que el notebook esté actualmente abierto/sincronizado solo en Google Colab, no en el filesystem local. En síntesis: **hay dos líneas paralelas de "Celda 4"** (una con el motor `cuerpo_cerrado.py` de fusión de muros pero con `OGUC_REGLAS` propia sin importar de `reglas_normativas.py`, y otra —`_celda4_actual.py`— con `OGUC_REGLAS` casi sincronizada pero sin el motor de fusión geométrica), y no hay evidencia dentro de los archivos leídos de que se hayan unificado. **SIN VERIFICAR.**
+**RESUELTO 2026-09-21 (investigación de seguimiento, confianza ALTA)**: la línea que corre en vivo es la **Línea 2** (la que usa `cuerpo_cerrado.py`), no `_celda4_actual.py`. Evidencia: existe un único notebook `.ipynb` real no archivado en todo el filesystem local — `Fase 2/Desarrollos/Test/ArchiCheck_Base 05sep_2151.ipynb` (commit `65493b2`, 2026-09-14, sin diff local pendiente) — cuya celda 4 real (extraída con el mismo mecanismo que usa `aplicar_fix_celda4.mjs`) importa `cuerpo_cerrado.py` explícitamente (27 referencias) y produce `ventanas_reconstruidas_por_jamba`. `_celda4_actual.py` (1279 líneas, sin ningún import de `cuerpo_cerrado.py`) no guarda ningún parecido estructural con las ~4263 líneas de la celda real. Trazabilidad adicional: `Celda 4 - copiar en Colab.py` es un espejo de EXPORTACIÓN generado a mano desde el notebook tras cada fix (confirmado por sus propios mensajes de commit, "regenera copia de Celda 4" / "confirmado byte a byte que solo Celda 4 cambió"), no al revés; y el mecanismo alternativo `aplicar_fix_celda4.mjs` está **abandonado y roto** si se invoca hoy (exige exactamente 1 `.ipynb` en `Docs archicheck/Doc prueba/` y hay 0; su argumento por defecto `_celda4_nueva.py` no se toca desde 2026-07-23).
+
+**Consecuencia — la línea que corre en vivo está MÁS desincronizada de lo que se pensaba, no menos.** Comparando `Celda 4 - copiar en Colab.py` (el proxy estático más cercano a la línea viva) contra `Fase 2/reglas_normativas.py`:
+
+| Regla | Línea viva (Celda 4 real) | `reglas_normativas.py` | Estado |
+|---|---|---|---|
+| `pasillo` | `(None, 1.20, 'Art. 4.2.5 OGUC...')` | `(None, 1.10, 'Art. 4.2.18 OGUC...')`, corregido 2026-09-20 | **Desincronizado** — el notebook vivo tiene el valor y la cita viejos |
+| `puerta_ancho_libre` | **Ausente del diccionario** | `(None, 0.90, 'OGUC Art. 4.1.7 N°4...')`, agregada 2026-09-19 | **Faltante** — la regla no existía cuando se escribió esta versión |
+| `puerta_ancho_libre_bano_accesible` | Ausente | Presente | **Faltante** |
+| `muro_fire_rating` | Ausente | Presente | **Faltante** |
+| `ventilacion_iluminacion_pct` | Ausente | Presente, agregada 2026-09-21 | **Faltante** |
+| `circulo_giro_accesible_m` | Valor `1.50` hardcodeado inline (no como entrada del diccionario) | `(1.50, 'DDU 351 / Art. 4.1.7 OGUC...')` | Valor coincide, pero no unificado |
+| Pendiente de rampa — constante | `0.5333` truncada | `4.0/7.5` exacta | **Desincronizado** — mismo bug que `_celda4_actual.py:1168`, con un guard aún peor: no protege `desarrollo <= 0` (solo `is None`), tratando una rampa de largo 0 o negativo como válida en vez de rechazarla |
+| Pendiente de rampa — sin dato | Asume 8% en silencio | Devuelve `None` explícito | **Desincronizado** |
+| escalera, rampa (ancho) | Sincronizados | — | OK |
+
+Es decir: 4 reglas completas agregadas entre el 19 y el 21 de septiembre (`puerta_ancho_libre`, su variante de baño accesible, `muro_fire_rating`, `ventilacion_iluminacion_pct`) **nunca llegaron a la línea que corre en producción hoy** — el trabajo reciente de consolidación normativa (commits `c03d36b`, `f9971d6`, `fdd8d4c`) solo tocó `_celda4_actual.py` (el espejo de prueba) y el pipeline BIM, no la Celda 4 real.
+
+**Hallazgo adicional grave**: `reglas_normativas.py:18-20` afirma textualmente que `_celda4_actual.py` "ahora importa de aca" (de `reglas_normativas.py`) — es **falso**, confirmado por grep: `_celda4_actual.py` no tiene ningún `from reglas_normativas import`, sigue con `OGUC_REGLAS` inline. La fuente de verdad normativa del proyecto documenta incorrectamente su propio estado de sincronización.
 
 ## 6. Archivos `.py` adicionales (no `_tmp_`/`test_`) leídos completos
 
