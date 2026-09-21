@@ -73,8 +73,21 @@ def corpus_de(ruta):
         return 'LGUC', RE_ART_INT
     if n.startswith('ddu'):
         return 'DDU', RE_ART_INT
-    if 'providencia' in ruta.replace('\\', '/'):
-        return 'PRC_PROVIDENCIA', RE_ART_INT
+    if n.startswith('indice-circulares-ddu'):
+        return 'DDU', RE_ART_INT
+    if n.startswith('ley-19300') or n.startswith('ley19300'):
+        return 'LEY_19300', RE_ART_INT
+    # El corpus se toma de la CARPETA, no del nombre del archivo. Aprendido a la
+    # mala: "resumen_ejecutivo_prcp_2007_Santiago.pdf" es en realidad de
+    # PROVIDENCIA (su portada dice "Plan Regulador de Providencia 2007"). Un
+    # nombre de archivo no acredita de que comuna es una norma.
+    ruta_norm = ruta.replace('\\', '/').lower()
+    for carpeta, etiqueta in (('/providencia/', 'PRC_PROVIDENCIA'),
+                              ('/nunoa/', 'PRC_NUNOA'),
+                              ('/santiago/', 'PRC_SANTIAGO'),
+                              ('/isla_de_pascua/', 'PRC_ISLA_DE_PASCUA')):
+        if carpeta in ruta_norm:
+            return etiqueta, RE_ART_INT
     return 'OTRO', RE_ART_INT
 
 

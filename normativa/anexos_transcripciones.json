@@ -72,6 +72,159 @@
       "contenido": "| N. recintos docentes | 5 a 16 | 17 a 24 | 25 a 32 | >32 |\n|---|---|---|---|---|\n| Tamano de muestra | 2 | 3 | 4 | 10% |",
       "verificacion": "Leida 2026-09-21 ampliada 4x (la imagen original mide 371x52 px). Pertenece al Art. 4.1.10 (acondicionamiento termico): el ultimo encabezado de articulo antes de la pagina 214 esta en la pagina 193. Tampoco se extraia antes, por el mismo filtro de lado minimo.",
       "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-2.6.3-tabla-angulo-rasantes",
+      "corpus": "OGUC",
+      "articulo": "2.6.3",
+      "tipo": "tabla",
+      "titulo": "Angulo de las rasantes por region",
+      "paginas": [
+        147
+      ],
+      "imagenes": [
+        "OGUC_p0147_x305"
+      ],
+      "contenido": "| Regiones | Angulo de las Rasantes |\n|---|---|\n| De Arica y Parinacota, De Tarapaca, De Antofagasta, De Atacama | 80 grados |\n| De Coquimbo, De Valparaiso, Metropolitana de Santiago, Del Libertador General Bernardo O'Higgins, Del Maule, De Nuble, De Biobio, De La Araucania | 70 grados |\n| De Los Rios, De Los Lagos, De Aysen del General Carlos Ibanez del Campo, De Magallanes y de la Antartica Chilena | 60 grados |",
+      "verificacion": "Leida 2026-09-21. Imagen de 1500x938 px, legible a resolucion original. Es un chequeo urbanistico central del producto y existia SOLO como imagen: el texto del articulo dice 'no podran sobrepasar en ningun punto las rasantes que se indican mas adelante' y nunca da el angulo.",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-2.6.13-tabla-sombra-proyectada",
+      "corpus": "OGUC",
+      "articulo": "2.6.13",
+      "tipo": "tabla",
+      "titulo": "Angulos de sombra proyectada por region y orientacion",
+      "paginas": [
+        155
+      ],
+      "imagenes": [
+        "OGUC_p0155_x322"
+      ],
+      "contenido": "Grupo 1: Arica y Parinacota, Tarapaca, Antofagasta, Atacama.\nGrupo 2: Coquimbo, Valparaiso, Metropolitana de Santiago, O'Higgins, Maule, Nuble, Biobio, La Araucania.\nGrupo 3: Los Rios, Los Lagos, Aysen del General Carlos Ibanez del Campo, Magallanes y Antartica Chilena.\n\n| Sombra Proyectada | Grupo 1 | Grupo 2 | Grupo 3 |\n|---|---|---|---|\n| Hacia el Sur | 63 grados | 57 grados | 51 grados |\n| Hacia el Oriente | 28 grados | 26 grados | 24 grados |\n| Hacia el Poniente | 28 grados | 26 grados | 24 grados |",
+      "verificacion": "Leida 2026-09-21. Imagen de 1500x693 px, legible a resolucion original.",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.5.7-tabla-patios-establecimientos",
+      "corpus": "OGUC",
+      "articulo": "4.5.7",
+      "tipo": "tabla",
+      "titulo": "Superficie de patio exigible en establecimientos educacionales, por nivel y region",
+      "paginas": [
+        257
+      ],
+      "imagenes": [
+        "OGUC_p0257_x551"
+      ],
+      "contenido": "Dos bloques: SUPERFICIE TOTAL DE PATIO EXIGIBLE E INCREMENTO (todas las regiones del pais) y SUPERFICIE DE PATIO EXIGIBLE A SER CUBIERTA E INCREMENTO (por grupo de regiones).\n\nGrupo A (patio cubierto): Arica y Parinacota, Tarapaca, Antofagasta, Atacama, Coquimbo, Valparaiso, Metropolitana de Santiago, Del Libertador General Bernardo O'Higgins.\nGrupo B (patio cubierto): Del Maule, De Nuble, Del Biobio, De La Araucania, De Los Rios, De Los Lagos, De Aysen del General Carlos Ibanez del Campo, De Magallanes y de la Antartica Chilena.\n\n| Nivel del local | Patio total exigible (todas las regiones) | Patio cubierto - grupo A | Patio cubierto - grupo B |\n|---|---|---|---|\n| Sala cuna | Hasta 20 lactantes: 60 m2; sobre 20 lactantes: 3 m2 por lactante | - | Hasta 20 lactantes: 20 m2; sobre 20 lactantes: 1 m2 por lactante |\n| Jardin Infantil | Hasta 30 parvulos: 90 m2; sobre 30 parvulos: 3 m2 por parvulo | - | Hasta 20 parvulos: 20 m2; sobre 20 parvulos: 1 m2 por parvulo |\n| General basica y media | Hasta 60 alumnos: 150 m2; sobre 60 alumnos: 2,50 m2 por alumno | Desde 180 y hasta 270 alumnos: 70 m2; sobre 270 alumnos: 0,15 m2 por alumno | Desde 180 y hasta 270 alumnos: 70 m2; sobre 270 alumnos: 0,15 m2 por alumno |\n| Basico especial | Hasta 40 alumnos: 120 m2; sobre 40 alumnos: 3,00 m2 por alumno | - | - |\n| Hogar estudiantil | Hasta 20 alumnos: 50 m2; sobre 20 alumnos: 2,50 m2 por alumno | - | - |",
+      "verificacion": "Leida 2026-09-21. Imagen de 1500x1320 px, legible a resolucion original. El Art. 4.5.7 SI esta entre los 43 articulos del prompt, asi que esta tabla entra al analisis.",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-formula-superficie-maxima-ventana",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "formula",
+      "titulo": "Superficie maxima de ventana (SMV)",
+      "paginas": [
+        200
+      ],
+      "imagenes": [
+        "OGUC_p0200_x418"
+      ],
+      "contenido": "SMV = StPV * (%mV / 100%)\n\nDonde:\n  SMV  = superficie maxima de ventana (m2)\n  StPV = superficie total de paramentos verticales (m2)\n  %mV  = porcentaje maximo de ventana (%)",
+      "verificacion": "Leida 2026-09-21. Es una de las imagenes que el filtro original descartaba por exigir 120 px de lado minimo: esta mide 357x117.",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-formula-transmitancia-ponderada",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "formula",
+      "titulo": "Transmitancia termica ponderada de ventana y muro (Upvm)",
+      "paginas": [
+        202
+      ],
+      "imagenes": [
+        "OGUC_p0202_x425"
+      ],
+      "contenido": "Upvm = ((Um * Sm) + (Uv * Sv)) / (Sm + Sv)\n\nDonde:\n  Upvm = transmitancia termica ponderada ventana y muro\n  Um   = transmitancia termica de muro (W/m2K)\n  Sm   = superficie de muro (m2)\n  Uv   = transmitancia termica de ventana (W/m2K)\n  Sv   = superficie de ventana (m2)",
+      "verificacion": "Leida 2026-09-21. En el PDF la formula esta escrita como fraccion; se transcribe en linea con parentesis para no perder el orden de operaciones.",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-2.2.8-tabla-circulaciones-peatonales",
+      "corpus": "OGUC",
+      "articulo": "2.2.8",
+      "tipo": "tabla",
+      "titulo": "Ancho y altura libre minima de circulaciones peatonales",
+      "paginas": [
+        117
+      ],
+      "imagenes": [
+        "OGUC_p0117_x243"
+      ],
+      "contenido": "| Tipo de circulacion | Ancho libre minimo | Altura libre minima |\n|---|---|---|\n| Veredas | Ancho de la vereda, con un minimo de 1,20 m | 2,10 m |\n| Circulaciones peatonales al interior de espacios publicos (*) | Al menos una ruta accesible cuyo ancho correspondera al ancho de la circulacion, con un minimo de 2,00 m | 2,10 m |\n\n(*) Plazas, parques y areas verdes publicas.",
+      "verificacion": "Leida 2026-09-21.",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-2.3.3-tabla-anchos-pasajes",
+      "corpus": "OGUC",
+      "articulo": "2.3.3",
+      "tipo": "tabla",
+      "titulo": "Anchos minimos de pasajes",
+      "paginas": [
+        133
+      ],
+      "imagenes": [
+        "OGUC_p0133_x276"
+      ],
+      "contenido": "| Ancho de Via entre Lineas Oficiales | Ancho de Calzada | Distancia minima de Linea Oficial a calzada | Largo maximo pasaje sin salida | Pasaje con salida |\n|---|---|---|---|---|\n| Minimo 8 metros | Entre 3,5 y 4,5 metros | 2,25 metros | 50 metros | 100 metros |",
+      "verificacion": "Leida 2026-09-21 (imagen de 350x149 px).",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla-orientaciones",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "Rangos de orientacion (norte, oriente, sur, poniente)",
+      "paginas": [
+        200
+      ],
+      "imagenes": [
+        "OGUC_p0200_x417"
+      ],
+      "contenido": "| Orientacion | Rango |\n|---|---|\n| NORTE | Mayor o igual a 315 grados y menor que 45 grados |\n| ORIENTE | Mayor o igual a 45 grados y menor que 135 grados |\n| SUR | Mayor o igual a 135 grados y menor que 225 grados |\n| PONIENTE | Mayor o igual a 225 grados y menor que 315 grados |",
+      "verificacion": "Leida 2026-09-21. La imagen incluye ademas un diagrama circular con la rosa de orientaciones, que solo ilustra los mismos rangos.",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-portada-logo-bcn",
+      "corpus": "OGUC",
+      "articulo": null,
+      "tipo": "decoracion",
+      "titulo": "Logo Biblioteca del Congreso Nacional / Ley Chile (portada)",
+      "paginas": [
+        1
+      ],
+      "imagenes": [
+        "OGUC_p0001_x5"
+      ],
+      "contenido": "",
+      "verificacion": "Revisada 2026-09-21: es el banner institucional de la BCN en la portada. NO es contenido normativo. Se cuela en el manifiesto porque aparece en 1 sola pagina y la regla de decoracion (>3 paginas) no la atrapa. Queda registrada como decoracion para que no figure como pendiente.",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "estado": "DECORACION"
     }
   ]
 }

@@ -43,35 +43,65 @@ El caso testigo es el **Art. 4.5.5 de la OGUC**. El texto extraído dice literal
 
 | Corpus | Imágenes de contenido | Transcritas | Pendientes |
 |---|---|---|---|
-| **OGUC** | 30 | 4 | **26** |
-| **DDU** (Libro completo + 351 + 447) | 68 | 0 | **68** |
-| **PRC Providencia** | 32 | 0 | **32** |
-| **LGUC** | 1 | 0 | **1** |
-| **TOTAL** | **131** | **4** | **127** |
+| **OGUC** | 30 | **14** | 16 |
+| **DDU** (Libro completo + 351 + 447 + índice) | 68 | 0 | 68 |
+| **PRC Providencia** | 99 | 0 | 99 |
+| **PRC Santiago** | 13 | 0 | 13 |
+| **PRC Ñuñoa** | 2 | 0 | 2 |
+| **PRC Isla de Pascua** | 1 | 0 | 1 |
+| **LGUC** | 1 | 0 | 1 |
+| **Ley 19.300** | 1 | 0 | 1 |
+| **TOTAL** | **215** | **14** | **201** |
 
-> **Corrección del filtro (2026-09-21)**: la primera versión exigía **120 px de lado mínimo** en ambos lados, y eso descartaba justo las **fórmulas**, que son imágenes anchas y bajas. Se perdían 10 imágenes de contenido real, entre ellas la tabla con fórmula del **Art. 2.2.5 bis** (`% = Densidad de ocupación × 11 / 2.000`, porcentaje de cesión) y la **TABLA 15 del Art. 4.1.10**. El criterio ahora es de **área**, que no discrimina por forma.
+Además hay **306 páginas con figuras vectoriales** (PRC Santiago 123, PRC Ñuñoa 64, Providencia 62, DDU 32, Isla de Pascua 25): diagramas dibujados con líneas y texto suelto, que **no aparecen como imagen embebida**. El manifiesto ya las lista; procesarlas requiere renderizar la página.
 
-### Transcritas y verificadas
+### Qué descarta el filtro — auditado, no supuesto
 
-| Anexo | Artículo | Verificación |
+Se enumeró **toda** imagen de todo PDF y se clasificó lo excluido. Lo único que se descarta es:
+
+| Qué | Cuántas | Por qué |
 |---|---|---|
-| Tabla de % de vanos por región | **OGUC 4.5.5** | 2 imágenes (x545 encabezado + norte/centro, x546 sur). Los 12 valores coinciden exactamente con `ART_455_DOCENTE` de `Fase 2/reglas_normativas.py`, obtenido antes por una lectura independiente. |
-| Tabla de densidad de carga combustible | **OGUC 4.3.4** | Leída en 2 pasadas (original + ampliación 5×). La ampliación **corrigió 3 celdas** de la grilla de letras. |
-| Tabla con fórmula de % de cesión | **OGUC 2.2.5 bis** | `% = (Densidad de ocupación × 11) / 2.000` hasta 8.000 pers/ha; 44% sobre eso. Recuperada al corregir el filtro. |
-| TABLA 15, tamaño de muestra de ensayo | **OGUC 4.1.10** | Leída ampliada 4× (original 371×52 px). Recuperada al corregir el filtro. |
+| Membrete de Ley Chile (580×102) y logos institucionales | 6 | Se repiten en más de 3 páginas |
+| Ícono 90×90 de Ley Chile, logo 61×46 | 4 | Área < 15.000 px |
+| Números de página **escaneados** del PRC Santiago (99×94) | 146 | Área < 15.000 px. Verificado abriendo uno: es un "1" |
 
-Las dos últimas **todavía no llegan al prompt**: sus artículos (2.2.5 bis y 4.1.10) no están entre los 43 seleccionados. Quedan en banco, listas para cuando se agreguen.
+**Ninguna fórmula ni tabla queda fuera del filtro.** Lo que sí queda fuera del *análisis* es todo lo que está extraído pero aún sin transcribir.
 
----
+### Fórmulas encontradas en OGUC
 
-## Pendiente — qué falta y en qué orden
+Las 3 que existen como imagen, todas extraídas y transcritas:
 
-1. **OGUC, 26 imágenes.** Prioridad alta: es el cuerpo que más pesa en el análisis. Concentradas en dos zonas — Arts. 2.1.25 a 2.1.33 (páginas 195–215, equipamiento y escalas) y Arts. 2.6.11 / 2.6.13 (rasantes, páginas 147 y 155). La de 4.5.7 (página 257, 1500×1320) está pendiente.
-2. **DDU, 68 imágenes.** (+ 1 de LGUC, que con el filtro corregido sí tiene una imagen de contenido) Ojo: [la auditoría de integridad](../CLAUDE.md) ya registró que 3 JSON de DDU (279, 320, 390) están fabricados o sin fuente. Antes de transcribir conviene resolver eso, para no construir sobre una base sin respaldo.
-3. **PRC Providencia, 32 imágenes.** Son en su mayoría **planos cartográficos** de gran formato (láminas de 1 página), no tablas. Necesitan un tratamiento distinto al de una tabla: probablemente recorte por zona y lectura dirigida, no transcripción completa.
-4. **82 páginas con figuras VECTORIALES** (21 en DDU, 61 en PRC Providencia). No aparecen como imagen embebida porque están dibujadas con líneas y texto suelto. Requieren **renderizar la página**, no extraer la imagen. El extractor ya las detecta y las lista en `paginas_con_figuras_vectoriales` del manifiesto, pero **todavía no las procesa**.
-5. **Ley 19.300**: no hay PDF en el repo, solo `normativa/nacional/Fuentes/ley19300.json`. **No se puede auditar su contenido gráfico hasta conseguir el PDF oficial.**
-6. **PRC Ñuñoa y Santiago**: sin PDF en el repo. Mismo caso.
+| Fórmula | Artículo | Llega al prompt |
+|---|---|---|
+| `% = (Densidad de ocupación × 11) / 2.000` — porcentaje de cesión | 2.2.5 bis | **No** (artículo fuera de los 43) |
+| `SMV = StPV × (%mV / 100%)` — superficie máxima de ventana | 4.1.10 | **No** (artículo fuera de los 43) |
+| `Upvm = ((Um·Sm) + (Uv·Sv)) / (Sm + Sv)` — transmitancia ponderada | 4.1.10 | **No** (artículo fuera de los 43) |
+
+Las 3 estaban entre las que el filtro original descartaba por forma.
+
+### Transcritas y verificadas (14 imágenes, 13 anexos)
+
+| Anexo | Artículo | ¿Entra al prompt? |
+|---|---|---|
+| Tabla de % de vanos por región | **4.5.5** | Sí |
+| Tabla de densidad de carga combustible | **4.3.4** | Sí |
+| **Ángulo de las rasantes por región** (80°/70°/60°) | **2.6.3** | Sí |
+| Superficie de patio en establecimientos educacionales | **4.5.7** | Sí |
+| Ángulos de sombra proyectada por región | 2.6.13 | No |
+| Circulaciones peatonales (ancho/altura libre) | 2.2.8 | No |
+| Anchos mínimos de pasajes | 2.3.3 | No |
+| Tabla con fórmula de % de cesión | 2.2.5 bis | No |
+| TABLA 15, tamaño de muestra de ensayo | 4.1.10 | No |
+| Rangos de orientación (N/O/S/P) | 4.1.10 | No |
+| Fórmula SMV | 4.1.10 | No |
+| Fórmula Upvm | 4.1.10 | No |
+| Logo BCN de portada | — | Clasificado como **decoración** |
+
+> **El ángulo de las rasantes es el hallazgo más importante de esta tanda.** Es un chequeo urbanístico central del producto y **existía solo como imagen**: el texto del Art. 2.6.3 dice *"no podrán sobrepasar en ningún punto las rasantes que se indican más adelante"* y nunca da el número. Ahora sí llega al análisis.
+
+### Lo que falta en OGUC
+
+Las 16 pendientes son **todas del Art. 4.1.10** (acondicionamiento térmico, páginas 195–215): transmitancia U y resistencia Rt por zona térmica, porcentaje máximo de ventana por zona y orientación, aislación de sobrecimientos, permeabilidad al aire e infiltración por provincia. Son de alto valor técnico, pero **el Art. 4.1.10 no está entre los 43 artículos del prompt**, así que hoy no llegarían al análisis aunque se transcriban.
 
 ---
 

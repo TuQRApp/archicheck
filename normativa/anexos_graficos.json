@@ -1536,8 +1536,8 @@
   ],
   "imagenes": [
     {
-      "id": "OTRO_p0001_x13722",
-      "corpus": "OTRO",
+      "id": "PRC_ISLA_DE_PASCUA_p0001_x13722",
+      "corpus": "PRC_ISLA_DE_PASCUA",
       "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
       "pagina": 1,
       "xref": 13722,
@@ -1552,7 +1552,7 @@
         92.9
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0001_x13722.png",
+      "archivo": "anexos_graficos/PRC_ISLA_DE_PASCUA_p0001_x13722.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
@@ -3006,8 +3006,8 @@
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0001_x5",
-      "corpus": "OTRO",
+      "id": "LEY_19300_p0001_x5",
+      "corpus": "LEY_19300",
       "pdf": "normativa/nacional/Fuentes/Ley-19300_09-MAR-1994.pdf",
       "pagina": 1,
       "xref": 5,
@@ -3022,7 +3022,7 @@
         50.0
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0001_x5.png",
+      "archivo": "anexos_graficos/LEY_19300_p0001_x5.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
@@ -3063,7 +3063,7 @@
         448.5,
         627.9
       ],
-      "articulo": "2.2.5",
+      "articulo": "2.2.5 bis",
       "archivo": "anexos_graficos/OGUC_p0113_x234.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
@@ -3657,8 +3657,8 @@
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0001_x25",
-      "corpus": "OTRO",
+      "id": "PRC_NUNOA_p0001_x25",
+      "corpus": "PRC_NUNOA",
       "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
       "pagina": 1,
       "xref": 25,
@@ -3673,13 +3673,13 @@
         103.0
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0001_x25.png",
+      "archivo": "anexos_graficos/PRC_NUNOA_p0001_x25.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0037_x105",
-      "corpus": "OTRO",
+      "id": "PRC_NUNOA_p0037_x105",
+      "corpus": "PRC_NUNOA",
       "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
       "pagina": 37,
       "xref": 105,
@@ -3694,7 +3694,7 @@
         274.1
       ],
       "articulo": "2",
-      "archivo": "anexos_graficos/OTRO_p0037_x105.png",
+      "archivo": "anexos_graficos/PRC_NUNOA_p0037_x105.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
@@ -5778,8 +5778,8 @@
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0001_x16",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0001_x16",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 1,
       "xref": 16,
@@ -5794,13 +5794,13 @@
         391.9
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0001_x16.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0001_x16.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0113_x1025",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0113_x1025",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 113,
       "xref": 1025,
@@ -5815,13 +5815,13 @@
         447.4
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0113_x1025.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0113_x1025.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0114_x1048",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0114_x1048",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 114,
       "xref": 1048,
@@ -5836,13 +5836,13 @@
         375.4
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0114_x1048.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0114_x1048.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0114_x1046",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0114_x1046",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 114,
       "xref": 1046,
@@ -5857,13 +5857,13 @@
         375.4
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0114_x1046.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0114_x1046.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0114_x1044",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0114_x1044",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 114,
       "xref": 1044,
@@ -5878,13 +5878,13 @@
         351.8
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0114_x1044.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0114_x1044.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0114_x1042",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0114_x1042",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 114,
       "xref": 1042,
@@ -5899,13 +5899,13 @@
         352.6
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0114_x1042.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0114_x1042.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0114_x1040",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0114_x1040",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 114,
       "xref": 1040,
@@ -5920,13 +5920,13 @@
         460.6
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0114_x1040.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0114_x1040.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0114_x1038",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0114_x1038",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 114,
       "xref": 1038,
@@ -5941,13 +5941,13 @@
         460.6
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0114_x1038.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0114_x1038.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0115_x1064",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0115_x1064",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 115,
       "xref": 1064,
@@ -5962,13 +5962,13 @@
         182.6
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0115_x1064.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0115_x1064.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0115_x1062",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0115_x1062",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 115,
       "xref": 1062,
@@ -5983,13 +5983,13 @@
         182.6
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0115_x1062.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0115_x1062.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0116_x1079",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0116_x1079",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 116,
       "xref": 1079,
@@ -6004,13 +6004,13 @@
         397.0
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0116_x1079.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0116_x1079.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0116_x1078",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0116_x1078",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 116,
       "xref": 1078,
@@ -6025,13 +6025,13 @@
         261.4
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0116_x1078.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0116_x1078.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
     {
-      "id": "OTRO_p0116_x1076",
-      "corpus": "OTRO",
+      "id": "PRC_SANTIAGO_p0116_x1076",
+      "corpus": "PRC_SANTIAGO",
       "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
       "pagina": 116,
       "xref": 1076,
@@ -6046,7 +6046,7 @@
         359.5
       ],
       "articulo": null,
-      "archivo": "anexos_graficos/OTRO_p0116_x1076.png",
+      "archivo": "anexos_graficos/PRC_SANTIAGO_p0116_x1076.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     }
