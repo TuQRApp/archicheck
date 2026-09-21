@@ -939,14 +939,34 @@ function buildPromptCapa2(tipo, comuna, archivos, preguntas = {}, colabData = nu
     return `Archivo ${i + 1}: "${f.name}" (${f.tipoDoc || "sin clasificar"}) — ${tag}`;
   }).join("\n\n---\n\n");
 
-  // Resumen compacto de OGUC y LGUC — el sistema RAG inyecta los artículos completos más relevantes vía system prompt
+  // Texto oficial de los artículos de OGUC/LGUC que se inyectan siempre. El RAG
+  // agrega además lo que sea relevante a la consulta puntual.
+  //
+  // CORREGIDO 2026-09-21 (repasada de la auditoría Fase 1), 3 cambios, cada uno
+  // por un problema real medido:
+  //
+  // 1. SIN TRUNCAR. Antes cortaba a 220 caracteres. Sobre texto legal un corte
+  //    ciego cae donde cae: en el Art. 4.2.18 el requisito ("1,10 m") está en el
+  //    carácter 222, o sea que el modelo recibía "…con un ancho mínimo d…" y
+  //    NUNCA veía el número. No hay límite seguro —el valor operativo puede
+  //    estar en la primera línea o en la última—, así que el artículo entra
+  //    entero o no entra.
+  // 2. SIN la etiqueta de tema. Esas etiquetas se mantenían a mano y estaban
+  //    equivocadas: decían "escaleras_minimos" para el Art. 4.2.2 (que en
+  //    realidad trata de cambio de destino). Con el texto real presente, la
+  //    etiqueta no aporta y sí podía contradecirlo.
+  // 3. El texto ahora se DERIVA del PDF oficial vía
+  //    normativa/generar_articulos_prompt.mjs. Antes era una copia a mano: de
+  //    los 53 artículos inyectados, 30 tenían texto fabricado o placeholders
+  //    ("[Artículo 60 - consultar texto completo en BCN]"). Ese texto inventado
+  //    es el origen de las citas falsas que se venían corrigiendo río abajo.
   const ogucTexto = Object.entries(ogucArticulos.articulos)
-    .map(([num, art]) => `Art. ${num} (${art.tema}): ${art.texto.replace(/\n+/g, " ").substring(0, 220).trimEnd()}…`)
-    .join("\n");
+    .map(([num, art]) => `Art. ${num}: ${art.texto.replace(/\n+/g, " ")}`)
+    .join("\n\n");
 
   const lgucTexto = Object.entries(lgucArticulos.articulos)
-    .map(([num, art]) => `Art. ${num} (${art.tema}): ${art.texto.replace(/\n+/g, " ").substring(0, 220).trimEnd()}…`)
-    .join("\n");
+    .map(([num, art]) => `Art. ${num}: ${art.texto.replace(/\n+/g, " ")}`)
+    .join("\n\n");
 
   // Reglas de verificación nacional
   const reglasTexto = reglasNacionales.reglas

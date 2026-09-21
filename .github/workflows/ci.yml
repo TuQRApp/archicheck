@@ -1,0 +1,69 @@
+name: CI
+
+# Por que existe (2026-09-21, auditoria Fase 1 / ACH-OPS-001):
+# el proyecto no tenia NINGUNA verificacion automatica. La unica que existia era
+# un hook pre-commit que corria en una sola maquina, solo si estaba instalado,
+# solo para cambios en Fase 2/Herramientas_CubiCasa5k/ y salteable con
+# --no-verify. Todo lo demas -- el prompt de produccion, el Worker, el pipeline
+# BIM, los JSON de normativa -- no tenia ninguna verificacion, nunca.
+#
+# Eso permitio que el corpus normativo que se inyecta en el prompt acumulara
+# texto FABRICADO durante meses: de los 53 articulos que decia ser "NORMATIVA
+# NACIONAL VIGENTE", 30 no coincidian con el texto oficial. El chequeo que lo
+# detecta corre ahora en cada push.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  frontend-y-normativa:
+    name: Build del portal + corpus normativo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Build del portal
+        run: npm run build
+
+      # El chequeo central: que el texto normativo que viaja al prompt de
+      # produccion sea el oficial y no una copia editada a mano.
+      - name: El prompt solo inyecta texto normativo oficial
+        run: node normativa/test_articulos_prompt.mjs
+
+      # Que los archivos generados esten en sincronia con su generador: si
+      # alguien edita el JSON a mano en vez de regenerarlo, falla aca.
+      - name: Los articulos del prompt estan en sincronia con su generador
+        run: node normativa/generar_articulos_prompt.mjs --check
+
+  motor-cad:
+    name: Motor CAD (regresion + propiedades)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install opencv-python-headless numpy hypothesis pytest
+
+      # Los golden tests quedan fuera a proposito (los excluye pytest.ini con
+      # -m "not golden"): corren el pipeline completo contra PDFs reales, son
+      # lentos y dependen de archivos pesados. Los sigue corriendo el hook
+      # pre-commit local.
+      - name: Regresion y propiedades
+        working-directory: "Fase 2/Herramientas_CubiCasa5k"
+        run: python -m pytest -q
+
+      - name: Ningun valor normativo hardcodeado fuera de reglas_normativas.py
+        working-directory: "Fase 2"
+        run: python verificar_hardcodeo_normativo.py

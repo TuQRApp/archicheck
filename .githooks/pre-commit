@@ -10,6 +10,21 @@
 # Para saltarlo puntualmente (no recomendado, solo si ya se corrio a
 # mano y se sabe que esta OK): git commit --no-verify
 
+# ── Corpus normativo del prompt ───────────────────────────────────────────
+# Agregado 2026-09-21: si el commit toca normativa/ o el portal, verifica que
+# el texto que se inyecta en el prompt de produccion siga siendo el OFICIAL.
+# Sin este chequeo, ese corpus acumulo texto fabricado durante meses (30 de 53
+# articulos no coincidian con el PDF oficial). Es rapido y no necesita Python.
+NORMATIVA=$(git diff --cached --name-only --diff-filter=ACM -- normativa/ src/App.jsx)
+if [ -n "$NORMATIVA" ]; then
+  echo "pre-commit: cambios en normativa/ o el portal, verificando el corpus del prompt..."
+  if ! node normativa/test_articulos_prompt.mjs; then
+    echo ""
+    echo "pre-commit: el corpus normativo del prompt NO coincide con el texto oficial -- commit BLOQUEADO."
+    exit 1
+  fi
+fi
+
 DIR="Fase 2/Herramientas_CubiCasa5k"
 ARCHIVOS=$(git diff --cached --name-only --diff-filter=ACM -- "$DIR")
 
