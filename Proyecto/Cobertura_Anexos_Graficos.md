@@ -79,6 +79,24 @@ Ordenados por gravedad.
 
 ---
 
+## Catálogos de la lámina L4 de Providencia — transcritos
+
+**153 filas**, leídas renderizando la lámina a 190–215 dpi por tramos. El PDF no tiene capa de texto: todo esto solo existía como gráfico.
+
+| Catálogo | Filas | Contenido |
+|---|---|---|
+| **ZT** Zonas Típicas | 9 | N.º de decreto, fecha de declaratoria, nombre, direcciones y tramo |
+| **MH** Monumentos Históricos | 18 | N.º de decreto, fecha, denominación y dirección |
+| **ZCH** Zonas de Conservación Histórica | 23 | Nombre, calles con numeración y referencia |
+| **ICH** Inmuebles de Conservación Histórica | 82 | Denominación y dirección |
+| **ZEMoI** Equipamiento Metropolitano | 5 | Identificación y dirección |
+| **ZIM** Interés Metropolitano | 13 | Identificación y dirección |
+| **PD** Planos de Detalle | 3 | Nombre |
+
+**Control cruzado**: los 7 totales coinciden exactamente con los que declara el Resumen Ejecutivo del PRCP (9, 18, 23, 82, 5, 13, 3). Eso confirma que no falta ninguna fila.
+
+---
+
 ## Mecanismo
 
 | Pieza | Qué hace |
@@ -102,7 +120,6 @@ Ordenados por gravedad.
 
 ## Lo que queda pendiente, acotado
 
-1. **Los 6 catálogos de la lámina L4 de Providencia, fila por fila** (~153 filas: 9 ZT + 18 MH + 23 ZCH + 82 ICH + 5 ZEMoI + 13 ZIM + 3 PD). Verificado que **son legibles a 200 dpi** — se leyeron completas las filas 8 a 68 del catálogo ICH como prueba. No se transcribieron a medias a propósito: un catálogo de inmuebles protegidos incompleto induce a creer que una propiedad no está protegida cuando sí lo está.
-2. **Conseguir los documentos faltantes** de Providencia (3 Planos de Detalle, Fichas de Valoración).
-3. **Decidir si ampliar la lista de 43 artículos** del prompt, para que las 6 fórmulas y las tablas del Art. 4.1.10 lleguen al análisis.
-4. **Una cota ilegible declarada, no rellenada**: en la FIGURA 1 de la DDU 351 las medidas menores de la huella podotáctil no son legibles en el escaneo oficial ni ampliadas 5×. La fuente para esas medidas es la NCh 3180.
+1. **Conseguir los documentos faltantes** de Providencia (3 Planos de Detalle, Fichas de Valoración).
+2. **Decidir si ampliar la lista de 43 artículos** del prompt, para que las 6 fórmulas y las tablas del Art. 4.1.10 lleguen al análisis.
+3. **Una cota ilegible declarada, no rellenada**: en la FIGURA 1 de la DDU 351 las medidas menores de la huella podotáctil no son legibles en el escaneo oficial ni ampliadas 5×. La fuente para esas medidas es la NCh 3180.
