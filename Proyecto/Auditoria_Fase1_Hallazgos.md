@@ -174,9 +174,28 @@ Buscando por qué la cita falsa seguía viva en producción, apareció el origen
 
 **Queda abierto**: las etiquetas de tema y, sobre todo, **la selección de qué artículos incluir** se hicieron sobre premisas equivocadas (el 4.5.7 entró creyendo que trataba de ventilación). Merece una curación normativa.
 
-### ACH-DATA-008 (NUEVO, P2, ABIERTO) — 49 artículos "bis" faltan en la extracción
+### ACH-DATA-008 (NUEVO, P2 — RESUELTO 2026-09-21 en el repo; **re-indexado de Supabase PENDIENTE**) — 45 artículos "bis" faltaban en la extracción
 
-La regex de extracción nunca contempló artículos *bis*: faltan **22 en LGUC y 27 en OGUC**, entre ellos el **LGUC Art. 116 bis** (revisor independiente), que el propio checklist del prompt manda verificar y que **sí está en el PDF** (página 65). Afecta por igual al prompt y al **corpus del RAG en Supabase**, que sale de la misma extracción. Arreglarlo implica re-extraer y re-indexar, por eso queda como decisión aparte.
+Ninguna de las 2 regex de extracción contemplaba los artículos *bis*/*ter*/*quáter*. Se recuperaron **45 artículos** (13 en OGUC, 32 en LGUC), entre ellos el **LGUC Art. 116 bis** (revisor independiente), que el propio checklist del prompt manda verificar.
+
+*Corrección a la Fase 1*: el hallazgo original decía "49 (22 LGUC + 27 OGUC)". Ese conteo salía de un grep sobre el PDF que **también contaba las referencias cruzadas** escritas en minúscula (*"lo dispuesto en el artículo 116 bis"*). El número verificado, contando encabezados reales, es 45.
+
+**Los 2 corpus fallaban de forma distinta, y la de LGUC era peor**:
+
+- **OGUC** (`Artículo 2.1.3. bis.`): la regex capturaba solo `\d+\.\d+\.\d+`, así que el bis se guardaba con el número del artículo **base**; el dedup de más abajo conserva la primera ocurrencia y **lo descartaba entero, en silencio**. Pérdida limpia: el texto del artículo base quedaba correcto.
+- **LGUC** (`Artículo 116 bis.-`): la regex exigía `.` o `-` **pegado al número**, así que el encabezado **no matcheaba en absoluto**. Como cada artículo se corta desde su match hasta el siguiente, no crear el límite no borraba el bis: **le pegaba su texto al artículo anterior**. Verificado: el Art. 2 contenía adentro todo el Art. 2 bis, y el Art. 116 se comía el 116 bis más la serie completa **116 bis A–I** (9 artículos sobre torres de antenas). Esto es peor que perder el texto — el corpus entregaba el contenido del bis **atribuido al número del artículo base**, que es precisamente el patrón de ACH-DATA-007.
+
+**Verificación aplicada a ambos** (no una lectura a ojo): se comparó la extracción nueva contra la anterior artículo por artículo, confirmando que **0 caracteres se perdieron** y que las diferencias son solo re-corte en chunks. En OGUC un primer intento de regex con el punto opcional rompió la extracción —pasó a matchear referencias cruzadas escritas con mayúscula y generó cortes espurios que se comieron un fragmento real del Art. 2.1.4—; **lo detectó ese control de integridad, no una revisión manual**. En LGUC el delta de 581 caracteres se explicó y cuadró: son los 32 encabezados que ahora son límites en vez de texto. Resultado: OGUC 770 → 791 secciones, LGUC 245 → 267.
+
+**Efecto colateral arreglado**: el strip del encabezado quitaba un solo carácter de `.-`, así que **los 17 artículos LGUC del prompt empezaban con `- `**. Preexistente y cosmético, pero iba en el prompt de producción.
+
+El test del corpus pasa de 59/59 a **60/60**: `LGUC 116 bis` figuraba en `articulos_prompt.json` y hasta ahora se reportaba como "NO hallado en el PDF".
+
+**PENDIENTE — decisión del usuario**: el **RAG de Supabase** (1.608 chunks) sale de esta misma extracción y **sigue con los datos viejos**. Re-indexar toca datos de producción, así que no se hizo sin visto bueno explícito. Hasta que se haga, el prompt y el RAG están **desincronizados**: el prompt ya tiene los bis, el RAG no.
+
+### ACH-DATA-009 (NUEVO, P3, ABIERTO) — los 10 artículos transitorios de la LGUC se descartan en silencio
+
+Hallado al verificar ACH-DATA-008, **preexistente y sin relación con ese arreglo**. La LGUC numera sus artículos transitorios desde 1 otra vez (`Artículo 1°.-` en el carácter 349.668, justo después de la marca *"ARTICULOS TRANSITORIOS"*). Como el extractor deduplica por número conservando la primera ocurrencia, **los 10 transitorios se descartan** y se quedan los del cuerpo principal. No afecta a ningún artículo hoy seleccionado para el prompt. El arreglo es acotado —prefijar el número cuando la posición supera la marca de transitorios—, pero cambia el corpus, así que se registra en vez de aplicarse junto con otra cosa. OGUC no tiene el problema: 791 secciones, 0 números duplicados.
 
 ### ACH-OPS-001 (NUEVO, P2 — RESUELTO 2026-09-21, commits `0a55a24` y `2460ed5`)
 Existe un `pre-commit` real y bueno (chequeo de hardcodeo + los 24 casos de regresión + los golden tests contra 3 proyectos reales), activado vía `core.hooksPath = .githooks`. Pero **`.githooks/` no estaba versionado**: no sobrevivía a un clone limpio ni existía para ningún colaborador. Sumado a que no hay CI (`.github/workflows` no existe), toda la verificación automática del motor CAD dependía de un archivo sin trackear en un equipo. *Corrección a la Fase 1*: el anexo de motor CAD decía que los golden tests están "excluidos por defecto de cualquier corrida normal" — cierto para `pytest`, pero incompleto: el hook sí los corre.

@@ -115,15 +115,36 @@ async function main() {
   const texto = await extraerTextoCompleto(pdfjs, PDF);
   console.log(`\n  Texto total: ${Math.round(texto.length / 1000)} KB`);
 
-  // Detectar artículos: "Artículo X.Y.Z."
-  // El PDF puede tener "Artículo" con acento y con/sin espacio antes del número
-  const RE_ART = /Artículo\s+(\d+\.\d+\.\d+)\./g;
+  // Detectar artículos: "Artículo X.Y.Z." y también "Artículo X.Y.Z. bis"
+  //
+  // CORREGIDO 2026-09-21 (auditoría Fase 1, ACH-DATA-008): la versión anterior
+  // capturaba solo `\d+\.\d+\.\d+`, así que un encabezado "Artículo 2.1.3. bis"
+  // se guardaba con el número "2.1.3" — el mismo que el artículo base. Y como
+  // el dedup de más abajo conserva la PRIMERA ocurrencia, el artículo bis se
+  // descartaba entero, en silencio. No se mezclaba con el base (el corte por
+  // posición dejaba el texto del base correcto): simplemente desaparecía.
+  //
+  // El PDF usa 2 formatos: "Artículo 2.1.3. bis." y "Artículo 2.1.4. bis".
+  // Las referencias cruzadas dentro del texto usan minúscula ("lo dispuesto en
+  // el artículo 2.1.4. bis"), así que exigir la A mayúscula ya las excluye.
+  //
+  // OJO con el punto tras el número: es OBLIGATORIO a propósito. Un primer
+  // intento lo hizo opcional (`\.?`) y eso rompió la extracción: paso a
+  // matchear referencias cruzadas escritas con mayúscula ("el Artículo 2.1.4
+  // de esta Ordenanza"), creando cortes espurios que se comieron un fragmento
+  // real del Art. 2.1.4. Lo detectó el control de integridad que compara el
+  // texto nuevo contra el anterior, no una lectura a ojo.
+  const RE_ART = /Artículo\s+(\d+\.\d+\.\d+)\.\s*(bis|ter)?\.?/g;
 
   console.log('Detectando artículos...');
   const limites = [];
   let m;
   while ((m = RE_ART.exec(texto)) !== null) {
-    limites.push({ numero: m[1], pos: m.index });
+    // m[2] es "bis"/"ter" si el encabezado lo trae. Se normaliza a
+    // "2.1.3 bis" (un solo espacio, sin el punto intermedio) para que el
+    // número quede legible y distinto del artículo base.
+    const numero = m[2] ? `${m[1]} ${m[2]}` : m[1];
+    limites.push({ numero, pos: m.index });
   }
   console.log(`  ${limites.length} artículos encontrados`);
 
@@ -132,7 +153,8 @@ async function main() {
   for (let i = 0; i < limites.length; i++) {
     const { numero, pos } = limites[i];
     const finPos = i + 1 < limites.length ? limites[i + 1].pos : texto.length;
-    const textoArt = texto.substring(pos, finPos).replace(/^Artículo\s+\d+\.\d+\.\d+\./, '').trim();
+    const textoArt = texto.substring(pos, finPos)
+      .replace(/^Artículo\s+\d+\.\d+\.\d+\.?\s*(?:bis|ter)?\.?/, '').trim();
 
     const subpartes = partirEnSubpartes(numero, textoArt);
     articulos.push(...subpartes);

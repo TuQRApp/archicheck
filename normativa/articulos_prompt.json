@@ -245,5 +245,5 @@
       "tema": "recepcion_definitiva_obligatoria"
     }
   ],
-  "_nota_116bis": "LGUC 116 bis (revisor independiente) figura en la lista pero NO se genera: falta en la extraccion, no en el PDF. Ver ACH-DATA-008. Cuando se arregle el extractor, aparece solo."
+  "_nota_116bis": "LGUC 116 bis (revisor independiente) se recupero el 2026-09-21 al arreglar el extractor (ACH-DATA-008). El regex exigia \".\" o \"-\" pegado al numero, asi que \"Articulo 116 bis.-\" no matcheaba y su texto quedaba PEGADO al Art. 116."
 }
