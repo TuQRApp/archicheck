@@ -233,13 +233,13 @@ Es la **misma clase de defecto que el truncado a 220 caracteres** que se elimin�
 
 El bloque normativo pasa de ~24k a ~45k tokens. Ese es el costo de entregar los artículos enteros.
 
-### ACH-DATA-013 (NUEVO, P3, ABIERTO) — las tablas en texto pierden su estructura de filas
+### ACH-DATA-013 (NUEVO, P3 — RESUELTO 2026-09-21, commit `eec7c1c`) — las tablas en texto perdían su estructura de filas
 
 `normativa/limpiar_texto_normativo.mjs:54` hace `.replace(/\s+/g, ' ')`, que aplana los saltos de línea. La matriz de resistencia al fuego del **Art. 4.3.3** llega al modelo como una sola línea corrida (`|a |F-180|F-120|…`). Los valores están todos y el patrón de pipes permite recuperar las filas, así que está **degradado, no perdido**. No se arregló en el acto porque los patrones de limpieza de marginalia operan sobre el texto aplanado —el ruido del decreto viene intercalado por la maqueta a dos columnas—, así que preservar los saltos obliga a rediseñar esa limpieza para que sea consciente de las líneas.
 
-### ACH-DATA-011 (NUEVO, P3, ABIERTO) — el prompt cita el Art. 4.2.18 y no se lo entrega
+### ACH-DATA-011 (NUEVO, P3 — RESUELTO 2026-09-21, commit `88ea3bc`) — el prompt citaba el Art. 4.2.18 y no se lo entregaba
 
-Mismo patrón que tenía el 4.2.10 antes de la curación: `src/App.jsx:1054` instruye citar **OGUC Art. 4.2.18** (ancho de pasillos) y el artículo **no está** entre los 43 que se inyectan. Verificado con un cruce de todos los artículos citados en `App.jsx` contra la lista entregada: es el **único** que falta (LGUC: 0 faltantes). El impacto es menor que en el caso del 4.2.10 porque la propia instrucción deletrea el requisito (*medio centímetro por persona, mínimo 1,10 m*), así que el umbral no se pierde. Igual corresponde entregarlo: el texto oficial está extraído y disponible.
+**RESUELTO**: el Art. 4.2.18 se agregó a `articulos_prompt.json` el 2026-09-21 y hoy se entrega con su texto completo (497 caracteres). Lo que sigue es el hallazgo original. Mismo patrón que tenía el 4.2.10 antes de la curación: `src/App.jsx:1054` instruye citar **OGUC Art. 4.2.18** (ancho de pasillos) y el artículo **no está** entre los 43 que se inyectan. Verificado con un cruce de todos los artículos citados en `App.jsx` contra la lista entregada: es el **único** que falta (LGUC: 0 faltantes). El impacto es menor que en el caso del 4.2.10 porque la propia instrucción deletrea el requisito (*medio centímetro por persona, mínimo 1,10 m*), así que el umbral no se pierde. Igual corresponde entregarlo: el texto oficial está extraído y disponible.
 
 ### ACH-OPS-001 (NUEVO, P2 — RESUELTO 2026-09-21, commits `0a55a24` y `2460ed5`)
 Existe un `pre-commit` real y bueno (chequeo de hardcodeo + los 24 casos de regresión + los golden tests contra 3 proyectos reales), activado vía `core.hooksPath = .githooks`. Pero **`.githooks/` no estaba versionado**: no sobrevivía a un clone limpio ni existía para ningún colaborador. Sumado a que no hay CI (`.github/workflows` no existe), toda la verificación automática del motor CAD dependía de un archivo sin trackear en un equipo. *Corrección a la Fase 1*: el anexo de motor CAD decía que los golden tests están "excluidos por defecto de cualquier corrida normal" — cierto para `pytest`, pero incompleto: el hook sí los corre.
