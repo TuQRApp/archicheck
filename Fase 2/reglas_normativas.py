@@ -314,20 +314,40 @@ ART_455_DOCENTE = {
 }
 
 
-def vanos_minimos_art_455(region, tipo_recinto='docente'):
+# Valor de `tipo_edificacion` (vocabulario canonico de la taxonomia normativa,
+# ver normativa/taxonomia_articulos.json: agropecuario, comercio, cultura,
+# educacion, industrial, oficinas, residencial, salud, todos) al que aplica el
+# Art. 4.5.5. Se usa el mismo vocabulario a proposito: el paso de preguntas de
+# carga (Backlog_Macro item 7a) va a poblar exactamente esa dimension.
+TIPO_EDIFICACION_ART_455 = 'educacion'
+
+
+def vanos_minimos_art_455(region, tipo_edificacion, tipo_recinto='docente'):
     """% minimo de vanos (iluminacion, ventilacion) segun Art. 4.5.5 OGUC.
 
-    `region`: nombre de region chilena (match laxo, sin tildes ni mayusculas).
+    `region`: nombre de region chilena (match laxo, tolera "Region de ...", "RM").
+    `tipo_edificacion`: vocabulario de la taxonomia ('educacion', 'residencial',
+        'oficinas', ...). La regla SOLO aplica a 'educacion'.
     `tipo_recinto`: 'docente' | 'hogar_estudiantil'.
 
-    Devuelve (pct_iluminacion, pct_ventilacion, referencia) o None si la region
-    no se reconoce -- nunca asume un grupo por defecto, mismo criterio de "dato
-    ausente != cumple" que rige en el resto del modulo.
+    Devuelve (pct_iluminacion, pct_ventilacion, referencia), o None si la regla
+    no aplica o falta el dato -- nunca asume un default, mismo criterio de
+    "dato ausente != cumple" que rige en el resto del modulo.
 
-    OJO: esta regla aplica SOLO a recintos docentes / hogares estudiantiles.
-    Para cualquier otro destino, OGUC no fija porcentaje alguno (Art. 4.1.2 es
-    cualitativo: "al menos una ventana"). No la uses como default general.
+    El guard de `tipo_edificacion` esta DENTRO de la funcion a proposito: el bug
+    que motivo todo esto (ACH-FRONT-007) fue justamente aplicar un porcentaje de
+    vanos a todo recinto de todo proyecto. Para cualquier destino que no sea
+    educacional, OGUC no fija porcentaje alguno -- el Art. 4.1.2 es cualitativo
+    ("al menos una ventana"). Que la funcion no pueda devolver un numero fuera
+    de su alcance hace imposible repetir ese error desde un consumidor nuevo.
+
+    NOTA de alcance: los "hogares estudiantiles" del articulo son residencias de
+    estudiantes; se los trata como 'educacion' porque el articulo vive en el
+    capitulo de locales escolares y los nombra explicitamente. Si algun dia el
+    paso de carga los clasifica como 'residencial', hay que contemplarlo aca.
     """
+    if tipo_edificacion != TIPO_EDIFICACION_ART_455:
+        return None
     if not region:
         return None
 
