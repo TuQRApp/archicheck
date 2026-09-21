@@ -155,7 +155,30 @@ Un recinto con 12% de ventana **cumple en BIM y no cumple en CAD**. Mismo edific
 ### ACH-TEST-001 (NUEVO, P2 — YA CORREGIDO)
 `test_cuerpo_cerrado.py` (24 aserciones sobre 9 bugs históricos) **no definía ninguna función `def test_*`**, así que `pytest` no recolectaba nada de ahí, en silencio. Corriendo `pytest` se veía "5 passed" y cualquiera concluía que la regresión había corrido. El docstring del archivo hermano incluso afirmaba que "corre junto al resto" — era falso. Los 24 casos pasan (verificado a mano), así que no había regresión escondida: era un problema de cobertura del runner. **Corregido** con un envoltorio; pytest pasó de 5 a 6 tests y la afirmación del docstring ahora es verdadera.
 
-### ACH-OPS-001 (NUEVO, P2 — RESUELTO 2026-09-21, commit `0a55a24`)
+### ACH-DATA-007 (NUEVO, **el hallazgo raíz** — RESUELTO 2026-09-21, commit `2460ed5`)
+
+Buscando por qué la cita falsa seguía viva en producción, apareció el origen de toda la cadena de citas erróneas que el proyecto venía corrigiendo río abajo desde hacía meses.
+
+`src/App.jsx` inyecta en **cada análisis** un bloque titulado *"NORMATIVA NACIONAL VIGENTE — OGUC/LGUC"* con 53 artículos, que salían de 2 JSON **mantenidos a mano**. Cruzados uno por uno contra el PDF oficial: **solo 23 tenían el texto real.** Los otros 30:
+
+- **Texto fabricado** atribuido a artículos reales. Verificado a mano: el JSON decía que el **Art. 4.2.2** trata de anchos de escalera (el real trata de *cambio de destino*) y que el **Art. 4.5.7** exige *"1/6 de la superficie de piso"* de ventana (el real regula *patios de locales escolares*, y ese 1/6 **no existe en ninguno de los 770 artículos**).
+- **Placeholders**: 5 artículos de LGUC (57, 58, 60, 119, 120) cuyo texto era literalmente `"[Artículo N - consultar texto completo en BCN]"` — mientras el checklist del prompt le pedía al modelo verificarlos.
+
+**Ese 1/6 inventado es el origen de ACH-FRONT-007**, y muy probablemente de las demás citas equivocadas (4.2.2 para escaleras, 4.2.5/4.2.6 para ventilación) que se venían parcheando una por una en `reglas_normativas.py`, en la Celda 4 y en las instrucciones del prompt, sin dar con la fuente. Se corregían síntomas mientras el corpus que el prompt inyecta arriba de todo estaba inventado.
+
+**Dos defectos más que se potenciaban entre sí:**
+1. La extracción del PDF trae la marginalia del decreto **intercalada dentro de las oraciones** (*"Los pasillos tendrán un ancho **Decreto 75, VIVIENDA** libre mínimo de medio centímetro por persona…"*), en **565 de 770** secciones.
+2. El prompt **truncaba cada artículo a 220 caracteres**. En el Art. 4.2.18 el requisito (`1,10 m`) cae en el carácter **222**: el ruido empujaba el número justo fuera del corte y **el modelo nunca lo veía**.
+
+**Resuelto así**: el texto ya no se escribe a mano, se **deriva** del PDF oficial (`generar_articulos_prompt.mjs`) y se limpia (`limpiar_texto_normativo.mjs`, 565 → 0 secciones con ruido). Se eliminó el truncado —sobre texto legal un corte ciego cae donde cae, no existe un límite seguro— y la etiqueta de tema, que también estaba equivocada. Un test (`test_articulos_prompt.mjs`, 51/51) falla si el texto no coincide con el oficial, si reaparece un placeholder o si queda marginalia, y corre en el hook y en CI. El bloque pasa de ~3k a ~20k tokens: ese es el costo de que el modelo lea el texto real.
+
+**Queda abierto**: las etiquetas de tema y, sobre todo, **la selección de qué artículos incluir** se hicieron sobre premisas equivocadas (el 4.5.7 entró creyendo que trataba de ventilación). Merece una curación normativa.
+
+### ACH-DATA-008 (NUEVO, P2, ABIERTO) — 49 artículos "bis" faltan en la extracción
+
+La regex de extracción nunca contempló artículos *bis*: faltan **22 en LGUC y 27 en OGUC**, entre ellos el **LGUC Art. 116 bis** (revisor independiente), que el propio checklist del prompt manda verificar y que **sí está en el PDF** (página 65). Afecta por igual al prompt y al **corpus del RAG en Supabase**, que sale de la misma extracción. Arreglarlo implica re-extraer y re-indexar, por eso queda como decisión aparte.
+
+### ACH-OPS-001 (NUEVO, P2 — RESUELTO 2026-09-21, commits `0a55a24` y `2460ed5`)
 Existe un `pre-commit` real y bueno (chequeo de hardcodeo + los 24 casos de regresión + los golden tests contra 3 proyectos reales), activado vía `core.hooksPath = .githooks`. Pero **`.githooks/` no estaba versionado**: no sobrevivía a un clone limpio ni existía para ningún colaborador. Sumado a que no hay CI (`.github/workflows` no existe), toda la verificación automática del motor CAD dependía de un archivo sin trackear en un equipo. *Corrección a la Fase 1*: el anexo de motor CAD decía que los golden tests están "excluidos por defecto de cualquier corrida normal" — cierto para `pytest`, pero incompleto: el hook sí los corre.
 
 **RESUELTO**, y versionarlo destapó 3 problemas que lo habrían hecho inútil para un colaborador:
@@ -165,7 +188,7 @@ Existe un `pre-commit` real y bueno (chequeo de hardcodeo + los 24 casos de regr
 
 `CLAUDE.md` documenta ahora el paso de instalación (`git config core.hooksPath .githooks`), porque **`core.hooksPath` es config local de git y no viaja con el clon**: versionar el archivo no lo activa. Verificado que las 3 etapas del gate siguen pasando con el intérprete que ahora elige la detección.
 
-**Lo que sigue abierto**: no hay CI. El gate ahora es compartible y reproducible, pero sigue dependiendo de que cada quien lo instale y de que commitee desde una máquina con el entorno armado.
+**El CI ya existe** (`.github/workflows/ci.yml`, commit `2460ed5`): en cada push a `main` y en cada PR corre el build del portal, el chequeo del corpus normativo, la sincronía con su generador, la regresión del motor CAD (24 casos + propiedades) y el chequeo de hardcodeo. Los 3 pasos se probaron localmente antes de subirlos. Los golden tests quedan fuera a propósito (lentos, dependen de PDFs pesados) y los sigue corriendo el hook local.
 
 ## Cobertura de esta pasada — qué quedó cubierto al 100% y qué no
 
