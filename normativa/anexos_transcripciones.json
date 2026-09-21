@@ -225,6 +225,246 @@
       "verificacion": "Revisada 2026-09-21: es el banner institucional de la BCN en la portada. NO es contenido normativo. Se cuela en el manifiesto porque aparece en 1 sola pagina y la regla de decoracion (>3 paginas) no la atrapa. Queda registrada como decoracion para que no figure como pendiente.",
       "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
       "estado": "DECORACION"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla01-u-rt",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 1. Transmitancia termica U maxima y resistencia termica Rt minima para complejos de techumbre, muros perimetrales, piso ventilado y puertas opacas",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        195
+      ],
+      "imagenes": [
+        "OGUC_p0195_x403"
+      ],
+      "contenido": "| Zona termica | Techumbre U (W/m2K) | Techumbre Rt (m2K/W) | Muros perim. U | Muros perim. Rt | Piso ventilado U | Piso ventilado Rt | Puertas opacas U | Puertas opacas Rt |\n|---|---|---|---|---|---|---|---|---|\n| A | 0,84 | 1,19 | 2,10 | 0,48 | 3,60 | 0,28 | --- | --- |\n| B | 0,47 | 2,13 | 0,80 | 1,25 | 0,70 | 1,43 | 1,70 | 0,59 |\n| C | 0,47 | 2,13 | 0,80 | 1,25 | 0,87 | 1,15 | 1,70 | 0,59 |\n| D | 0,38 | 2,63 | 0,80 | 1,25 | 0,60 | 1,67 | 1,70 | 0,59 |\n| E | 0,33 | 3,03 | 0,60 | 1,67 | 0,60 | 1,67 | 1,70 | 0,59 |\n| F | 0,28 | 3,57 | 0,45 | 2,22 | 0,50 | 2,00 | 1,70 | 0,59 |\n| G | 0,28 | 3,57 | 0,40 | 2,50 | 0,39 | 2,56 | 1,70 | 0,59 |\n| H | 0,25 | 4,00 | 0,30 | 3,33 | 0,32 | 3,13 | 1,70 | 0,59 |\n| I | 0,25 | 4,00 | 0,35 | 2,86 | 0,32 | 3,13 | 1,70 | 0,59 |",
+      "verificacion": "Leida 2026-09-21 con ampliacion 4x en 2 mitades. La ampliacion CORRIGIO la fila D de muros perimetrales, que a resolucion original se habia leido 0,60/1,67 cuando es 0,80/1,25. Esa celda es justamente una de las 2 en que esta tabla difiere de la TABLA 10.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla02-r100",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 2. Resistencia termica R100 minima del material aislante en complejos de techumbre, muros perimetrales y piso ventilado",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        197
+      ],
+      "imagenes": [
+        "OGUC_p0197_x408"
+      ],
+      "contenido": "| Zona termica | Techumbre R100 | Muros perimetrales R100 | Piso ventilado R100 |\n|---|---|---|---|\n| A | 119 | 48 | 28 |\n| B | 213 | 125 | 143 |\n| C | 213 | 125 | 115 |\n| D | 263 | 125 | 167 |\n| E | 303 | 167 | 167 |\n| F | 357 | 222 | 200 |\n| G | 357 | 250 | 256 |\n| H | 400 | 333 | 313 |\n| I | 400 | 286 | 313 |",
+      "verificacion": "Leida 2026-09-21 ampliada 4x. Coherente con la TABLA 1: donde la 1 pide U=0,80 (Rt 1,25) la 2 pide R100=125, y donde pide U=2,10 (Rt 0,48) pide R100=48.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla03-pct-ventana",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 3. Porcentaje maximo permitido de superficie de ventanas segun orientacion y valor U, para cada zona termica",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        198
+      ],
+      "imagenes": [
+        "OGUC_p0198_x411",
+        "OGUC_p0199_x414"
+      ],
+      "contenido": "Columnas = transmitancia termica U de la ventana (W/m2K). Valores = porcentaje maximo de superficie de ventana. O-P = Oriente/Poniente. OGT = otras orientaciones (techumbre).\n\n| Zona | Orientacion | <=0,6 | <=0,8 | <=1,2 | <=1,6 | <=2,0 | <=2,4 | <=2,8 | <=3,2 | <=3,6 | <=4,0 | <=4,4 | <=5,8 |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| A | Norte | 100% | 100% | 100% | 100% | 100% | 98% | 97% | 95% | 94% | 91% | 88% | 50% |\n| A | O - P | 100% | 100% | 99% | 96% | 94% | 91% | 87% | 84% | 80% | 75% | 69% | 30% |\n| A | Sur | 94% | 93% | 91% | 89% | 85% | 82% | 78% | 74% | 69% | 63% | 57% | 25% |\n| A | OGT | 54% | 53% | 52% | 51% | 50% | 49% | 48% | 46% | 44% | 42% | 40% | 25% |\n| B | Norte | 100% | 99% | 98% | 97% | 96% | 94% | 92% | 90% | 88% | 85% | 82% | 30% |\n| B | O - P | 92% | 91% | 89% | 87% | 84% | 81% | 78% | 75% | 71% | 66% | 60% | 20% |\n| B | Sur | 86% | 84% | 81% | 78% | 75% | 71% | 68% | 64% | 59% | 54% | 47% | 10% |\n| B | OGT | 52% | 51% | 49% | 47% | 46% | 45% | 43% | 42% | 40% | 38% | 35% | 10% |\n| C | Norte | 96% | 95% | 94% | 93% | 91% | 90% | 88% | 85% | 83% | 79% | 75% | 40% |\n| C | O - P | 82% | 81% | 79% | 77% | 75% | 72% | 69% | 66% | 62% | 58% | 52% | 35% |\n| C | Sur | 75% | 73% | 70% | 67% | 64% | 61% | 58% | 54% | 49% | 44% | 38% | 15% |\n| C | OGT | 47% | 46% | 45% | 44% | 42% | 41% | 39% | 37% | 35% | 33% | 30% | 15% |\n| D | Norte | 94% | 93% | 91% | 89% | 87% | 85% | 83% | 80% | 77% | 73% | 69% | 25% |\n| D | O - P | 73% | 72% | 70% | 68% | 65% | 63% | 60% | 57% | 53% | 49% | 44% | 15% |\n| D | Sur | 62% | 61% | 59% | 57% | 54% | 51% | 48% | 44% | 40% | 35% | 29% | 10% |\n| D | OGT | 43% | 42% | 41% | 40% | 38% | 37% | 35% | 33% | 31% | 28% | 25% | 10% |\n| E | Norte | 90% | 89% | 87% | 85% | 83% | 80% | 78% | 75% | 71% | 67% | 61% | 10% |\n| E | O - P | 63% | 62% | 60% | 58% | 56% | 54% | 51% | 48% | 45% | 41% | 35% | 8% |\n| E | Sur | 51% | 50% | 48% | 46% | 44% | 41% | 38% | 35% | 31% | 26% | 20% | 5% |\n| E | OGT | 39% | 38% | 37% | 36% | 34% | 32% | 30% | 28% | 26% | 23% | 19% | 5% |\n| F | Norte | 88% | 86% | 83% | 80% | 78% | 76% | 73% | 69% | 65% | 60% | 54% | 0% |\n| F | O - P | 54% | 53% | 51% | 49% | 47% | 45% | 42% | 40% | 36% | 32% | 27% | 0% |\n| F | Sur | 41% | 40% | 38% | 36% | 34% | 31% | 28% | 25% | 21% | 17% | 12% | 0% |\n| F | OGT | 36% | 35% | 33% | 31% | 30% | 28% | 26% | 24% | 21% | 17% | 13% | 0% |\n| G | Norte | 84% | 82% | 79% | 76% | 74% | 71% | 67% | 64% | 59% | 54% | 46% | 0% |\n| G | O - P | 43% | 42% | 41% | 40% | 38% | 36% | 34% | 31% | 28% | 24% | 20% | 0% |\n| G | Sur | 31% | 30% | 28% | 26% | 24% | 21% | 19% | 16% | 13% | 8% | 0% | 0% |\n| G | OGT | 32% | 31% | 29% | 27% | 26% | 24% | 21% | 19% | 16% | 12% | 0% | 0% |\n| H | Norte | 77% | 76% | 74% | 72% | 69% | 66% | 62% | 58% | 53% | 47% | 38% | 0% |\n| H | O - P | 34% | 33% | 32% | 31% | 29% | 27% | 25% | 23% | 20% | 16% | 12% | 0% |\n| H | Sur | 30% | 29% | 27% | 25% | 23% | 20% | 18% | 15% | 12% | 7% | 0% | 0% |\n| H | OGT | 31% | 30% | 28% | 26% | 25% | 23% | 20% | 18% | 15% | 11% | 0% | 0% |\n| I | Norte | 75% | 73% | 70% | 67% | 64% | 61% | 57% | 52% | 46% | 39% | 30% | 0% |\n| I | O - P | 43% | 42% | 41% | 40% | 38% | 36% | 34% | 31% | 28% | 24% | 20% | 0% |\n| I | Sur | 28% | 27% | 25% | 23% | 21% | 18% | 16% | 13% | 10% | 5% | 0% | 0% |\n| I | OGT | 29% | 28% | 26% | 24% | 23% | 21% | 18% | 16% | 13% | 10% | 0% | 0% |",
+      "verificacion": "Leida 2026-09-21. La tabla ocupa 2 imagenes: x411 (zonas A y B) y x414 (zonas C a I). Ambas ampliadas, la segunda en 2 mitades, por ser 36 filas x 12 columnas.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla05-upvm",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 5. Valor U ponderado maximo (Upvm) de los complejos de ventanas y muros perimetrales segun orientacion y valor U de ventana",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        201
+      ],
+      "imagenes": [
+        "OGUC_p0201_x421",
+        "OGUC_p0201_x422"
+      ],
+      "contenido": "Columnas = transmitancia termica U de la ventana (W/m2K). Valores = Upvm maximo en W/m2K. \"na\" = no aplica. La zona A no figura en la tabla.\n\n| Zona | Orientacion | <=0,6 | <=0,8 | <=1,2 | <=1,6 | <=2,0 | <=2,4 | <=2,8 | <=3,2 | <=3,6 |\n|---|---|---|---|---|---|---|---|---|---|---|\n| B | Norte | na | na | 1,19 | 1,58 | 1,95 | 2,30 | 2,64 | 2,96 | 3,26 |\n| B | O - P | na | na | 1,16 | 1,50 | 1,81 | 2,10 | 2,36 | 2,60 | 2,79 |\n| B | Sur | na | na | 1,12 | 1,42 | 1,70 | 1,94 | 2,16 | 2,34 | 2,45 |\n| C | Norte | na | na | 1,18 | 1,54 | 1,89 | 2,24 | 2,56 | 2,84 | 3,12 |\n| C | O - P | na | na | 1,12 | 1,42 | 1,70 | 1,95 | 2,18 | 2,38 | 2,54 |\n| C | Sur | na | na | 1,08 | 1,34 | 1,57 | 1,78 | 1,96 | 2,10 | 2,17 |\n| D | Norte | na | na | 1,16 | 1,51 | 1,84 | 2,16 | 2,46 | 2,72 | 2,96 |\n| D | O - P | na | na | 1,08 | 1,34 | 1,58 | 1,81 | 2,00 | 2,17 | 2,28 |\n| D | Sur | na | na | 1,04 | 1,26 | 1,45 | 1,62 | 1,76 | 1,86 | 1,92 |\n| E | Norte | na | 0,78 | 1,12 | 1,45 | 1,76 | 2,04 | 2,32 | 2,55 | 2,73 |\n| E | O - P | na | 0,72 | 0,96 | 1,18 | 1,38 | 1,57 | 1,72 | 1,85 | 1,95 |\n| E | Sur | na | 0,70 | 0,89 | 1,06 | 1,22 | 1,34 | 1,44 | 1,51 | 1,53 |\n| F | Norte | 0,58 | 0,75 | 1,07 | 1,37 | 1,66 | 1,93 | 2,17 | 2,35 | 2,50 |\n| F | O - P | 0,53 | 0,64 | 0,83 | 1,01 | 1,18 | 1,33 | 1,44 | 1,55 | 1,58 |\n| F | Sur | 0,51 | 0,59 | 0,74 | 0,86 | 0,98 | 1,05 | 1,11 | 1,14 | 1,11 |\n| G | Norte | 0,57 | 0,73 | 1,03 | 1,31 | 1,58 | 1,82 | 2,01 | 2,19 | 2,29 |\n| G | O - P | 0,49 | 0,57 | 0,73 | 0,88 | 1,01 | 1,12 | 1,22 | 1,27 | 1,30 |\n| G | Sur | 0,46 | 0,52 | 0,62 | 0,71 | 0,78 | 0,82 | 0,86 | 0,85 | 0,82 |\n| H | Norte | 0,53 | 0,68 | 0,97 | 1,24 | 1,47 | 1,69 | 1,85 | 1,98 | 2,05 |\n| H | O - P | 0,40 | 0,47 | 0,59 | 0,70 | 0,79 | 0,87 | 0,93 | 0,97 | 0,96 |\n| H | Sur | 0,39 | 0,45 | 0,54 | 0,63 | 0,69 | 0,72 | 0,75 | 0,74 | 0,70 |\n| I | Norte | 0,54 | 0,68 | 0,95 | 1,19 | 1,41 | 1,60 | 1,75 | 1,83 | 1,85 |\n| I | O - P | 0,46 | 0,54 | 0,70 | 0,85 | 0,98 | 1,09 | 1,18 | 1,23 | 1,26 |\n| I | Sur | 0,42 | 0,47 | 0,56 | 0,64 | 0,70 | 0,72 | 0,74 | 0,72 | 0,68 |",
+      "verificacion": "Leida 2026-09-21 ampliada 4x en 2 mitades. La tabla ocupa 2 imagenes en la misma pagina: x421 (zonas B a H) y x422 (zona I). Se aplica junto con la formula Upvm transcrita aparte.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla06-sobrecimientos",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 6. Resistencia termica R100 minima del material aislante utilizado en los sobrecimientos de pisos sobre el terreno",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        204
+      ],
+      "imagenes": [
+        "OGUC_p0204_x430"
+      ],
+      "contenido": "| Zona termica | Aislacion termica de sobrecimiento R100 [(m2K)/W]x100 |\n|---|---|\n| A | - |\n| B | 45 |\n| C | 45 |\n| D | 45 |\n| E | 45 |\n| F | 91 |\n| G | 91 |\n| H | 91 |\n| I | 91 |\n\n(*) Segun NCh 2251: R100 = Resistencia Termica (m2K/W) x 100.",
+      "verificacion": "Leida 2026-09-21.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla07-infiltracion",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 7. Clase de infiltracion de aire maxima permitida para la envolvente termica, por provincia",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        205
+      ],
+      "imagenes": [
+        "OGUC_p0205_x433"
+      ],
+      "contenido": "| Provincia | Clase de infiltracion de aire 50 Pa (ach) |\n|---|---|\n| Arica, Iquique, Tocopilla, Chanaral, Isla de Pascua | --- |\n| Parinacota, Tamarugal, El Loa, Coyhaique, Aysen, General Carrera, Capitan Prat, Ultima Esperanza, Magallanes, Tierra del Fuego, Antartica Chilena | 4,00 |\n| Copiapo, Limari, Los Andes, Valparaiso, Cordillera, Maipo, Melipilla, Talagante, Cachapoal, Cardenal Caro, Colchagua, Talca, Concepcion, Arauco, Malleco, Cautin, Valdivia, Ranco, Osorno, Llanquihue, Palena, Chiloe | 5,00 |\n| Antofagasta, Huasco, Elqui, Choapa, Petorca, Quillota, San Felipe de Aconcagua, San Antonio, Marga Marga, Chacabuco, Curico, Linares, Cauquenes, Diguillin, Punilla, Itata, Biobio | 8,00 |\n\nNota: la clase de infiltracion sera medida excluyendo (sellando) los dispositivos de ventilacion.",
+      "verificacion": "Leida 2026-09-21. Mismo contenido que la TABLA 14; se transcriben por separado porque son tablas distintas del articulo.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla08-muestra-ensayo",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 8. Tamano de la muestra de ensayo en terreno, segun tamano del lote y cantidad de items no conformes",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        206
+      ],
+      "imagenes": [
+        "OGUC_p0206_x436"
+      ],
+      "contenido": "| Tamano del lote | Tamano de la muestra | Items no conformes |\n|---|---|---|\n| 11 a 50 | 2 | 1 |\n| 51 a 500 | 3 | 1 |\n| >501 | 5 | 1 |\n\nEl tamano del lote y de la muestra corresponden a las unidades de vivienda del proyecto y a las unidades de vivienda a ensayar. Los items no conformes corresponden a la cantidad de muestras que no cumplen con el estandar definido en la TABLA 7.",
+      "verificacion": "Leida 2026-09-21.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla09-permeabilidad",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 9. Clase de permeabilidad al aire minima para complejos de puertas opacas y ventanas",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        207
+      ],
+      "imagenes": [
+        "OGUC_p0207_x439"
+      ],
+      "contenido": "| Zona termica | Clase de permeabilidad al aire 100 Pa |\n|---|---|\n| A | --- |\n| B | 1 |\n| C | 1 |\n| D | 2 |\n| E | 2 |\n| F | 2 |\n| G | 3 |\n| H | 3 |\n| I | 3 |\n\nNota: las clases de permeabilidad al aire estan definidas en la NCh 3296 y corresponden a la clasificacion final del elemento ensayado segun la NCh 3297.",
+      "verificacion": "Leida 2026-09-21. Mismo contenido que la TABLA 16.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla10-u-rt",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 10. Transmitancia termica U maxima y resistencia termica Rt minima para complejos de techumbre, muros perimetrales, piso ventilado y puertas opacas",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        208
+      ],
+      "imagenes": [
+        "OGUC_p0208_x442"
+      ],
+      "contenido": "| Zona termica | Techumbre U (W/m2K) | Techumbre Rt (m2K/W) | Muros perim. U | Muros perim. Rt | Piso ventilado U | Piso ventilado Rt | Puertas opacas U | Puertas opacas Rt |\n|---|---|---|---|---|---|---|---|---|\n| A | 0,84 | 1,19 | 2,00 | 0,50 | 3,60 | 0,28 | --- | --- |\n| B | 0,47 | 2,13 | 0,80 | 1,25 | 0,70 | 1,43 | 1,70 | 0,59 |\n| C | 0,47 | 2,13 | 0,80 | 1,25 | 0,87 | 1,15 | 1,70 | 0,59 |\n| D | 0,38 | 2,63 | 0,60 | 1,67 | 0,60 | 1,67 | 1,70 | 0,59 |\n| E | 0,33 | 3,03 | 0,60 | 1,67 | 0,60 | 1,67 | 1,70 | 0,59 |\n| F | 0,28 | 3,57 | 0,45 | 2,22 | 0,50 | 2,00 | 1,70 | 0,59 |\n| G | 0,28 | 3,57 | 0,40 | 2,50 | 0,39 | 2,56 | 1,70 | 0,59 |\n| H | 0,25 | 4,00 | 0,30 | 3,33 | 0,32 | 3,13 | 1,70 | 0,59 |\n| I | 0,25 | 4,00 | 0,35 | 2,86 | 0,32 | 3,13 | 1,70 | 0,59 |",
+      "verificacion": "Leida 2026-09-21 ampliada 4x en 2 mitades. Difiere de la TABLA 1 en EXACTAMENTE 2 celdas, ambas de muros perimetrales: zona A (2,00/0,50 aqui, 2,10/0,48 en la TABLA 1) y zona D (0,60/1,67 aqui, 0,80/1,25 en la TABLA 1). Verificar la caja de cada valor importa: a resolucion original las 2 tablas parecen identicas.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla11-r100",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 11. Resistencia termica R100 minima del material aislante en complejos de techumbre, muros perimetrales y piso ventilado",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        210
+      ],
+      "imagenes": [
+        "OGUC_p0210_x447"
+      ],
+      "contenido": "| Zona termica | Techumbre R100 | Muros perimetrales R100 | Piso ventilado R100 |\n|---|---|---|---|\n| A | 119 | 50 | 28 |\n| B | 213 | 125 | 143 |\n| C | 213 | 125 | 115 |\n| D | 263 | 167 | 167 |\n| E | 303 | 167 | 167 |\n| F | 357 | 222 | 200 |\n| G | 357 | 250 | 256 |\n| H | 400 | 333 | 313 |\n| I | 400 | 286 | 313 |",
+      "verificacion": "Leida 2026-09-21 ampliada 4x. Difiere de la TABLA 2 en las mismas 2 filas que la TABLA 10 difiere de la TABLA 1 (A: 50 vs 48; D: 167 vs 125), lo que confirma la lectura por coherencia interna.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla12-ventanas",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 12. Transmitancia termica U maxima y resistencia termica Rt minima para el complejo de ventanas",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        211
+      ],
+      "imagenes": [
+        "OGUC_p0211_x450"
+      ],
+      "contenido": "| Zona termica | U (W/m2K) | Rt (m2K/W) |\n|---|---|---|\n| A | 5,80 | 0,17 |\n| B | 3,60 | 0,28 |\n| C | 3,60 | 0,28 |\n| D | 3,60 | 0,28 |\n| E | 3,00 | 0,33 |\n| F | 3,00 | 0,33 |\n| G | 3,00 | 0,33 |\n| H | 2,40 | 0,42 |\n| I | 3,00 | 0,33 |",
+      "verificacion": "Leida 2026-09-21. Ojo con la zona H: es la unica que baja a 2,40, y la I vuelve a 3,00.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla13-sobrecimientos",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 13. Resistencia termica R100 minima del material aislante utilizado en los sobrecimientos de pisos sobre el terreno",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        212
+      ],
+      "imagenes": [
+        "OGUC_p0212_x453"
+      ],
+      "contenido": "| Zona termica | Aislacion termica de sobrecimiento R100 [(m2K)/W]x100 |\n|---|---|\n| A | - |\n| B | 45 |\n| C | 45 |\n| D | 45 |\n| E | 45 |\n| F | 91 |\n| G | 91 |\n| H | 91 |\n| I | 91 |\n\n(*) Segun NCh 2251: R100 = Resistencia Termica (m2K/W) x 100.",
+      "verificacion": "Leida 2026-09-21. Mismo contenido que la TABLA 6.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla14-infiltracion",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 14. Clase de infiltracion de aire maxima permitida para la envolvente termica, por provincia",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        213
+      ],
+      "imagenes": [
+        "OGUC_p0213_x456"
+      ],
+      "contenido": "| Provincia | Clase de infiltracion de aire 50 Pa (ach) |\n|---|---|\n| Arica, Iquique, Tocopilla, Chanaral, Isla de Pascua | --- |\n| Parinacota, Tamarugal, El Loa, Coyhaique, Aysen, General Carrera, Capitan Prat, Ultima Esperanza, Magallanes, Tierra del Fuego, Antartica Chilena | 4,00 |\n| Copiapo, Limari, Los Andes, Valparaiso, Cordillera, Maipo, Melipilla, Talagante, Cachapoal, Cardenal Caro, Colchagua, Talca, Concepcion, Arauco, Malleco, Cautin, Valdivia, Ranco, Osorno, Llanquihue, Palena, Chiloe | 5,00 |\n| Antofagasta, Huasco, Elqui, Choapa, Petorca, Quillota, San Felipe de Aconcagua, San Antonio, Marga Marga, Chacabuco, Curico, Linares, Cauquenes, Diguillin, Punilla, Itata, Biobio | 8,00 |\n\nNota: la clase de infiltracion sera medida excluyendo (sellando) los dispositivos de ventilacion.",
+      "verificacion": "Leida 2026-09-21. Mismo contenido que la TABLA 7.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.1.10-tabla16-permeabilidad",
+      "corpus": "OGUC",
+      "articulo": "4.1.10",
+      "tipo": "tabla",
+      "titulo": "TABLA 16. Clase de permeabilidad al aire minima para complejos de ventanas y de puertas opacas",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [
+        215
+      ],
+      "imagenes": [
+        "OGUC_p0215_x462"
+      ],
+      "contenido": "| Zona termica | Clase de permeabilidad al aire 100 Pa |\n|---|---|\n| A | --- |\n| B | 1 |\n| C | 1 |\n| D | 2 |\n| E | 2 |\n| F | 2 |\n| G | 3 |\n| H | 3 |\n| I | 3 |\n\nNota: las clases de permeabilidad al aire estan definidas en la NCh 3296 y corresponden a la clasificacion final del elemento ensayado segun la NCh 3297.",
+      "verificacion": "Leida 2026-09-21. Mismo contenido que la TABLA 9.",
+      "estado": "TRANSCRITO"
     }
   ]
 }
