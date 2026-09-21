@@ -129,16 +129,15 @@ OGUC_REGLAS = {
     #     ocupacion, sin arriesgar falsos positivos contra escaleras que si
     #     cumplen para su carga real (que hoy no medimos). Pendiente: implementar
     #     carga de ocupacion real para aplicar la tabla completa.
-    #   - 'pasillo' cita Art. 4.2.5 -- el articulo SI es el correcto en tema (el
-    #     texto real confirma que el ancho de vias de evacuacion, exceptuando
-    #     escaleras, se determina "en base a la carga de ocupacion de la
-    #     superficie que sirve"), pero el valor especifico "1,20 m para corredores
-    #     de uso comun" que veniamos usando NO aparece textualmente en el articulo
-    #     -- no se encontro en esta pasada la tabla equivalente a la de escaleras
-    #     (4.2.10) para pasillos/corredores generales. Se mantiene el valor por
-    #     ahora (es un minimo de uso muy extendido en la practica) pero queda
-    #     marcado como parcialmente verificado, no confirmado al 100%.
-    'pasillo'   : (None, 1.20, 'Art. 4.2.5 OGUC — ancho min corredores de uso comun 1,20 m (cita y tema confirmados; valor exacto no verificado al 100% -- ver comentario)'),
+    #   - 'pasillo' citaba Art. 4.2.5 -- CORREGIDO 2026-09-21 (port desde
+    #     Fase 2/reglas_normativas.py, que es la fuente unica para este valor):
+    #     4.2.5 no es el articulo real. El articulo real es 4.2.18 -- 0,5 cm por
+    #     persona segun carga de ocupacion de la superficie servida, con piso
+    #     minimo de 1,10 m. El 1,20 m anterior era MAS estricto que el minimo
+    #     real (menos falsos positivos, no menos falsos negativos). Mismo patron
+    #     que 'escalera': falta implementar carga de ocupacion real para aplicar
+    #     la tabla completa, se usa el piso como valor conservador.
+    'pasillo'   : (None, 1.10, 'Art. 4.2.18 OGUC — 0,5 cm por persona segun carga de ocupacion de la superficie servida, con piso minimo de 1,10 m (aplica siempre en ocupaciones <50 personas o subterraneos de estacionamiento/bodega/servicio); puede exigir mas de 1,10 m segun ocupacion, no calculado todavia'),
     'escalera'  : (None, 1.10, 'Art. 4.2.10 OGUC — tabla por carga de ocupacion, 1,10 m es el piso minimo (hasta 50 personas); puede exigir hasta 1,50 m o 2 escaleras segun ocupacion, no calculado todavia'),
     # FIX 2026-07-26 (c) -- CORRECCION IMPORTANTE tras auditar contra oguc_pdf.json
     # (extraccion completa del PDF oficial, 770 articulos, distinta de la fuente
@@ -156,6 +155,20 @@ OGUC_REGLAS = {
     # simplificacion, no la regla general. Ver tambien el fix de PENDIENTE mas abajo
     # en el bloque "if tipo == 'rampa':", que SI se corrigio a la formula real.
     'rampa'     : (None, 1.50, 'Art. 4.1.7 N°2 OGUC — ancho min 1,50 m (supone ruta a recinto con atencion de publico; puede ser 0,90-1,50 m segun el caso, ver comentario)'),
+
+    # AGREGADO 2026-09-21 -- port desde Fase 2/reglas_normativas.py (fuente
+    # unica). Estas 4 entradas no las consume el loop de arriba (que busca por
+    # `tipo` de recinto: dormitorio/pasillo/escalera/etc. -- ninguna de estas
+    # 4 claves calza con un tipo de recinto real), asi que agregarlas aca no
+    # cambia ningun comportamiento hoy -- solo evita que esta copia quede
+    # desactualizada respecto de la fuente real si algun dia se conectan.
+    'puerta_ancho_libre': (None, 0.90, 'OGUC Art. 4.1.7 N°4 — ancho libre minimo 0,90 m, puertas de ingreso/unidades/recintos con atencion de publico y puertas interiores residenciales (accesibilidad universal)'),
+    'puerta_ancho_libre_bano_accesible': (None, 0.80, 'OGUC Art. 4.1.7 N°6 letra b) — ancho libre minimo 0,80 m (vano 0,90 m), puerta de servicio higienico accesible'),
+    'muro_fire_rating': {
+        'campo_requerido': 'Pset_WallCommon.FireRating',
+        'ref': 'OGUC Art. 4.3.3 — resistencia al fuego segun destino/altura (chequeo de dato declarado, no de valor numerico)',
+    },
+    'ventilacion_iluminacion_pct': (10.0, 'SIN VERIFICAR -- 10% es una convencion de diseño de uso extendido, NO una cita OGUC real (Art. 4.2.5/4.2.6, la cita previa, tratan de pasillos/altura de evacuacion, no de ventanas; Art. 4.1.2 -- el articulo real de ventilacion de locales habitables -- es cualitativo, sin porcentaje)'),
 }
 
 def mejorar_contraste_nitidez(img_rgb):
@@ -3735,22 +3748,37 @@ for (PAGINA_PLANTA, ESCALA_MANUAL, crop) in entries:
                     # que Revi calculo con ella (9,5%/9,60% en vez de los ~10,53%/
                     # ~10,40% que da la formula real para 4,25/4,50 m). Se corrige
                     # aqui a la formula real.
-                    if desarrollo is None:
-                        max_pendiente = 8.0
+                    # CORREGIDO 2026-09-21 (port desde Fase 2/reglas_normativas.py,
+                    # pendiente_maxima_rampa_pct(), fuente unica) -- 2 hallazgos reales
+                    # verificados antes de corregir:
+                    # (a) Codex: dato ausente (desarrollo is None) asumia en silencio
+                    #     el maximo mas estricto (8.0), tratando "no medido" como si
+                    #     fuera una rampa larga real -- ahora max_pendiente queda en
+                    #     None y el chequeo completo se salta (dato ausente != incumple,
+                    #     mismo principio que ya rige en el pipeline BIM). Se agrega
+                    #     tambien el guard desarrollo<=0 (fisicamente invalido, antes
+                    #     caia en la rama <=1.5 y devolvia 12.0 como si fuera valido).
+                    # (b) DeepSeek: 0.5333 es la constante truncada a 4 decimales de
+                    #     -4/7.5 = -0.53333... (periodico) -- verificado empiricamente
+                    #     133 puntos de discrepancia en el rango 1.5-9.0m al redondear a
+                    #     2 decimales, suficiente para cambiar un cumple/no-cumple en un
+                    #     caso limite. Corregido a la fraccion exacta.
+                    if desarrollo is None or desarrollo <= 0:
+                        max_pendiente = None
                     elif desarrollo <= 1.5:
                         max_pendiente = 12.0
                     elif desarrollo >= 9.0:
                         max_pendiente = 8.0
                     else:
-                        max_pendiente = round(12.8 - 0.5333 * desarrollo, 2)
-                    if pendiente_declarada > max_pendiente:
+                        max_pendiente = round(12.8 - (4.0 / 7.5) * desarrollo, 2)
+                    if max_pendiente is not None and pendiente_declarada > max_pendiente:
                         incumplimientos_geo.append({
                             'tipo': 'pendiente_rampa', 'pagina': PAGINA_PLANTA,
                             'recinto': nombre, 'id': rg['id'],
                             'medido': pendiente_declarada, 'minimo': None, 'maximo': max_pendiente,
                             'desarrollo_m': desarrollo,
                             'deficit': round(pendiente_declarada - max_pendiente, 2),
-                            'ref': 'Art. 4.1.7 N°2 OGUC — pendiente max. 8% (desarrollo >=9m) a 12% (desarrollo <=1,5m), formula i%=12,8-0,5333*L entre esos valores'
+                            'ref': 'Art. 4.1.7 N°2 OGUC — pendiente max. 8% (desarrollo >=9m) a 12% (desarrollo <=1,5m), formula i%=12,8-(4/7,5)*L entre esos valores'
                         })
 
         # FIX 2026-07-26: bano/recinto accesible sin circulo de giro -- Revi
