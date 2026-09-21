@@ -76,3 +76,7 @@ __pycache__/
 # PDF oficiales, que si estan versionados. Lo que se versiona es el manifiesto
 # (anexos_graficos.json) y la transcripcion (anexos_transcripciones.json).
 normativa/anexos_graficos/
+
+# Respaldos de filas de Supabase previos a un re-indexado: son datos de
+# produccion (incluyen embeddings), no van al repo publico.
+normativa/_respaldos/
