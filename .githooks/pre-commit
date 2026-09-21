@@ -1,0 +1,58 @@
+#!/bin/sh
+# Pre-commit: corre correr_revisiones.py SOLO si hay cambios staged
+# dentro de Fase 2/Herramientas_CubiCasa5k/ (motor CAD de cuerpo
+# cerrado) -- no afecta commits que no tocan esta zona (portal, BIM,
+# roadmap, etc). Bloquea el commit si algo falla.
+#
+# Instalacion (una vez por clon del repo):
+#   git config core.hooksPath .githooks
+#
+# Para saltarlo puntualmente (no recomendado, solo si ya se corrio a
+# mano y se sabe que esta OK): git commit --no-verify
+
+DIR="Fase 2/Herramientas_CubiCasa5k"
+ARCHIVOS=$(git diff --cached --name-only --diff-filter=ACM -- "$DIR")
+
+if [ -z "$ARCHIVOS" ]; then
+  exit 0
+fi
+
+# Interprete de Python: override explicito primero, despues candidatos.
+#
+# Se prueba EJECUTANDO cada candidato, no con `command -v`: en Windows,
+# `python3` suele resolver al stub de Microsoft Store, que existe como
+# ejecutable pero no es un Python real. La version anterior de este hook tenia
+# una ruta absoluta a una maquina concreta y caia a `command -v python3 ||
+# command -v python` -- ese fallback estaba roto en esa misma maquina (elegia
+# el stub), pero nunca se noto porque la ruta hardcodeada siempre ganaba.
+# (Encontrado 2026-09-21 al versionar el hook.)
+#
+# Para fijar un interprete concreto sin tocar este archivo:
+#   export ARCHICHECK_PYTHON=/ruta/a/python.exe
+PYTHON=""
+for cand in "$ARCHICHECK_PYTHON" python python3 py; do
+  [ -z "$cand" ] && continue
+  if "$cand" -c "import sys" >/dev/null 2>&1; then
+    PYTHON="$cand"
+    break
+  fi
+done
+if [ -z "$PYTHON" ]; then
+  echo "pre-commit: no se encontro un interprete de Python que ejecute -- no se pueden correr las revisiones."
+  echo "  Instalar Python, o fijar uno con: export ARCHICHECK_PYTHON=/ruta/a/python"
+  echo "  Para saltar esta vez: git commit --no-verify"
+  exit 1
+fi
+
+echo "pre-commit: cambios detectados en $DIR, corriendo revisiones..."
+"$PYTHON" "$DIR/correr_revisiones.py" --archivos-cambiados $ARCHIVOS
+RESULTADO=$?
+
+if [ $RESULTADO -ne 0 ]; then
+  echo ""
+  echo "pre-commit: las revisiones fallaron -- commit BLOQUEADO."
+  echo "  Para forzar el commit igual (no recomendado): git commit --no-verify"
+  exit 1
+fi
+
+exit 0

@@ -1,0 +1,6 @@
+# Los hooks son scripts de shell: SIEMPRE con finales de linea LF, incluso en
+# clones sobre Windows. Si git los convierte a CRLF, el shebang queda como
+# "#!/bin/sh\r" y en Linux/macOS falla con "bad interpreter" -- el hook no
+# correria justamente en las maquinas donde mas importa que corra.
+# (Agregado 2026-09-21 al versionar .githooks/, ver ACH-OPS-001.)
+.githooks/** text eol=lf
