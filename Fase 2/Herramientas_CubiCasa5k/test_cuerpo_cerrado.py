@@ -259,5 +259,25 @@ def main():
         raise SystemExit(1)
 
 
+def test_todos_los_casos_de_regresion():
+    """Envoltorio para que pytest RECOJA estos 24 casos.
+
+    Agregado 2026-09-21 (repasada de la auditoria Fase 1). Hallazgo real: este
+    archivo se llama test_*.py y vive junto a pytest.ini y conftest.py, pero no
+    definia ninguna funcion `test_*`, asi que `pytest` no recolectaba NADA de
+    aca -- en silencio, sin warning. Corriendo `pytest` desde este directorio se
+    veia "5 passed" (solo los de test_cuerpo_cerrado_properties.py) y cualquiera
+    concluia razonablemente que la regresion habia corrido. No habia corrido.
+    Peor: el docstring de test_cuerpo_cerrado_properties.py afirmaba que con
+    `pytest` esto "corre junto al resto" -- era falso.
+
+    Los 24 casos pasaban (verificado corriendo el script a mano el 2026-09-21),
+    asi que no habia ninguna regresion escondida; el problema era de cobertura
+    del runner, no de correctitud. main() ya lanza SystemExit(1) si algun caso
+    falla, y pytest reporta eso como fallo del test.
+    """
+    main()
+
+
 if __name__ == '__main__':
     main()
