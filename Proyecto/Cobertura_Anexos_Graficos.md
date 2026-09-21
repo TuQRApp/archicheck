@@ -20,7 +20,17 @@
 | **PRC Isla de Pascua** | 1 | 1 | 1 |
 | **TOTAL** | **215** | **215** | **59** |
 
-Quedan **306 páginas con figuras vectoriales** sin procesar (PRC Santiago 123, Ñuñoa 64, Providencia 62, DDU 32, Isla de Pascua 25): diagramas dibujados con líneas y texto suelto que no aparecen como imagen embebida. Los casos de esas páginas que sí tenían contenido normativo (los esquemas de fachada de Santiago) se procesaron renderizando la página.
+### Las 306 páginas "vectoriales" — auditadas y cerradas
+
+El extractor marca como candidata toda página con más de 40 trazos. Eran 306. **Auditadas una por una, ninguna contiene una figura sin leer.**
+
+| Qué resultaron ser | Cuántas |
+|---|---|
+| Rejillas de tabla: trazos que son líneas rectas de menos de 1,5 pt de grosor | 224 |
+| Sombreado de celdas y letras de la marca de agua (sobre todo la ordenanza de Providencia, 56 págs.) | 60 |
+| Figuras reales **ya procesadas** (esquemas de fachada del PRC Santiago, figuras de la DDU) | 22 |
+
+El criterio de descarte no fue visual: se contaron las formas **no lineales** por página y se verificó que el contenido de esas páginas **sí está en la capa de texto**. Comprobado sobre muestras de los 4 PDF con más candidatas — el catálogo de inmuebles de Santiago (págs. 46–52) tiene 4.264 caracteres de texto por página, y las tablas de la DDU‑447 también.
 
 ### Qué descarta el filtro — auditado imagen por imagen
 
@@ -93,7 +103,6 @@ Ordenados por gravedad.
 ## Lo que queda pendiente, acotado
 
 1. **Los 6 catálogos de la lámina L4 de Providencia, fila por fila** (~153 filas: 9 ZT + 18 MH + 23 ZCH + 82 ICH + 5 ZEMoI + 13 ZIM + 3 PD). Verificado que **son legibles a 200 dpi** — se leyeron completas las filas 8 a 68 del catálogo ICH como prueba. No se transcribieron a medias a propósito: un catálogo de inmuebles protegidos incompleto induce a creer que una propiedad no está protegida cuando sí lo está.
-2. **Las 306 páginas con figuras vectoriales**, para descartar que alguna tenga cotas que no estén en el texto.
-3. **Conseguir los documentos faltantes** de Providencia (3 Planos de Detalle, Fichas de Valoración).
-4. **Decidir si ampliar la lista de 43 artículos** del prompt, para que las 6 fórmulas y las tablas del Art. 4.1.10 lleguen al análisis.
-5. **Una cota ilegible declarada, no rellenada**: en la FIGURA 1 de la DDU 351 las medidas menores de la huella podotáctil no son legibles en el escaneo oficial ni ampliadas 5×. La fuente para esas medidas es la NCh 3180.
+2. **Conseguir los documentos faltantes** de Providencia (3 Planos de Detalle, Fichas de Valoración).
+3. **Decidir si ampliar la lista de 43 artículos** del prompt, para que las 6 fórmulas y las tablas del Art. 4.1.10 lleguen al análisis.
+4. **Una cota ilegible declarada, no rellenada**: en la FIGURA 1 de la DDU 351 las medidas menores de la huella podotáctil no son legibles en el escaneo oficial ni ampliadas 5×. La fuente para esas medidas es la NCh 3180.
