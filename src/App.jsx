@@ -960,12 +960,30 @@ function buildPromptCapa2(tipo, comuna, archivos, preguntas = {}, colabData = nu
   //    los 53 artículos inyectados, 30 tenían texto fabricado o placeholders
   //    ("[Artículo 60 - consultar texto completo en BCN]"). Ese texto inventado
   //    es el origen de las citas falsas que se venían corrigiendo río abajo.
+  // 4. ANEXOS GRÁFICOS (2026-09-21, ACH-DATA-010). En el PDF de Ley Chile hay
+  //    contenido normativo que NO está en la capa de texto porque está embebido
+  //    como IMAGEN. El caso testigo es la tabla del Art. 4.5.5: el texto oficial
+  //    dice "el porcentaje … que se indica en la siguiente tabla: % SUPERFICIE
+  //    DEL RECINTO.." y ahí se corta. Entregar eso es peor que no entregarlo —
+  //    el artículo promete un número que nunca llega, que es justo como nació el
+  //    "1/6" falso. La transcripción de esas imágenes viaja en `art.anexos` y se
+  //    marca como tal: no es texto verbatim del PDF sino la lectura de una
+  //    imagen, y va con su procedencia (pdf + página) para poder verificarla.
+  const conAnexos = (num, art) => {
+    const base = `Art. ${num}: ${art.texto.replace(/\n+/g, " ")}`;
+    if (!art.anexos || !art.anexos.length) return base;
+    const anexos = art.anexos
+      .map(a => `  [ANEXO GRÁFICO de este artículo — ${a.titulo}]\n  Fuente: ${a.fuente}\n${a.contenido}`)
+      .join("\n\n");
+    return `${base}\n\n${anexos}`;
+  };
+
   const ogucTexto = Object.entries(ogucArticulos.articulos)
-    .map(([num, art]) => `Art. ${num}: ${art.texto.replace(/\n+/g, " ")}`)
+    .map(([num, art]) => conAnexos(num, art))
     .join("\n\n");
 
   const lgucTexto = Object.entries(lgucArticulos.articulos)
-    .map(([num, art]) => `Art. ${num}: ${art.texto.replace(/\n+/g, " ")}`)
+    .map(([num, art]) => conAnexos(num, art))
     .join("\n\n");
 
   // Reglas de verificación nacional

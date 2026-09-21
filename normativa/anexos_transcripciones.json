@@ -1,0 +1,34 @@
+{
+  "_que_es": "Transcripcion del contenido normativo que en el PDF oficial existe SOLO como imagen (tablas, diagramas, formulas). Es el complemento de anexos_graficos.json: ese es el manifiesto regenerable (lo escribe extraer_imagenes_normativa.py); ESTE archivo guarda la lectura y NUNCA se sobrescribe automaticamente.",
+  "_por_que": "Ver ACH-DATA-010. El texto extraido del PDF anuncia tablas que no estan ('el porcentaje ... que se indica en la siguiente tabla: % SUPERFICIE DEL RECINTO..' y ahi se corta). Un modelo que recibe eso queda invitado a inventar el numero, que es exactamente como nacio el '1/6' falso de ACH-DATA-007.",
+  "_como_se_verifica": "Cada anexo declara las imagenes de origen (id del manifiesto, con su pdf + pagina + xref) y como se leyo. Las grillas densas se leen ampliadas con _zoom_anexo.py: a resolucion original se cometen errores reales (en la tabla del 4.3.4 el zoom corrigio 3 celdas de la grilla de letras).",
+  "_contrato": "El contenido de un anexo NO es texto verbatim de la capa de texto del PDF, y por eso va marcado como anexo en el prompt en vez de mezclarse con el articulo. Es una transcripcion de imagen, con su procedencia.",
+  "anexos": [
+    {
+      "id": "OGUC-4.5.5-tabla-vanos-por-region",
+      "corpus": "OGUC",
+      "articulo": "4.5.5",
+      "tipo": "tabla",
+      "titulo": "% SUPERFICIE DEL RECINTO (superficie minima de vanos de recintos docentes y hogares estudiantiles, por region)",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [255],
+      "imagenes": ["OGUC_p0255_x545", "OGUC_p0255_x546"],
+      "contenido": "Porcentaje de la superficie interior del recinto que deben cubrir los vanos.\n\n| Regiones | ILUMINACION - Recintos docentes | ILUMINACION - Recintos Hogar estudiantil | VENTILACION - Recintos docentes | VENTILACION - Recintos hogar estudiantil |\n|---|---|---|---|---|\n| De Arica y Parinacota, De Tarapaca, De Antofagasta, De Atacama, De Coquimbo | 14 | 6 | 8 | 6 |\n| De Valparaiso, Metropolitana de Santiago, Del Libertador General Bernardo O'Higgins, Del Maule | 17 | 7 | 8 | 6 |\n| De Nuble, Del Biobio, De La Araucania, De Los Rios, De Los Lagos, De Aysen del General Carlos Ibanez del Campo, De Magallanes y de la Antartica Chilena | 20 | 8 | 8 | 6 |",
+      "verificacion": "Leida 2026-09-21. La tabla esta partida en 2 imagenes (x545 = encabezado + filas norte y centro; x546 = fila sur). Los 12 valores coinciden exactamente con ART_455_DOCENTE de 'Fase 2/reglas_normativas.py', que se habia obtenido por la misma via en una lectura anterior e independiente.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "OGUC-4.3.4-tabla-carga-combustible",
+      "corpus": "OGUC",
+      "articulo": "4.3.4",
+      "tipo": "tabla",
+      "titulo": "Tipo de edificacion segun densidad de carga combustible y numero de pisos",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "paginas": [240],
+      "imagenes": ["OGUC_p0240_x514"],
+      "contenido": "DESTINO DEL EDIFICIO / DENSIDAD DE CARGA COMBUSTIBLE (*) / NUMERO DE PISOS.\nDensidad Media en MJ/m2 segun NCh 1916; Puntual Maxima en MJ/m2 segun NCh 1993.\nLas 5 letras de la ultima columna corresponden, en orden, a edificios de 1, 2, 3, 4 y 5 o mas pisos.\n\nCombustibles, lubricantes, aceites minerales y naturales:\n| Media (MJ/m2) | Puntual Maxima (MJ/m2) | 1 | 2 | 3 | 4 | 5 o mas |\n|---|---|---|---|---|---|---|\n| Sobre 8.000 | Sobre 24.000 | a | a | a | a | a |\n| sobre 4.000 y hasta 8.000 | sobre 16.000 y hasta 24.000 | b | a | a | a | a |\n| sobre 2.000 y hasta 4.000 | sobre 10.000 y hasta 16.000 | c | b | a | a | a |\n| hasta 2.000 | hasta 10.000 | d | c | b | a | a |\n\nEstablecimientos Industriales:\n| Media (MJ/m2) | Puntual Maxima (MJ/m2) | 1 | 2 | 3 | 4 | 5 o mas |\n|---|---|---|---|---|---|---|\n| Sobre 16.000 | Sobre 32.000 | a | a | a | a | a |\n| sobre 8.000 y hasta 16.000 | sobre 24.000 y hasta 32.000 | b | a | a | a | a |\n| sobre 4.000 y hasta 8.000 | sobre 16.000 y hasta 24.000 | c | b | a | a | a |\n| sobre 2.000 y hasta 4.000 | sobre 10.000 y hasta 16.000 | c | c | b | a | a |\n| sobre 1.000 y hasta 2.000 | sobre 6.000 y hasta 10.000 | d | c | c | b | a |\n| sobre 500 y hasta 1.000 | sobre 3.500 y hasta 6.000 | d | d | c | c | b |\n| hasta 500 | hasta 3.500 | d | d | d | c | c |\n\nSupermercados y Centros Comerciales:\n| Media (MJ/m2) | Puntual Maxima (MJ/m2) | 1 | 2 | 3 | 4 | 5 o mas |\n|---|---|---|---|---|---|---|\n| Sobre 16.000 | Sobre 32.000 | b | a | a | a | a |\n| sobre 8.000 y hasta 16.000 | sobre 24.000 y hasta 32.000 | b | b | a | a | a |\n| sobre 4.000 y hasta 8.000 | sobre 16.000 y hasta 24.000 | c | b | b | a | a |\n| sobre 2.000 y hasta 4.000 | sobre 10.000 y hasta 16.000 | c | c | b | b | a |\n| sobre 1.000 y hasta 2.000 | sobre 6.000 y hasta 10.000 | d | c | c | b | b |\n| hasta 1.000 | hasta 6.000 | d | d | c | c | b |\n\nEstablecimientos de bodegaje:\n| Media (MJ/m2) | Puntual Maxima (MJ/m2) | 1 | 2 | 3 | 4 | 5 o mas |\n|---|---|---|---|---|---|---|\n| Sobre 16.000 | Sobre 32.000 | b | b | a | a | a |\n| sobre 8.000 y hasta 16.000 | sobre 24.000 y hasta 32.000 | c | b | b | a | a |\n| sobre 4.000 y hasta 8.000 | sobre 16.000 y hasta 24.000 | c | c | b | b | a |\n| sobre 2.000 y hasta 4.000 | sobre 10.000 y hasta 16.000 | d | c | c | b | b |\n| sobre 1.000 y hasta 2.000 | sobre 6.000 y hasta 10.000 | d | d | c | c | b |\n| sobre 500 y hasta 1.000 | sobre 3.500 y hasta 6.000 | d | d | d | c | c |\n| hasta 500 | hasta 3.500 | d | d | d | d | c |",
+      "verificacion": "Leida 2026-09-21 en 2 pasadas: la imagen original (600x516) y luego ampliada 5x por columnas con _zoom_anexo.py. La ampliacion CORRIGIO 3 celdas de la grilla de letras que se habian leido mal a resolucion original (Industriales fila 5: 'd c c b a', no 'd c b b a'; Supermercados fila 5: 'd c c b b', no 'd c b b b'; bodegaje fila 6: 'd d d c c', no 'd d c c c'). Tambien se confirmo que el bloque de Supermercados tiene 6 filas y termina en 'hasta 1.000', mientras bodegaje tiene 7 y termina en 'hasta 500'.",
+      "estado": "TRANSCRITO"
+    }
+  ]
+}

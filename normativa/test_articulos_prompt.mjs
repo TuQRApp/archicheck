@@ -27,6 +27,13 @@ import { indexarArticulos } from './corpus_articulos.mjs';
 const __dir = dirname(fileURLToPath(import.meta.url));
 const cargar = p => JSON.parse(readFileSync(join(__dir, p), 'utf-8'));
 
+// Los anexos graficos (contenido que en el PDF solo existe como imagen) no se
+// pueden comparar contra la capa de texto, asi que se verifican contra su
+// propia fuente: anexos_transcripciones.json. El punto es el mismo que el de
+// ACH-DATA-007 -- que nadie pueda escribir a mano una tabla en el archivo
+// generado y que pase por normativa oficial.
+const transcripciones = cargar('anexos_transcripciones.json');
+
 const CASOS = [
   { nombre: 'OGUC', prompt: 'nacional/oguc_articulos.json', fuente: 'nacional/oguc_pdf.json' },
   { nombre: 'LGUC', prompt: 'nacional/lguc_articulos.json', fuente: 'nacional/lguc_pdf.json' },
@@ -34,6 +41,7 @@ const CASOS = [
 
 let fallas = 0;
 let verificados = 0;
+let anexosOk = 0;
 
 for (const caso of CASOS) {
   const inyectado = cargar(caso.prompt);
@@ -73,12 +81,38 @@ for (const caso of CASOS) {
       fallas++;
       continue;
     }
+    // Anexos graficos: cada uno debe existir en anexos_transcripciones.json,
+    // con el mismo contenido. Asi un anexo no puede nacer de una edicion a mano
+    // del archivo generado.
+    for (const anexo of art.anexos || []) {
+      const origen = (transcripciones.anexos || []).find(
+        a => a.corpus === caso.nombre &&
+             String(a.articulo).trim() === String(num).trim() &&
+             a.titulo === anexo.titulo);
+      if (!origen) {
+        console.error(`  FALLA  Art. ${num}: anexo "${anexo.titulo}" no existe en anexos_transcripciones.json.`);
+        fallas++;
+        continue;
+      }
+      if (origen.contenido !== anexo.contenido) {
+        console.error(`  FALLA  Art. ${num}: el anexo "${anexo.titulo}" no coincide con su transcripcion de origen.`);
+        fallas++;
+        continue;
+      }
+      if (!origen.imagenes || !origen.imagenes.length || !origen.pdf) {
+        console.error(`  FALLA  Art. ${num}: el anexo "${anexo.titulo}" no declara procedencia (pdf + imagenes).`);
+        fallas++;
+        continue;
+      }
+      anexosOk++;
+    }
     verificados++;
   }
   console.log(`  ${Object.keys(inyectado.articulos).length} articulos revisados.`);
 }
 
-console.log(`\n${verificados} articulos verificados contra el texto oficial, ${fallas} fallas.`);
+console.log(`
+${verificados} articulos verificados contra el texto oficial, ${anexosOk} anexo(s) grafico(s) contra su transcripcion, ${fallas} fallas.`);
 
 if (fallas > 0) {
   console.error('\nEl corpus del prompt NO coincide con el texto oficial.');

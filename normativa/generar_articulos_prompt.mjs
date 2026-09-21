@@ -36,6 +36,13 @@ import { dirname, join } from 'path';
 import { limpiarTextoNormativo } from './limpiar_texto_normativo.mjs';
 import { indexarArticulos } from './corpus_articulos.mjs';
 
+// Anexos graficos: contenido normativo que en el PDF existe SOLO como imagen
+// (ver ACH-DATA-010). Va como campo aparte de `texto` a proposito: `texto` se
+// deriva verbatim de la capa de texto del PDF y un test lo compara contra ella;
+// un anexo es la TRANSCRIPCION de una imagen, con otra procedencia y otra forma
+// de verificarse. Mezclarlos haria imposible seguir verificando el texto.
+const ANEXOS = 'anexos_transcripciones.json';
+
 const __dir = dirname(fileURLToPath(import.meta.url));
 const SOLO_CHECK = process.argv.includes('--check');
 
@@ -69,6 +76,7 @@ function cargar(p) {
 let huboProblemas = false;
 
 const lista = cargar(LISTA);
+const transcripciones = cargar(ANEXOS);
 
 for (const cuerpo of CUERPOS) {
   const actual = cargar(cuerpo.destino);
@@ -90,9 +98,19 @@ for (const cuerpo of CUERPOS) {
       noEncontrados.push(entrada.numero);
       continue;
     }
+    const anexos = (transcripciones.anexos || [])
+      .filter(a => a.corpus === cuerpo.nombre && String(a.articulo).trim() === clave)
+      .map(a => ({
+        titulo: a.titulo,
+        tipo: a.tipo,
+        contenido: a.contenido,
+        fuente: `${a.pdf} p. ${a.paginas.join(', ')} (transcripcion de imagen)`,
+      }));
+
     salida[clave] = {
       tema: entrada.tema,
       texto: limpiarTextoNormativo(texto),
+      ...(anexos.length ? { anexos } : {}),
     };
   }
 
@@ -114,6 +132,10 @@ for (const cuerpo of CUERPOS) {
   console.log(`\n=== ${cuerpo.nombre} ===`);
   console.log(`  articulos en la lista : ${lista[cuerpo.nombre].length}`);
   console.log(`  con texto oficial     : ${Object.keys(salida).length}`);
+  const conAnexo = Object.entries(salida).filter(([, v]) => v.anexos);
+  if (conAnexo.length) {
+    console.log(`  con anexo grafico     : ${conAnexo.length} -> ${conAnexo.map(([k]) => k).join(', ')}`);
+  }
   if (noEncontrados.length) {
     console.log(`  NO hallados en el PDF : ${noEncontrados.length} -> ${noEncontrados.join(', ')}`);
   }

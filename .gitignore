@@ -68,3 +68,11 @@ __pycache__/
 # origen -- se quedan en disco por si hace falta comparar corridas, pero solo
 # la ultima de cada archivo fuente se comitea (2026-09-19)
 /Fase 2/BIM/Archivos ejemplo/**/old/
+.vercel
+.env*
+
+# Imagenes extraidas de los PDF normativos (68 MB). Se regeneran de forma
+# determinista con `python normativa/extraer_imagenes_normativa.py` desde los
+# PDF oficiales, que si estan versionados. Lo que se versiona es el manifiesto
+# (anexos_graficos.json) y la transcripcion (anexos_transcripciones.json).
+normativa/anexos_graficos/
