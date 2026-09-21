@@ -1,0 +1,245 @@
+{
+  "_proposito": "Lista curada de que articulos se inyectan en el prompt de produccion. El TEXTO no se escribe aca: lo deriva generar_articulos_prompt.mjs del PDF oficial. Aca solo se decide QUE incluir y con que etiqueta.",
+  "_curado": "2026-09-21 -- ver Proyecto/Curacion_Corpus_Normativo_Prompt.md",
+  "OGUC": [
+    {
+      "numero": "1.1.1",
+      "tema": "objeto_ordenanza"
+    },
+    {
+      "numero": "1.1.2",
+      "tema": "definiciones"
+    },
+    {
+      "numero": "2.1.1",
+      "tema": "planificacion_urbana"
+    },
+    {
+      "numero": "2.1.33",
+      "tema": "equipamiento_clases"
+    },
+    {
+      "numero": "2.1.35",
+      "tema": "escalas_equipamiento"
+    },
+    {
+      "numero": "2.1.36",
+      "tema": "escalas_equipamiento_2"
+    },
+    {
+      "numero": "3.1.1",
+      "tema": "subdivision_predial"
+    },
+    {
+      "numero": "3.1.2",
+      "tema": "subdivision_condiciones"
+    },
+    {
+      "numero": "3.1.4",
+      "tema": "loteo"
+    },
+    {
+      "numero": "2.4.1",
+      "tema": "estacionamientos_general"
+    },
+    {
+      "numero": "2.4.2",
+      "tema": "estacionamientos_reduccion"
+    },
+    {
+      "numero": "2.4.6",
+      "tema": "estacionamientos_rampas"
+    },
+    {
+      "numero": "2.6.1",
+      "tema": "agrupamiento_edificios"
+    },
+    {
+      "numero": "2.6.2",
+      "tema": "adosamientos"
+    },
+    {
+      "numero": "2.6.3",
+      "tema": "distanciamientos"
+    },
+    {
+      "numero": "4.1.1",
+      "tema": "definicion_locales_habitables"
+    },
+    {
+      "numero": "4.1.2",
+      "tema": "ventilacion_iluminacion_cualitativa"
+    },
+    {
+      "numero": "4.1.3",
+      "tema": "ventilacion_banos_cocinas"
+    },
+    {
+      "numero": "4.1.7",
+      "tema": "accesibilidad_universal_ruta_accesible"
+    },
+    {
+      "numero": "4.2.2",
+      "tema": "cambio_destino"
+    },
+    {
+      "numero": "4.2.1",
+      "tema": "habitabilidad_general"
+    },
+    {
+      "numero": "4.2.4",
+      "tema": "carga_ocupacion"
+    },
+    {
+      "numero": "4.2.5",
+      "tema": "ancho_vias_evacuacion"
+    },
+    {
+      "numero": "4.2.6",
+      "tema": "altura_libre_evacuacion"
+    },
+    {
+      "numero": "4.2.7",
+      "tema": "altura_minima_pisos"
+    },
+    {
+      "numero": "4.3.1",
+      "tema": "incendio_general"
+    },
+    {
+      "numero": "4.3.2",
+      "tema": "incendio_clases_fuego"
+    },
+    {
+      "numero": "4.3.3",
+      "tema": "incendio_resistencia"
+    },
+    {
+      "numero": "4.3.4",
+      "tema": "incendio_tabla_resistencia"
+    },
+    {
+      "numero": "4.3.5",
+      "tema": "incendio_vias_evacuacion"
+    },
+    {
+      "numero": "5.1.1",
+      "tema": "instalaciones_general"
+    },
+    {
+      "numero": "5.2.1",
+      "tema": "fiscalizacion_dom"
+    },
+    {
+      "numero": "5.3.1",
+      "tema": "clases_edificacion_materiales"
+    },
+    {
+      "numero": "3.2.1",
+      "tema": "urbanizacion_general"
+    },
+    {
+      "numero": "4.5.7",
+      "tema": "patios_locales_escolares"
+    },
+    {
+      "numero": "5.5.1",
+      "tema": "calidad_materiales"
+    },
+    {
+      "numero": "3.2.3",
+      "tema": "obras_urbanizacion"
+    },
+    {
+      "numero": "4.2.10",
+      "tema": "escaleras_ancho_por_carga_ocupacion"
+    },
+    {
+      "numero": "4.5.5",
+      "tema": "vanos_recintos_docentes_por_region"
+    },
+    {
+      "numero": "4.3.14",
+      "tema": "muros_cortafuego"
+    },
+    {
+      "numero": "5.9.1",
+      "tema": "instalaciones_domiciliarias_agua_alcantarillado"
+    },
+    {
+      "numero": "4.1.4",
+      "tema": "ventilacion_locales_comerciales"
+    }
+  ],
+  "LGUC": [
+    {
+      "numero": "55",
+      "tema": "usos_suelo_rural"
+    },
+    {
+      "numero": "57",
+      "tema": "uso_suelo_urbano"
+    },
+    {
+      "numero": "58",
+      "tema": "patentes_municipales"
+    },
+    {
+      "numero": "59",
+      "tema": "cambios_destino_plazos"
+    },
+    {
+      "numero": "60",
+      "tema": "terrenos_con_riesgo"
+    },
+    {
+      "numero": "62",
+      "tema": "congelamiento_usos"
+    },
+    {
+      "numero": "116",
+      "tema": "permiso_construccion"
+    },
+    {
+      "numero": "117",
+      "tema": "obras_sin_permiso"
+    },
+    {
+      "numero": "118",
+      "tema": "plazo_dom_permisos"
+    },
+    {
+      "numero": "119",
+      "tema": "recepciones_parciales"
+    },
+    {
+      "numero": "120",
+      "tema": "demoliciones"
+    },
+    {
+      "numero": "116 bis",
+      "tema": "revision_independiente"
+    },
+    {
+      "numero": "1",
+      "tema": "objeto_ley"
+    },
+    {
+      "numero": "2",
+      "tema": "niveles_planificacion"
+    },
+    {
+      "numero": "89",
+      "tema": "zona_tipica_conservacion_historica"
+    },
+    {
+      "numero": "144",
+      "tema": "recepcion_definitiva_solicitud"
+    },
+    {
+      "numero": "145",
+      "tema": "recepcion_definitiva_obligatoria"
+    }
+  ],
+  "_nota_116bis": "LGUC 116 bis (revisor independiente) figura en la lista pero NO se genera: falta en la extraccion, no en el PDF. Ver ACH-DATA-008. Cuando se arregle el extractor, aparece solo."
+}

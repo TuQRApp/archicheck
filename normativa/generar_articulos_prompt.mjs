@@ -38,6 +38,14 @@ import { limpiarTextoNormativo } from './limpiar_texto_normativo.mjs';
 const __dir = dirname(fileURLToPath(import.meta.url));
 const SOLO_CHECK = process.argv.includes('--check');
 
+// La LISTA de que articulos incluir vive en su propio archivo
+// (articulos_prompt.json), no dentro del archivo generado. Antes el generador
+// leia la lista del mismo archivo que escribia -- circular: para cambiar la
+// seleccion habia que editar a mano el archivo derivado, que es justo lo que
+// este mecanismo existe para evitar. Ahora lo que se revisa y se versiona es
+// una lista corta de {numero, tema}; el texto lo pone el PDF oficial.
+const LISTA = 'articulos_prompt.json';
+
 const CUERPOS = [
   {
     nombre: 'OGUC',
@@ -59,6 +67,8 @@ function cargar(p) {
 
 let huboProblemas = false;
 
+const lista = cargar(LISTA);
+
 for (const cuerpo of CUERPOS) {
   const actual = cargar(cuerpo.destino);
   const pdf = cargar(cuerpo.fuente);
@@ -67,14 +77,12 @@ for (const cuerpo of CUERPOS) {
   const salida = {};
   const noEncontrados = [];
 
-  for (const [num, entrada] of Object.entries(actual.articulos)) {
-    // Normaliza la clave: el JSON a mano tenia cosas como "1°" o
-    // "4.2.5_ancho_evacuacion" que no son numeros de articulo validos.
-    const clave = String(num).replace(/[°º]/g, '').trim();
-    const texto = real.get(clave) ?? real.get(num);
+  for (const entrada of lista[cuerpo.nombre]) {
+    const clave = String(entrada.numero).replace(/[°º]/g, '').trim();
+    const texto = real.get(clave);
 
     if (!texto) {
-      noEncontrados.push(num);
+      noEncontrados.push(entrada.numero);
       continue;
     }
     salida[clave] = {
@@ -99,7 +107,7 @@ for (const cuerpo of CUERPOS) {
   const previo = readFileSync(destinoAbs, 'utf-8');
 
   console.log(`\n=== ${cuerpo.nombre} ===`);
-  console.log(`  articulos en la lista : ${Object.keys(actual.articulos).length}`);
+  console.log(`  articulos en la lista : ${lista[cuerpo.nombre].length}`);
   console.log(`  con texto oficial     : ${Object.keys(salida).length}`);
   if (noEncontrados.length) {
     console.log(`  NO hallados en el PDF : ${noEncontrados.length} -> ${noEncontrados.join(', ')}`);
