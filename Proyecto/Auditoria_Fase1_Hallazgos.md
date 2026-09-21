@@ -197,7 +197,9 @@ El test del corpus pasa de 59/59 a **60/60**: `LGUC 116 bis` figuraba en `articu
 
 Hallado al verificar ACH-DATA-008, **preexistente y sin relación con ese arreglo**. La LGUC numera sus artículos transitorios desde 1 otra vez (`Artículo 1°.-` en el carácter 349.668, justo después de la marca *"ARTICULOS TRANSITORIOS"*). Como el extractor deduplica por número conservando la primera ocurrencia, **los 10 transitorios se descartan** y se quedan los del cuerpo principal. No afecta a ningún artículo hoy seleccionado para el prompt. El arreglo es acotado —prefijar el número cuando la posición supera la marca de transitorios—, pero cambia el corpus, así que se registra en vez de aplicarse junto con otra cosa. OGUC no tiene el problema: 791 secciones, 0 números duplicados.
 
-### ACH-DATA-010 (NUEVO, **P1**, ABIERTO) — 4 artículos llegan al prompt con la prosa y **sin la tabla**, que es donde está la norma
+### ACH-DATA-010 (NUEVO, P2 — **CORREGIDO Y REENCUADRADO 2026-09-21**, commit `8b0d940`) — contenido normativo que solo existe como imagen
+
+> **⚠️ Corrección a este propio hallazgo.** La primera versión decía que **4** artículos perdían su tabla por estar embebida como imagen. Al ir a extraer las imágenes se comprobó que **solo 1 lo era** (el 4.5.5). Las otras 3 (4.2.4, 4.3.3, 2.6.3) **sí tienen su tabla en la capa de texto** y se perdían por una causa distinta y mayor: **ACH-DATA-012**. El error de diagnóstico vino de un chequeo que buscaba cifras con unidad (`m`, `%`, `cm`) y no reconocía ni los valores `F-180` de la matriz de resistencia al fuego ni las columnas alineadas de la tabla de carga de ocupación, y de no haber mirado los chunks de continuación del artículo. Lo que sigue es la versión corregida.
 
 Hallado al cerrar ACH-DATA-008, barriendo los 60 artículos del prompt en busca de menciones a una tabla o cuadro. En el PDF de leychile.cl **las tablas son imágenes**: la extracción verbatim captura el texto que las rodea y **descarta los números**. En estos 4 artículos los números *son* la norma, así que lo que llega al modelo es un artículo que anuncia una tabla que nunca recibe:
 
@@ -213,6 +215,27 @@ Hallado al cerrar ACH-DATA-008, barriendo los 60 artículos del prompt en busca 
 **La tabla del 4.5.5 ya está recuperada y verificada** (`ART_455_DOCENTE` en `Fase 2/reglas_normativas.py`, valores por grupo de regiones norte/centro/sur), obtenida renderizando la página del PDF con PyMuPDF. O sea: el motor CAD conoce el número y **el prompt no**. Las otras 3 tablas habría que recuperarlas igual.
 
 **Por qué no se arregló en el acto**: inyectar la tabla rompe el contrato que estableció el arreglo de ACH-DATA-007 —*"el texto se deriva verbatim del PDF"*— y haría fallar al test. Necesita un mecanismo explícito: un anexo marcado como tal, con su fuente (página del PDF) y reconocido por el test. Es una decisión de diseño, no un parche.
+
+### ACH-DATA-012 (NUEVO, **P1** — RESUELTO 2026-09-21, commit `cf98892`) — el prompt dejaba fuera el 52% del texto de sus propios artículos
+
+El extractor parte los artículos largos en chunks de ≤3.000 caracteres, numerados `4.2.4`, `4.2.4-b`, `4.2.4-c`… El generador del corpus hacía `map.get("4.2.4")`, que devuelve **solo el primer chunk**. Todo lo que pasara de 3.000 caracteres se descartaba en silencio: **104.410 de 199.586 caracteres, el 52%**. Afectaba a 11 de los 43 artículos OGUC del prompt y a 3 de los 17 de LGUC.
+
+| Art. | Qué se perdía |
+|---|---|
+| **1.1.2** definiciones | 20 secciones, se entregaba 1. De 2.682 a 49.129 caracteres. **Al modelo le faltaba el ~95% del glosario** del que depende todo el análisis |
+| **4.2.4** carga de ocupación | La `TABLA DE CARGOS DE OCUPACION` vive en `4.2.4-b`. El chunk entregado terminaba justo en *"se calculará de acuerdo a la siguiente tabla:"* |
+| **2.6.3** distanciamientos | La tabla (Fachada con vano / sin vano) vive en `2.6.3-b` |
+| **LGUC 116** | Se entregaban 3.000 de sus 9.269 caracteres |
+
+Es la **misma clase de defecto que el truncado a 220 caracteres** que se eliminó en ACH-DATA-007, pero un nivel más abajo y mucho menos visible: el texto que llegaba era oficial y estaba limpio, solo que era un pedazo.
+
+**Y el test compartía el defecto con el generador** —los dos armaban su propio Map con el mismo `.get(numero)`— así que daba por bueno un corpus truncado al 48%. Por eso el acceso quedó en un único módulo (`normativa/corpus_articulos.mjs`) que ambos importan: si comparten el punto de acceso, no pueden volver a desincronizarse en la misma dirección.
+
+El bloque normativo pasa de ~24k a ~45k tokens. Ese es el costo de entregar los artículos enteros.
+
+### ACH-DATA-013 (NUEVO, P3, ABIERTO) — las tablas en texto pierden su estructura de filas
+
+`normativa/limpiar_texto_normativo.mjs:54` hace `.replace(/\s+/g, ' ')`, que aplana los saltos de línea. La matriz de resistencia al fuego del **Art. 4.3.3** llega al modelo como una sola línea corrida (`|a |F-180|F-120|…`). Los valores están todos y el patrón de pipes permite recuperar las filas, así que está **degradado, no perdido**. No se arregló en el acto porque los patrones de limpieza de marginalia operan sobre el texto aplanado —el ruido del decreto viene intercalado por la maqueta a dos columnas—, así que preservar los saltos obliga a rediseñar esa limpieza para que sea consciente de las líneas.
 
 ### ACH-DATA-011 (NUEVO, P3, ABIERTO) — el prompt cita el Art. 4.2.18 y no se lo entrega
 
