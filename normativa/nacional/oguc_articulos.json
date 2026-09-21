@@ -173,6 +173,10 @@
     "4.1.4": {
       "tema": "ventilacion_locales_comerciales",
       "texto": "La ventilación de locales habitables de carácter industrial o comercial, como tiendas, oficinas, talleres, bodegas y garajes, podrá efectuarse directamente hacia patios y vías particulares o públicas, o bien, por escotillas o linternas de techumbres por las cuales deberá el aire circular libremente sin perjudicar recintos colindantes. El área mínima de estas aberturas no será inferior a la duodécima parte del área del piso del local. La ventilación de tales recintos puede efectuarse también por medios mecánicos que funcionen sin interrupción y satisfactoriamente durante las horas de trabajo. Los locales comerciales que tengan accesos por galerías comerciales techadas y que no cuenten con ventilación directa al exterior, deberán ventilarse mediante conductos (shafts) de sección no inferior a 0,20 m2. Cuando estos locales se destinen a preparación y venta de alimentos, reparaciones (eléctricas, ópticas, calzados), talleres fotográficos, lavasecos u otros usos que produzcan olores o emanaciones, dicha ventilación deberá activarse por medios mecánicos durante las horas de trabajo."
+    },
+    "4.1.14": {
+      "tema": "distancias_minimas_entre_fachadas_con_vano",
+      "texto": "En un mismo edificio colectivo las fachadas de unidades independientes deberán cumplir las siguientes distancias mínimas: 1. Entre las fachadas con vano de recintos habitables y las fachadas con vano, deberá contemplarse una distancia mínima libre horizontal de 6 metros. 2. Entre las fachadas con vano de recintos habitables y las fachadas sin vano, deberá contemplarse una distancia mínima libre horizontal de 3 metros. 3. Entre las fachadas con vano de recintos no habitables deberá contemplarse una distancia mínima libre horizontal de 3 metros. Se exceptúan de cumplir con las distancias mínimas establecidas en el inciso anterior, las fachadas con vano de recintos no habitables que se enfrenten a fachadas sin vano y las fachadas sin vano que se enfrenten entre sí."
     }
   }
 }

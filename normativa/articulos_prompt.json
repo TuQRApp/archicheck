@@ -169,6 +169,10 @@
     {
       "numero": "4.1.4",
       "tema": "ventilacion_locales_comerciales"
+    },
+    {
+      "numero": "4.1.14",
+      "tema": "distancias_minimas_entre_fachadas_con_vano"
     }
   ],
   "LGUC": [

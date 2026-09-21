@@ -263,6 +263,72 @@ OGUC_REGLAS = {
     'ventilacion_iluminacion_pct': (10.0, 'SIN VERIFICAR -- 10% es una convencion de diseño de uso extendido, NO una cita OGUC real (Art. 4.2.5/4.2.6, la cita previa, tratan de pasillos/altura de evacuacion, no de ventanas; Art. 4.1.2 -- el articulo real de ventilacion de locales habitables -- es cualitativo, sin porcentaje). Para recintos DOCENTES/hogar estudiantil si existe una exigencia real y regionalizada: ver ART_455_DOCENTE'),
 }
 
+# ── Art. 4.1.4 OGUC: ventilacion de locales comerciales/industriales ─────────
+#
+# ENCONTRADO 2026-09-21, y corrige un hallazgo PREVIO DE ESTA MISMA AUDITORIA.
+# Se habia concluido que "para vivienda/oficina/comercio OGUC no fija ningun
+# porcentaje de superficie de ventana". Eso era FALSO, y el error fue de metodo:
+# la busqueda rastreaba "%" y fracciones en DIGITOS ("1/6", "1/12"), y este
+# articulo escribe la fraccion EN PALABRAS -- "la duodecima parte". Lo detecto
+# el usuario revisando la curacion del corpus, no la busqueda automatica.
+# Barrido posterior de fracciones escritas en palabras sobre los 770 articulos:
+# este es el UNICO en contexto de ventilacion/iluminacion.
+#
+# Texto real (Art. 4.1.4): "La ventilacion de locales habitables de caracter
+# industrial o comercial, como tiendas, oficinas, talleres, bodegas y garajes
+# [...] El area minima de estas aberturas no sera inferior a la duodecima parte
+# del area del piso del local."
+#
+# 1/12 = 8,33%. Aplica a los destinos que el producto atiende de verdad
+# (Beauchef = comercio + oficinas). Nota: el pipeline BIM compara hoy contra un
+# 10% marcado SIN VERIFICAR, que resulta ser MAS estricto que el minimo real --
+# o sea que puede estar marcando como incumplimiento recintos que cumplen.
+VENTILACION_COMERCIAL_INDUSTRIAL_PCT = (
+    100.0 / 12.0,  # 8.33% -- fraccion exacta, no el literal truncado
+    'OGUC Art. 4.1.4 — el area de las aberturas de ventilacion no sera inferior '
+    'a la duodecima parte (1/12 = 8,33%) del area del piso, en locales habitables '
+    'de caracter industrial o comercial: tiendas, oficinas, talleres, bodegas y '
+    'garajes. Admite tambien ventilacion mecanica permanente durante las horas de '
+    'trabajo. Locales en galerias techadas sin ventilacion directa: shaft de '
+    'seccion no inferior a 0,20 m2.'
+)
+
+# Destinos (vocabulario de normativa/taxonomia_articulos.json) a los que aplica
+# la regla de arriba. 'residencial' NO esta: para vivienda rige el Art. 4.1.2,
+# que es cualitativo (al menos una ventana), sin porcentaje.
+TIPOS_EDIFICACION_ART_414 = frozenset({'comercio', 'oficinas', 'industrial'})
+
+
+def ventilacion_minima_pct(tipo_edificacion, region=None, tipo_recinto='docente'):
+    """% minimo de superficie de VENTILACION segun el destino del edificio.
+
+    Puerta de entrada unica -- a proposito. Una version anterior devolvia None
+    para 'educacion' (porque ese caso lo resuelve vanos_minimos_art_455) y eso
+    era una trampa: quien llamara sin leer el docstring iba a interpretar el
+    None como "no hay exigencia", cuando para un colegio SI la hay (8%). Ahora
+    la funcion resuelve los 3 casos y None significa una sola cosa: OGUC no fija
+    porcentaje para ese destino.
+
+      - comercio / oficinas / industrial -> 8,33% (Art. 4.1.4)
+      - educacion                        -> delega en vanos_minimos_art_455();
+                                            necesita `region` porque la
+                                            exigencia varia por zona del pais
+      - residencial y el resto           -> None; rige el Art. 4.1.2, que exige
+                                            "al menos una ventana", sin porcentaje
+
+    Devuelve (pct, referencia) o None. Nunca inventa un valor.
+    """
+    if tipo_edificacion in TIPOS_EDIFICACION_ART_414:
+        return VENTILACION_COMERCIAL_INDUSTRIAL_PCT
+    if tipo_edificacion == TIPO_EDIFICACION_ART_455:
+        r = vanos_minimos_art_455(region, tipo_edificacion, tipo_recinto)
+        if r is None:
+            return None          # falta la region: no evaluable, no un default
+        _iluminacion, ventilacion, ref = r
+        return (ventilacion, ref)
+    return None
+
+
 # ── Art. 4.5.5 OGUC: % de vanos en recintos docentes y hogares estudiantiles ──
 #
 # RECUPERADO 2026-09-21 (repasada de la auditoria Fase 1). Historia, porque
