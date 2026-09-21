@@ -111,6 +111,36 @@ Imports sin usar (`datetime` en `_celda4_actual.py`), funciones nunca invocadas 
 
 ---
 
+## Repasada crítica de la Fase 1 (2026-09-21, con Opus)
+
+Revisión independiente de la propia auditoría: verificar los hallazgos contra el código real, buscar falsos positivos, poner a prueba las afirmaciones de cobertura y **auditar las remediaciones aplicadas**. Resultado: la Fase 1 se sostiene, pero **dejó pasar un hallazgo importante** y hubo que corregir una afirmación.
+
+### Lo que se confirmó
+- **La identificación de la "Celda 4" viva era correcta**, y ahora está confirmada por un método independiente: las 6 corridas reales más recientes (19-sep) contienen todas `ventanas_reconstruidas_por_jamba`, campo que **solo** produce la línea con `cuerpo_cerrado.py`. La conclusión ya no depende de razonar sobre el código: la respaldan los datos de salida de producción.
+- **Las remediaciones no introdujeron regresiones.** Se auditó específicamente el riesgo de haber agregado 4 entradas de formas heterogéneas (un dict, una tupla de 2) a `OGUC_REGLAS`, cuyo consumidor desempaqueta 3 valores: ambos archivos modificados tienen un único consumidor (`.get(tipo, ...)`) y ninguna derivación desde las claves. Inerte, como se había afirmado.
+- **ACH-DATA-006 sin falso positivo**: 3 comunas `activa:true`, solo `PRC-PRV` indexado por algún `_idx_*.mjs`, y `santiago/metadata.json` efectivamente sin campo `activa`.
+- **La afirmación de cobertura de `App.jsx` se sostiene**: en los ~1.900 líneas no leídas línea por línea hay **cero** umbrales normativos; las 48 menciones a normativa son todas de presentación (encabezados, colores, lectura de `r.cumple`).
+
+### ACH-FRONT-007 (NUEVO, P1) — el canal PDF/CAD afirma una cita OGUC que no existe
+El prompt de producción y **el informe que ve el arquitecto** dicen que la verificación de iluminación/ventilación es "según OGUC **Art. 4.5.7**", con un "ratio **1/6**" atribuido a "Art. 4.1.2, 4.5.7". Verificado contra `oguc_pdf.json`:
+- **Art. 4.5.7 no trata de ventanas**: regula **patios de locales escolares** (esparcimiento, educación física, ancho mínimo 5,50 m). Es una cita de materia equivocada.
+- **Art. 4.1.2** es real y sí trata de ventilación de locales habitables, pero es **cualitativo**: exige "al menos una ventana" y 1,5 m libres en dormitorios. **No contiene ningún ratio.**
+- El ratio **1/6 no existe en los 770 artículos** para ventanas: las dos únicas apariciones son Art. 2.6.12 (distanciamiento a predios, 1/6 de la altura) y Art. 5.6.6 (sección de albañilería).
+
+La cita `4.5.7` aparece **5 veces** en `src/App.jsx`, incluidos el subtítulo de la etapa y el PDF exportable. Es la misma clase de defecto que ACH-FRONT-001/002 —afirmar ante el arquitecto una cita que la fuente no respalda— pero más grave: artículo de materia ajena **y** un valor inexistente en la norma. `reglas_normativas.py` ya había documentado esto para el canal BIM ("el 10% NO es una cita OGUC real"); el canal PDF/CAD nunca se cruzó contra esa conclusión.
+
+### ACH-XCUT-002 (NUEVO, P1) — el mismo requisito, dos umbrales según el canal
+- **PDF/CAD**: ratio 1/6 = **16,67%**
+- **BIM**: **10%** (`reglas_normativas.py` → `analizar_todos.py`)
+
+Un recinto con 12% de ventana **cumple en BIM y no cumple en CAD**. Mismo edificio, misma regla, veredicto distinto según por dónde entró el proyecto. Es el mismo patrón raíz que el hallazgo transversal de la rampa, en un requisito que Fase 1 tocó por un lado (BIM) sin cruzarlo con el otro. **Elegir el umbral es una decisión de producto**, no técnica: queda abierta.
+
+### ACH-TEST-001 (NUEVO, P2 — YA CORREGIDO)
+`test_cuerpo_cerrado.py` (24 aserciones sobre 9 bugs históricos) **no definía ninguna función `def test_*`**, así que `pytest` no recolectaba nada de ahí, en silencio. Corriendo `pytest` se veía "5 passed" y cualquiera concluía que la regresión había corrido. El docstring del archivo hermano incluso afirmaba que "corre junto al resto" — era falso. Los 24 casos pasan (verificado a mano), así que no había regresión escondida: era un problema de cobertura del runner. **Corregido** con un envoltorio; pytest pasó de 5 a 6 tests y la afirmación del docstring ahora es verdadera.
+
+### ACH-OPS-001 (NUEVO, P2) — el gate de calidad existe en una sola máquina
+Existe un `pre-commit` real y bueno (chequeo de hardcodeo + los 24 casos de regresión + los golden tests contra 3 proyectos reales), activado vía `core.hooksPath = .githooks`. Pero **`.githooks/` no está versionado**: no sobrevive a un clone limpio ni existe para ningún colaborador. Sumado a que no hay CI (`.github/workflows` no existe), toda la verificación automática del motor CAD depende de un archivo sin trackear en un equipo. *Corrección a la Fase 1*: el anexo de motor CAD decía que los golden tests están "excluidos por defecto de cualquier corrida normal" — cierto para `pytest`, pero incompleto: el hook sí los corre.
+
 ## Cobertura de esta pasada — qué quedó cubierto al 100% y qué no
 
 | Área | Cobertura | Estado |
