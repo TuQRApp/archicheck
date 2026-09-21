@@ -47,7 +47,7 @@ Cuando se sube un PDF/JSON/PNG generado desde el canal BIM, hoy entra directo al
 
 Otras preguntas propuestas para el mismo paso (a validar con el usuario):
 - Comuna/ubicación → determina qué PRC aplica (hoy solo Ñuñoa/Santiago/Providencia tienen algo cargado — ver auditoría de integridad normativa)
-- Obra nueva vs. ampliación/regularización de obra existente → LGCU Art. 116 vs. 116 bis tienen requisitos distintos
+- **Tipo de obra**: nueva / remodelación / ampliación / regularización de obra existente / otro → LGCU Art. 116 vs. 116 bis tienen requisitos distintos (confirmado explícitamente por el usuario 2026-09-21: cubrir nueva, remodelación u otro, no solo nueva vs. ampliación)
 - Uso mixto: si el edificio tiene más de un destino (como Beauchef: comercio + oficinas), declarar qué niveles/recintos corresponden a cada uso
 - N° de subterráneos / evacuación diferenciada por subterráneo (afecta OGUC 4.2.4/4.2.5)
 
