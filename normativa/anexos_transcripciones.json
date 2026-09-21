@@ -465,6 +465,168 @@
       "contenido": "| Zona termica | Clase de permeabilidad al aire 100 Pa |\n|---|---|\n| A | --- |\n| B | 1 |\n| C | 1 |\n| D | 2 |\n| E | 2 |\n| F | 2 |\n| G | 3 |\n| H | 3 |\n| I | 3 |\n\nNota: las clases de permeabilidad al aire estan definidas en la NCh 3296 y corresponden a la clasificacion final del elemento ensayado segun la NCh 3297.",
       "verificacion": "Leida 2026-09-21. Mismo contenido que la TABLA 9.",
       "estado": "TRANSCRITO"
+    },
+    {
+      "id": "LGUC-LEY19300-banner-bcn",
+      "corpus": "LGUC",
+      "articulo": null,
+      "tipo": "decoracion",
+      "titulo": "Banner Biblioteca del Congreso Nacional / Ley Chile (portada)",
+      "pdf": "normativa/nacional/Fuentes/LGUC_DTO-458_13-ABR-1976.pdf",
+      "paginas": [
+        1
+      ],
+      "imagenes": [
+        "LGUC_p0001_x5",
+        "LEY_19300_p0001_x5"
+      ],
+      "contenido": "",
+      "verificacion": "Revisada 2026-09-21. Es el mismo banner institucional de la BCN que trae la portada de la OGUC (identico byte a byte). Cubre la UNICA imagen de contenido que el manifiesto detecta en la LGUC y en la Ley 19.300: ambos cuerpos legales NO tienen tablas ni formulas embebidas como imagen; todo su contenido esta en la capa de texto.",
+      "estado": "DECORACION"
+    },
+    {
+      "id": "PRC-NUNOA-escudo-municipal",
+      "corpus": "PRC_NUNOA",
+      "articulo": null,
+      "tipo": "decoracion",
+      "titulo": "Escudo de la I. Municipalidad de Nunoa",
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "paginas": [
+        1
+      ],
+      "imagenes": [
+        "PRC_NUNOA_p0001_x25"
+      ],
+      "contenido": "",
+      "verificacion": "Revisada 2026-09-21: escudo municipal de la portada. No es contenido normativo.",
+      "estado": "DECORACION"
+    },
+    {
+      "id": "PRC-SANTIAGO-escudo-municipal",
+      "corpus": "PRC_SANTIAGO",
+      "articulo": null,
+      "tipo": "decoracion",
+      "titulo": "Escudo de la I. Municipalidad de Santiago",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "paginas": [
+        1
+      ],
+      "imagenes": [
+        "PRC_SANTIAGO_p0001_x16"
+      ],
+      "contenido": "",
+      "verificacion": "Revisada 2026-09-21: escudo municipal de la portada. No es contenido normativo.",
+      "estado": "DECORACION"
+    },
+    {
+      "id": "PRC-ISLA-PASCUA-cabecera-do",
+      "corpus": "PRC_ISLA_DE_PASCUA",
+      "articulo": null,
+      "tipo": "decoracion",
+      "titulo": "Cabecera del Diario Oficial de la Republica de Chile",
+      "pdf": "normativa/isla_de_pascua/PRC_Isla_de_Pascua_DO_2026.pdf",
+      "paginas": [
+        1
+      ],
+      "imagenes": [
+        "PRC_ISLA_DE_PASCUA_p0001_x13722"
+      ],
+      "contenido": "",
+      "verificacion": "Revisada 2026-09-21: cabecera del Diario Oficial. Es la unica imagen de contenido que el manifiesto detecta en este PDF, o sea que el PRC de Isla de Pascua no trae tablas ni figuras embebidas como imagen.",
+      "estado": "DECORACION"
+    },
+    {
+      "id": "PRC-NUNOA-sello-zona-z7-no-aplicable",
+      "corpus": "PRC_NUNOA",
+      "articulo": "26",
+      "tipo": "sello",
+      "titulo": "Sello sobre la Zona Z-7: ESTA ZONA NO ES APLICABLE EN EL TERRITORIO COMUNAL",
+      "pdf": "normativa/nunoa/PRC_Nunoa_texto_refundido.pdf",
+      "paginas": [
+        37
+      ],
+      "imagenes": [
+        "PRC_NUNOA_p0037_x105"
+      ],
+      "contenido": "SELLO SUPERPUESTO, EN DIAGONAL, SOBRE EL CUADRO NORMATIVO DE LA ZONA Z-7:\n\"ESTA ZONA NO ES APLICABLE EN EL TERRITORIO COMUNAL\"\n\nEl cuadro que el sello anula -- y que SI esta en la capa de texto, sin ninguna marca -- dice:\n\n| Norma urbanistica (Zona Z-7) | Valor |\n|---|---|\n| Superficie de subdivision predial minima | 300 m2 |\n| Coeficiente de ocupacion de suelo | 0,6 max. |\n| Coeficiente de constructibilidad | 1,5 |\n| Sistemas de agrupamiento | Aislado y Pareado |\n| Porcentaje maximo de pareo en el deslinde | 40% |\n| Adosamiento | Segun OGUC, retirado a 3 m de la fachada |\n| Altura maxima de edificacion | 8 m |\n| Altura maxima de cierro a deslindes colindante a terrenos de inmuebles de Conservacion Historica | 2,50 m |\n| Rasante | Segun Articulo 2.6.3 de la OGUC |\n| Antejardin minimo | 5 m |\n\nCONCLUSION OPERATIVA: estos valores NO deben aplicarse a ningun proyecto de Nunoa.",
+      "verificacion": "Leida 2026-09-21. ES EL HALLAZGO MAS IMPORTANTE DE LOS PRC. El sello existe UNICAMENTE como imagen: la capa de texto entrega el cuadro de la Zona Z-7 completo y sin ninguna advertencia. Un analisis que lea solo el texto -- que es lo que hacia el sistema hasta hoy -- aplicaria normas urbanisticas de una zona que la propia ordenanza declara no aplicable. Es el reverso exacto del problema del Art. 4.5.5: alli faltaba un numero, aca SOBRA un cuadro entero.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-SANTIAGO-art26-esquema-fachada-a7",
+      "corpus": "PRC_SANTIAGO",
+      "articulo": "26",
+      "tipo": "diagrama",
+      "titulo": "Esquema de composicion de fachada, Zona de Conservacion Historica A7",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "paginas": [
+        113
+      ],
+      "imagenes": [
+        "PRC_SANTIAGO_p0113_x1025"
+      ],
+      "contenido": "Esquema con 2 vistas: FACHADA PRINCIPAL y CORTE.\n\nFachada principal, de arriba hacia abajo: Piso Adicional (linea de puntos) / Cuerpo Superior - Piso Retirado / Cuerpo Central / Altura Primer Piso / Cuerpo Inferior - Zocalo.\nAcotacion del zocalo: \"1/3 de altura del 1er piso\".\n\nCorte: el piso retirado se acota en 3 m y la envolvente del piso adicional se traza a 45 grados.\n\nCOTA QUE SOLO EXISTE EN EL DIBUJO: altura total acotada de 23 m.",
+      "verificacion": "Leida 2026-09-21 renderizando la pagina, no extrayendo el raster: la imagen embebida es un RECTANGULO BLANCO de fondo y el esquema esta dibujado encima como vectores. La cota de 23 m y el angulo de 45 grados no aparecen en el texto del articulo.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-SANTIAGO-art27-esquemas-fachada",
+      "corpus": "PRC_SANTIAGO",
+      "articulo": "27",
+      "tipo": "diagrama",
+      "titulo": "Esquemas de ordenamiento de fachada y de cuerpo jerarquizado (Zonas B3, B4, B7, D1)",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "paginas": [
+        114
+      ],
+      "imagenes": [
+        "PRC_SANTIAGO_p0114_x1038",
+        "PRC_SANTIAGO_p0114_x1040",
+        "PRC_SANTIAGO_p0114_x1042",
+        "PRC_SANTIAGO_p0114_x1044",
+        "PRC_SANTIAGO_p0114_x1046",
+        "PRC_SANTIAGO_p0114_x1048"
+      ],
+      "contenido": "Dos recuadros de esquemas.\n\n1) Modos de ordenamiento de fachada: \"Simetria de espejo\" (cuerpo central jerarquizado entre 2 cuerpos laterales identicos) y \"Asimetria con cuerpo lateral simetrico\".\n\n2) Zona de Conservacion Historica B7b, jerarquizacion con piso adicional habitable: \"Cuerpo unico centrado\" y \"Dos cuerpos laterales identicos\". Ambos acotados con \"1/2 del ancho total de fachada como maximo\" y rotulados \"Piso extra\".",
+      "verificacion": "Leida 2026-09-21 renderizando la pagina. Las 6 imagenes embebidas son rectangulos blancos de fondo; los esquemas son vectores dibujados encima. Las reglas numericas (piso adicional de 3 m maximo, ancho entre 1/2 y 1/3 del total) SI estan en el texto del articulo.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-SANTIAGO-art27-esquemas-volado",
+      "corpus": "PRC_SANTIAGO",
+      "articulo": "27",
+      "tipo": "diagrama",
+      "titulo": "Esquemas de pisos en volado y de jerarquizacion de esquina",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "paginas": [
+        115
+      ],
+      "imagenes": [
+        "PRC_SANTIAGO_p0115_x1062",
+        "PRC_SANTIAGO_p0115_x1064"
+      ],
+      "contenido": "1) Pisos en volado, 3 vistas: \"Corte\" acotado 0,9 m (proyeccion desde el plano de fachada); \"Elevacion con piso en volado centrado\", acotada 1/3 del ancho total y 3 m; \"Elevacion con piso en volado lateral\", acotada 1 m (distancia minima de los vanos al piso en volado).\n\n2) Jerarquizacion de predios esquina: volumen de esquina con ambos costados acotados \"40% de A\", donde A es el frente.",
+      "verificacion": "Leida 2026-09-21 renderizando la pagina. Las cotas del dibujo coinciden con el texto: volado 1/3 del ancho y 0,9 m de proyeccion, vanos a 1 m como minimo, y costado de esquina equivalente al 40% del frente menor.",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "PRC-SANTIAGO-art27-esquema-cierros",
+      "corpus": "PRC_SANTIAGO",
+      "articulo": "27",
+      "tipo": "diagrama",
+      "titulo": "Esquema de cierros de Av. Republica: zocalo, reja y pilares",
+      "pdf": "normativa/santiago/PRC_Santiago_texto_refundido_2021.pdf",
+      "paginas": [
+        116
+      ],
+      "imagenes": [
+        "PRC_SANTIAGO_p0116_x1076",
+        "PRC_SANTIAGO_p0116_x1078",
+        "PRC_SANTIAGO_p0116_x1079"
+      ],
+      "contenido": "Elevacion y corte de cierro, acotados:\n| Elemento | Cota del dibujo |\n|---|---|\n| Ancho de pilar | 0,3 m min. / 0,6 m max. |\n| Sobresalir del pilar respecto del limite superior de la reja | 0,15 m min. / 0,6 m max. |\n| Altura de la reja | 0,85 m min. / 2 m max. |\n| Altura del zocalo | 0,25 m min. / 1,3 m max. |\n| Distancia a eje entre pilares | 1,8 m min. / 4,5 m max. |\n| Profundidad del zocalo | 0,3 m min. |",
+      "verificacion": "Leida 2026-09-21 renderizando la pagina. Todas las cotas del dibujo coinciden con el texto del punto 10 del articulo; el esquema no agrega ni contradice ningun valor.",
+      "estado": "TRANSCRITO"
     }
   ]
 }
