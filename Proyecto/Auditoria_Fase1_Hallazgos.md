@@ -197,6 +197,27 @@ El test del corpus pasa de 59/59 a **60/60**: `LGUC 116 bis` figuraba en `articu
 
 Hallado al verificar ACH-DATA-008, **preexistente y sin relación con ese arreglo**. La LGUC numera sus artículos transitorios desde 1 otra vez (`Artículo 1°.-` en el carácter 349.668, justo después de la marca *"ARTICULOS TRANSITORIOS"*). Como el extractor deduplica por número conservando la primera ocurrencia, **los 10 transitorios se descartan** y se quedan los del cuerpo principal. No afecta a ningún artículo hoy seleccionado para el prompt. El arreglo es acotado —prefijar el número cuando la posición supera la marca de transitorios—, pero cambia el corpus, así que se registra en vez de aplicarse junto con otra cosa. OGUC no tiene el problema: 791 secciones, 0 números duplicados.
 
+### ACH-DATA-010 (NUEVO, **P1**, ABIERTO) — 4 artículos llegan al prompt con la prosa y **sin la tabla**, que es donde está la norma
+
+Hallado al cerrar ACH-DATA-008, barriendo los 60 artículos del prompt en busca de menciones a una tabla o cuadro. En el PDF de leychile.cl **las tablas son imágenes**: la extracción verbatim captura el texto que las rodea y **descarta los números**. En estos 4 artículos los números *son* la norma, así que lo que llega al modelo es un artículo que anuncia una tabla que nunca recibe:
+
+| Art. | Tema | Qué falta | Por qué importa |
+|---|---|---|---|
+| **4.2.4** | Carga de ocupación | La tabla completa de ocupación por destino. Sobreviven 2 cifras incidentales (`60 m2`, `140 m2`) | Es el **insumo** del ancho de vías de evacuación (4.2.5) y de escaleras (4.2.10). Se le pide calcular carga de ocupación sin la tabla |
+| **4.3.3** | Resistencia al fuego | La matriz completa. **Cero cifras con unidad en todo el artículo** | El 4.3.14 (muros cortafuego) remite explícitamente a *"la tabla del artículo 4.3.3"*, que tampoco está |
+| **2.6.3** | Distanciamientos | La tabla de distanciamientos a deslindes. Sobrevive solo un `100 m` | Es un chequeo urbanístico directo |
+| **4.5.5** | Vanos de recintos docentes | La tabla de % por región. El texto dice literalmente *"el porcentaje … que se indica en la siguiente tabla: **% SUPERFICIE DEL RECINTO..**"* y ahí se corta | **Es el caso más grave**: se entrega un artículo que promete un porcentaje y no lo da. Ese es exactamente el modo de falla que produjo el "1/6" inventado (ACH-DATA-007) |
+
+**Es un riesgo distinto al de ACH-DATA-007, y en un sentido peor**: allá el texto era falso y se detectaba comparándolo con el oficial. Acá el texto **es oficial y está incompleto**, así que el test `test_articulos_prompt.mjs` lo da por bueno —con razón, según su criterio— mientras el modelo queda invitado a rellenar el número que falta.
+
+**La tabla del 4.5.5 ya está recuperada y verificada** (`ART_455_DOCENTE` en `Fase 2/reglas_normativas.py`, valores por grupo de regiones norte/centro/sur), obtenida renderizando la página del PDF con PyMuPDF. O sea: el motor CAD conoce el número y **el prompt no**. Las otras 3 tablas habría que recuperarlas igual.
+
+**Por qué no se arregló en el acto**: inyectar la tabla rompe el contrato que estableció el arreglo de ACH-DATA-007 —*"el texto se deriva verbatim del PDF"*— y haría fallar al test. Necesita un mecanismo explícito: un anexo marcado como tal, con su fuente (página del PDF) y reconocido por el test. Es una decisión de diseño, no un parche.
+
+### ACH-DATA-011 (NUEVO, P3, ABIERTO) — el prompt cita el Art. 4.2.18 y no se lo entrega
+
+Mismo patrón que tenía el 4.2.10 antes de la curación: `src/App.jsx:1054` instruye citar **OGUC Art. 4.2.18** (ancho de pasillos) y el artículo **no está** entre los 43 que se inyectan. Verificado con un cruce de todos los artículos citados en `App.jsx` contra la lista entregada: es el **único** que falta (LGUC: 0 faltantes). El impacto es menor que en el caso del 4.2.10 porque la propia instrucción deletrea el requisito (*medio centímetro por persona, mínimo 1,10 m*), así que el umbral no se pierde. Igual corresponde entregarlo: el texto oficial está extraído y disponible.
+
 ### ACH-OPS-001 (NUEVO, P2 — RESUELTO 2026-09-21, commits `0a55a24` y `2460ed5`)
 Existe un `pre-commit` real y bueno (chequeo de hardcodeo + los 24 casos de regresión + los golden tests contra 3 proyectos reales), activado vía `core.hooksPath = .githooks`. Pero **`.githooks/` no estaba versionado**: no sobrevivía a un clone limpio ni existía para ningún colaborador. Sumado a que no hay CI (`.github/workflows` no existe), toda la verificación automática del motor CAD dependía de un archivo sin trackear en un equipo. *Corrección a la Fase 1*: el anexo de motor CAD decía que los golden tests están "excluidos por defecto de cualquier corrida normal" — cierto para `pytest`, pero incompleto: el hook sí los corre.
 
