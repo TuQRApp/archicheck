@@ -129,6 +129,23 @@ El prompt de producción y **el informe que ve el arquitecto** dicen que la veri
 
 La cita `4.5.7` aparece **5 veces** en `src/App.jsx`, incluidos el subtítulo de la etapa y el PDF exportable. Es la misma clase de defecto que ACH-FRONT-001/002 —afirmar ante el arquitecto una cita que la fuente no respalda— pero más grave: artículo de materia ajena **y** un valor inexistente en la norma. `reglas_normativas.py` ya había documentado esto para el canal BIM ("el 10% NO es una cita OGUC real"); el canal PDF/CAD nunca se cruzó contra esa conclusión.
 
+**RESUELTO 2026-09-21** (commit `897ee39`), y la pregunta "¿1/6 o 10%?" resultó ser la pregunta equivocada. Al preguntar el usuario *para qué tipo de proyecto* aplicaba el umbral, la respuesta reencuadró todo: **para vivienda, oficina o comercio la OGUC no fija ningún porcentaje**. El único porcentaje real del cuerpo normativo es el Art. 4.5.5, y su propio texto acota el alcance a "recintos docentes... salas de actividades, de clases, talleres y laboratorios... y los dormitorios en hogares estudiantiles". Los proyectos de prueba del sistema (restaurante, comercio+oficinas) no caen ahí. El chequeo estaba generando falsos positivos contra una exigencia inexistente para esos destinos.
+
+**Además se recuperó la tabla del Art. 4.5.5**, que el proyecto daba por perdida ("no se extrajo limpia del PDF"). La causa real era otra: **el PDF oficial de Ley Chile no tiene la tabla en su capa de texto** —donde van los valores dice literalmente dos puntos— porque está embebida como **imagen** en la página 255. Se recuperó renderizando esa página y leyéndola. Revela dos cosas que el sistema no contemplaba:
+
+| Regiones | Ilum. docentes | Ilum. hogar est. | Vent. docentes | Vent. hogar est. |
+|---|---|---|---|---|
+| Arica y Parinacota → Coquimbo | 14% | 6% | 8% | 6% |
+| Valparaíso, **Metropolitana**, O'Higgins, Maule | 17% | 7% | 8% | 6% |
+| Ñuble → Magallanes | 20% | 8% | 8% | 6% |
+
+1. La exigencia es **regional** (sube de norte a sur).
+2. **Iluminación y ventilación son porcentajes distintos** — el sistema los trata como un único chequeo combinado (`ventilacion_iluminacion_pct`).
+
+Quedó implementado en `reglas_normativas.py` (`ART_455_DOCENTE` + `vanos_minimos_art_455()`, que devuelve `None` si no reconoce la región en vez de asumir un default; verificado contra las 16 regiones y sus variantes de escritura reales). En `App.jsx` se eliminaron las 5 afirmaciones de "Art. 4.5.7" (la única mención que queda es la que **prohíbe** citarlo) y el default `"1/6"` de la columna "Ratio req." pasó a `—`.
+
+**Pendiente, bloqueado por el roadmap**: aplicar la regla educacional de verdad requiere conocer el **destino del edificio**, input que hoy no existe (el desplegable de "tipo de proyecto" es otro eje: obra nueva/ampliación/…). El usuario confirmó que la captura del destino ya está en el roadmap y será un input garantizado; cuando llegue, `vanos_minimos_art_455()` ya está listo para conectarse.
+
 ### ACH-XCUT-002 (NUEVO, P1) — el mismo requisito, dos umbrales según el canal
 - **PDF/CAD**: ratio 1/6 = **16,67%**
 - **BIM**: **10%** (`reglas_normativas.py` → `analizar_todos.py`)
