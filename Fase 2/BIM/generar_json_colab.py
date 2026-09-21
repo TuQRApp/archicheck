@@ -549,6 +549,19 @@ def main(ifc_path=IFC_PATH, nombre_corto=None):
 
         incumplimientos_geo = []
         for d in puertas:
+            # BUG REAL CORREGIDO 2026-09-21 (auditoria Fase 1, ACH-BIM-001): esta
+            # linea no existia. `ancho` nunca se calculaba desde la puerta `d` --
+            # como en Python las variables de `for` no tienen scope de bloque,
+            # el chequeo de abajo comparaba contra el valor residual de `ancho`
+            # del loop de VENTANAS (linea ~488) o del resguardo de ventilacion,
+            # es decir el ancho de una ventana cualquiera, no el de la puerta
+            # evaluada. Efecto: todas las puertas de un nivel compartian el mismo
+            # "medido" (el de la ultima ventana) -> falsos positivos en masa si
+            # esa ventana era angosta, o falsos negativos si era ancha. Peor: en
+            # un IFC con puertas reales y CERO IfcWindow (caso documentado:
+            # "Administrativo (ES)", 100% muro cortina) `ancho` quedaba sin
+            # asignar y el script moria con UnboundLocalError.
+            ancho = a.num_o_none_escalado(d.OverallWidth, escala_m)
             # escala_m aplicada (fix 2026-09-19) -- mismo bug de unidades que
             # analizar_todos.py: comparar el OverallWidth crudo contra 0.80
             # nunca podia fallar en archivos con LENGTHUNIT en milimetros.
