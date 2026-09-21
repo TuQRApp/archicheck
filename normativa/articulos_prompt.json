@@ -173,6 +173,26 @@
     {
       "numero": "4.1.14",
       "tema": "distancias_minimas_entre_fachadas_con_vano"
+    },
+    {
+      "numero": "4.2.18",
+      "tema": "pasillos_ancho_minimo"
+    },
+    {
+      "numero": "5.1.11",
+      "tema": "computo_superficie_edificada"
+    },
+    {
+      "numero": "2.6.13",
+      "tema": "sombra_proyectada_por_region"
+    },
+    {
+      "numero": "2.3.3",
+      "tema": "anchos_pasajes_y_circulacion_peatonal"
+    },
+    {
+      "numero": "2.2.5 bis",
+      "tema": "cesiones_densificacion"
     }
   ],
   "LGUC": [

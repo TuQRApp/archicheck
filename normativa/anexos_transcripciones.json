@@ -772,7 +772,11 @@
       "contenido": "Cada caso trae una planta esquematica del predio (edificio existente, a demoler y/o ampliacion, con el eje de calle y la franja de maximo 30 m) mas su cuadro de datos. Los calculos completos SI estan en la capa de texto. Lo que la serie establece, y conviene tener explicito:\n\n1. Densidad de ocupacion = (carga de ocupacion nueva - carga de ocupacion demolida) x 10.000 / superficie bruta del terreno [m2]  ->  ocupantes/Ha.\n2. Porcentaje de terreno a ceder = densidad de ocupacion x 11 / 2.000  (formula del Art. 2.2.5 bis).\n3. TOPE ACUMULADO DEL 44% (Art. 2.2.5 bis C): no puede acumularse mas de 44% a ceder sumando lo efectivamente cedido o aportado en permisos anteriores. En el CASO 3 el acumulado daba 47,52% y debe ajustarse, quedando el porcentaje de esa actuacion en 4,33%.\n4. Equivalente en dinero para aporte = avaluo fiscal del terreno x porcentaje. El avaluo se incrementa en el mismo porcentaje que el beneficio de constructibilidad obtenido (Art. 182 LGUC).\n5. Superficie a ceder = superficie neta del terreno x porcentaje.\n6. En AMPLIACIONES solo se considera el INCREMENTO de carga de ocupacion; no se descuenta la poblacion que ya ocupaba las edificaciones existentes que se densifican.",
       "verificacion": "Leidas 2026-09-21 renderizando las 5 paginas. Las imagenes son las plantas esquematicas; todas las cifras de los ejemplos estan en el texto. Se transcribe el procedimiento porque es la aplicacion practica de la formula del Art. 2.2.5 bis que ya esta en el corpus.",
       "corpus": "DDU",
-      "estado": "TRANSCRITO"
+      "estado": "TRANSCRITO",
+      "aplica_a": {
+        "corpus": "OGUC",
+        "articulo": "2.2.5 bis"
+      }
     },
     {
       "id": "DDULIBRO-plano-zch-santiago",
@@ -821,7 +825,11 @@
       "contenido": "Cinco plantas de loteo que grafican donde queda la INTERSECCION DE EJES cuando una calle o pasaje remata en fondo de saco, y que lotes quedan afectados por cada eje.\n\nCASO 1 a CASO 3: fondo de saco con distinta geometria de remate; se marca la interseccion del eje de calle o pasaje con el EJE VERTICAL (recta vertical perpendicular al plano horizontal, segun la definicion de eje que la propia DDU toma del diccionario).\nCASO 4: remate en angulo, con la interseccion de ejes desplazada.\nCASO 5 (pagina siguiente): eje de calle o pasaje que REMATA EN PREDIOS, con la interseccion de ejes sobre la linea de los lotes.\n\nLos lotes afectados se distinguen por trama de color en cada caso.",
       "verificacion": "Leidas 2026-09-21 renderizando ambas paginas. Son esquemas sin cotas.",
       "corpus": "DDU",
-      "estado": "TRANSCRITO"
+      "estado": "TRANSCRITO",
+      "aplica_a": {
+        "corpus": "OGUC",
+        "articulo": "2.3.2"
+      }
     },
     {
       "id": "DDULIBRO-vias-locales-sin-salida",
@@ -842,7 +850,11 @@
       "contenido": "Plantas acotadas que grafican los limites de las vias locales sin salida.\n\nEJEMPLO 2, calle sin salida con un solo acceso:\n  X = largo total, maximo 200 metros\n  tramo inicial = 50% de X, con ancho minimo de 15 metros entre lineas oficiales\n  resto = ancho minimo de 11 metros entre lineas oficiales\n  el remate se grafica como fondo de saco circular\n\nEJEMPLO 3a, via local en circunvalacion: minimo 11 metros entre lineas oficiales, SIN RESTRICCIONES de largo.\nEJEMPLO 3b, circunvalacion con doble calzada unidireccional: cada calzada con minimo 7 metros, y el anillo con minimo 11 metros entre lineas oficiales.\n\nEJEMPLO 4, circunvalacion alrededor de una plaza o conjunto de sitios:\n  A + B + C + D = maximo 200 metros\n  tramo inicial A = 50% de (A+B+C+D), con minimo 15 metros entre lineas oficiales\n  resto con minimo 11 metros entre lineas oficiales\n\nAdemas (en el texto): cuando la via tiene acceso por un solo extremo, la mayor distancia entre el acceso de un predio y la linea oficial de la via vehicular continua mas cercana sera de 100 m; la calzada pavimentada no sera inferior a 7 metros y debe permitir estacionamiento adicional en uno de sus costados de al menos 2 metros de ancho.",
       "verificacion": "Leidas 2026-09-21 renderizando ambas paginas. Las cotas de las figuras concuerdan con el texto.",
       "corpus": "DDU",
-      "estado": "TRANSCRITO"
+      "estado": "TRANSCRITO",
+      "aplica_a": {
+        "corpus": "OGUC",
+        "articulo": "2.3.2"
+      }
     },
     {
       "id": "DDULIBRO-adosamiento-punto-promedio",
@@ -859,7 +871,11 @@
       "contenido": "Isometrica de un muro de adosamiento sobre terreno inclinado.\n\nFORMULA GRAFICADA:  punto promedio = (a + b) / 2\ndonde a y b son los niveles de terreno natural en los puntos extremos en que la construccion que se adosa corta el deslinde (rotulados Nivel a y Nivel b).\n\nCotas del dibujo:\n| Concepto | Valor |\n|---|---|\n| Altura maxima de adosamiento, medida desde el punto promedio | 3,50 m |\n| Altura minima del muro de adosamiento | 2,00 m |\n\nLa altura de 3,50 m se acota en 3 posiciones del muro para dejar claro que se mide desde el punto promedio y no desde cada punto del terreno.",
       "verificacion": "Leida 2026-09-21 renderizando la pagina. La formula (a+b)/2 aparece SOLO en el dibujo; el texto describe el criterio en palabras pero no lo expresa como formula.",
       "corpus": "DDU",
-      "estado": "TRANSCRITO"
+      "estado": "TRANSCRITO",
+      "aplica_a": {
+        "corpus": "OGUC",
+        "articulo": "2.6.2"
+      }
     },
     {
       "id": "DDULIBRO-rasantes-aplicacion",
@@ -892,7 +908,11 @@
       "contenido": "Serie de cortes e isometricas que fijan DONDE y DESDE QUE NIVEL se levanta la rasante.\n\nFIGURA 1: la rasante se levanta en todos los puntos del EJE DESLINDE con otros predios, desde el nivel de terreno natural (n.n.t.).\nFIGURA 2a: hacia el espacio publico se levanta en el PUNTO MEDIO entre lineas oficiales, acotado como X/2 + X/2, donde X = ancho del espacio publico.\nFIGURA 2b: mismo criterio aunque la calzada no coincida con el eje del espacio publico.\nFIGURA 3: si el predio colinda con AREA VERDE PUBLICA, la rasante se aplica en el deslinde entre el predio privado y el area verde, no en el eje de la via.\nFIGURA 4a: si el ancho entre lineas oficiales es MAYOR A 100 m, NO se aplican rasantes en ese frente.\nFIGURA 4b: si NO HAY LINEA OFICIAL en el lado opuesto (por ejemplo frente al mar), tampoco se aplican rasantes en ese frente.\nFIGURAS 5a y 5b: cuando el IPT permite construccion aislada POR SOBRE la continua, el nivel de aplicacion de la rasante es la ALTURA MAXIMA PERMITIDA PARA LA EDIFICACION CONTINUA (segun IPT), tanto hacia los deslindes como hacia el espacio publico.\nFIGURAS 6a y 6b: si el IPT fija una profundidad maxima para la edificacion continua menor a la del predio, la rasante para la aislada se aplica a la altura maxima de la continua en toda la profundidad permitida, aunque el proyecto no la use completa. En el resto del predio el nivel de aplicacion vuelve a ser el de terreno natural.\nFIGURAS 7a, 7b y 7c: cuando la profundidad permitida para la edificacion continua es el 100% de la del predio, la rasante se aplica desde la altura maxima de la continua en todo el predio, tanto si el proyecto usa esa profundidad como si no, y tambien cuando el IPT admite la aislada como agrupamiento adicional.",
       "verificacion": "Leidas 2026-09-21 renderizando las 5 paginas. El criterio del punto medio X/2 y el corte de los 100 m son directamente aplicables al chequeo de rasantes.",
       "corpus": "DDU",
-      "estado": "TRANSCRITO"
+      "estado": "TRANSCRITO",
+      "aplica_a": {
+        "corpus": "OGUC",
+        "articulo": "2.6.3"
+      }
     },
     {
       "id": "DDULIBRO-computo-superficie-edificada",
@@ -932,7 +952,11 @@
       "contenido": "Serie que fija que porcentaje de cada superficie se contabiliza como superficie edificada.\n\nFIGURA 1 - FORMULA DE LA SUPERFICIE CONSTRUIDA DE UN PISO:\n  S = (a x b) + (d x e)\n  100% Superficie construida = S - Z\ndonde S se mide por la CARA EXTERIOR de los muros perimetrales y\n  Z = superficie correspondiente a vacios, ductos verticales y escaleras de evacuacion.\nLa escalera interior o comun SI forma parte de la superficie de cada piso.\n\nFIGURAS 2a y 2b - ALTURA LIBRE MINIMA:\n  bajo plano inclinado con altura interior h < 1,60 m  ->  0% (no se contabiliza)\n  el resto  ->  100%\n  mismo criterio para la superficie horizontal de cuerpos salientes con h < 1,60 m.\n\nFIGURAS 3a y 3b - SUPERFICIE CUBIERTA LATERALMENTE ABIERTA:\n  si la profundidad NO es superior al frente abierto (a mayor o igual que b)  ->  50%\n  la parte cerrada  ->  100%\n\nFIGURA 4 - cuando el frente abierto es MENOR a la profundidad (a menor que b):\n  se computa 50% solo hasta el equivalente al frente abierto, y 100% al area que lo sobrepasa.\n\nFIGURA 5 - NO SE CONTABILIZAN (0%):\n  superficies abiertas cuya cubierta este en volado por 2 o mas lados convergentes,\n  jardineras exteriores,\n  espacios cubiertos y abiertos del primer piso que sean de uso comun.\n\nFIGURAS 6a y 6b - combinaciones de los casos anteriores en una misma planta (0%, 50% y 100% conviviendo).\n\nFIGURA 7 - SUPERFICIE COMUN HABITACIONAL (Art. 6.1.5, viviendas acogidas al DFL 2):\n  si el area comun habitacional es INFERIOR al 20% de la superficie util habitacional, su constructibilidad computa 0.\n  si SUPERA el 20%, se contabiliza el excedente.\n  si el proyecto ocupa menos del 20%, el excedente no utilizado NO puede usarse como incremento de constructibilidad de la superficie util.",
       "verificacion": "Leidas 2026-09-21 renderizando las 5 paginas. La formula S = (axb)+(dxe) y S - Z aparecen SOLO en la figura. Todo este bloque es directamente aplicable al computo de superficies del producto. Las figuras se repiten identicas en las paginas 383 a 387 del mismo libro; los ids duplicados quedan asociados a este mismo anexo.",
       "corpus": "DDU",
-      "estado": "TRANSCRITO"
+      "estado": "TRANSCRITO",
+      "aplica_a": {
+        "corpus": "OGUC",
+        "articulo": "5.1.11"
+      }
     },
     {
       "id": "PRC-PROVIDENCIA-ordenanza-iconos-zona",

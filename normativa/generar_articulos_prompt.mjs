@@ -98,12 +98,31 @@ for (const cuerpo of CUERPOS) {
       noEncontrados.push(entrada.numero);
       continue;
     }
+    // Un anexo se adjunta a un articulo de 2 formas:
+    //   - por pertenencia: es una figura del PROPIO cuerpo legal (corpus +
+    //     numero de articulo coinciden). Es el caso de las tablas de la OGUC.
+    //   - por `aplica_a`: las circulares DDU son interpretaciones oficiales del
+    //     MINVU SOBRE articulos de la OGUC, asi que sus figuras documentan ese
+    //     articulo y no uno propio. Sin esta segunda via nunca se adjuntarian,
+    //     porque el filtro por corpus las descarta -- y son justamente las que
+    //     traen la formula de computo de superficie edificada (Art. 5.1.11) y
+    //     la serie de rasantes (Art. 2.6.3).
+    const aplicaAqui = a => {
+      if (a.aplica_a) {
+        return a.aplica_a.corpus === cuerpo.nombre
+          && String(a.aplica_a.articulo).trim() === clave;
+      }
+      return a.corpus === cuerpo.nombre && String(a.articulo).trim() === clave;
+    };
+
     const anexos = (transcripciones.anexos || [])
-      .filter(a => a.corpus === cuerpo.nombre && String(a.articulo).trim() === clave)
+      .filter(aplicaAqui)
       .map(a => ({
         titulo: a.titulo,
         tipo: a.tipo,
         contenido: a.contenido,
+        // La fuente lleva el PDF de origen, asi que en un anexo tomado de una
+        // circular DDU queda a la vista que no sale del texto de la OGUC.
         fuente: `${a.pdf} p. ${a.paginas.join(', ')} (transcripcion de imagen)`,
       }));
 

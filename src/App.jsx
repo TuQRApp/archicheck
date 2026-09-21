@@ -979,8 +979,11 @@ function buildPromptCapa2(tipo, comuna, archivos, preguntas = {}, colabData = nu
   const conAnexos = (num, art) => {
     const base = `Art. ${num}: ${art.texto.replace(/\n{3,}/g, "\n\n")}`;
     if (!art.anexos || !art.anexos.length) return base;
+    // El rótulo NO dice "de este artículo": un anexo puede venir de una
+    // circular DDU que interpreta el artículo, no del propio cuerpo legal. La
+    // fuente lleva el PDF de origen, así que la procedencia queda a la vista.
     const anexos = art.anexos
-      .map(a => `  [ANEXO GRÁFICO de este artículo — ${a.titulo}]\n  Fuente: ${a.fuente}\n${a.contenido}`)
+      .map(a => `  [ANEXO GRÁFICO aplicable al Art. ${num} — ${a.titulo}]\n  Fuente: ${a.fuente}\n${a.contenido}`)
       .join("\n\n");
     return `${base}\n\n${anexos}`;
   };

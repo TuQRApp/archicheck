@@ -85,10 +85,18 @@ for (const caso of CASOS) {
     // con el mismo contenido. Asi un anexo no puede nacer de una edicion a mano
     // del archivo generado.
     for (const anexo of art.anexos || []) {
-      const origen = (transcripciones.anexos || []).find(
-        a => a.corpus === caso.nombre &&
-             String(a.articulo).trim() === String(num).trim() &&
-             a.titulo === anexo.titulo);
+      // MISMA regla de pertenencia que usa el generador: por corpus+numero, o
+      // por `aplica_a` cuando el anexo viene de otro cuerpo legal que
+      // interpreta este articulo (las circulares DDU sobre la OGUC).
+      const origen = (transcripciones.anexos || []).find(a => {
+        if (a.titulo !== anexo.titulo) return false;
+        if (a.aplica_a) {
+          return a.aplica_a.corpus === caso.nombre
+            && String(a.aplica_a.articulo).trim() === String(num).trim();
+        }
+        return a.corpus === caso.nombre
+          && String(a.articulo).trim() === String(num).trim();
+      });
       if (!origen) {
         console.error(`  FALLA  Art. ${num}: anexo "${anexo.titulo}" no existe en anexos_transcripciones.json.`);
         fallas++;

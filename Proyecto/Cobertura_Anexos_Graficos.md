@@ -50,14 +50,16 @@ Todas extraídas y transcritas. Ninguna estaba en la capa de texto.
 
 | Fórmula | Fuente | ¿Llega al prompt hoy? |
 |---|---|---|
-| `S = (a×b) + (d×e)` y `Superficie construida = S − Z` — cómputo de superficie edificada por piso (Z = vacíos, ductos verticales y escaleras de evacuación) | DDU, Art. 5.1.11 | No |
-| `punto promedio = (a+b)/2` — altura de adosamiento en terreno inclinado | DDU, Art. 2.6.2 | No |
-| `% = (Densidad de ocupación × 11) / 2.000` — porcentaje de cesión | OGUC 2.2.5 bis | No |
+| `S = (a×b) + (d×e)` y `Superficie construida = S − Z` — cómputo de superficie edificada por piso (Z = vacíos, ductos verticales y escaleras de evacuación) | DDU, Art. 5.1.11 | **Sí** |
+| `punto promedio = (a+b)/2` — altura de adosamiento en terreno inclinado | DDU, Art. 2.6.2 | **Sí** |
+| `% = (Densidad de ocupación × 11) / 2.000` — porcentaje de cesión | OGUC 2.2.5 bis | **Sí** |
 | `SMV = StPV × (%mV/100%)` — superficie máxima de ventana | OGUC 4.1.10 | No |
 | `Upvm = ((Um·Sm) + (Uv·Sv)) / (Sm + Sv)` — transmitancia ponderada | OGUC 4.1.10 | No |
-| `Densidad de ocupación = (carga nueva − carga demolida) × 10.000 / superficie bruta` | DDU 447 | No |
+| `Densidad de ocupación = (carga nueva − carga demolida) × 10.000 / superficie bruta` | DDU 447 | **Sí** (Art. 2.2.5 bis) |
 
-No llegan porque sus artículos no están entre los 43 de `articulos_prompt.json`. Quedan en banco.
+**Ampliación aplicada el 2026-09-21**: la lista pasó de 43 a **48 artículos OGUC**. Se agregaron `4.2.18` (ancho de pasillos), `5.1.11` (cómputo de superficie edificada), `2.6.13` (sombra proyectada), `2.3.3` (anchos de pasajes) y `2.2.5 bis` (cesiones por densificación). Costo real: **+9,1%** del bloque normativo, de 46k a **50k tokens**.
+
+Se dejaron **fuera a propósito** el Art. 4.1.10 (acondicionamiento térmico, ~14k tokens) y el 2.2.8 (~7k): sus exigencias son valores U, R100 y permeabilidad, que se acreditan con especificaciones técnicas y ensayos, **no se leen de una planta**. Quedan transcritos y disponibles para el RAG.
 
 ---
 
@@ -121,5 +123,4 @@ Ordenados por gravedad.
 ## Lo que queda pendiente, acotado
 
 1. **Conseguir los documentos faltantes** de Providencia (3 Planos de Detalle, Fichas de Valoración).
-2. **Decidir si ampliar la lista de 43 artículos** del prompt, para que las 6 fórmulas y las tablas del Art. 4.1.10 lleguen al análisis.
-3. **Una cota ilegible declarada, no rellenada**: en la FIGURA 1 de la DDU 351 las medidas menores de la huella podotáctil no son legibles en el escaneo oficial ni ampliadas 5×. La fuente para esas medidas es la NCh 3180.
+2. **Una cota ilegible declarada, no rellenada**: en la FIGURA 1 de la DDU 351 las medidas menores de la huella podotáctil no son legibles en el escaneo oficial ni ampliadas 5×. La fuente para esas medidas es la NCh 3180.
