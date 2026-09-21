@@ -627,6 +627,312 @@
       "contenido": "Elevacion y corte de cierro, acotados:\n| Elemento | Cota del dibujo |\n|---|---|\n| Ancho de pilar | 0,3 m min. / 0,6 m max. |\n| Sobresalir del pilar respecto del limite superior de la reja | 0,15 m min. / 0,6 m max. |\n| Altura de la reja | 0,85 m min. / 2 m max. |\n| Altura del zocalo | 0,25 m min. / 1,3 m max. |\n| Distancia a eje entre pilares | 1,8 m min. / 4,5 m max. |\n| Profundidad del zocalo | 0,3 m min. |",
       "verificacion": "Leida 2026-09-21 renderizando la pagina. Todas las cotas del dibujo coinciden con el texto del punto 10 del articulo; el esquema no agrega ni contradice ningun valor.",
       "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDU351-logo-minvu",
+      "articulo": null,
+      "tipo": "decoracion",
+      "pdf": "normativa/nacional/Fuentes/DDU 351_Accesibilidad.pdf",
+      "paginas": [
+        1
+      ],
+      "imagenes": [
+        "DDU_p0001_x3",
+        "DDU_p0002_x8"
+      ],
+      "titulo": "Logo del Ministerio de Vivienda y Urbanismo",
+      "contenido": "",
+      "verificacion": "Revisada 2026-09-21: membrete institucional del MINVU. No es contenido normativo.",
+      "corpus": "DDU",
+      "estado": "DECORACION"
+    },
+    {
+      "id": "DDU351-fig1-huella-podotactil",
+      "articulo": null,
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU 351_Accesibilidad.pdf",
+      "paginas": [
+        2
+      ],
+      "imagenes": [
+        "DDU_p0002_x7"
+      ],
+      "titulo": "FIGURA 1. Configuracion basica de la huella podotactil",
+      "contenido": "Esquema de una esquina de vereda con los 2 tipos de pavimento podotactil y sus fichas:\n- PAVIMENTO ALERTA: baldosa de botones (puntos en relieve). Se usa para alertar cambios de nivel o de direccion.\n- PAVIMENTO GUIA: baldosa de barras paralelas en relieve. Se usa para guiar el recorrido.\n\nLa ficha acotada muestra baldosas cuadradas de aproximadamente 40 x 40 cm, con corte transversal del relieve.\n\nLIMITE DE LECTURA: las cotas menores de la ficha (altura del relieve, separacion entre botones y entre barras) NO SON LEGIBLES en el escaneo oficial, ni siquiera ampliadas 5x. NO se transcriben para no inventar una dimension normativa. El texto de la circular tampoco las da; para esas medidas la fuente es la NCh 3180 referida por la propia DDU.",
+      "verificacion": "Leida 2026-09-21, original y ampliada 5x. Se deja constancia explicita de lo ilegible en vez de completarlo: adivinar una cota es exactamente el modo de falla que esta auditoria existe para evitar.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDU351-fig2-3-ruta-accesible-condominios",
+      "articulo": null,
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU 351_Accesibilidad.pdf",
+      "paginas": [
+        11
+      ],
+      "imagenes": [
+        "DDU_p0011_x18",
+        "DDU_p0011_x19"
+      ],
+      "titulo": "FIGURAS 2 y 3. Ruta accesible en condominios tipo A y tipo B",
+      "contenido": "Dos isometricas que grafican el trazado exigido de la ruta accesible (marcada en rojo).\n\nFIGURA 2, condominio TIPO A: la ruta conecta el ESPACIO PUBLICO con el ACCESO del Edificio 1 y el del Edificio 2, con los RECINTOS DE USO COMUN de ambos y con la CUOTA DE ESTACIONAMIENTOS PARA PERSONAS CON DISCAPACIDAD.\n\nFIGURA 3, condominio TIPO B: la ruta conecta el ESPACIO PUBLICO con las VIVIENDAS, el RECINTO DE USO COMUN, la PISCINA, el AREA DE JUEGOS INFANTILES y la CUOTA DE ESTACIONAMIENTOS PARA PERSONAS CON DISCAPACIDAD.\n\nCriterio que ilustran: los bienes comunes de acceso restringido, necesarios solo para el funcionamiento del condominio, no quedan obligados a conectarse a la ruta accesible.",
+      "verificacion": "Leida 2026-09-21 renderizando la pagina. Son esquemas sin cotas; el criterio esta en el texto.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDU351-fig4-descansos-rampa",
+      "articulo": null,
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU 351_Accesibilidad.pdf",
+      "paginas": [
+        19
+      ],
+      "imagenes": [
+        "DDU_p0019_x28"
+      ],
+      "titulo": "FIGURA 4. Exigencia de descanso antes y despues de rampa y espacio libre para el barrido de puertas",
+      "contenido": "Dos cortes longitudinales de rampa con puerta.\n\nCOTA CLAVE, repetida en los 2 ejemplos y a ambos lados de la rampa:\n  ESPACIO LIBRE HORIZONTAL  L = 1,50 m\n\nEJEMPLO 1: el ESPACIO DE BARRIDO DE PUERTA queda DENTRO del espacio libre horizontal superior, de modo que el barrido se superpone al descanso.\nEJEMPLO 2: el barrido de puerta queda FUERA del descanso, hacia el interior del recinto.\n\nEn ambos casos se exige el descanso horizontal de 1,50 m antes y despues del desnivel salvado por la rampa.",
+      "verificacion": "Leida 2026-09-21. La cota de 1,50 m es directamente aplicable al chequeo de rampas del producto y esta solo en la figura.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDU351-fig5-cambio-direccion-rampa",
+      "articulo": null,
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU 351_Accesibilidad.pdf",
+      "paginas": [
+        20
+      ],
+      "imagenes": [
+        "DDU_p0020_x30"
+      ],
+      "titulo": "FIGURA 5. Esquema para el cambio de direccion en rampa",
+      "contenido": "Planta de 2 tramos de rampa en angulo recto. En el encuentro se inscribe un circulo acotado:\n  D = 1,50 m\nEs el diametro libre que debe quedar disponible en el descanso donde la rampa cambia de direccion, para permitir el giro.",
+      "verificacion": "Leida 2026-09-21. El circulo de giro de 1,50 m de diametro es un chequeo que el motor ya implementa; esta figura es su respaldo grafico oficial.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDU447-logo-minvu",
+      "articulo": null,
+      "tipo": "decoracion",
+      "pdf": "normativa/nacional/Fuentes/DDU-447-Circular-Aportes-Tramitacion-permisos-12.11.20.pdf",
+      "paginas": [
+        1
+      ],
+      "imagenes": [
+        "DDU_p0001_x16"
+      ],
+      "titulo": "Logo del Ministerio de Vivienda y Urbanismo",
+      "contenido": "",
+      "verificacion": "Revisada 2026-09-21: membrete institucional. No es contenido normativo.",
+      "corpus": "DDU",
+      "estado": "DECORACION"
+    },
+    {
+      "id": "DDU447-firma-sello",
+      "articulo": null,
+      "tipo": "decoracion",
+      "pdf": "normativa/nacional/Fuentes/DDU-447-Circular-Aportes-Tramitacion-permisos-12.11.20.pdf",
+      "paginas": [
+        33
+      ],
+      "imagenes": [
+        "DDU_p0033_x2091"
+      ],
+      "titulo": "Firma y timbres de la Division de Desarrollo Urbano",
+      "contenido": "",
+      "verificacion": "Revisada 2026-09-21: firma del Jefe de la Division de Desarrollo Urbano y timbres de Asesoria Juridica. No es contenido normativo.",
+      "corpus": "DDU",
+      "estado": "DECORACION"
+    },
+    {
+      "id": "DDU447-casos-aportes-2.2.5bis",
+      "articulo": "2.2.5 bis",
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU-447-Circular-Aportes-Tramitacion-permisos-12.11.20.pdf",
+      "paginas": [
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "imagenes": [
+        "DDU_p0026_x209",
+        "DDU_p0027_x212",
+        "DDU_p0028_x215",
+        "DDU_p0029_x218",
+        "DDU_p0030_x221"
+      ],
+      "titulo": "CASOS 1 a 5. Esquemas de los ejemplos de calculo de aportes y cesiones del Art. 2.2.5 bis",
+      "contenido": "Cada caso trae una planta esquematica del predio (edificio existente, a demoler y/o ampliacion, con el eje de calle y la franja de maximo 30 m) mas su cuadro de datos. Los calculos completos SI estan en la capa de texto. Lo que la serie establece, y conviene tener explicito:\n\n1. Densidad de ocupacion = (carga de ocupacion nueva - carga de ocupacion demolida) x 10.000 / superficie bruta del terreno [m2]  ->  ocupantes/Ha.\n2. Porcentaje de terreno a ceder = densidad de ocupacion x 11 / 2.000  (formula del Art. 2.2.5 bis).\n3. TOPE ACUMULADO DEL 44% (Art. 2.2.5 bis C): no puede acumularse mas de 44% a ceder sumando lo efectivamente cedido o aportado en permisos anteriores. En el CASO 3 el acumulado daba 47,52% y debe ajustarse, quedando el porcentaje de esa actuacion en 4,33%.\n4. Equivalente en dinero para aporte = avaluo fiscal del terreno x porcentaje. El avaluo se incrementa en el mismo porcentaje que el beneficio de constructibilidad obtenido (Art. 182 LGUC).\n5. Superficie a ceder = superficie neta del terreno x porcentaje.\n6. En AMPLIACIONES solo se considera el INCREMENTO de carga de ocupacion; no se descuenta la poblacion que ya ocupaba las edificaciones existentes que se densifican.",
+      "verificacion": "Leidas 2026-09-21 renderizando las 5 paginas. Las imagenes son las plantas esquematicas; todas las cifras de los ejemplos estan en el texto. Se transcribe el procedimiento porque es la aplicacion practica de la formula del Art. 2.2.5 bis que ya esta en el corpus.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDULIBRO-plano-zch-santiago",
+      "articulo": null,
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU_LIBRO_COMPLETO.pdf",
+      "paginas": [
+        219
+      ],
+      "imagenes": [
+        "DDU_p0219_x1220",
+        "DDU_p0219_x1221",
+        "DDU_p0219_x1222",
+        "DDU_p0219_x1223",
+        "DDU_p0219_x1224",
+        "DDU_p0219_x1225"
+      ],
+      "titulo": "Plano ejemplo de Zona de Conservacion Historica",
+      "contenido": "Plano catastral de un sector de Santiago (entre Compania, Huerfanos, Alameda y Almirante Barroso) usado como EJEMPLO de como se grafica una Zona de Conservacion Historica.\n\nSimbologia del plano:\n| Simbolo | Significado |\n|---|---|\n| A-B / H-A | Poligono ZCH |\n| Linea segmentada gruesa | Zona de Conservacion Historica |\n| Numero en circulo | Numero de inmueble |\n| Relleno gris | Inmueble de Conservacion Historica |\n| N en recuadro | Nivel de intervencion |\n| Trama de cuadricula | Zona Tipica |\n| Relleno negro | Monumento Historico |\n\nEs un ejemplo ilustrativo, no una norma aplicable a un proyecto concreto.",
+      "verificacion": "Leida 2026-09-21 renderizando la pagina. Las 6 imagenes componen un unico plano.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDULIBRO-casos-eje-calle",
+      "articulo": "2.3.2",
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU_LIBRO_COMPLETO.pdf",
+      "paginas": [
+        286,
+        287
+      ],
+      "imagenes": [
+        "DDU_p0286_x963",
+        "DDU_p0286_x964",
+        "DDU_p0286_x965",
+        "DDU_p0286_x966",
+        "DDU_p0286_x967",
+        "DDU_p0286_x968",
+        "DDU_p0286_x969",
+        "DDU_p0286_x970",
+        "DDU_p0287_x957",
+        "DDU_p0287_x958"
+      ],
+      "titulo": "CASOS 1 a 5. Determinacion del eje de calle o pasaje en fondo de saco",
+      "contenido": "Cinco plantas de loteo que grafican donde queda la INTERSECCION DE EJES cuando una calle o pasaje remata en fondo de saco, y que lotes quedan afectados por cada eje.\n\nCASO 1 a CASO 3: fondo de saco con distinta geometria de remate; se marca la interseccion del eje de calle o pasaje con el EJE VERTICAL (recta vertical perpendicular al plano horizontal, segun la definicion de eje que la propia DDU toma del diccionario).\nCASO 4: remate en angulo, con la interseccion de ejes desplazada.\nCASO 5 (pagina siguiente): eje de calle o pasaje que REMATA EN PREDIOS, con la interseccion de ejes sobre la linea de los lotes.\n\nLos lotes afectados se distinguen por trama de color en cada caso.",
+      "verificacion": "Leidas 2026-09-21 renderizando ambas paginas. Son esquemas sin cotas.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDULIBRO-vias-locales-sin-salida",
+      "articulo": "2.3.2",
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU_LIBRO_COMPLETO.pdf",
+      "paginas": [
+        306,
+        307
+      ],
+      "imagenes": [
+        "DDU_p0306_x895",
+        "DDU_p0307_x888",
+        "DDU_p0307_x889",
+        "DDU_p0307_x890"
+      ],
+      "titulo": "Ejemplos 2 a 4. Vias locales sin salida y en circunvalacion (Circular DDU 107)",
+      "contenido": "Plantas acotadas que grafican los limites de las vias locales sin salida.\n\nEJEMPLO 2, calle sin salida con un solo acceso:\n  X = largo total, maximo 200 metros\n  tramo inicial = 50% de X, con ancho minimo de 15 metros entre lineas oficiales\n  resto = ancho minimo de 11 metros entre lineas oficiales\n  el remate se grafica como fondo de saco circular\n\nEJEMPLO 3a, via local en circunvalacion: minimo 11 metros entre lineas oficiales, SIN RESTRICCIONES de largo.\nEJEMPLO 3b, circunvalacion con doble calzada unidireccional: cada calzada con minimo 7 metros, y el anillo con minimo 11 metros entre lineas oficiales.\n\nEJEMPLO 4, circunvalacion alrededor de una plaza o conjunto de sitios:\n  A + B + C + D = maximo 200 metros\n  tramo inicial A = 50% de (A+B+C+D), con minimo 15 metros entre lineas oficiales\n  resto con minimo 11 metros entre lineas oficiales\n\nAdemas (en el texto): cuando la via tiene acceso por un solo extremo, la mayor distancia entre el acceso de un predio y la linea oficial de la via vehicular continua mas cercana sera de 100 m; la calzada pavimentada no sera inferior a 7 metros y debe permitir estacionamiento adicional en uno de sus costados de al menos 2 metros de ancho.",
+      "verificacion": "Leidas 2026-09-21 renderizando ambas paginas. Las cotas de las figuras concuerdan con el texto.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDULIBRO-adosamiento-punto-promedio",
+      "articulo": "2.6.2",
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU_LIBRO_COMPLETO.pdf",
+      "paginas": [
+        310
+      ],
+      "imagenes": [
+        "DDU_p0310_x878"
+      ],
+      "titulo": "Altura de adosamiento en terreno inclinado: punto promedio",
+      "contenido": "Isometrica de un muro de adosamiento sobre terreno inclinado.\n\nFORMULA GRAFICADA:  punto promedio = (a + b) / 2\ndonde a y b son los niveles de terreno natural en los puntos extremos en que la construccion que se adosa corta el deslinde (rotulados Nivel a y Nivel b).\n\nCotas del dibujo:\n| Concepto | Valor |\n|---|---|\n| Altura maxima de adosamiento, medida desde el punto promedio | 3,50 m |\n| Altura minima del muro de adosamiento | 2,00 m |\n\nLa altura de 3,50 m se acota en 3 posiciones del muro para dejar claro que se mide desde el punto promedio y no desde cada punto del terreno.",
+      "verificacion": "Leida 2026-09-21 renderizando la pagina. La formula (a+b)/2 aparece SOLO en el dibujo; el texto describe el criterio en palabras pero no lo expresa como formula.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDULIBRO-rasantes-aplicacion",
+      "articulo": "2.6.3",
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU_LIBRO_COMPLETO.pdf",
+      "paginas": [
+        318,
+        319,
+        320,
+        321,
+        322
+      ],
+      "imagenes": [
+        "DDU_p0318_x851",
+        "DDU_p0319_x845",
+        "DDU_p0319_x846",
+        "DDU_p0319_x847",
+        "DDU_p0320_x840",
+        "DDU_p0320_x841",
+        "DDU_p0321_x833",
+        "DDU_p0321_x834",
+        "DDU_p0321_x835",
+        "DDU_p0321_x836",
+        "DDU_p0322_x826",
+        "DDU_p0322_x827",
+        "DDU_p0322_x828"
+      ],
+      "titulo": "FIGURAS 1 a 7. Aplicacion de las rasantes (Circular DDU 109)",
+      "contenido": "Serie de cortes e isometricas que fijan DONDE y DESDE QUE NIVEL se levanta la rasante.\n\nFIGURA 1: la rasante se levanta en todos los puntos del EJE DESLINDE con otros predios, desde el nivel de terreno natural (n.n.t.).\nFIGURA 2a: hacia el espacio publico se levanta en el PUNTO MEDIO entre lineas oficiales, acotado como X/2 + X/2, donde X = ancho del espacio publico.\nFIGURA 2b: mismo criterio aunque la calzada no coincida con el eje del espacio publico.\nFIGURA 3: si el predio colinda con AREA VERDE PUBLICA, la rasante se aplica en el deslinde entre el predio privado y el area verde, no en el eje de la via.\nFIGURA 4a: si el ancho entre lineas oficiales es MAYOR A 100 m, NO se aplican rasantes en ese frente.\nFIGURA 4b: si NO HAY LINEA OFICIAL en el lado opuesto (por ejemplo frente al mar), tampoco se aplican rasantes en ese frente.\nFIGURAS 5a y 5b: cuando el IPT permite construccion aislada POR SOBRE la continua, el nivel de aplicacion de la rasante es la ALTURA MAXIMA PERMITIDA PARA LA EDIFICACION CONTINUA (segun IPT), tanto hacia los deslindes como hacia el espacio publico.\nFIGURAS 6a y 6b: si el IPT fija una profundidad maxima para la edificacion continua menor a la del predio, la rasante para la aislada se aplica a la altura maxima de la continua en toda la profundidad permitida, aunque el proyecto no la use completa. En el resto del predio el nivel de aplicacion vuelve a ser el de terreno natural.\nFIGURAS 7a, 7b y 7c: cuando la profundidad permitida para la edificacion continua es el 100% de la del predio, la rasante se aplica desde la altura maxima de la continua en todo el predio, tanto si el proyecto usa esa profundidad como si no, y tambien cuando el IPT admite la aislada como agrupamiento adicional.",
+      "verificacion": "Leidas 2026-09-21 renderizando las 5 paginas. El criterio del punto medio X/2 y el corte de los 100 m son directamente aplicables al chequeo de rasantes.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
+    },
+    {
+      "id": "DDULIBRO-computo-superficie-edificada",
+      "articulo": "5.1.11",
+      "tipo": "figura",
+      "pdf": "normativa/nacional/Fuentes/DDU_LIBRO_COMPLETO.pdf",
+      "paginas": [
+        342,
+        343,
+        344,
+        345,
+        346
+      ],
+      "imagenes": [
+        "DDU_p0342_x750",
+        "DDU_p0383_x1661",
+        "DDU_p0342_x751",
+        "DDU_p0383_x1662",
+        "DDU_p0342_x752",
+        "DDU_p0383_x1663",
+        "DDU_p0343_x743",
+        "DDU_p0384_x1654",
+        "DDU_p0343_x744",
+        "DDU_p0384_x1655",
+        "DDU_p0344_x738",
+        "DDU_p0385_x1649",
+        "DDU_p0344_x739",
+        "DDU_p0385_x1650",
+        "DDU_p0345_x733",
+        "DDU_p0386_x1643",
+        "DDU_p0345_x734",
+        "DDU_p0386_x1644",
+        "DDU_p0346_x729",
+        "DDU_p0387_x1639"
+      ],
+      "titulo": "FIGURAS 1 a 7. Computo de la superficie edificada (Art. 5.1.11 OGUC)",
+      "contenido": "Serie que fija que porcentaje de cada superficie se contabiliza como superficie edificada.\n\nFIGURA 1 - FORMULA DE LA SUPERFICIE CONSTRUIDA DE UN PISO:\n  S = (a x b) + (d x e)\n  100% Superficie construida = S - Z\ndonde S se mide por la CARA EXTERIOR de los muros perimetrales y\n  Z = superficie correspondiente a vacios, ductos verticales y escaleras de evacuacion.\nLa escalera interior o comun SI forma parte de la superficie de cada piso.\n\nFIGURAS 2a y 2b - ALTURA LIBRE MINIMA:\n  bajo plano inclinado con altura interior h < 1,60 m  ->  0% (no se contabiliza)\n  el resto  ->  100%\n  mismo criterio para la superficie horizontal de cuerpos salientes con h < 1,60 m.\n\nFIGURAS 3a y 3b - SUPERFICIE CUBIERTA LATERALMENTE ABIERTA:\n  si la profundidad NO es superior al frente abierto (a mayor o igual que b)  ->  50%\n  la parte cerrada  ->  100%\n\nFIGURA 4 - cuando el frente abierto es MENOR a la profundidad (a menor que b):\n  se computa 50% solo hasta el equivalente al frente abierto, y 100% al area que lo sobrepasa.\n\nFIGURA 5 - NO SE CONTABILIZAN (0%):\n  superficies abiertas cuya cubierta este en volado por 2 o mas lados convergentes,\n  jardineras exteriores,\n  espacios cubiertos y abiertos del primer piso que sean de uso comun.\n\nFIGURAS 6a y 6b - combinaciones de los casos anteriores en una misma planta (0%, 50% y 100% conviviendo).\n\nFIGURA 7 - SUPERFICIE COMUN HABITACIONAL (Art. 6.1.5, viviendas acogidas al DFL 2):\n  si el area comun habitacional es INFERIOR al 20% de la superficie util habitacional, su constructibilidad computa 0.\n  si SUPERA el 20%, se contabiliza el excedente.\n  si el proyecto ocupa menos del 20%, el excedente no utilizado NO puede usarse como incremento de constructibilidad de la superficie util.",
+      "verificacion": "Leidas 2026-09-21 renderizando las 5 paginas. La formula S = (axb)+(dxe) y S - Z aparecen SOLO en la figura. Todo este bloque es directamente aplicable al computo de superficies del producto. Las figuras se repiten identicas en las paginas 383 a 387 del mismo libro; los ids duplicados quedan asociados a este mismo anexo.",
+      "corpus": "DDU",
+      "estado": "TRANSCRITO"
     }
   ]
 }
