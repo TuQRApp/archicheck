@@ -66,17 +66,19 @@ Las dos últimas **todavía no llegan al prompt**: sus artículos (2.2.5 bis y 4
 
 ## Pendiente — qué falta y en qué orden
 
-1. **OGUC, 21 imágenes.** Prioridad alta: es el cuerpo que más pesa en el análisis. Concentradas en dos zonas — Arts. 2.1.25 a 2.1.33 (páginas 195–215, equipamiento y escalas) y Arts. 2.6.11 / 2.6.13 (rasantes, páginas 147 y 155). La de 4.5.7 (página 257, 1500×1320) está pendiente.
-2. **DDU, 67 imágenes.** Ojo: [la auditoría de integridad](../CLAUDE.md) ya registró que 3 JSON de DDU (279, 320, 390) están fabricados o sin fuente. Antes de transcribir conviene resolver eso, para no construir sobre una base sin respaldo.
-3. **PRC Providencia, 30 imágenes.** Son en su mayoría **planos cartográficos** de gran formato (láminas de 1 página), no tablas. Necesitan un tratamiento distinto al de una tabla: probablemente recorte por zona y lectura dirigida, no transcripción completa.
+1. **OGUC, 26 imágenes.** Prioridad alta: es el cuerpo que más pesa en el análisis. Concentradas en dos zonas — Arts. 2.1.25 a 2.1.33 (páginas 195–215, equipamiento y escalas) y Arts. 2.6.11 / 2.6.13 (rasantes, páginas 147 y 155). La de 4.5.7 (página 257, 1500×1320) está pendiente.
+2. **DDU, 68 imágenes.** (+ 1 de LGUC, que con el filtro corregido sí tiene una imagen de contenido) Ojo: [la auditoría de integridad](../CLAUDE.md) ya registró que 3 JSON de DDU (279, 320, 390) están fabricados o sin fuente. Antes de transcribir conviene resolver eso, para no construir sobre una base sin respaldo.
+3. **PRC Providencia, 32 imágenes.** Son en su mayoría **planos cartográficos** de gran formato (láminas de 1 página), no tablas. Necesitan un tratamiento distinto al de una tabla: probablemente recorte por zona y lectura dirigida, no transcripción completa.
 4. **82 páginas con figuras VECTORIALES** (21 en DDU, 61 en PRC Providencia). No aparecen como imagen embebida porque están dibujadas con líneas y texto suelto. Requieren **renderizar la página**, no extraer la imagen. El extractor ya las detecta y las lista en `paginas_con_figuras_vectoriales` del manifiesto, pero **todavía no las procesa**.
 5. **Ley 19.300**: no hay PDF en el repo, solo `normativa/nacional/Fuentes/ley19300.json`. **No se puede auditar su contenido gráfico hasta conseguir el PDF oficial.**
 6. **PRC Ñuñoa y Santiago**: sin PDF en el repo. Mismo caso.
 
 ---
 
-## Hallazgo colateral abierto — ACH-DATA-013
+## ACH-DATA-013 — RESUELTO el 2026-09-21
 
-`normativa/limpiar_texto_normativo.mjs:54` hace `.replace(/\s+/g, ' ')`, que **aplana los saltos de línea**. Las tablas que sí están en la capa de texto pierden su estructura de filas: la matriz de resistencia al fuego del **Art. 4.3.3** llega al modelo como una sola línea corrida (`|a |F-180|F-120|…`). Los valores están todos y el patrón de pipes permite recuperar las filas, así que está degradado, no perdido.
+`limpiar_texto_normativo.mjs` aplanaba los saltos de línea con `.replace(/\s+/g,' ')`, así que las tablas que sí están en la capa de texto perdían su estructura de filas.
 
-**No se arregló en el acto a propósito**: los patrones de limpieza de marginalia operan sobre el texto aplanado, porque el ruido del decreto viene intercalado por la maqueta a dos columnas del PDF. Preservar los saltos obliga a rediseñar esa limpieza para que sea consciente de las líneas. Es un cambio cuidadoso, no un parche.
+**Ya no.** Al pasar el descarte de marginalia a un criterio **posicional** (ver ACH-DATA-014), aplanar dejó de ser necesario: los patrones de limpieza existían para sacar marginalia intercalada, y ahora esa marginalia ni siquiera entra. El limpiador conserva los saltos y `App.jsx` dejó de aplanar al inyectar.
+
+Medido: el Art. 4.3.3 pasa de **1 línea corrida a 46 líneas**, el 4.2.4 a 81 y el 2.6.3 a 203. La matriz `|a |F-180|F-120|…` llega al modelo con sus filas.
