@@ -969,8 +969,15 @@ function buildPromptCapa2(tipo, comuna, archivos, preguntas = {}, colabData = nu
   //    "1/6" falso. La transcripción de esas imágenes viaja en `art.anexos` y se
   //    marca como tal: no es texto verbatim del PDF sino la lectura de una
   //    imagen, y va con su procedencia (pdf + página) para poder verificarla.
+  // OJO: el texto YA NO se aplana (cambio 2026-09-21, ACH-DATA-014). Antes acá
+  // había un `.replace(/\n+/g, " ")` que convertía cada artículo en una sola
+  // línea. Eso destruía las tablas que sí están en la capa de texto: la matriz
+  // de resistencia al fuego del Art. 4.3.3 (`|a |F-180|F-120|…`) llegaba al
+  // modelo como una línea corrida, y la tabla de carga de ocupación del 4.2.4
+  // perdía la correspondencia entre destino y m²/persona. Ahora la extracción
+  // reconstruye las líneas por posición y acá se respetan.
   const conAnexos = (num, art) => {
-    const base = `Art. ${num}: ${art.texto.replace(/\n+/g, " ")}`;
+    const base = `Art. ${num}: ${art.texto.replace(/\n{3,}/g, "\n\n")}`;
     if (!art.anexos || !art.anexos.length) return base;
     const anexos = art.anexos
       .map(a => `  [ANEXO GRÁFICO de este artículo — ${a.titulo}]\n  Fuente: ${a.fuente}\n${a.contenido}`)

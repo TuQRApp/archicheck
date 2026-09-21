@@ -7,8 +7,9 @@
  * Desde: archicheck/normativa/
  */
 
-import { readFileSync, writeFileSync } from 'fs';
-import { pathToFileURL, fileURLToPath } from 'url';
+import { writeFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { extraerPaginas } from './extraer_texto_pdf.mjs';
 import { join, dirname } from 'path';
 
 const __dir  = dirname(fileURLToPath(import.meta.url));
@@ -17,43 +18,32 @@ const SALIDA = join(__dir, 'nacional/oguc_pdf.json');
 
 const MAX_CHARS = 3000; // máximo por chunk antes de partir
 
-// ── pdfjs ──────────────────────────────────────────────────────────────────────
+// ── Extracción de texto ────────────────────────────────────────────────────────
+//
+// CORREGIDO 2026-09-21 (ACH-DATA-014): antes esta función juntaba TODOS los
+// items de texto de la página en orden de lectura y después intentaba sacar el
+// ruido con regex. Eso arrastraba 2 problemas:
+//
+//   - la columna de referencias a decretos que el PDF imprime a la DERECHA de
+//     cada párrafo quedaba INTERCALADA DENTRO DE LAS ORACIONES ("Los pasillos
+//     tendrán un ancho Decreto 75, VIVIENDA libre mínimo de…"), en 565 de 770
+//     secciones. Cada variante nueva había que descubrirla y agregarla a mano.
+//   - para que esos regex pegaran había que aplanar los saltos de línea, y eso
+//     destruía la estructura de filas de las tablas que SÍ están en la capa de
+//     texto (la matriz del Art. 4.3.3 quedaba como una línea corrida).
+//
+// Ahora el descarte es POSICIONAL: se midió la distribución de palabras por
+// coordenada x y hay un corte limpio —el cuerpo ocupa x=50..400 y en x>=440 no
+// hay una sola palabra del articulado—, así que la marginalia, el encabezado y
+// el pie se van por dónde están impresos, no por cómo están escritos. Ver
+// extraer_texto_pdf.mjs.
 
-async function cargarPdfjs() {
-  const pdfjsPath  = join(__dir, '../node_modules/pdfjs-dist/legacy/build/pdf.mjs');
-  const workerPath = join(__dir, '../node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs');
-  const mod   = await import(pathToFileURL(pdfjsPath).href);
-  const pdfjs = mod.default ?? mod;
-  const GO    = pdfjs.GlobalWorkerOptions ?? mod.GlobalWorkerOptions;
-  GO.workerSrc = pathToFileURL(workerPath).href;
-  return pdfjs;
-}
-
-async function extraerTextoCompleto(pdfjs, rutaPdf) {
-  const buf = readFileSync(rutaPdf);
-  const doc = await pdfjs.getDocument({ data: new Uint8Array(buf) }).promise;
-  console.log(`  ${doc.numPages} páginas`);
-
-  const paginas = [];
-  for (let i = 1; i <= doc.numPages; i++) {
-    const page    = await doc.getPage(i);
-    const content = await page.getTextContent();
-    paginas.push(content.items.map(it => it.str || '').join(' '));
-    if (i % 50 === 0) process.stdout.write(`  ${i}/${doc.numPages}...\r`);
-  }
-
-  // Unir todo y limpiar
-  let texto = paginas.join('\n');
-
-  // Eliminar encabezados de página de leychile.cl
-  texto = texto.replace(
-    /Decreto 47, VIVIENDA \(1992\)\s+Biblioteca del Congreso Nacional de Chile[^\n]*página \d+ de \d+/g,
-    ' '
-  );
-  // Colapsar espacios excesivos
-  texto = texto.replace(/[ \t]{3,}/g, '  ').replace(/\n{3,}/g, '\n\n');
-
-  return texto;
+async function extraerTextoCompleto(rutaPdf) {
+  const paginas = await extraerPaginas(rutaPdf, {
+    onProgreso: (i, n) => { if (i % 50 === 0) process.stdout.write(`  ${i}/${n}...\r`); },
+  });
+  console.log(`  ${paginas.length} páginas`);
+  return paginas.join('\n');
 }
 
 // ── Partir artículo largo en sub-partes ───────────────────────────────────────
@@ -109,10 +99,8 @@ function partirEnSubpartes(numero, texto) {
 
 async function main() {
   console.log('OGUC — Extracción desde PDF leychile.cl');
-  const pdfjs = await cargarPdfjs();
-
-  console.log('Extrayendo texto...');
-  const texto = await extraerTextoCompleto(pdfjs, PDF);
+  console.log('Extrayendo texto (descarte posicional de marginalia)...');
+  const texto = await extraerTextoCompleto(PDF);
   console.log(`\n  Texto total: ${Math.round(texto.length / 1000)} KB`);
 
   // Detectar artículos: "Artículo X.Y.Z." y también "Artículo X.Y.Z. bis"

@@ -43,13 +43,13 @@ El caso testigo es el **Art. 4.5.5 de la OGUC**. El texto extraído dice literal
 
 | Corpus | Imágenes de contenido | Transcritas | Pendientes |
 |---|---|---|---|
-| **OGUC** | 24 | 3 | **21** |
-| **DDU** (Libro completo + 351 + 447) | 67 | 0 | **67** |
-| **PRC Providencia** | 30 | 0 | **30** |
-| **LGUC** | 0 | — | — |
-| **TOTAL** | **121** | **3** | **118** |
+| **OGUC** | 30 | 4 | **26** |
+| **DDU** (Libro completo + 351 + 447) | 68 | 0 | **68** |
+| **PRC Providencia** | 32 | 0 | **32** |
+| **LGUC** | 1 | 0 | **1** |
+| **TOTAL** | **131** | **4** | **127** |
 
-**LGUC: 0 imágenes de contenido.** No es un pendiente: se verificó que sus únicas 3 imágenes son el membrete repetido en 124 páginas. Su matriz normativa (p. ej. la de resistencia al fuego) está en la capa de texto.
+> **Corrección del filtro (2026-09-21)**: la primera versión exigía **120 px de lado mínimo** en ambos lados, y eso descartaba justo las **fórmulas**, que son imágenes anchas y bajas. Se perdían 10 imágenes de contenido real, entre ellas la tabla con fórmula del **Art. 2.2.5 bis** (`% = Densidad de ocupación × 11 / 2.000`, porcentaje de cesión) y la **TABLA 15 del Art. 4.1.10**. El criterio ahora es de **área**, que no discrimina por forma.
 
 ### Transcritas y verificadas
 
@@ -57,6 +57,10 @@ El caso testigo es el **Art. 4.5.5 de la OGUC**. El texto extraído dice literal
 |---|---|---|
 | Tabla de % de vanos por región | **OGUC 4.5.5** | 2 imágenes (x545 encabezado + norte/centro, x546 sur). Los 12 valores coinciden exactamente con `ART_455_DOCENTE` de `Fase 2/reglas_normativas.py`, obtenido antes por una lectura independiente. |
 | Tabla de densidad de carga combustible | **OGUC 4.3.4** | Leída en 2 pasadas (original + ampliación 5×). La ampliación **corrigió 3 celdas** de la grilla de letras. |
+| Tabla con fórmula de % de cesión | **OGUC 2.2.5 bis** | `% = (Densidad de ocupación × 11) / 2.000` hasta 8.000 pers/ha; 44% sobre eso. Recuperada al corregir el filtro. |
+| TABLA 15, tamaño de muestra de ensayo | **OGUC 4.1.10** | Leída ampliada 4× (original 371×52 px). Recuperada al corregir el filtro. |
+
+Las dos últimas **todavía no llegan al prompt**: sus artículos (2.2.5 bis y 4.1.10) no están entre los 43 seleccionados. Quedan en banco, listas para cuando se agreguen.
 
 ---
 

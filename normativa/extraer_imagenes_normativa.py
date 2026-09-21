@@ -42,10 +42,11 @@ MANIF  = os.path.join(NORM, 'anexos_graficos.json')
 # Una imagen que aparece en mas de este numero de paginas es decoracion
 # (membrete de la Biblioteca del Congreso, logo institucional), no contenido.
 MAX_PAGINAS_CONTENIDO = 3
-# Por debajo de esto no hay una tabla ni un diagrama legible: son vinetas,
-# firmas escaneadas y separadores.
-MIN_LADO_PX = 120
-MIN_AREA_PX = 40000
+# CORREGIDO 2026-09-21: la primera version exigia MIN_LADO_PX = 120 en AMBOS
+# lados, y eso descartaba justo las FORMULAS -- que son imagenes anchas y bajas
+# (600x96, 460x74, 371x52 en la OGUC). Se perdian 5 imagenes de contenido real
+# solo en OGUC. Ahora el criterio es de AREA, que no discrimina por forma.
+MIN_AREA_PX = 15000
 
 # Encabezados de articulo de cada cuerpo legal. OGUC usa numeracion decimal;
 # LGUC y las circulares/ordenanzas usan entero. Se acepta bis/ter/quater.
@@ -118,8 +119,8 @@ def main():
                     continue
                 if len(paginas_de[xref]) > MAX_PAGINAS_CONTENIDO:
                     continue  # membrete/logo
-                if min(w, h) < MIN_LADO_PX or w * h < MIN_AREA_PX:
-                    continue  # vineta/firma/separador
+                if w * h < MIN_AREA_PX:
+                    continue  # vineta o separador, no contenido
                 vistos.add(xref)
 
                 try:

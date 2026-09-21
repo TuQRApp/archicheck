@@ -49,18 +49,53 @@ const PATRONES_RUIDO = [
   /(?<!DE\s)\bVIVIENDA\b/g,
 ];
 
-/** Limpia un texto normativo extraido del PDF. Devuelve string. */
+/**
+ * Limpia un texto normativo extraido del PDF. Devuelve string.
+ *
+ * CAMBIO 2026-09-21 (ACH-DATA-014): ahora PRESERVA LOS SALTOS DE LINEA.
+ *
+ * Antes empezaba con `.replace(/\s+/g, ' ')`, que aplanaba todo. Se hacia por
+ * necesidad: la marginalia venia intercalada dentro de las oraciones y los
+ * patrones de abajo solo pegaban sobre texto plano. El costo era que las
+ * tablas que SI estan en la capa de texto perdian su estructura de filas --
+ * la matriz de resistencia al fuego del Art. 4.3.3 llegaba al modelo como una
+ * linea corrida (era ACH-DATA-013).
+ *
+ * Ya no hace falta: la marginalia se descarta POR POSICION en la extraccion
+ * (extraer_texto_pdf.mjs), asi que el texto llega limpio y con sus lineas.
+ * Medido despues del cambio: LGUC 0 de 264 secciones con residuo, OGUC 7 de
+ * 758 -- y esas 7 son falsos positivos sobre bloques "NOTA" que si son
+ * contenido legitimo del texto refundido.
+ *
+ * Los patrones quedan como RED DE SEGURIDAD, no como el mecanismo principal.
+ */
 export function limpiarTextoNormativo(texto) {
-  let t = String(texto ?? '').replace(/\s+/g, ' ');
+  // Espacios horizontales se colapsan; los saltos de linea se conservan.
+  let t = String(texto ?? '').replace(/[^\S\n]+/g, ' ');
   for (const re of PATRONES_RUIDO) t = t.replace(re, ' ');
   return t
-    .replace(/\s+([,;.])/g, '$1')   // espacio suelto antes de puntuacion
-    .replace(/\s{2,}/g, ' ')
+    .replace(/ +([,;.])/g, '$1')      // espacio suelto antes de puntuacion
+    .replace(/[^\S\n]{2,}/g, ' ')
+    .replace(/[^\S\n]*\n[^\S\n]*/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
 
-/** true si al texto todavia le queda marginalia despues de limpiar. */
+/**
+ * true si al texto todavia le queda marginalia despues de limpiar.
+ *
+ * OJO con la CAJA de "VIVIENDA": es lo que distingue la marginalia del
+ * contenido. El margen del PDF imprime "Decreto 75, VIVIENDA" en mayusculas;
+ * los bloques NOTA del texto refundido -- que son contenido legitimo -- dicen
+ * "Decreto 57, Vivienda, publicado el 06.04.2023". Con el test case-insensitive
+ * los 7 unicos "residuos" que quedan en OGUC son justamente esos NOTA, es
+ * decir falsos positivos que harian fallar al test por texto correcto.
+ */
 export function tieneRuidoResidual(texto) {
   const t = String(texto ?? '');
-  return /Decreto\s+\d+,\s*VIVIENDA|D\.\s*O\.\s*\d{2}\.\d{2}\.\d{4}|Art\.\s*(?:UNICO|ÚNICO|unico|único)\s*N/i.test(t);
+  if (/Decreto\s+\d+,\s*VIVIENDA\b/.test(t)) return true;               // sensible a mayusculas
+  if (/Art\.\s*(?:UNICO|ÚNICO)\s*N/.test(t)) return true;
+  // "D.O. dd.mm.aaaa" es marginalia salvo cuando el texto lo esta citando
+  // ("publicado el ..."), caso en que forma parte de la oracion.
+  return /(?<!publicado el\s)D\.\s*O\.\s*\d{2}\.\d{2}\.\d{4}/.test(t);
 }

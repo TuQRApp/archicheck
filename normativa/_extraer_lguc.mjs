@@ -2,38 +2,27 @@
  * _extraer_lguc.mjs — Extrae LGUC del PDF leychile.cl con regex.
  * Uso: node _extraer_lguc.mjs  (desde archicheck/normativa/)
  */
-import { readFileSync, writeFileSync } from 'fs';
-import { pathToFileURL, fileURLToPath } from 'url';
+import { writeFileSync } from 'fs';
+import { fileURLToPath } from 'url';
 import { join, dirname } from 'path';
+import { extraerPaginas } from './extraer_texto_pdf.mjs';
 
 const __dir  = dirname(fileURLToPath(import.meta.url));
 const PDF    = join(__dir, 'nacional/Fuentes/LGUC_DTO-458_13-ABR-1976.pdf');
 const SALIDA = join(__dir, 'nacional/lguc_pdf.json');
 const MAX_CHARS = 3000;
 
-async function cargarPdfjs() {
-  const pdfjsPath  = join(__dir, '../node_modules/pdfjs-dist/legacy/build/pdf.mjs');
-  const workerPath = join(__dir, '../node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs');
-  const mod = await import(pathToFileURL(pdfjsPath).href);
-  const pdfjs = mod.default ?? mod;
-  (pdfjs.GlobalWorkerOptions ?? mod.GlobalWorkerOptions).workerSrc = pathToFileURL(workerPath).href;
-  return pdfjs;
-}
-
-async function extraerTexto(pdfjs) {
-  const buf = readFileSync(PDF);
-  const doc = await pdfjs.getDocument({ data: new Uint8Array(buf) }).promise;
-  console.log(`  ${doc.numPages} páginas`);
-  const paginas = [];
-  for (let i = 1; i <= doc.numPages; i++) {
-    const page = await doc.getPage(i);
-    const c = await page.getTextContent();
-    paginas.push(c.items.map(it => it.str || '').join(' '));
-  }
-  let texto = paginas.join('\n');
-  // Eliminar encabezado leychile
-  texto = texto.replace(/Decreto 458, VIVIENDA \(\d+\)\s+Biblioteca del Congreso[^\n]*página \d+ de \d+/g, ' ');
-  return texto.replace(/[ \t]{3,}/g, '  ').replace(/\n{3,}/g, '\n\n');
+// CORREGIDO 2026-09-21 (ACH-DATA-014): antes juntaba todos los items de texto
+// en orden de lectura y sacaba el encabezado con un regex. Eso dejaba entrar la
+// columna de referencias a decretos que el PDF imprime a la DERECHA de cada
+// párrafo, intercalada dentro de las oraciones. Ahora el descarte es POSICIONAL
+// —marginalia, encabezado y pie se van por dónde están impresos, no por cómo
+// están escritos— y además se reconstruyen las líneas. La LGUC comparte maqueta
+// con la OGUC (612x792, cuerpo en x=50..400). Ver extraer_texto_pdf.mjs.
+async function extraerTexto() {
+  const paginas = await extraerPaginas(PDF);
+  console.log(`  ${paginas.length} páginas`);
+  return paginas.join('\n');
 }
 
 function partirLargo(numero, texto) {
@@ -57,8 +46,7 @@ function partirLargo(numero, texto) {
 
 async function main() {
   console.log('LGUC — Extracción desde PDF leychile.cl');
-  const pdfjs = await cargarPdfjs();
-  const texto = await extraerTexto(pdfjs);
+  const texto = await extraerTexto();
   console.log(`  Texto total: ${Math.round(texto.length / 1000)} KB`);
 
   // LGUC usa "Artículo N°.-" o "Artículo N.-", y además una familia de

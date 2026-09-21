@@ -1,7 +1,7 @@
 {
   "_que_es": "Manifiesto de imagenes de contenido de los PDF normativos. La transcripcion la hace una lectura con vision y queda en \"transcripcion\"; \"estado\" pasa de PENDIENTE a TRANSCRITO.",
   "_procedencia": "Cada entrada trae pdf + pagina (1-based) + xref, para poder volver a la fuente y verificar.",
-  "total": 121,
+  "total": 131,
   "paginas_con_figuras_vectoriales": [
     {
       "pdf": "normativa/nacional/Fuentes/DDU-447-Circular-Aportes-Tramitacion-permisos-12.11.20.pdf",
@@ -559,6 +559,27 @@
       ],
       "articulo": "4",
       "archivo": "anexos_graficos/DDU_p0020_x30.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "DDU_p0001_x16",
+      "corpus": "DDU",
+      "pdf": "normativa/nacional/Fuentes/DDU-447-Circular-Aportes-Tramitacion-permisos-12.11.20.pdf",
+      "pagina": 1,
+      "xref": 16,
+      "px": [
+        195,
+        195
+      ],
+      "bbox": [
+        70.9,
+        28.0,
+        169.1,
+        126.3
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/DDU_p0001_x16.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
@@ -1823,6 +1844,69 @@
       "estado": "PENDIENTE"
     },
     {
+      "id": "LGUC_p0001_x5",
+      "corpus": "LGUC",
+      "pdf": "normativa/nacional/Fuentes/LGUC_DTO-458_13-ABR-1976.pdf",
+      "pagina": 1,
+      "xref": 5,
+      "px": [
+        596,
+        102
+      ],
+      "bbox": [
+        71.1,
+        10.0,
+        304.9,
+        50.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/LGUC_p0001_x5.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OGUC_p0001_x5",
+      "corpus": "OGUC",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "pagina": 1,
+      "xref": 5,
+      "px": [
+        596,
+        102
+      ],
+      "bbox": [
+        71.1,
+        10.0,
+        304.9,
+        50.0
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OGUC_p0001_x5.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OGUC_p0113_x234",
+      "corpus": "OGUC",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "pagina": 113,
+      "xref": 234,
+      "px": [
+        600,
+        96
+      ],
+      "bbox": [
+        48.5,
+        563.9,
+        448.5,
+        627.9
+      ],
+      "articulo": "2.2.5 Bis",
+      "archivo": "anexos_graficos/OGUC_p0113_x234.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
       "id": "OGUC_p0117_x243",
       "corpus": "OGUC",
       "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
@@ -1991,6 +2075,27 @@
       "estado": "PENDIENTE"
     },
     {
+      "id": "OGUC_p0200_x418",
+      "corpus": "OGUC",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "pagina": 200,
+      "xref": 418,
+      "px": [
+        357,
+        117
+      ],
+      "bbox": [
+        48.5,
+        356.9,
+        405.5,
+        473.9
+      ],
+      "articulo": "2.1.25",
+      "archivo": "anexos_graficos/OGUC_p0200_x418.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
       "id": "OGUC_p0200_x417",
       "corpus": "OGUC",
       "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
@@ -2008,6 +2113,27 @@
       ],
       "articulo": "2.1.25",
       "archivo": "anexos_graficos/OGUC_p0200_x417.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OGUC_p0201_x422",
+      "corpus": "OGUC",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "pagina": 201,
+      "xref": 422,
+      "px": [
+        460,
+        74
+      ],
+      "bbox": [
+        48.5,
+        622.9,
+        448.5,
+        686.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OGUC_p0201_x422.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
@@ -2092,6 +2218,27 @@
       ],
       "articulo": null,
       "archivo": "anexos_graficos/OGUC_p0205_x433.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "OGUC_p0206_x436",
+      "corpus": "OGUC",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "pagina": 206,
+      "xref": 436,
+      "px": [
+        504,
+        104
+      ],
+      "bbox": [
+        48.5,
+        125.9,
+        448.5,
+        207.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OGUC_p0206_x436.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
@@ -2222,6 +2369,27 @@
       "estado": "PENDIENTE"
     },
     {
+      "id": "OGUC_p0214_x459",
+      "corpus": "OGUC",
+      "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
+      "pagina": 214,
+      "xref": 459,
+      "px": [
+        371,
+        52
+      ],
+      "bbox": [
+        48.5,
+        169.9,
+        419.5,
+        221.9
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/OGUC_p0214_x459.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
       "id": "OGUC_p0215_x462",
       "corpus": "OGUC",
       "pdf": "normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf",
@@ -2348,6 +2516,27 @@
       "estado": "PENDIENTE"
     },
     {
+      "id": "PRC_PROVIDENCIA_p0046_x143",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/ordenanza_refundida.pdf",
+      "pagina": 46,
+      "xref": 143,
+      "px": [
+        142,
+        110
+      ],
+      "bbox": [
+        506.7,
+        118.1,
+        553.2,
+        154.1
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0046_x143.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
       "id": "PRC_PROVIDENCIA_p0048_x152",
       "corpus": "PRC_PROVIDENCIA",
       "pdf": "normativa/providencia/ordenanza_refundida.pdf",
@@ -2365,6 +2554,27 @@
       ],
       "articulo": null,
       "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0048_x152.png",
+      "transcripcion": null,
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": "PRC_PROVIDENCIA_p0001_x269",
+      "corpus": "PRC_PROVIDENCIA",
+      "pdf": "normativa/providencia/prcp_2007_l1_de_4_espacio_publico_vialidad_y_areas_verdes_publicas_refundido_de_trabajo.pdf",
+      "pagina": 1,
+      "xref": 269,
+      "px": [
+        1116,
+        110
+      ],
+      "bbox": [
+        2938.2,
+        2966.9,
+        3246.2,
+        2997.2
+      ],
+      "articulo": null,
+      "archivo": "anexos_graficos/PRC_PROVIDENCIA_p0001_x269.png",
       "transcripcion": null,
       "estado": "PENDIENTE"
     },
