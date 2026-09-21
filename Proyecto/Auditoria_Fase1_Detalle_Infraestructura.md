@@ -5,6 +5,8 @@
 
 ## 1. Cloudflare Worker (`archicheck-worker`)
 
+> **Actualización 2026-09-21 (misma sesión, "Hazlo"): los hallazgos 1.1, 1.2 y 1.3 de esta sección ya se remediaron.** Se agregaron `SUPABASE_URL`/`SUPABASE_KEY` como secrets, se creó la carpeta `public/` faltante, y se redesplegó. Al verificar con una llamada real al Worker apareció un SEGUNDO bug independiente: `match_normativa()` tiene 2 sobrecargas en Supabase (la original de 3 args y una de 9 args agregada con la taxonomía) y PostgREST no podía elegir cuál usar (`PGRST203`) — el RAG seguía fallando incluso con los secrets correctos. Se corrigió `worker.js` (`queryNormativa()`, 2 call sites) agregando `p_solo_vigentes:false` explícito, que desambigua hacia la función de 9 args Y preserva el comportamiento histórico (esa función defaultea ese parámetro a `true`, que habría excluido en silencio todo el corpus DDU/PRC marcado `sin_verificar`). Verificado end-to-end: llamada directa a `match_normativa` con los mismos parámetros que ahora envía el Worker devuelve 200 con chunks reales. Commits `archicheck-worker@744988c`, deploys `bd4c31cf`/`4d573beb`.
+
 ### 1.1 Secrets configurados vs. documentados — HALLAZGO P0
 `wrangler.toml` (11 líneas, completo) documenta en un comentario: `# Secrets (agregar via: wrangler secret put NOMBRE) — ANTHROPIC_API_KEY, OPENAI_API_KEY, SUPABASE_URL, SUPABASE_KEY`. `wrangler secret list` contra el Worker desplegado real devuelve únicamente:
 ```json
