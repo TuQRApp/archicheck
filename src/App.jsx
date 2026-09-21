@@ -1035,7 +1035,7 @@ INSTRUCCIONES OBLIGATORIAS DE COMPLETITUD:
    • Carga de ocupación calculada por recinto y nivel (OGUC Art. 4.2.4)
    • Salidas de emergencia: cantidad y ancho según carga (OGUC Art. 4.2.4, 4.2.5)
    • Resistencia al fuego de elementos estructurales (OGUC Art. 4.3.3); para determinar la clase (a/b/c/d) usa OGUC Art. 4.3.4 Tabla 1 cruzando destino × número de pisos: restaurante 250–500 m² en 2 pisos = clase 'b', en 1 piso = clase 'c'
-   • Iluminación y ventilación natural por recinto — ratio 1/6 (OGUC Art. 4.1.2, 4.5.7)
+   • Iluminación y ventilación natural por recinto. OJO con la fuente, verificado contra el texto íntegro de OGUC (2026-09-21): para destinos generales (vivienda, oficina, comercio) la OGUC **no fija ningún porcentaje** de superficie de ventana — el Art. 4.1.2 es cualitativo: exige "al menos una ventana" que permita entrada de aire y luz, con 1,5 m libres frente a dormitorios. El único porcentaje real de la OGUC es el Art. 4.5.5, y aplica SOLO a recintos docentes (salas de clases, talleres, laboratorios) y hogares estudiantiles, con valores que además varían por región (ej. Metropolitana: 17% iluminación / 8% ventilación en recintos docentes). NO cites "Art. 4.5.7" para esto: ese artículo regula patios de locales escolares, no ventanas. Si el proyecto no es educacional, evalúa el requisito cualitativo del Art. 4.1.2 (¿tiene ventana el recinto?) y, si querés reportar la relación ventana/superficie, preséntala como referencia de diseño, nunca como exigencia OGUC con número de artículo
    • Ductos de ventilación mecánica para baños y cocinas sin ventana (OGUC Art. 4.1.3)
    • Accesibilidad universal: rampa, baño accesible, estacionamiento, ruta (OGUC Art. 4.1.7, DDU 351)
    • Pasamanos en escaleras (OGUC Art. 4.2.7)
@@ -2512,10 +2512,10 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
         {/* N3 */}
         <div style={pg}>
           <CapaBanner>CAPA 2 — EVALUACIÓN NORMATIVA</CapaBanner>
-          <EtapaTitle label="Etapa C — Iluminación y Ventilación" subtitle="Verificación de relación ventana/área de recinto según OGUC Art. 4.5.7" badge="Capa 2 · C/D" c2 />
+          <EtapaTitle label="Etapa C — Iluminación y Ventilación" subtitle="Relación ventana/área de recinto — referencia de diseño (OGUC Art. 4.1.2 exige ventana, sin fijar porcentaje)" badge="Capa 2 · C/D" c2 />
           {(result.capa2?.iluminacion_ventilacion?.tabla || []).every(r => !r.area_ventana_m2) && (
             <p style={{ fontSize:9, color:"#7B5800", background:"#FFF8E1", border:"1px solid #F9A825", borderRadius:4, padding:"5px 8px", marginBottom:6 }}>
-              ⚠ Áreas de ventana no detectadas automáticamente. Verificar cuadro de vanos en el plano (OGUC Art. 4.5.7).
+              ⚠ Áreas de ventana no detectadas automáticamente. Verificar cuadro de vanos en el plano (OGUC Art. 4.1.2).
             </p>
           )}
           <PrintTable
@@ -2525,7 +2525,11 @@ function PrintReport({ result, obsStatus, tipo, comuna, archivos, colabPngs, ver
                 <td style={{ ...PTD, fontWeight:700, color:"#1B3A8A" }}><ElemLabel nombre={r.recinto} id={r._colab_id} /></td>
                 <td style={{ ...PTD, textAlign:"center" }}>{r.area_ventana_m2 ?? "—"}</td>
                 <td style={{ ...PTD, textAlign:"center" }}>{r.area_recinto_m2 ?? "—"}</td>
-                <td style={{ ...PTD, textAlign:"center" }}>{r.ratio_requerido || "1/6"}</td>
+                {/* Sin default "1/6" (2026-09-21): ese ratio NO es una exigencia
+                    OGUC para destinos generales -- mostrarlo como "Ratio req."
+                    afirmaba un requisito inexistente. Ver Art. 4.1.2 (cualitativo)
+                    y Art. 4.5.5 (unico con %, solo educacional y por region). */}
+                <td style={{ ...PTD, textAlign:"center" }}>{r.ratio_requerido || "—"}</td>
                 <td style={PTD}><StatusBadge val={r.cumple} /></td>
               </tr>
             ))}
@@ -4249,7 +4253,7 @@ ${printRef.current.innerHTML}
                     <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12 }}>
                       <div>
                         <h1 style={{ fontSize:22, fontWeight:800, color:"#1B3A8A", fontFamily:"'Inter',sans-serif", margin:"0 0 4px" }}>Etapa C — Iluminación y Ventilación</h1>
-                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>Verificación de relación ventana/área de recinto según OGUC Art. 4.5.7</p>
+                        <p style={{ color:"#6B7A99", fontSize:13, margin:0 }}>Relación ventana/área de recinto — referencia de diseño (OGUC Art. 4.1.2 exige ventana, sin fijar porcentaje)</p>
                       </div>
                       <span style={{ fontSize:10, fontWeight:700, padding:"4px 14px", borderRadius:99, background:"rgba(214,137,16,0.08)", color:"#D68910", border:"1px solid rgba(214,137,16,0.25)", whiteSpace:"nowrap" }}>Capa 2 · C/D</span>
                     </div>
@@ -4261,13 +4265,13 @@ ${printRef.current.innerHTML}
                       <>
                         {sinVentanas && (
                           <div style={{ background:"#FFF8E1", border:"1px solid #F9A825", borderRadius:6, padding:"8px 12px", marginBottom:10, fontSize:12, color:"#7B5800" }}>
-                            ⚠ Áreas de ventana no detectadas automáticamente. Verificar cuadro de vanos en el plano para determinar cumplimiento real de iluminación natural (OGUC Art. 4.5.7).
+                            ⚠ Áreas de ventana no detectadas automáticamente. Verificar cuadro de vanos en el plano para determinar cumplimiento real de iluminación natural (OGUC Art. 4.1.2).
                           </div>
                         )}
                         <div style={{ overflowX:"auto", marginBottom:8 }}>
                           <table style={{ width:"100%", borderCollapse:"collapse" }}>
                             <thead><tr>{["Recinto","Área ventana m²","Área recinto m²","Ratio req.","Cumple"].map(h => <th key={h} style={TH}>{h}</th>)}</tr></thead>
-                            <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}><ElemLabel nombre={r.recinto} id={r._colab_id} /></td><td style={{ ...TD, textAlign:"center" }}>{r.area_ventana_m2??<span style={{color:"#B8C5E0"}}>—</span>}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_recinto_m2??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ratio_requerido||"1/6"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
+                            <tbody>{d.tabla.map((r,i) => <tr key={i} style={{ background:i%2===0?"#fff":"#F8F9FF" }}><td style={{ ...TD, fontWeight:600, color:"#1B3A8A" }}><ElemLabel nombre={r.recinto} id={r._colab_id} /></td><td style={{ ...TD, textAlign:"center" }}>{r.area_ventana_m2??<span style={{color:"#B8C5E0"}}>—</span>}</td><td style={{ ...TD, textAlign:"center" }}>{r.area_recinto_m2??"—"}</td><td style={{ ...TD, textAlign:"center" }}>{r.ratio_requerido||"—"}</td><td style={TD}><StatusBadge val={r.cumple} /></td></tr>)}</tbody>
                           </table>
                         </div>
                       </>

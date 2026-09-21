@@ -252,8 +252,125 @@ OGUC_REGLAS = {
     # evidencia de que sea insuficiente) pero marcado SIN VERIFICAR de forma
     # honesta, igual que 'pasillo' arriba -- nunca mas afirmar una cita OGUC
     # que la busqueda exhaustiva no respalda.
-    'ventilacion_iluminacion_pct': (10.0, 'SIN VERIFICAR -- 10% es una convencion de diseño de uso extendido, NO una cita OGUC real (Art. 4.2.5/4.2.6, la cita previa, tratan de pasillos/altura de evacuacion, no de ventanas; Art. 4.1.2 -- el articulo real de ventilacion de locales habitables -- es cualitativo, sin porcentaje)'),
+    # ACTUALIZACION 2026-09-21 (repasada de la auditoria Fase 1): se RECUPERO
+    # la tabla real del Art. 4.5.5 -- ver ART_455_DOCENTE mas abajo. No
+    # contradice nada de lo anterior: confirma que para destinos generales
+    # (vivienda/oficina/comercio) OGUC efectivamente NO fija ningun porcentaje,
+    # y que el unico porcentaje real del cuerpo normativo aplica SOLO a
+    # recintos docentes y hogares estudiantiles. Esta entrada se mantiene tal
+    # cual (con su valor y su marca SIN VERIFICAR) porque la decision del
+    # usuario sigue vigente y porque analizar_todos.py lee [0] de aca.
+    'ventilacion_iluminacion_pct': (10.0, 'SIN VERIFICAR -- 10% es una convencion de diseño de uso extendido, NO una cita OGUC real (Art. 4.2.5/4.2.6, la cita previa, tratan de pasillos/altura de evacuacion, no de ventanas; Art. 4.1.2 -- el articulo real de ventilacion de locales habitables -- es cualitativo, sin porcentaje). Para recintos DOCENTES/hogar estudiantil si existe una exigencia real y regionalizada: ver ART_455_DOCENTE'),
 }
+
+# ── Art. 4.5.5 OGUC: % de vanos en recintos docentes y hogares estudiantiles ──
+#
+# RECUPERADO 2026-09-21 (repasada de la auditoria Fase 1). Historia, porque
+# importa para no volver a perderlo: este proyecto dio por hecho durante meses
+# que "la tabla no se extrajo limpia del PDF a texto". No era un problema de
+# extraccion: el PDF oficial de Ley Chile NO TIENE la tabla en su capa de
+# texto -- donde van los valores, el texto extraido dice literalmente dos
+# puntos ("." "."). La tabla esta embebida como IMAGEN en la pagina 255 del
+# PDF (indice 254). Se recupero renderizando esa pagina y leyendola. Si algun
+# dia hay que re-verificarla: normativa/nacional/Fuentes/OGUC_DTO-47_05-JUN-1992.pdf
+#
+# Alcance textual del articulo (importa, es mas acotado de lo que se asumia):
+# "los recintos docentes correspondientes a salas de actividades, de clases,
+# talleres y laboratorios, como asimismo el recinto destinado a
+# estar-comedor-estudio y los dormitorios en hogares estudiantiles".
+# NO aplica a vivienda, oficina, comercio ni ningun otro destino.
+#
+# Dos cosas que el sistema no contemplaba y que la tabla real deja claras:
+#   1. La exigencia es REGIONAL (sube de norte a sur: 14 / 17 / 20% de
+#      iluminacion para recintos docentes).
+#   2. ILUMINACION y VENTILACION son porcentajes DISTINTOS -- no un unico
+#      chequeo combinado como lo trata hoy 'ventilacion_iluminacion_pct'.
+#
+# Valores = % de la superficie interior del respectivo recinto.
+ART_455_REF = ('OGUC Art. 4.5.5 (texto vigente segun Decreto 57 VIVIENDA, '
+               'Art. unico N°23, D.O. 06.04.2023) -- solo recintos docentes y '
+               'hogares estudiantiles')
+
+ART_455_DOCENTE = {
+    # grupo_region: {iluminacion: {docente, hogar_estudiantil}, ventilacion: {...}}
+    'norte': {
+        'regiones': ('Arica y Parinacota', 'Tarapaca', 'Antofagasta', 'Atacama', 'Coquimbo'),
+        'iluminacion': {'docente': 14.0, 'hogar_estudiantil': 6.0},
+        'ventilacion': {'docente': 8.0,  'hogar_estudiantil': 6.0},
+    },
+    'centro': {
+        'regiones': ('Valparaiso', 'Metropolitana de Santiago',
+                     "Libertador General Bernardo O'Higgins", 'Maule'),
+        'iluminacion': {'docente': 17.0, 'hogar_estudiantil': 7.0},
+        'ventilacion': {'docente': 8.0,  'hogar_estudiantil': 6.0},
+    },
+    'sur': {
+        'regiones': ('Nuble', 'Biobio', 'La Araucania', 'Los Rios', 'Los Lagos',
+                     'Aysen del General Carlos Ibanez del Campo',
+                     'Magallanes y de la Antartica Chilena'),
+        'iluminacion': {'docente': 20.0, 'hogar_estudiantil': 8.0},
+        'ventilacion': {'docente': 8.0,  'hogar_estudiantil': 6.0},
+    },
+}
+
+
+def vanos_minimos_art_455(region, tipo_recinto='docente'):
+    """% minimo de vanos (iluminacion, ventilacion) segun Art. 4.5.5 OGUC.
+
+    `region`: nombre de region chilena (match laxo, sin tildes ni mayusculas).
+    `tipo_recinto`: 'docente' | 'hogar_estudiantil'.
+
+    Devuelve (pct_iluminacion, pct_ventilacion, referencia) o None si la region
+    no se reconoce -- nunca asume un grupo por defecto, mismo criterio de "dato
+    ausente != cumple" que rige en el resto del modulo.
+
+    OJO: esta regla aplica SOLO a recintos docentes / hogares estudiantiles.
+    Para cualquier otro destino, OGUC no fija porcentaje alguno (Art. 4.1.2 es
+    cualitativo: "al menos una ventana"). No la uses como default general.
+    """
+    if not region:
+        return None
+
+    def _norm(s):
+        s = str(s).lower().strip()
+        for a, b in (('á','a'),('é','e'),('í','i'),('ó','o'),('ú','u'),('ñ','n')):
+            s = s.replace(a, b)
+        # Saca el prefijo/conectores con que se escribe una region en la
+        # practica ("Region Metropolitana", "Region de Los Lagos", "Region del
+        # Biobio"). Sin esto, "Region Metropolitana" -- la forma MAS comun en
+        # Chile -- no matcheaba contra "Metropolitana de Santiago" (encontrado
+        # probando la funcion, 2026-09-21; los datos propios del proyecto usan
+        # "Metropolitana" a secas y si matcheaban, lo que lo hacia facil de
+        # pasar por alto).
+        for p in ('region metropolitana', 'region de la ', 'region de los ',
+                  'region de las ', 'region del ', 'region de ', 'region '):
+            if s.startswith(p):
+                s = 'metropolitana' if p == 'region metropolitana' else s[len(p):]
+                break
+        return s.strip()
+
+    # Token distintivo por region -- evita depender de que el nombre completo
+    # coincida. 'santiago' y 'rm' se aceptan como alias de Metropolitana.
+    ALIAS = {
+        'norte':  ('arica', 'parinacota', 'tarapaca', 'antofagasta', 'atacama', 'coquimbo'),
+        'centro': ('valparaiso', 'metropolitana', 'santiago', 'rm', "o'higgins",
+                   'ohiggins', 'libertador', 'maule'),
+        # 'lagos'/'rios' sueltos ademas de 'los lagos'/'los rios': el limpiador
+        # de prefijos de arriba saca el "de los" de "Region de Los Lagos" y deja
+        # solo "lagos" (encontrado probando, 2026-09-21).
+        'sur':    ('nuble', 'biobio', 'bio bio', 'araucania', 'los rios', 'los lagos',
+                   'lagos', 'rios', 'aysen', 'magallanes', 'antartica'),
+    }
+    objetivo = _norm(region)
+    if not objetivo:
+        return None
+    for nombre_grupo, grupo in ART_455_DOCENTE.items():
+        for alias in ALIAS[nombre_grupo]:
+            if objetivo == alias or alias in objetivo:
+                return (grupo['iluminacion'][tipo_recinto],
+                        grupo['ventilacion'][tipo_recinto],
+                        ART_455_REF)
+    return None
 
 # Tipos de RECINTO dentro de OGUC_REGLAS -- derivado, nunca una lista aparte
 # a mano. Hallazgo real (revision propia, 2026-09-20): la primera version de
