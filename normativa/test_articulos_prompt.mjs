@@ -22,6 +22,7 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { limpiarTextoNormativo, tieneRuidoResidual } from './limpiar_texto_normativo.mjs';
+import { indexarArticulos } from './corpus_articulos.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const cargar = p => JSON.parse(readFileSync(join(__dir, p), 'utf-8'));
@@ -37,7 +38,11 @@ let verificados = 0;
 for (const caso of CASOS) {
   const inyectado = cargar(caso.prompt);
   const pdf = cargar(caso.fuente);
-  const real = new Map(pdf.secciones.map(s => [String(s.numero).trim(), s.texto]));
+  // MISMO acceso que usa el generador, a proposito. Antes cada uno armaba su
+  // propio Map con `.get(numero)` y los dos compartian el mismo punto ciego:
+  // se quedaban con el primer chunk del articulo, asi que el test daba por
+  // bueno un corpus truncado al 48%. Ver ACH-DATA-012.
+  const real = indexarArticulos(pdf.secciones);
 
   console.log(`\n=== ${caso.nombre} ===`);
 

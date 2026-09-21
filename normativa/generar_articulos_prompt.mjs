@@ -34,6 +34,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { limpiarTextoNormativo } from './limpiar_texto_normativo.mjs';
+import { indexarArticulos } from './corpus_articulos.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const SOLO_CHECK = process.argv.includes('--check');
@@ -72,7 +73,11 @@ const lista = cargar(LISTA);
 for (const cuerpo of CUERPOS) {
   const actual = cargar(cuerpo.destino);
   const pdf = cargar(cuerpo.fuente);
-  const real = new Map(pdf.secciones.map(s => [String(s.numero).trim(), s.texto]));
+  // indexarArticulos reune cada articulo con sus continuaciones (-b, -c...).
+  // Antes aca habia un `new Map(secciones.map(...))` + `.get(numero)`, que
+  // devolvia SOLO EL PRIMER CHUNK: se descartaba el 52% del texto de los
+  // articulos seleccionados, en silencio. Ver ACH-DATA-012.
+  const real = indexarArticulos(pdf.secciones);
 
   const salida = {};
   const noEncontrados = [];
